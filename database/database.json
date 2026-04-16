@@ -1,12 +1,7 @@
 {
-  "database_info": {
-    "name": "MSISDN-Registry",
-    "status": "SECURE-ENCRYPTED",
-    "last_sync": "2024-05-20T10:00:00Z"
-  },
   "Numbers": [
     "6288994037615",
     "6288994486449",
-    "62881036109288", 
+    "62881036109288"
   ]
 }
