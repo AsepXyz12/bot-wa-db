@@ -12,28 +12,39 @@
       "value": "6288994037615",
       "type": "MSISDN",
       "risk_score": 0,
-      "tags": ["whitelist", "verified"]
+      "tags": [
+        "whitelist",
+        "verified"
+      ]
     },
     {
       "id": "IDX-002",
       "value": "6288994486449",
       "type": "MSISDN",
       "risk_score": 0,
-      "tags": ["whitelist", "verified"]
+      "tags": [
+        "whitelist",
+        "verified"
+      ]
     },
     {
       "id": "IDX-003",
       "value": "62881036109288",
       "type": "MSISDN",
       "risk_score": 0,
-      "tags": ["whitelist", "verified"]
+      "tags": [
+        "whitelist",
+        "verified"
+      ]
     },
     {
       "id": "IDX-004",
       "value": "6299",
       "type": "MSISDN",
       "risk_score": 0,
-      "tags": ["added-by-bot"]
+      "tags": [
+        "added-by-bot"
+      ]
     }
   ]
 }
