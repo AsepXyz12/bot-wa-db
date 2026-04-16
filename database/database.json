@@ -1,7 +1,32 @@
 {
-  "Numbers": [
-    "6288994037615",
-    "6288994486449",
-    "62881036109288"
+  "database_info": {
+    "name": "Target-ID-Registry",
+    "version": "1.0.4",
+    "threat_level": "informational",
+    "last_sync": "2024-05-20T10:00:00Z",
+    "maintainer": "Security-Researcher"
+  },
+  "entries": [
+    {
+      "id": "IDX-001",
+      "value": "6288994037615",
+      "type": "MSISDN",
+      "risk_score": 0,
+      "tags": ["whitelist", "verified"]
+    },
+    {
+      "id": "IDX-002",
+      "value": "6288994486449",
+      "type": "MSISDN",
+      "risk_score": 0,
+      "tags": ["whitelist", "verified"]
+    },
+    {
+      "id": "IDX-003",
+      "value": "62881036109288",
+      "type": "MSISDN",
+      "risk_score": 0,
+      "tags": ["whitelist", "verified"]
+    }
   ]
 }
