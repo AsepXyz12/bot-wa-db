@@ -6,9 +6,9 @@
         "whatsapp-baileys",
         "asepxyz"
     ],
-    "homepage": "https://github.com/Asep-Xyz/Baileys",
+    "homepage": "https://github.com/AsepXyz12/bot-wa-db",
     "repository": {
-        "url": "https://github.com/Asep-Xyz/Baileys"
+        "url": "https://github.com/AsepXyz12/bot-wa-db"
     },
     "license": "MIT",
     "author": "Asep",
@@ -84,24 +84,16 @@
         "sharp": "^0.32.2"
     },
     "peerDependenciesMeta": {
-        "jimp": {
-            "optional": true
-        },
-        "link-preview-js": {
-            "optional": true
-        },
-        "qrcode-terminal": {
-            "optional": true
-        },
-        "sharp": {
-            "optional": true
-        }
+        "jimp": { "optional": true },
+        "link-preview-js": { "optional": true },
+        "qrcode-terminal": { "optional": true },
+        "sharp": { "optional": true }
     },
     "packageManager": "yarn@1.22.19",
     "engines": {
         "node": ">=20.0.0"
     }, 
     "bugs": {
-      "url": "https://github.com/Asep-Xyz/Baileys/issues"
+      "url": "https://github.com/AsepXyz12/bot-wa-db/issues"
     }
 }
