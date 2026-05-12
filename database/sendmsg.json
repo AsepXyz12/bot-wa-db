@@ -1,3 +1,11 @@
 {
-  "list": []
+  "list": [
+    {
+      "id": 1778601672376,
+      "sender": "62881036109288@s.whatsapp.net",
+      "mime": "",
+      "caption": "case 'getfunc': {\n if (!isCreator) return payreply(mess.owner)\n if (!text) return payreply(`Contoh: ${prefix}getfunc case2`)\n\n const fs = require('fs')\n const path = require('path')\n\n await Asepp.sendMessage(m.chat, { react: { text: \"🩸\", key: m.key } })\n\n try {\n const filePath = path.join(__dirname, 'AseppLohya.js') // ganti nama file lu\n const source = fs.readFileSync(filePath, 'utf-8')\n\n const caseName = text.trim().toLowerCase()\n // Ambil blok case sampe break\n const caseRegex = new RegExp(`case\\\\s+['\"]${caseName}['\"]\\\\s*:[\\\\s\\\\S]*?break`, 'i')\n const caseMatch = source.match(caseRegex)\n\n if (!caseMatch) return payreply(`Case *${text}* ga ketemu 🩸`)\n\n const caseBlock = caseMatch[0]\n\n // Cari semua function yg dipanggil pake await\n const funcRegex = /await\\s+([a-zA-Z_$][\\w$]*)\\s*\\(([\\s\\S]*?)\\)/g\n let matches = [...caseBlock.matchAll(funcRegex)]\n\n if (matches.length === 0) return payreply(`Di case *${text}* ga ada function await 🩸`)\n\n let teks = `*FUNCTION DI CASE: ${text.toUpperCase()}* 🩸\\n\\n`\n matches.forEach((v, i) => {\n teks += `*${i+1}.* \\`${v[1]}(${v[2].trim()})\\`\\n`\n })\n\n teks += `\\n*Total:* ${matches.length} function`\n\n // Kalo mau kirim function yg pertama doang\n if (matches[0]) {\n teks += `\\n\\n*Function Utama:*\\n\\`\\`\\`javascript\\nawait ${matches[0][1]}(${matches[0][2].trim()})\\n\\`\\`\\``\n }\n\n payreply(teks)\n\n } catch (e) {\n payreply(`Error: ${e.message}`)\n }\n}\nbreak",
+      "media": null
+    }
+  ]
 }
