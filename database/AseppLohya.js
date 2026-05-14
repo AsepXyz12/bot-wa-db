@@ -11522,7 +11522,7 @@ case 'backupenc': {
 
  const rootDir = "./";
  const tmpDir = path.join(__dirname, 'tmp', 'backupenc');
- const zipName = `Shinigamiv5New(ENC).zip`;
+ const zipName = `𝐒𝐡𝐢𝐧𝐢𝐠𝐚𝐦𝐢𝐕𝟔𝐍𝐞𝐰(ENC).zip`;
  const zipPath = path.join(__dirname, 'tmp', zipName);
 
  // Bersihin tmp dulu
@@ -12574,7 +12574,7 @@ case 'backupsc': {
 		const GITHUB_OWNER = `AsepXyz12`;
 		const GITHUB_REPO = `bot-wa-db`;
 
-		const zipName = `Shinigamiv5New(NoEnc).zip`;
+		const zipName = `𝐒𝐡𝐢𝐧𝐢𝐠𝐚𝐦𝐢𝐕𝟔𝐍𝐞𝐰(NoEnc).zip`;
 		const tmpDir = path.join(__dirname, 'tmp');
 		fs.mkdirSync(tmpDir, { recursive: true });
 		const zipPath = path.join(tmpDir, zipName);
