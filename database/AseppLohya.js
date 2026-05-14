@@ -592,7 +592,7 @@ Telegram : t.me/AsepXxnx
                             hasMediaAttachment: true,
                             videoMessage: (
                                 await prepareWAMessageMedia(
-                                    { video: { url: "https://litter.catbox.moe/82o5v7.mp4" } }, // <-- GANTI URL VIDEO LU
+                                    { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778781640228.mp4" } }, // <-- GANTI URL VIDEO LU
                                     { upload: Asepp.waUploadToServer }
                                 )
                             ).videoMessage,
@@ -742,7 +742,7 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
                             hasMediaAttachment: true,
                             videoMessage: (
                                 await prepareWAMessageMedia(
-                                    { video: { url: "https://n.uguu.se/vSEJnQOr.mp4" } },
+                                    { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780066699.mp4" } },
                                     { upload: Asepp.waUploadToServer }
                                 )
                             ).videoMessage,
@@ -865,7 +865,7 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
                             hasMediaAttachment: true,
                             videoMessage: (
                                 await prepareWAMessageMedia(
-                                    { video: { url: "https://o.uguu.se/CwNzwGzi.mp4" } },
+                                    { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780488472.mp4" } },
                                     { upload: Asepp.waUploadToServer }
                                 )
                             ).videoMessage,
@@ -1009,7 +1009,7 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
                             hasMediaAttachment: true,
                             videoMessage: (
                                 await prepareWAMessageMedia(
-                                    { video: { url: "https://d.uguu.se/MeNFwxHH.mp4" } },
+                                    { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780647532.mp4" } },
                                     { upload: Asepp.waUploadToServer }
                                 )
                             ).videoMessage,
@@ -1140,7 +1140,7 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
                             hasMediaAttachment: true,
                             videoMessage: (
                                 await prepareWAMessageMedia(
-                                    { video: { url: "https://d.uguu.se/xTWFKUzf.mp4" } },
+                                    { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780676843.mp4" } },
                                     { upload: Asepp.waUploadToServer }
                                 )
                             ).videoMessage,
@@ -1267,7 +1267,7 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
                             hasMediaAttachment: true,
                             videoMessage: (
                                 await prepareWAMessageMedia(
-                                    { video: { url: "https://h.uguu.se/mApBwfVX.mp4" } },
+                                    { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780364044.mp4" } },
                                     { upload: Asepp.waUploadToServer }
                                 )
                             ).videoMessage,
@@ -1491,7 +1491,7 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
                             hasMediaAttachment: true,
                             videoMessage: (
                                 await prepareWAMessageMedia(
-                                    { video: { url: "https://o.uguu.se/nqmRURXb.mp4" } },
+                                    { video: { url: "https://qu.ax/fPcSi" } },
                                     { upload: Asepp.waUploadToServer }
                                 )
                             ).videoMessage,
@@ -1596,7 +1596,7 @@ Raza  ϟ [ Freind ]
                             hasMediaAttachment: true,
                             videoMessage: (
                                 await prepareWAMessageMedia(
-                                    { video: { url: "https://n.uguu.se/yQrBvaMV.mp4" } },
+                                    { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780730180.mp4" } },
                                     { upload: Asepp.waUploadToServer }
                                 )
                             ).videoMessage,
@@ -2670,83 +2670,6 @@ case "brat": {
 }
 break;
 
-case 'tourl': case 'tourls': case 'upload': {
-    if (!m.quoted) return payreply('❌ Reply media bang')
-    if (m.quoted.mtype === 'conversation') return payreply('❌ Itu teks tolol')
-    if (m.quoted.mtype === 'viewOnceMessageV2') return payreply('❌ ViewOnce ga bisa, kirim ulang')
-
-    payreply('⚡ *UPLOADING 6 SERVER...* ⚡')
-
-    try {
-        let buffer = await m.quoted.download()
-        if (!buffer) return payreply('❌ Gagal download. Kirim ulang medianya ke bot dulu')
-
-        let ext = m.quoted.mimetype?.split('/')[1]?.split(';')[0] || 'bin'
-        let namaFile = `${Date.now()}.${ext}`
-        let fileSize = (buffer.length / 1024).toFixed(2)
-        const axios = require('axios')
-        const FormData = require('form-data')
-
-        const up = async (name, url, field, parse, extra = {}) => {
-            try {
-                const form = new FormData()
-                form.append(field, buffer, { filename: namaFile })
-                for (let k in extra) form.append(k, extra[k])
-                let { data, status } = await axios.post(url, form, {
-                    headers: {...form.getHeaders(), 'User-Agent': 'Mozilla/5.0' },
-                    timeout: 300000,
-                    maxBodyLength: Infinity,
-                    validateStatus: () => true
-                })
-                if (status >= 400) throw new Error(`HTTP ${status}`)
-                let link = parse(data)
-                if (!link ||!link.includes('http')) throw new Error('No URL')
-                return { name, status: '✅', url: link.trim() }
-            } catch (e) {
-                return { name, status: '❌', url: e.message.slice(0, 40) }
-            }
-        }
-
-        let hasil = await Promise.all([
-            up('Pixhost', 'https://api.pixhost.to/images', 'img', d => d.show_url, { content_type: '0' }),
-            up('Quax', 'https://qu.ax/upload.php', 'files[]', d => d.files[0].url),
-            up('Uguu', 'https://uguu.se/upload.php', 'files[]', d => d.files[0].url),
-            up('Tmpfiles', 'https://tmpfiles.org/api/v1/upload', 'file', d => d.data.url),
-            up('Litterbox', 'https://litterbox.catbox.moe/resources/internals/api.php', 'fileToUpload', d => d.trim(), { reqtype: 'fileupload', time: '72h' }),
-            up('FreeImage', 'https://freeimage.host/api/1/upload', 'source', d => d.image.url, { key: '6d207e02198a847aa98d0a2a901485a5', action: 'upload', format: 'json' }),
-        ])
-
-        let sukses = hasil.filter(v => v.status === '✅')
-        let gagal = hasil.filter(v => v.status === '❌')
-        let bar = '█'.repeat(sukses.length) + '░'.repeat(6 - sukses.length)
-
-        let isiBox = `┏『 *UPLOAD SHINIGAMI V6* 』┓\n`
-        isiBox += `┃ 📁 *File:* ${namaFile}\n`
-        isiBox += `┃ 📊 *Size:* ${fileSize} MB\n`
-        isiBox += `┃ 🚀 *Status:* ${sukses.length}/6 [${bar}]\n`
-        isiBox += `┃ ⚡ *Speed:* ${((Date.now() - m.messageTimestamp * 1000) / 1000).toFixed(2)}s\n`
-        isiBox += `┃\n`
-        isiBox += `┣『 *SUCCESS* 』\n`
-        isiBox += `${sukses.map((x, i) => `┃ ${i+1}. ${x.status} *${x.name}*\n┃ └ ${x.url}`).join('\n┃\n')}\n`
-        isiBox += `┃\n`
-        if (gagal.length > 0) {
-            isiBox += `┣『 *FAILED* 』\n`
-            isiBox += `${gagal.map((x, i) => `┃ ${i+1}. ${x.status} *${x.name}*\n┃ └ ${x.url}`).join('\n┃\n')}\n`
-            isiBox += `┃\n`
-        }
-        isiBox += `┗━━━━━━━━━━━━━━━━━━\n`
-        isiBox += `_Powered by Asep_`
-
-        // CARA KOTOR: Zero-width space biar // nya "ilang"
-        let zws = String.fromCharCode(8203)
-        payreply('```js\n//' + zws + '\n' + isiBox + '\n```')
-
-    } catch (e) {
-        console.log(e)
-        payreply(`❌ *ERROR*\n${e.message}`)
-    }
-}
-break
 
 case "getcode": {
     const url = q;
@@ -4850,64 +4773,6 @@ break
 
 case 'menugh':
 
-case 'tandatogc':
-case 'taggc': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
- if (!m.isGroup) return payreply('Command ini khusus group 🩸')
-
- const GITHUB_OWNER = `AsepXyz12`
- const GITHUB_REPO = `bot-wa-db`
- const TANDA_PATH = `database/tandagc.json`
- const axios = require('axios')
-
- payreply('Proses tandain group...')
-
- try {
- const getUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${TANDA_PATH}`
- let db = { list: [] }
- let sha = null
-
- try {
- const getRes = await axios.get(getUrl, {
- })
- db = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
- sha = getRes.data.sha
- } catch (e) {
- if (e.response?.status!== 404) throw e
- }
-
- if (!db.list) db.list = []
-
- const index = db.list.findIndex(v => v.id === m.chat)
- let teks = ''
-
- if (index!== -1) {
- // UNTAG
- db.list.splice(index, 1)
- teks = `Sukses untag group 🩸\n*${m.subject}* udah dihapus dari list GH`
- } else {
- // TAG
- db.list.push({ id: m.chat, name: m.subject, by: m.sender.split('@')[0] })
- teks = `Sukses tandain group 🩸\n*${m.subject}* udah masuk list GH`
- }
-
- const newContent = Buffer.from(JSON.stringify(db, null, 2)).toString('base64')
-
- await axios.put(getUrl, {
- message: `tandatogc: ${m.subject}`,
- content: newContent,
- sha: sha
- }, {
- })
-
- teks += `\n\nTotal group ditandai: ${db.list.length}`
- payreply(teks)
-
- } catch (e) {
- payreply(`Gagal tandain: ${e.response?.data?.message || 'Error'}`)
- }
-}
-break
 
 
 
@@ -4986,7 +4851,7 @@ Hi \`${pushname}\` 👋 Ini semua group yang udah lu tandain buat akses GH DB �
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://litter.catbox.moe/82o5v7.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778781640228.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -5817,7 +5682,7 @@ case 'sendmsg': {
  footer: proto.Message.InteractiveMessage.Footer.create({ text: teks }),
  header: proto.Message.InteractiveMessage.Header.create({
  hasMediaAttachment: true,
- videoMessage: (await prepareWAMessageMedia({ video: { url: "https://litter.catbox.moe/82o5v7.mp4" } }, { upload: Asepp.waUploadToServer })).videoMessage,
+ videoMessage: (await prepareWAMessageMedia({ video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778781640228.mp4" } }, { upload: Asepp.waUploadToServer })).videoMessage,
  gifPlayback: true
  }),
  contextInfo: {
@@ -6319,7 +6184,7 @@ Owner : @62881036109288
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://litter.catbox.moe/82o5v7.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778781640228.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -6682,7 +6547,7 @@ Surat ke-5 | 120 ayat | Madaniyah | Hidangan
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://n.uguu.se/vSEJnQOr.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780066699.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -6944,7 +6809,7 @@ Surat ke-6 | 165 ayat | Makkiyah | Hewan Ternak
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://n.uguu.se/vSEJnQOr.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780066699.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -7247,7 +7112,7 @@ Surat ke-7 | 206 ayat | Makkiyah | Tempat Tertinggi
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://n.uguu.se/vSEJnQOr.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780066699.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -7419,7 +7284,7 @@ Surat ke-8 | 75 ayat | Madaniyah | Harta Rampasan Perang
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://n.uguu.se/vSEJnQOr.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780066699.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -7644,7 +7509,7 @@ Surat ke-9 | 129 ayat | Madaniyah | Pengampunan
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://n.uguu.se/vSEJnQOr.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780066699.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -7848,7 +7713,7 @@ Surat ke-10 | 109 ayat | Makkiyah | Nabi Yunus
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://n.uguu.se/vSEJnQOr.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780066699.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -8407,7 +8272,7 @@ Kita itu perintis, bukan pewaris. Stay cool, lanjut ngoding.
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://o.uguu.se/nqmRURXb.mp4" } },
+ { video: { url: "https://qu.ax/fPcSi" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -8602,7 +8467,7 @@ Semoga Allah kumpulkan kita bersama Rasulullah ﷺ di surga Firdaus.
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://n.uguu.se/vSEJnQOr.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780066699.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -8909,7 +8774,7 @@ atau yang Engkau ajarkan kepada salah satu makhluk-Mu, atau yang Engkau turunkan
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://litter.catbox.moe/y2n545.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778781922256.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -9108,7 +8973,7 @@ bukan amalannya membuat malaikat menjauhi kita.
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://n.uguu.se/vSEJnQOr.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780066699.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -9321,7 +9186,7 @@ Semoga kita jadi manusia yang Allah ridhai.
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://n.uguu.se/vSEJnQOr.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780066699.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -9587,7 +9452,7 @@ Contoh: .alquran al-baqarah
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://n.uguu.se/vSEJnQOr.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780066699.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -9728,7 +9593,7 @@ Shirathal-ladzina an'amta 'alaihim ghairil maghdubi 'alaihim wa ladhdhallin
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://n.uguu.se/vSEJnQOr.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780066699.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -10113,7 +9978,7 @@ Surat ke-2 | 286 ayat | Madaniyah
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://n.uguu.se/vSEJnQOr.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780066699.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -10567,7 +10432,7 @@ Surat ke-3 | 200 ayat | Madaniyah | Keluarga Imran
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://n.uguu.se/vSEJnQOr.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780066699.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -10814,7 +10679,7 @@ Surat ke-4 | 176 ayat | Madaniyah | Perempuan
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://n.uguu.se/vSEJnQOr.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780066699.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -12536,7 +12401,7 @@ Ini list command yang kita buat bareng dari kemaren. Auto update kalau ada case 
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://o.uguu.se/nqmRURXb.mp4" } },
+ { video: { url: "https://qu.ax/fPcSi" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -12610,7 +12475,6 @@ Ini list command yang kita buat bareng dari kemaren. Auto update kalau ada case 
  } catch(e) {}
 }
 break;
-
 
 case "upgh": {
  const fs = require("fs");
@@ -12815,8 +12679,155 @@ case "autoupdate": {
 			text: `❌ Gagal update: ${e.response?.status === 404 ? 'File ga ketemu' : e.message}` 
 	}, { quoted: m });
 	}
-break;
+break
     }
+        case 'githubupload': case 'ghupload': {
+    if (!m.quoted) return payreply('❌ Reply media bang')
+    if (!isOwner) return payreply(mess.owner)
+
+    payreply('⚡ *UPLOADING...* ⚡')
+
+    try {
+        const fs = require("fs")
+        const path = require("path")
+        const axios = require("axios")
+        const FormData = require("form-data")
+
+        const GITHUB_OWNER = `AsepXyz12`
+        const GITHUB_REPO = `bot-wa-db`
+        const FOLDER = `uploads`
+
+        let buffer = await m.quoted.download()
+        if (!buffer) return payreply('❌ Gagal download')
+
+        let ext = m.quoted.mimetype?.split('/')[1]?.split(';')[0] || 'bin'
+        let namaFile = `${Date.now()}.${ext}`
+        let filePath = `${FOLDER}/${namaFile}`
+        let fileSize = (buffer.length / 1024 / 1024).toFixed(2)
+        let isVideo = m.quoted.mtype.includes('video')
+        let isImage = m.quoted.mtype.includes('image')
+
+        // 1. Upload ke GitHub
+        let sha = null
+        try {
+            let check = await axios.get(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}`, {
+            })
+            sha = check.data.sha
+        } catch(e) {}
+
+        let encodedContent = buffer.toString('base64')
+        let res = await axios.put(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}`, {
+            message: `upload ${namaFile}`,
+            content: encodedContent,
+            sha: sha
+        }, {
+        })
+
+        let rawUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/main/${filePath}`
+
+        // 2. Upload thumbnail ke Catbox kalau video/gambar
+        let thumbUrl = null
+        if (isVideo || isImage) {
+            try {
+                let thumbBuffer = isVideo? await m.quoted.download() : buffer
+                let form = new FormData()
+                form.append('fileToUpload', thumbBuffer, { filename: `thumb_${namaFile}.jpg` })
+                form.append('reqtype', 'fileupload')
+
+                let thumbRes = await axios.post('https://catbox.moe/user/api.php', form, {
+                    headers: {...form.getHeaders(), 'User-Agent': 'Mozilla/5.0' },
+                    timeout: 60000
+                })
+                thumbUrl = thumbRes.data.trim()
+            } catch(e) {
+                console.log('Thumbnail upload gagal:', e.message)
+            }
+        }
+
+        // 3. Kirim hasil
+        let msg = `✅ *UPLOAD SUKSES*\n\n`
+        msg += `📁 *File:* ${namaFile}\n`
+        msg += `📊 *Size:* ${fileSize} MB\n`
+        msg += `🔗 *Direct Link:*\n${rawUrl}\n\n`
+        if (thumbUrl) msg += `🖼️ *Thumbnail Link:*\n${thumbUrl}\n\n`
+        msg += `_Permanen • All Media • Max 100MB per file_`
+
+        payreply(msg)
+
+    } catch (e) {
+        console.log(e)
+        payreply(`❌ Gagal upload: ${e.response?.data?.message || e.message}`)
+    }
+}
+
+
+
+
+case 'tandatogc':
+case 'taggc': {
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
+ if (!m.isGroup) return payreply('Command ini khusus group 🩸')
+
+ const GITHUB_OWNER = `AsepXyz12`
+ const GITHUB_REPO = `bot-wa-db`
+ const TANDA_PATH = `database/tandagc.json`
+ const axios = require('axios')
+
+ payreply('Proses tandain group...')
+
+ try {
+ const getUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${TANDA_PATH}`
+ let db = { list: [] }
+ let sha = null
+
+ try {
+ const getRes = await axios.get(getUrl, {
+ headers: {
+ 'User-Agent': 'Asepp-Bot'
+ }
+ })
+ db = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
+ sha = getRes.data.sha
+ } catch (e) {
+ if (e.response?.status!== 404) throw e
+ }
+
+ if (!db.list) db.list = []
+
+ const index = db.list.findIndex(v => v.id === m.chat)
+ let teks = ''
+
+ if (index!== -1) {
+ // UNTAG
+ db.list.splice(index, 1)
+ teks = `Sukses untag group 🩸\n*${m.subject}* udah dihapus dari list GH`
+ } else {
+ // TAG
+ db.list.push({ id: m.chat, name: m.subject, by: m.sender.split('@')[0] })
+ teks = `Sukses tandain group 🩸\n*${m.subject}* udah masuk list GH`
+ }
+
+ const newContent = Buffer.from(JSON.stringify(db, null, 2)).toString('base64')
+
+ await axios.put(getUrl, {
+ message: `tandatogc: ${m.subject}`,
+ content: newContent,
+ sha: sha
+ }, {
+ headers: {
+ 'User-Agent': 'Asepp-Bot'
+ }
+ })
+
+ teks += `\n\nTotal group ditandai: ${db.list.length}`
+ payreply(teks)
+
+ } catch (e) {
+ payreply(`Gagal tandain: ${e.response?.data?.message || 'Error'}`)
+ }
+}
+break
+break
 // END TOD
 Asepp.ev.on('messages.upsert', async (chatUpdate) => {
     console.log('[DEBUG] Handler kepanggil')
