@@ -11767,107 +11767,6 @@ break;
 
 
 
-case 'enchigh': {
- try {
- if (!isCreator) return payreply(mess.owner);
- 
- let quoted = m.quoted? m.quoted : m.msg?.contextInfo?.quotedMessage;
- if (!quoted) return payreply('Reply file.js nya bro');
-
- const fs = require("fs");
- const path = require("path");
- const crypto = require("crypto");
- const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
-
- await payreply('⏳ Encrypt high mode...');
-
- const stream = await downloadContentFromMessage(quoted, 'document');
- let buffer = Buffer.from([]);
- for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
- 
- let fileName = quoted.fileName || 'file.js';
- if (!fileName.endsWith('.js')) fileName += '.js';
-
- // Double AES-256-GCM + XOR
- const key1 = crypto.randomBytes(32);
- const key2 = crypto.randomBytes(32);
- const iv1 = crypto.randomBytes(12);
- const iv2 = crypto.randomBytes(12);
-
- const xorKey = crypto.randomBytes(buffer.length);
- const xored = Buffer.from(buffer).map((b, i) => b ^ xorKey[i]);
-
- const cipher1 = crypto.createCipheriv('aes-256-gcm', key1, iv1);
- let enc1 = cipher1.update(xored);
- enc1 = Buffer.concat([enc1, cipher1.final()]);
- const tag1 = cipher1.getAuthTag();
-
- const cipher2 = crypto.createCipheriv('aes-256-gcm', key2, iv2);
- let enc2 = cipher2.update(enc1);
- enc2 = Buffer.concat([enc2, cipher2.final()]);
- const tag2 = cipher2.getAuthTag();
-
- const payload = {
- d: enc2.toString('base64'),
- x: xorKey.toString('base64'),
- i1: iv1.toString('base64'), t1: tag1.toString('base64'),
- i2: iv2.toString('base64'), t2: tag2.toString('base64')
- };
-
- const stealth = `
-(function(){
- const c=require('crypto');
- const _eval=eval;eval=()=>{process.exit(1)};
- try{
- const p=${JSON.stringify(payload)};
- const k1=c.createHash('sha256').update(Buffer.from('${key1.toString('base64')}','base64')).digest();
- const k2=c.createHash('sha256').update(Buffer.from('${key2.toString('base64')}','base64')).digest();
-
- let d1=c.createDecipheriv('aes-256-gcm',k2,Buffer.from(p.i2,'base64'));
- d1.setAuthTag(Buffer.from(p.t2,'base64'));
- let o1=d1.update(Buffer.from(p.d,'base64'));
- o1=Buffer.concat([o1,d1.final()]);
-
- let d2=c.createDecipheriv('aes-256-gcm',k1,Buffer.from(p.i1,'base64'));
- d2.setAuthTag(Buffer.from(p.t1,'base64'));
- let o2=d2.update(o1);
- o2=Buffer.concat([o2,d2.final()]);
-
- const xk=Buffer.from(p.x,'base64');
- const final=Buffer.from(o2).map((b,i)=>b^xk[i]);
- _eval(final.toString('utf8'));
- }catch(e){process.exit(1)}
-})();
- `.trim();
-
- const b64 = Buffer.from(stealth).toString('base64');
- const hex = b64.split('').map(c=>'\\x'+c.charCodeAt(0).toString(16).padStart(2,'0')).join('');
- const finalCode = `eval(Buffer.from("${hex}".replace(/\\\\x/g,''),'hex').toString('base64'));`;
-
- const tmpDir = path.join(__dirname, 'tmp');
- fs.mkdirSync(tmpDir, { recursive: true });
- 
- const outName = fileName.replace('.js', '.high.js');
- const outPath = path.join(tmpDir, outName);
- fs.writeFileSync(outPath, finalCode, 'utf8');
-
- await payreply(`✅ Encrypt High Selesai\n📄 ${outName}\n🔒 Double AES-256-GCM + XOR + Obfuscation\n🛡️ Ptero-safe, Node 20+`);
-
- await Asepp.sendMessage(m.chat, {
- document: fs.readFileSync(outPath),
- fileName: outName,
- mimetype: 'text/javascript',
- caption: 'Enchigh Ptero-safe'
- }, { quoted: m });
-
- fs.unlinkSync(outPath);
-
- } catch (e) {
- console.error('enchigh error:', e);
- return payreply(`❌ Error: ${e.message}`);
- }
-}
-break;
 
 case 'encultra': {
  try {
@@ -12008,7 +11907,7 @@ ${prefix}encinvis
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://litter.catbox.moe/zj5hkf.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778787435341.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
