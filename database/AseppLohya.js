@@ -12698,7 +12698,6 @@ case 'cleargh': {
  }
 }
 break
-
 case 'backupsc': {
 	try {
 		if (!isCreator) return Asepp.sendMessage(m.chat, { text: mess.owner }, { quoted: m });
@@ -12785,6 +12784,39 @@ case 'backupsc': {
 	}
 break;
 }
+case "autoupdate": {
+	if (!isOwner) return Asepp.sendMessage(m.chat, { text: mess.owner }, { quoted: m });
+
+	const fs = require("fs");
+	const path = require("path");
+	const axios = require("axios");
+
+	const GITHUB_OWNER = `AsepXyz12`;
+	const GITHUB_REPO = `bot-wa-db`;
+	const branch = 'main';
+
+	await Asepp.sendMessage(m.chat, { text: "🔄 Download update dari GitHub..." }, { quoted: m });
+
+	try {
+	// Cuma download AseppLohya.js, bukan full repo
+		let url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${branch}/database/AseppLohya.js`;
+		
+		let res = await axios.get(url);
+		
+		let filePath = path.join(__dirname, "AseppLohya.js");
+		fs.writeFileSync(filePath, res.data);
+		
+		await Asepp.sendMessage(m.chat, { 
+			text: "✅ Update selesai!\n🔄 Ketik *.restart* buat aktifin fitur baru" 
+		}, { quoted: m });
+
+	} catch (e) {
+		await Asepp.sendMessage(m.chat, { 
+			text: `❌ Gagal update: ${e.response?.status === 404 ? 'File ga ketemu' : e.message}` 
+	}, { quoted: m });
+	}
+break;
+    }
 // END TOD
 Asepp.ev.on('messages.upsert', async (chatUpdate) => {
     console.log('[DEBUG] Handler kepanggil')
