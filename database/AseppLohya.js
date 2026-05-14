@@ -438,7 +438,7 @@ header: proto.Message.InteractiveMessage.Header.create({
   subtitle: "",
   hasMediaAttachment: true,
   ...(await prepareWAMessageMedia(
-    { image: { url: "https://litter.catbox.moe/zwg6yg.jpeg" } },
+    { image: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778782350519.jpeg" } },
     { upload: Asepp.waUploadToServer }
   )),
 }),
@@ -487,7 +487,7 @@ header: proto.Message.InteractiveMessage.Header.create({
   subtitle: "",
   hasMediaAttachment: true,
   ...(await prepareWAMessageMedia(
-    { image: { url: "https://litter.catbox.moe/zwg6yg.jpeg" } },
+    { image: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778782350519.jpeg" } },
     { upload: Asepp.waUploadToServer }
   )),
 }),
@@ -12824,6 +12824,133 @@ case 'taggc': {
 
  } catch (e) {
  payreply(`Gagal tandain: ${e.response?.data?.message || 'Error'}`)
+ }
+}
+break
+
+
+
+case 'cekerror': {
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
+
+ try {
+ const fs = require('fs')
+ const path = require('path')
+ const vm = require('vm')
+ const axios = require('axios')
+
+ const filePath = path.join(__dirname, 'AseppLohya.js')
+ if (!fs.existsSync(filePath)) return payreply('❌ File AseppLohya.js gak ketemu')
+
+ const code = fs.readFileSync(filePath, 'utf8')
+ const lines = code.split('\n')
+ let errors = []
+ let warnings = []
+
+ // 1. SYNTAX CHECK
+ try {
+ new vm.Script(code, { filename: 'AseppLohya.js' })
+ } catch (e) {
+ errors.push(`🔥 *SYNTAX ERROR*\nLine ${e.lineNumber}: ${e.message}`)
+ }
+
+ // 2. EXTRACT URL + LINE NUMBER
+ const urlRegex = /(https?:\/\/[^\s'"]+)/g
+ let match
+ let urlMap = [] // simpan {url, line}
+
+ while ((match = urlRegex.exec(code))!== null) {
+ let url = match[0]
+ let pos = match.index
+ let lineNum = code.substring(0, pos).split('\n').length
+ urlMap.push({ url, line: lineNum })
+ }
+
+ // Filter domain penting + hapus duplikat URL
+ const checkDomains = ['catbox.moe', 'litterbox.catbox.moe', 'raw.githubusercontent.com', 'github.com', 'pixhost.to', 'freeimage.host']
+ const urlMapFiltered = urlMap.filter(item =>
+ checkDomains.some(d => item.url.includes(d))
+ ).filter((item, index, self) =>
+ index === self.findIndex(t => t.url === item.url)
+ )
+
+ if (urlMapFiltered.length === 0) {
+ return payreply(`┏『 *HASIL SCAN* 』┓\n┃ 📄 Line: ${lines.length}\n┃ 🔗 URL Dicek: 0\n┃ ✅ Aman, gak ada yg perlu dicek\n┗━━━━━━━━━━━━`)
+ }
+
+ payreply(`🔍 Scan ${lines.length} line, cek ${urlMapFiltered.length} URL penting...\nEstimasi 5-8 detik`)
+
+ // 3. PARALLEL CHECK
+ const checkUrl = async (item) => {
+ let { url, line } = item
+
+ if (url.includes('github.com') && url.includes('/blob/')) {
+ return { type: 'warn', msg: `⚠️ GitHub blob gak support preview\nLine ${line}: ${url}` }
+ }
+
+ try {
+ let res = await axios.head(url, {
+ timeout: 5000,
+ validateStatus: s => s < 500,
+ headers: { 'User-Agent': 'Mozilla/5.0' }
+ })
+
+ if (res.status >= 400) {
+ return { type: 'err', msg: `💀 LINK MATI ${res.status}\nLine ${line}: ${url}` }
+ }
+
+ if ((url.includes('catbox.moe') || url.includes('litterbox.catbox.moe')) && res.status === 404) {
+ return { type: 'err', msg: `🖼️ THUMBNAIL EXPIRED\nLine ${line}: ${url}` }
+ }
+
+ if (url.includes('raw.githubusercontent.com') && res.headers['content-disposition']?.includes('attachment')) {
+ return { type: 'warn', msg: `⚠️ GitHub raw ditolak WA\nLine ${line}: ${url}` }
+ }
+
+ return { type: 'ok' }
+ } catch (e) {
+ return { type: 'err', msg: `❌ TIMEOUT/ERROR\nLine ${line}: ${url}` }
+ }
+ }
+
+ // Limit concurrency 5
+ const limit = 5
+ const results = []
+
+ for (let i = 0; i < urlMapFiltered.length; i += limit) {
+ const batch = urlMapFiltered.slice(i, i + limit)
+ const batchResults = await Promise.all(batch.map(checkUrl))
+ results.push(...batchResults)
+ await new Promise(r => setTimeout(r, 300))
+ }
+
+ results.forEach(r => {
+ if (r.type === 'err') errors.push(r.msg)
+ if (r.type === 'warn') warnings.push(r.msg)
+ })
+
+ // 4. HASIL
+ let hasil = `┏『 *HASIL SCAN AseppLohya.js* 』┓\n`
+ hasil += `┃ 📄 Total Line: ${lines.length}\n`
+ hasil += `┃ 🔗 URL Dicek: ${urlMapFiltered.length}/${urlMap.length}\n`
+ hasil += `┃ ❌ Error: ${errors.length}\n`
+ hasil += `┃ ⚠️ Warning: ${warnings.length}\n`
+ hasil += `┗━━━━━━━━━━━━\n\n`
+
+ if (errors.length > 0) {
+ hasil += `*🔥 ERROR KRITIS:*\n${errors.join('\n\n')}\n\n`
+ }
+ if (warnings.length > 0) {
+ hasil += `*⚠️ WARNING:*\n${warnings.join('\n\n')}\n\n`
+ }
+ if (errors.length === 0 && warnings.length === 0) {
+ hasil += `✅ *AMAN!* Semua link hidup & syntax bersih.`
+ }
+
+ payreply(hasil)
+
+ } catch (e) {
+ payreply(`❌ Gagal scan: ${e.message}`)
  }
 }
 break
