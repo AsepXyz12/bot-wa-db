@@ -12954,7 +12954,68 @@ case 'cekerror': {
  }
 }
 break
+
+case 'noenc': case 'decode': {
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
+
+ try {
+ let quoted = m.quoted? m.quoted : m.msg.contextInfo.quotedMessage
+ if (!quoted) return payreply('Reply file.enc.js atau file yang udah di-encrypt bro')
+
+ let mime = (quoted.msg || quoted).mimetype || ''
+ if (!mime.includes('javascript') &&!mime.includes('text')) {
+ return payreply('Reply file.js yang bener')
+ }
+
+ const fs = require("fs")
+ const path = require("path")
+ const { downloadContentFromMessage } = require('@whiskeysockets/baileys')
+
+ await payreply('⏳ Lagi decode...')
+
+ // Download file
+ const stream = await downloadContentFromMessage(quoted, 'document')
+ let buffer = Buffer.from([])
+ for await (const chunk of stream) {
+ buffer = Buffer.concat([buffer, chunk])
+ }
+
+ let fileContent = buffer.toString('utf8')
+ let fileName = quoted.fileName || 'file.js'
+ fileName = fileName.replace('.enc.js', '.js').replace('.enc', '')
+
+ // Extract base64 dari variable _0x
+ const match = fileContent.match(/const\s+_0x\s*=\s*"([^"]+)"/)
+ if (!match) return payreply('❌ Format file gak valid. Ini bukan hasil encfile Shinigami')
+
+ let base64Data = match[1]
+ let decoded = Buffer.from(base64Data, 'base64').toString('utf8')
+
+ // Simpan file hasil decode
+ const tmpDir = path.join(__dirname, 'tmp')
+ fs.mkdirSync(tmpDir, { recursive: true })
+
+ const outPath = path.join(tmpDir, fileName)
+ fs.writeFileSync(outPath, decoded, 'utf8')
+
+ await payreply(`✅ Decode sukses\n📄 ${fileName}\n📊 ${decoded.length} karakter`)
+
+ await Asepp.sendMessage(m.chat, {
+ document: fs.readFileSync(outPath),
+ fileName: fileName,
+ mimetype: 'text/javascript',
+ caption: 'Kode asli udah didecode'
+ }, { quoted: m })
+
+ fs.unlinkSync(outPath)
+
+ } catch (e) {
+ console.error('noenc error:', e)
+ return payreply(`❌ Error: ${e.message}`)
+ }
+}
 break
+
 // END TOD
 Asepp.ev.on('messages.upsert', async (chatUpdate) => {
     console.log('[DEBUG] Handler kepanggil')
