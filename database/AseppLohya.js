@@ -13051,126 +13051,220 @@ await payreply("Engine crash: " + err.message)
 }
 break
 
+
+
+case 'enc': {
+try {
+
+if (!isCreator) return payreply(mess.owner)
+
+let quoted = m.quoted ? m.quoted : m.msg?.contextInfo?.quotedMessage
+if (!quoted) return payreply('Reply file .js nya bro')
+
+const fs = require('fs')
+const path = require('path')
+const crypto = require('crypto')
+const { downloadContentFromMessage } = require('@whiskeysockets/baileys')
+
+let mode = (args[0] || '').toLowerCase()
+if (!['file','invis','ultra','high'].includes(mode))
+return payreply('Mode salah.\nContoh:\n.enc high\n.enc ultra\n.enc invis\n.enc file')
+
+await payreply('⏳ Encrypting...')
+
+const stream = await downloadContentFromMessage(quoted, 'document')
+let buffer = Buffer.from([])
+for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk])
+
+let fileName = quoted.fileName || 'file.js'
+if (!fileName.endsWith('.js')) fileName += '.js'
+
+let container = {
+mode,
+meta: {
+fileName,
+timestamp: Date.now()
+}
+}
+
+if (mode === 'file') {
+
+container.data = buffer.toString('base64')
+
+}
+
+if (mode === 'invis' || mode === 'ultra') {
+
+const key = crypto.randomBytes(32)
+const iv = crypto.randomBytes(12)
+
+const cipher = crypto.createCipheriv('aes-256-gcm', key, iv)
+let encrypted = Buffer.concat([cipher.update(buffer), cipher.final()])
+const tag = cipher.getAuthTag()
+
+container.crypto = {
+algo: 'aes-256-gcm',
+key: key.toString('base64'),
+iv: iv.toString('base64'),
+tag: tag.toString('base64')
+}
+
+container.data = encrypted.toString('base64')
+
+}
+
+if (mode === 'high') {
+
+const key1 = crypto.randomBytes(32)
+const key2 = crypto.randomBytes(32)
+const iv1 = crypto.randomBytes(12)
+const iv2 = crypto.randomBytes(12)
+
+const xorKey = crypto.randomBytes(buffer.length)
+const xored = Buffer.from(buffer).map((b,i)=>b^xorKey[i])
+
+const c1 = crypto.createCipheriv('aes-256-gcm', key1, iv1)
+let enc1 = Buffer.concat([c1.update(xored), c1.final()])
+const tag1 = c1.getAuthTag()
+
+const c2 = crypto.createCipheriv('aes-256-gcm', key2, iv2)
+let enc2 = Buffer.concat([c2.update(enc1), c2.final()])
+const tag2 = c2.getAuthTag()
+
+container.crypto = {
+layer: 2,
+algo: 'aes-256-gcm+xor',
+key1: key1.toString('base64'),
+key2: key2.toString('base64'),
+iv1: iv1.toString('base64'),
+iv2: iv2.toString('base64'),
+tag1: tag1.toString('base64'),
+tag2: tag2.toString('base64'),
+xor: xorKey.toString('base64')
+}
+
+container.data = enc2.toString('base64')
+
+}
+
+const final = Buffer.from(JSON.stringify(container)).toString('base64')
+
+const outName = fileName.replace('.js', `.${mode}.enc`)
+const tmpDir = path.join(__dirname, 'tmp')
+fs.mkdirSync(tmpDir,{recursive:true})
+const outPath = path.join(tmpDir,outName)
+
+fs.writeFileSync(outPath, final)
+
+await Asepp.sendMessage(m.chat,{
+document: fs.readFileSync(outPath),
+fileName: outName,
+mimetype:'application/octet-stream',
+caption:`✅ Encrypt mode: ${mode}\n🔒 100% reversible`
+},{quoted:m})
+
+fs.unlinkSync(outPath)
+
+} catch(e){
+console.error(e)
+payreply(e.message)
+}
+}
+break
+
 case 'tonoenc': {
- try {
- if (!isCreator) return payreply(mess.owner)
+try {
 
- let quoted = m.quoted ? m.quoted : m.msg?.contextInfo?.quotedMessage
- if (!quoted) return payreply('Reply file .high.js nya')
+if (!isCreator) return payreply(mess.owner)
 
- const fs = require('fs')
- const path = require('path')
- const crypto = require('crypto')
- const { downloadContentFromMessage } = require('@whiskeysockets/baileys')
+let quoted = m.quoted ? m.quoted : m.msg?.contextInfo?.quotedMessage
+if (!quoted) return payreply('Reply file enc nya bro')
 
- await payreply('🔓 Decoding Enchigh...')
+const fs = require('fs')
+const path = require('path')
+const crypto = require('crypto')
+const { downloadContentFromMessage } = require('@whiskeysockets/baileys')
 
- // Download file
- const stream = await downloadContentFromMessage(quoted, 'document')
- let buffer = Buffer.from([])
- for await (const chunk of stream)
- buffer = Buffer.concat([buffer, chunk])
+await payreply('⏳ Decrypting...')
 
- let content = buffer.toString('utf8')
+const stream = await downloadContentFromMessage(quoted, 'document')
+let buffer = Buffer.from([])
+for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk])
 
- /* =========================
- 1. Extract HEX wrapper
- ========================= */
+let parsed = JSON.parse(Buffer.from(buffer.toString(),'base64').toString())
 
- let hexMatch = content.match(/Buffer\.from\("(.+?)"/)
- if (!hexMatch) return payreply('❌ Format tidak cocok')
+let result
 
- let hexString = hexMatch[1].replace(/\\x/g, '')
- let base64 = Buffer.from(hexString, 'hex').toString('utf8')
- let stealth = Buffer.from(base64, 'base64').toString('utf8')
+if (parsed.mode === 'file') {
 
- /* =========================
- 2. Extract Payload
- ========================= */
+result = Buffer.from(parsed.data,'base64')
 
- let payloadMatch = stealth.match(/const p=(\{[\s\S]*?\});/)
- if (!payloadMatch) return payreply('❌ Payload tidak ditemukan')
+}
 
- let payload = eval('(' + payloadMatch[1] + ')')
+if (parsed.mode === 'invis' || parsed.mode === 'ultra') {
 
- /* =========================
- 3. Extract Keys (exact)
- ========================= */
+const key = Buffer.from(parsed.crypto.key,'base64')
+const iv = Buffer.from(parsed.crypto.iv,'base64')
+const tag = Buffer.from(parsed.crypto.tag,'base64')
 
- let keyMatches = [...stealth.matchAll(/Buffer\.from\('([^']+)','base64'\)/g)]
- if (keyMatches.length < 2)
- return payreply('❌ Key tidak ditemukan')
+const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv)
+decipher.setAuthTag(tag)
 
- const key1 = crypto.createHash('sha256')
- .update(Buffer.from(keyMatches[0][1], 'base64'))
- .digest()
+result = Buffer.concat([
+decipher.update(Buffer.from(parsed.data,'base64')),
+decipher.final()
+])
 
- const key2 = crypto.createHash('sha256')
- .update(Buffer.from(keyMatches[1][1], 'base64'))
- .digest()
+}
 
- /* =========================
- 4. Reverse AES layer 2
- ========================= */
+if (parsed.mode === 'high') {
 
- const decipher2 = crypto.createDecipheriv(
- 'aes-256-gcm',
- key2,
- Buffer.from(payload.i2, 'base64')
- )
- decipher2.setAuthTag(Buffer.from(payload.t2, 'base64'))
+const k1 = Buffer.from(parsed.crypto.key1,'base64')
+const k2 = Buffer.from(parsed.crypto.key2,'base64')
+const iv1 = Buffer.from(parsed.crypto.iv1,'base64')
+const iv2 = Buffer.from(parsed.crypto.iv2,'base64')
+const tag1 = Buffer.from(parsed.crypto.tag1,'base64')
+const tag2 = Buffer.from(parsed.crypto.tag2,'base64')
+const xor = Buffer.from(parsed.crypto.xor,'base64')
 
- let layer1 = decipher2.update(Buffer.from(payload.d, 'base64'))
- layer1 = Buffer.concat([layer1, decipher2.final()])
+const d1 = crypto.createDecipheriv('aes-256-gcm',k2,iv2)
+d1.setAuthTag(tag2)
+let o1 = Buffer.concat([
+d1.update(Buffer.from(parsed.data,'base64')),
+d1.final()
+])
 
- /* =========================
- 5. Reverse AES layer 1
- ========================= */
+const d2 = crypto.createDecipheriv('aes-256-gcm',k1,iv1)
+d2.setAuthTag(tag1)
+let o2 = Buffer.concat([
+d2.update(o1),
+d2.final()
+])
 
- const decipher1 = crypto.createDecipheriv(
- 'aes-256-gcm',
- key1,
- Buffer.from(payload.i1, 'base64')
- )
- decipher1.setAuthTag(Buffer.from(payload.t1, 'base64'))
+result = Buffer.from(o2).map((b,i)=>b^xor[i])
 
- let layer0 = decipher1.update(layer1)
- layer0 = Buffer.concat([layer0, decipher1.final()])
+}
 
- /* =========================
- 6. Reverse XOR
- ========================= */
+const outName = parsed.meta.fileName.replace('.js','.decoded.js')
+const tmpDir = path.join(__dirname,'tmp')
+fs.mkdirSync(tmpDir,{recursive:true})
+const outPath = path.join(tmpDir,outName)
 
- const xorKey = Buffer.from(payload.x, 'base64')
- const original = Buffer.from(layer0).map((b, i) => b ^ xorKey[i])
+fs.writeFileSync(outPath,result)
 
- /* =========================
- 7. Save decoded
- ========================= */
+await Asepp.sendMessage(m.chat,{
+document: fs.readFileSync(outPath),
+fileName: outName,
+mimetype:'text/javascript',
+caption:'✅ 100% Restored'
+},{quoted:m})
 
- const tmpDir = path.join(__dirname, 'tmp')
- fs.mkdirSync(tmpDir, { recursive: true })
+fs.unlinkSync(outPath)
 
- const outName = (quoted.fileName || 'file.high.js')
- .replace('.high-3.js', '.decoded.js')
- .replace('.high.js', '.decoded.js')
-
- const outPath = path.join(tmpDir, outName)
- fs.writeFileSync(outPath, original)
-
- await Asepp.sendMessage(m.chat, {
- document: fs.readFileSync(outPath),
- fileName: outName,
- mimetype: 'text/javascript',
- caption: '✅ 100% Original Restored'
- }, { quoted: m })
-
- fs.unlinkSync(outPath)
-
- } catch (e) {
- console.error('tonoenc error:', e)
- payreply('❌ ' + e.message)
- }
+} catch(e){
+console.error(e)
+payreply('Decrypt gagal: '+e.message)
+}
 }
 break
 break
