@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AsepXxnx - Full Stack Developer Portofolio</title>
+
+<meta name="description" content="Full Stack Developer specializing in JavaScript, HTML, and UI/UX. View my live terminal portfolio."/>
+<meta property="og:title" content="AsepXxnx Payment"/>
+<meta property="og:description" content="Full Stack Developer specializing in JavaScript, HTML, and UI/UX."/>
+<meta property="og:url" content="https://AsepXyz12.github.io/bot-wa-db/"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="AsepXxnx"/>
+<meta property="og:image" content="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778864999571.jpeg"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { 'mono': ['Fira Code', 'monospace'], 'sans': ['Inter', 'sans-serif'] },
+      colors: {
+        terminal: {
+          bg: '#0d1117', darker: '#010409', card: '#161b22', border: '#30363d',
+          text: '#c9d1d9', comment: '#8b949e', keyword: '#ff7b72', string: '#a5d6ff',
+          function: '#d2a8ff', variable: '#ffa657', number: '#79c0ff', green: '#7ee787',
+          cyan: '#79c0ff', yellow: '#ffa657', purple: '#d2a8ff', pink: '#f778ba', red: '#ff7b72'
+        }
+      }
+    }
+  }
+}
+</script>
+
+<style>
+body { font-family: 'Inter', sans-serif; background-color: #0d1117; }
+.typing-cursor { display: inline-block; width: 8px; height: 16px; background-color: #7ee787; margin-left: 2px; animation: blink 0.7s infinite; vertical-align: text-bottom; }
+@keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.code-line { opacity: 0; animation: fadeIn 0.3s ease-in forwards; }
+@keyframes fadeIn { to { opacity: 1; } }
+.terminal-window { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
+.glass-card { background: rgba(22, 27, 34, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(48, 54, 61, 0.5); }
+.online-indicator { position: relative; }
+.online-indicator::after { content: ''; position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; background: #7ee787; border-radius: 50%; border: 3px solid #0d1117; animation: pulse-slow 2s infinite; }
+@keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity:.5; } }
+.syntax-keyword { color: #ff7b72; }.syntax-string { color: #a5d6ff; }.syntax-function { color: #d2a8ff; }
+.syntax-variable { color: #ffa657; }.syntax-number { color: #79c0ff; }.syntax-comment { color: #8b949e; }
+.syntax-green { color: #7ee787; }.syntax-yellow { color: #ffa657; }.syntax-pink { color: #f778ba; }
+::-webkit-scrollbar { width: 10px; } ::-webkit-scrollbar-track { background: #010409; }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+@keyframes rgbGlow { 0% {box-shadow: 0 0 10px #ff0000;} 25% {box-shadow: 0 0 10px #00ff00;} 50% {box-shadow: 0 0 10px #0000ff;} 75% {box-shadow: 0 0 10px #ff00ff;} 100% {box-shadow: 0 0 10px #00ffff;} }
+.bg-terminal-card { animation: rgbGlow 3s linear infinite; transition: 0.3s; }
+.bg-terminal-card:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 0 20px #ffffff; }
+
+.skill-bar { background: #010409; border-radius: 8px; overflow: hidden; }
+.skill-fill { height: 8px; background: linear-gradient(90deg, #7ee787, #79c0ff); transition: width 1.5s ease-out; width: 0; }
+.project-card:hover { transform: translateY(-5px); }
+.back-to-top { position: fixed; bottom: 20px; right: 20px; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 100; }
+.back-to-top.show { opacity: 1; pointer-events: auto; }
+.testimonial-card:hover { transform: scale(1.02); }
+.faq-item { transition: all 0.3s ease; }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.faq-item.active.faq-answer { max-height: 200px; }
+.stat-number { animation: countUp 2s ease-out forwards; }
+@keyframes countUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.playlist-item.active { background: rgba(123, 231, 135, 0.15); border-color: #7ee787; }
+.donghua-btn.active { background: linear-gradient(90deg, #d2a8ff, #79c0ff); color: #010409; }
+</style>
+</head>
+
+<body class="bg-terminal-bg text-terminal-text min-h-screen">
+<!-- CLICK INTRO -->
+<div id="clickIntro" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999; opacity:0; pointer-events:none; transition:opacity 0.6s ease;">
+  <img id="introLogo" src="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778864999571.jpeg" style="width:120px; height:120px; border-radius:50%; border:3px solid #00eaff; box-shadow:0 0 12px #00eaff;">
+  <h1 style="color:#00eaff; font-family:'Fira Code', monospace; margin-top:18px; font-size:26px; letter-spacing:2px; text-shadow:0 0 10px #00eaff;">WELCOME TO WEBSITE AsepXxnx</h1>
+</div>
+
+<script>
+document.addEventListener("click", function showIntroOnce() {
+  const intro = document.getElementById("clickIntro");
+  intro.style.pointerEvents = "auto"; intro.style.opacity = "1";
+  setTimeout(() => { intro.style.opacity = "0"; setTimeout(() => intro.remove(), 600); }, 1800);
+  document.removeEventListener("click", showIntroOnce);
+});
+</script>
+
+<header class="bg-terminal-darker border-b border-terminal-border sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3">
+    <div class="flex items-center justify-center space-x-2 text-terminal-comment">
+      <svg class="w-5 h-5 text-terminal-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+      <span class="text-sm font-mono">Developer Terminal</span>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 py-6">
+  <!-- Terminal Window 1 -->
+  <div class="terminal-window bg-terminal-darker rounded-xl overflow-hidden mb-8">
+    <div class="bg-terminal-card px-4 py-3 flex items-center justify-between border-b border-terminal-border">
+      <div class="flex items-center space-x-2">
+        <span class="w-3 h-3 rounded-full bg-red-500"></span>
+        <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+        <span class="w-3 h-3 rounded-full bg-green-500"></span>
+      </div>
+      <span class="text-sm text-terminal-comment font-mono">profile.config.js — AsepXxnx</span>
+    </div>
+
+    <div id="terminalContent" class="p-6 font-mono text-sm overflow-x-auto min-h-[400px] max-h-[500px] overflow-y-auto">
+      <div id="breadcrumb" class="text-terminal-comment mb-4 text-xs">src › modules › profile.config.js</div>
+      <div id="codeContainer" class="space-y-1"></div>
+      <div id="typingLine" class="mt-2"></div>
+    </div>
+  </div>
+
+  <!-- DONGHUA PLAYER -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-2xl mx-auto">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-2">
+        <svg class="w-5 h-5 text-terminal-purple" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zM5 15h10V7H5v8z"></path></svg>
+        <h3 class="font-mono text-terminal-purple font-semibold">DONGHUA PLAYER</h3>
+      </div>
+      <span class="text-xs text-terminal-comment font-mono" id="trackCount">Pilih Donghua</span>
+    </div>
+
+    <!-- DONGHUA MENU -->
+    <div class="flex gap-2 mb-4">
+      <button onclick="loadDonghua('btth')" id="btn-btth" class="donghua-btn flex-1 py-2 px-4 rounded-lg bg-terminal-darker border-terminal-border font-mono text-xs transition-all">
+        Battle Through the Heavens
+      </button>
+      <button onclick="loadDonghua('renegade')" id="btn-renegade" class="donghua-btn flex-1 py-2 px-4 rounded-lg bg-terminal-darker border-terminal-border font-mono text-xs transition-all">
+        Renegade Immortal
+      </button>
+    </div>
+
+    <div class="bg-terminal-darker rounded-lg p-4 mb-4 border-terminal-border">
+      <!-- VIDEO CONTAINER -->
+      <div id="videoContainer" class="hidden mb-4">
+        <video
+          id="videoPlayer"
+          class="w-full rounded-lg bg-black"
+          controls
+          controlsList="nodownload"
+          playsinline="false"
+          preload="metadata">
+          <source id="videoSource" src="" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- AUDIO CONTAINER -->
+      <div id="audioContainer" class="hidden">
+        <div class="flex items-center space-x-4 mb-4">
+          <div class="w-16 h-16 bg-gradient-to-br from-terminal-purple to-terminal-cyan rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-8 h-8 text-terminal-darker" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3.895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3.895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-terminal-text font-semibold truncate" id="currentTrackTitle">Pilih episode</div>
+            <div class="text-terminal-comment text-sm truncate" id="currentTrackArtist">AsepXxnx</div>
+          </div>
+        </div>
+
+        <audio id="audioPlayer" preload="metadata">
+          <source id="audioSource" src="" type="audio/mpeg">
+        </audio>
+      </div>
+
+      <!-- PROGRESS BAR -->
+      <div class="mt-4 mb-3">
+        <div class="flex justify-between text-xs text-terminal-comment mb-1 font-mono">
+          <span id="currentTime">0:00</span><span id="duration">0:00</span>
+        </div>
+        <div class="h-1 bg-terminal-card rounded-full cursor-pointer" id="progressBar">
+          <div class="h-full bg-gradient-to-r from-terminal-purple to-terminal-cyan rounded-full transition-all" id="progressFill" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- CONTROLS -->
+      <div class="flex items-center justify-center space-x-4">
+        <button id="prevBtn" class="p-2 text-terminal-comment hover:text-terminal-purple transition-colors">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z"></path></svg>
+        </button>
+        <button id="playPauseBtn" class="p-3 bg-gradient-to-r from-terminal-purple to-terminal-cyan rounded-full hover:shadow-lg hover:shadow-terminal-cyan/50 transition-all">
+          <svg id="playIcon" class="w-6 h-6 text-terminal-darker" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"></path></svg>
+          <svg id="pauseIcon" class="w-6 h-6 text-terminal-darker hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h2a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V4zm8 0a2 2 0 012-2h2a2 2 0 012 2v12a2 2 0 01-2 2h-2a2 2 0 01-2-2V4z"></path></svg>
+        </button>
+        <button id="nextBtn" class="p-2 text-terminal-comment hover:text-terminal-purple transition-colors">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798l-5.445-3.63z"></path></svg>
+        </button>
+      </div>
+
+      <!-- PLAYLIST AUTO LOADED -->
+      <div class="mt-4 space-y-2 max-h-64 overflow-y-auto" id="playlistContainer">
+        <div class="text-center text-terminal-comment text-xs">Pilih donghua dulu bro</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Card -->
+  <div class="glass-card rounded-xl p-6 max-w-2xl mx-auto">
+    <div class="flex flex-col items-center mb-8">
+      <div class="relative online-indicator mb-4">
+        <div class="w-32 h-32 rounded-full bg-gradient-to-br from-terminal-cyan to-terminal-purple p-1">
+          <div class="w-full h-full rounded-full bg-terminal-card flex items-center justify-center overflow-hidden">
+            <img src="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778864999571.jpeg" class="w-full h-full object-cover"/>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="text-2xl font-bold mb-2">ASEPXXNX</h2>
+      <p class="text-terminal-comment mb-4">➤ Full Stack Developer</p>
+
+      <div class="w-full bg-terminal-bg rounded-lg p-4 border-terminal-border mb-6">
+        <div class="text-terminal-yellow text-xs font-semibold mb-2 font-mono">BIO</div>
+        <p class="text-terminal-green italic text-sm">"Gw AsepXxnx, dev script & web. Fokus bikin tools praktis, cepat, dan gampang dipake. Kalau butuh custom project, gas DM."</p>
+      </div>
+
+      <!-- WHATSAPP -->
+      <div class="w-full bg-terminal-darker p-4 rounded border-terminal-border mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-terminal-comment font-mono">Nomor WhatsApp</span>
+          <button onclick="navigator.clipboard.writeText('62881036109288')" class="text-xs text-terminal-green hover:text-terminal-green/80 font-mono">Copy</button>
+        </div>
+        <div class="text-terminal-green font-mono text-lg font-semibold">62881036109288</div>
+      </div>
+
+      <!-- DANA -->
+      <div class="w-full bg-terminal-darker p-4 rounded border-terminal-border mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-terminal-comment font-mono">Nomor DANA</span>
+          <button onclick="navigator.clipboard.writeText('0882009545852')" class="text-xs text-terminal-cyan hover:text-terminal-cyan/80 font-mono">Copy</button>
+        </div>
+        <div class="text-terminal-cyan font-mono text-lg font-semibold">0882009545852</div>
+        <div class="text-terminal-green text-xs font-mono">a.n: AsepXxnx</div>
+      </div>
+
+      <!-- QRIS -->
+      <div class="w-full bg-terminal-darker p-4 rounded border-terminal-border mb-4">
+        <span class="text-xs text-terminal-comment font-mono mb-2 block">Scan QRIS</span>
+        <img src="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778865010448.jpeg" class="w-48 rounded-lg border-terminal-border"/>
+      </div>
+
+      <!-- NIKA VIA WA -->
+      <div class="w-full bg-terminal-darker p-5 rounded-lg border-terminal-border mb-4">
+        <p class="text-terminal-yellow font-bold text-lg mb-5 text-center">𝐍𝐈𝐊𝐀 𝐕𝐈𝐀 𝐖𝐀</p>
+        <div class="space-y-5 text-xs font-mono">
+          <div class="bg-terminal-card p-4 rounded-lg border-l-4 border-terminal-cyan">
+            <p class="text-terminal-cyan font-bold mb-2">- 𝐑𝐄𝐒𝐄𝐋𝐄𝐑 : 𝟔𝟎𝐊</p>
+            <p class="text-terminal-green font-semibold mb-2">𝐁𝐄𝐍𝐄𝐅𝐈𝐓 𝐑𝐄𝐒𝐄𝐋𝐄𝐑</p>
+            <ul class="space-y-1 text-terminal-text">
+              <li>❗ BISA JUALAN SC NIKA</li>
+              <li>❗ FREE UPDATE PERMANEN</li>
+              <li>❗ MASUK GB RESELLER</li>
+            </ul>
+          </div>
+          <div class="bg-terminal-card p-4 rounded-lg border-l-4 border-terminal-purple">
+            <p class="text-terminal-purple font-bold mb-2">- 𝐏𝐀𝐑𝐓𝐍𝐄𝐑 : 𝟏𝟎𝐊</p>
+            <p class="text-terminal-green font-semibold mb-2">𝐁𝐄𝐍𝐄𝐅𝐈𝐓 𝐏𝐀𝐑𝐓𝐍𝐄𝐑</p>
+            <ul class="space-y-1 text-terminal-text">
+              <li>❗ BISA JUALAN SC NIKA</li>
+              <li>❗ FREE UPDATE PERMANEN</li>
+              <li>❗ BISA JUALAN RESELLER</li>
+              <li>❗ MASUK GB RESELLER</li>
+              <li>❗ MASUK GRUP PARTNER</li>
+            </ul>
+          </div>
+          <div class="bg-terminal-card p-4 rounded-lg border-l-4 border-terminal-pink">
+            <p class="text-terminal-pink font-bold mb-2">- 𝐓𝐀𝐍𝐆𝐀𝐍 𝐊𝐀𝐍𝐀𝐍 : 𝟏𝟒𝟎𝐊</p>
+            <p class="text-terminal-green font-semibold mb-2">𝐁𝐄𝐍𝐄𝐅𝐈𝐓 𝐓𝐊</p>
+            <ul class="space-y-1 text-terminal-text">
+              <li>❗ BISA JUALAN SC NIKA</li>
+              <li>❗ FREE UPDATE PERMANEN</li>
+              <li>❗ BISA JUALAN RESELLER</li>
+              <li>❗ BISA JUALAN PARTNER</li>
+              <li>❗ MASUK GB RESELLER</li>
+              <li>❗ MASUK GRUP PARTNER</li>
+              <li>❗ DAPET BONUS LAINNYA</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKILLS SECTION -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-4xl mx-auto">
+    <h3 class="font-mono text-terminal-cyan font-semibold mb-4 text-lg">SKILLS & TECH STACK</h3>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div>
+        <div class="flex justify-between mb-1">
+          <span class="text-xs font-mono text-terminal-green">JavaScript/Node.js</span>
+          <span class="text-xs text-terminal-comment">95%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 95%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between mb-1">
+          <span class="text-xs font-mono text-terminal-purple">WhatsApp Baileys</span>
+          <span class="text-xs text-terminal-comment">98%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 98%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between mb-1">
+          <span class="text-xs font-mono text-terminal-yellow">HTML/CSS/Tailwind</span>
+          <span class="text-xs text-terminal-comment">90%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 90%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between mb-1">
+          <span class="text-xs font-mono text-terminal-pink">MongoDB/MySQL</span>
+          <span class="text-xs text-terminal-comment">85%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 85%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECTS SHOWCASE -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-4xl mx-auto">
+    <h3 class="font-mono text-terminal-purple font-semibold mb-4 text-lg">FEATURED PROJECTS</h3>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border project-card transition-all">
+        <div class="text-terminal-cyan font-mono text-sm mb-2">NIKABOT MD</div>
+        <p class="text-terminal-comment text-xs mb-3">WhatsApp Bot Multi-Device dengan 200+ fitur. Button, list, auto reply, AI chat.</p>
+        <div class="flex gap-2 flex-wrap">
+          <span class="text-xs bg-terminal-card px-2 py-1 rounded text-terminal-green">Node.js</span>
+          <span class="text-xs bg-terminal-card px-2 py-1 rounded text-terminal-purple">Baileys</span>
+        </div>
+      </div>
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border project-card transition-all">
+        <div class="text-terminal-pink font-mono text-sm mb-2">TERMINAL PORTO</div>
+        <p class="text-terminal-comment text-xs mb-3">Portofolio live terminal dengan typing animation 10k lines. Fully responsive.</p>
+        <div class="flex gap-2 flex-wrap">
+          <span class="text-xs bg-terminal-card px-2 py-1 rounded text-terminal-yellow">JavaScript</span>
+          <span class="text-xs bg-terminal-card px-2 py-1 rounded text-terminal-cyan">Tailwind</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISITOR COUNTER -->
+  <div class="glass-card rounded-xl p-4 mb-8 max-w-2xl mx-auto text-center">
+    <div class="text-xs text-terminal-comment font-mono mb-2">VISITORS</div>
+    <div class="text-3xl font-mono text-terminal-green" id="visitorCount">0</div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-4xl mx-auto">
+    <h3 class="font-mono text-terminal-pink font-semibold mb-4 text-lg">WHAT CLIENTS SAY</h3>
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border testimonial-card transition-all">
+        <div class="flex items-center mb-2">
+          <div class="w-8 h-8 rounded-full bg-terminal-purple flex items-center justify-center text-xs font-bold">A</div>
+          <div class="ml-2">
+            <div class="text-xs font-mono text-terminal-green">Andi</div>
+            <div class="text-xs text-yellow-400">★★★</div>
+          </div>
+        </div>
+        <p class="text-xs text-terminal-comment">"SC nya gacor parah, support 24/7. Recommended banget buat yang mau jualan bot."</p>
+      </div>
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border testimonial-card transition-all">
+        <div class="flex items-center mb-2">
+          <div class="w-8 h-8 rounded-full bg-terminal-cyan flex items-center justify-center text-xs font-bold">R</div>
+          <div class="ml-2">
+            <div class="text-xs font-mono text-terminal-green">Rudi</div>
+            <div class="text-xs text-yellow-400">★★★</div>
+          </div>
+        </div>
+        <p class="text-xs text-terminal-comment">"Update cepet, fitur sesuai request. Udah balik modal dalam 3 hari."</p>
+      </div>
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border testimonial-card transition-all">
+        <div class="flex items-center mb-2">
+          <div class="w-8 h-8 rounded-full bg-terminal-pink flex items-center justify-center text-xs font-bold">S</div>
+          <div class="ml-2">
+            <div class="text-xs font-mono text-terminal-green">Sinta</div>
+            <div class="text-xs text-yellow-400">★★★</div>
+          </div>
+        </div>
+        <p class="text-xs text-terminal-comment">"Web nya keren, terminal nya real 10k line. Auto percaya."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ SECTION -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-4xl mx-auto">
+    <h3 class="font-mono text-terminal-yellow font-semibold mb-4 text-lg">FREQUENTLY ASKED QUESTIONS</h3>
+    <div class="space-y-3">
+      <div class="faq-item bg-terminal-darker rounded-lg border-terminal-border">
+        <button onclick="toggleFaq(this)" class="w-full text-left p-4 flex justify-between items-center">
+          <span class="text-xs font-mono text-terminal-cyan">SC NIKA aman nggak?</span>
+          <span class="text-terminal-purple transition-transform">+</span>
+        </button>
+        <div class="faq-answer px-4 pb-4">
+          <p class="text-xs text-terminal-comment">Aman bro, udah anti detect. Update rutin tiap minggu. Kalau kena, free fix.</p>
+        </div>
+      </div>
+      <div class="faq-item bg-terminal-darker rounded-lg border-terminal-border">
+        <button onclick="toggleFaq(this)" class="w-full text-left p-4 flex justify-between items-center">
+          <span class="text-xs font-mono text-terminal-cyan">Pembayaran bisa COD?</span>
+          <span class="text-terminal-purple transition-transform">+</span>
+        </button>
+        <div class="faq-answer px-4 pb-4">
+          <p class="text-xs text-terminal-comment">Bisa COD via DANA/QRIS. Transfer dulu baru kirim SC + masukin grup.</p>
+        </div>
+      </div>
+      <div class="faq-item bg-terminal-darker rounded-lg border-terminal-border">
+        <button onclick="toggleFaq(this)" class="w-full text-left p-4 flex justify-between items-center">
+          <span class="text-xs font-mono text-terminal-cyan">Garansi berapa lama?</span>
+          <span class="text-terminal-purple transition-transform">+</span>
+        </button>
+        <div class="faq-answer px-4 pb-4">
+          <p class="text-xs text-terminal-comment">Garansi lifetime untuk update & fix bug. Support via WA/Telegram 24/7.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT FORM -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-2xl mx-auto">
+    <h3 class="font-mono text-terminal-green font-semibold mb-4 text-lg">FAST CONTACT FORM</h3>
+    <form id="contactForm" class="space-y-3">
+      <input type="text" id="name" placeholder="Nama lu" class="w-full bg-terminal-darker border-terminal-border rounded px-3 py-2 text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-green">
+      <input type="text" id="subject" placeholder="Subject / Paket yang mau dibeli" class="w-full bg-terminal-darker border-terminal-border rounded px-3 py-2 text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-green">
+      <textarea id="message" placeholder="Pesan..." rows="3" class="w-full bg-terminal-darker border-terminal-border rounded px-3 py-2 text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-green resize-none"></textarea>
+      <button type="button" onclick="sendContact()" class="w-full py-2 bg-gradient-to-r from-terminal-green to-terminal-cyan rounded text-xs font-mono text-terminal-bg font-bold hover:opacity-90 transition-opacity">
+        Kirim ke WhatsApp
+      </button>
+    </form>
+  </div>
+
+  <!-- LIVE STATS -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-4xl mx-auto">
+    <h3 class="font-mono text-terminal-purple font-semibold mb-4 text-lg">LIVE STATS</h3>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border">
+        <div class="text-2xl font-mono text-terminal-green stat-number" data-target="247">0</div>
+        <div class="text-xs text-terminal-comment mt-1">Clients</div>
+      </div>
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border">
+        <div class="text-2xl font-mono text-terminal-cyan stat-number" data-target="1500">0</div>
+        <div class="text-xs text-terminal-comment mt-1">Projects Done</div>
+      </div>
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border">
+                <div class="text-2xl font-mono text-terminal-yellow stat-number" data-target="99">0</div>
+        <div class="text-xs text-terminal-comment mt-1">Uptime %</div>
+      </div>
+
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border">
+        <div class="text-2xl font-mono text-terminal-pink stat-number" data-target="24">0</div>
+        <div class="text-xs text-terminal-comment mt-1">Support Jam</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Back to Top Button -->
+  <button id="backToTop" class="back-to-top p-3 bg-gradient-to-r from-terminal-cyan to-terminal-purple rounded-full shadow-lg">
+    <svg class="w-5 h-5 text-terminal-bg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+  </button>
+
+  <footer class="mt-12 text-center text-terminal-comment text-sm pb-8">
+    <p class="font-mono">© AsepXxnx using JavaScript & TailwindCSS</p>
+  </footer>
+</main>
+
+<script>
+// UTILS
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function highlightSyntax(line) {
+  return escapeHtml(line)
+.replace(/(const|let|var|function|return|if|else|for|while|async|await|class|new|try|catch|export|default|require)/g, '<span class="syntax-keyword">$1</span>')
+.replace(/(`(?:\\.|[^`])*?`|"(?:\\.|[^"])*?"|'(?:\\.|[^'])*?')/g, '<span class="syntax-string">$1</span>')
+.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="syntax-number">$1</span>')
+.replace(/\b([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\(/g, '<span class="syntax-function">$1</span>(')
+.replace(/([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '<span class="syntax-variable">$1</span>:')
+.replace(/(\/\/.*$)/g, '<span class="syntax-comment">$1</span>');
+}
+
+// GENERATE 10000 LINE "OTAK JS"
+const typingCode = [
+  '// AsepXxnx JS Brain v1.0 - 10000 Lines',
+  '// Generated: 2026-05-15',
+  '',
+];
+
+for(let i=1; i<=500; i++){
+  typingCode.push(`// SECTION 1.${i}: JAVASCRIPT FUNDAMENTALS`);
+  typingCode.push(`const var${i} = ${i};`);
+  typingCode.push(`let let${i} = "value${i}";`);
+  typingCode.push(`if(var${i} > 0) console.log("Positive ${i}");`);
+  typingCode.push(`function func${i}(a, b){ return a + b + ${i}; }`);
+  typingCode.push(``);
+}
+
+for(let i=501; i<=1500; i++){
+  typingCode.push(`// SECTION 2.${i}: ARRAY & OBJECT`);
+  typingCode.push(`const arr${i} = [${i}, ${i+1}, ${i+2}];`);
+  typingCode.push(`const obj${i} = { id: ${i}, name: "Item${i}", active: true };`);
+  typingCode.push(``);
+}
+
+let lineIndex = 0;
+let charIndex = 0;
+let isPaused = false;
+let typingTimeout = null;
+
+const typingLine = document.getElementById('typingLine');
+const codeContainer = document.getElementById('codeContainer');
+const terminalContent = document.getElementById('terminalContent');
+
+function isScrolledToBottom(element) {
+  return element.scrollHeight - element.scrollTop <= element.clientHeight + 50;
+}
+
+document.addEventListener('visibilitychange', () => {
+  isPaused = document.hidden;
+  if (!isPaused) typeCode();
+});
+
+function typeCode() {
+  if (isPaused) return;
+  if (typingTimeout) clearTimeout(typingTimeout);
+
+  if (lineIndex >= typingCode.length) {
+    typingLine.innerHTML = '<span class="typing-cursor"></span>';
+    return;
+  }
+
+  const currentLine = typingCode[lineIndex] || '';
+
+  if (charIndex <= currentLine.length) {
+    const typedPart = currentLine.substring(0, charIndex);
+    typingLine.innerHTML = `<span class="text-terminal-green">${escapeHtml(typedPart)}</span><span class="typing-cursor"></span>`;
+    charIndex++;
+    const delay = /[\s,\{\}\[\]\(\);]/.test(currentLine[charIndex - 1])? 8 : 20;
+    typingTimeout = setTimeout(typeCode, delay);
+  } else {
+    requestAnimationFrame(() => {
+      codeContainer.innerHTML += `<div class="code-line"><span class="text-terminal-comment mr-4 select-none">${(lineIndex+1).toString().padStart(5, '0')}</span>${highlightSyntax(currentLine)}</div>`;
+      if (isScrolledToBottom(terminalContent)) {
+        terminalContent.scrollTop = terminalContent.scrollHeight;
+      }
+    });
+    lineIndex++;
+    charIndex = 0;
+    typingLine.innerHTML = '';
+    typingTimeout = setTimeout(typeCode, 50);
+  }
+}
+
+// DONGHUA PLAYER LOGIC
+const donghuaData = {
+  btth: {
+    name: "Battle Through the Heavens",
+    episodes: [
+      { src: "https://files.catbox.moe/m8cejn.mp4", type: "video", title: "BTTH Episode 198 - Sub Indo HD" }
+    ]
+  },
+  renegade: {
+    name: "Renegade Immortal",
+    episodes: [
+      { src: "https://files.catbox.moe/r8hnvu.mp4", type: "video", title: "Renegade Immortal Episode 140 - Sub Indo HD" }
+    ]
+  }
+};
+
+let currentDonghua = null;
+let playlist = [];
+let currentTrack = 0;
+let currentMedia = null;
+
+const videoPlayer = document.getElementById('videoPlayer');
+const videoSource = document.getElementById('videoSource');
+const videoContainer = document.getElementById('videoContainer');
+const audioPlayer = document.getElementById('audioPlayer');
+const audioSource = document.getElementById('audioSource');
+const audioContainer = document.getElementById('audioContainer');
+
+const playPauseBtn = document.getElementById('playPauseBtn');
+const playIcon = document.getElementById('playIcon');
+const pauseIcon = document.getElementById('pauseIcon');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const progressBar = document.getElementById('progressBar');
+const progressFill = document.getElementById('progressFill');
+const currentTimeEl = document.getElementById('currentTime');
+const durationEl = document.getElementById('duration');
+const currentTrackTitle = document.getElementById('currentTrackTitle');
+const trackCount = document.getElementById('trackCount');
+const playlistContainer = document.getElementById('playlistContainer');
+
+function loadDonghua(type) {
+  currentDonghua = type;
+  playlist = donghuaData[type].episodes;
+  
+  document.querySelectorAll('.donghua-btn').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(`btn-${type}`).classList.add('active');
+  
+  renderPlaylist();
+  loadTrack(0);
+}
+
+function renderPlaylist() {
+  playlistContainer.innerHTML = '';
+  playlist.forEach((track, index) => {
+    const color = track.type === 'video' ? 'text-terminal-yellow' : 'text-terminal-green';
+    playlistContainer.innerHTML += `
+      <div class="playlist-item p-2 rounded border-terminal-border cursor-pointer hover:bg-terminal-card" data-index="${index}">
+        <div class="text-xs font-mono ${color}">${String(index+1).padStart(2,'0')}. ${track.title}</div>
+      </div>
+    `;
+  });
+
+  document.querySelectorAll('.playlist-item').forEach((item, index) => {
+    item.addEventListener('click', () => {
+      loadTrack(index);
+      currentMedia.play();
+    });
+  });
+}
+
+function loadTrack(index) {
+  currentTrack = index;
+  const track = playlist[index];
+  if (!track) return;
+
+  currentTrackTitle.textContent = track.title;
+  trackCount.textContent = `${index + 1}/${playlist.length}`;
+
+  document.querySelectorAll('.playlist-item').forEach((item, i) => {
+    item.classList.toggle('active', i === index);
+  });
+
+  if(currentMedia) currentMedia.pause();
+  playIcon.classList.remove('hidden');
+  pauseIcon.classList.add('hidden');
+
+  if (track.type === 'video') {
+    videoContainer.classList.remove('hidden');
+    audioContainer.classList.add('hidden');
+    videoSource.src = track.src;
+    videoPlayer.load();
+    currentMedia = videoPlayer;
+  } else {
+    videoContainer.classList.add('hidden');
+    audioContainer.classList.remove('hidden');
+    audioSource.src = track.src;
+    audioPlayer.load();
+    currentMedia = audioPlayer;
+  }
+}
+
+function togglePlayPause() {
+  if (!currentMedia) return;
+  if (currentMedia.paused) {
+    currentMedia.play().catch(e => console.log('Play failed:', e));
+    playIcon.classList.add('hidden');
+    pauseIcon.classList.remove('hidden');
+  } else {
+    currentMedia.pause();
+    playIcon.classList.remove('hidden');
+    pauseIcon.classList.add('hidden');
+  }
+}
+
+function nextTrack() {
+  if(!playlist.length) return;
+  currentTrack = (currentTrack + 1) % playlist.length;
+  loadTrack(currentTrack);
+  currentMedia.play();
+}
+
+function prevTrack() {
+  if(!playlist.length) return;
+  currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+  loadTrack(currentTrack);
+  currentMedia.play();
+}
+
+function formatTime(sec) {
+  if (isNaN(sec)) return '0:00';
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+function updateProgress() {
+  if (currentMedia && currentMedia.duration) {
+    const percent = (currentMedia.currentTime / currentMedia.duration) * 100;
+    progressFill.style.width = percent + '%';
+    currentTimeEl.textContent = formatTime(currentMedia.currentTime);
+  }
+}
+
+function updateDuration() {
+  if(currentMedia) durationEl.textContent = formatTime(currentMedia.duration);
+}
+
+videoPlayer.addEventListener('loadedmetadata', updateDuration);
+audioPlayer.addEventListener('loadedmetadata', updateDuration);
+videoPlayer.addEventListener('timeupdate', updateProgress);
+audioPlayer.addEventListener('timeupdate', updateProgress);
+videoPlayer.addEventListener('ended', nextTrack);
+audioPlayer.addEventListener('ended', nextTrack);
+
+progressBar.addEventListener('click', (e) => {
+  if(!currentMedia) return;
+  const width = progressBar.clientWidth;
+  const clickX = e.offsetX;
+  const duration = currentMedia.duration;
+  if (duration) currentMedia.currentTime = (clickX / width) * duration;
+});
+
+playPauseBtn.addEventListener('click', togglePlayPause);
+nextBtn.addEventListener('click', nextTrack);
+prevBtn.addEventListener('click', prevTrack);
+
+// FAQ TOGGLE
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const answer = item.querySelector('.faq-answer');
+  const icon = btn.querySelector('span:last-child');
+
+  item.classList.toggle('active');
+  icon.style.transform = item.classList.contains('active') ? 'rotate(45deg)' : 'rotate(0deg)';
+  answer.style.maxHeight = item.classList.contains('active') ? answer.scrollHeight + 'px' : '0px';
+}
+
+// CONTACT FORM TO WHATSAPP
+function sendContact() {
+  const name = document.getElementById('name').value;
+  const subject = document.getElementById('subject').value;
+  const message = document.getElementById('message').value;
+  if (!name || !message) { alert('Nama dan pesan wajib diisi bro'); return; }
+  const text = `Halo AsepXxnx%0A*Nama:* ${encodeURIComponent(name)}%0A*Paket:* ${encodeURIComponent(subject)}%0A*Pesan:* ${encodeURIComponent(message)}`;
+  window.open(`https://wa.me/62881036109288?text=${text}`, '_blank');
+}
+
+// VISITOR COUNTER
+let visitorCount = localStorage.getItem('visitorCount') || 0;
+visitorCount++;
+localStorage.setItem('visitorCount', visitorCount);
+document.getElementById('visitorCount').textContent = visitorCount;
+
+// BACK TO TOP
+const backToTopBtn = document.getElementById('backToTop');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 300) backToTopBtn.classList.add('show');
+  else backToTopBtn.classList.remove('show');
+});
+backToTopBtn.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// STATS COUNTER ANIMATION
+const statNumbers = document.querySelectorAll('.stat-number');
+const observerStats = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const target = parseInt(entry.target.dataset.target);
+      let current = 0;
+      const increment = target / 50;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) { current = target; clearInterval(timer); }
+        entry.target.textContent = Math.floor(current);
+      }, 40);
+      observerStats.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+statNumbers.forEach(stat => observerStats.observe(stat));
+
+// SKILL BAR ANIMATION
+const skillFills = document.querySelectorAll('.skill-fill');
+const observerSkills = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const width = entry.target.style.width || entry.target.parentElement.previousElementSibling.querySelector('span:last-child').textContent;
+      entry.target.style.width = width;
+      observerSkills.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+skillFills.forEach(skill => observerSkills.observe(skill));
+
+// START
+setTimeout(typeCode, 1000);
+</script>
+</body>
+</html>
