@@ -12913,6 +12913,266 @@ case 'noenc': case 'decode': {
  return payreply(`❌ Error: ${e.message}`)
  }
 }
+
+
+
+case 'cekfunc': {
+try {
+if (!isOwner) return payreply('Owner only 🩸')
+
+const fs = require('fs')
+const path = require('path')
+const os = require('os')
+const { spawn } = require('child_process')
+
+let quoted = m.quoted ? m.quoted : m
+let code = quoted.text || quoted.caption
+if (!code) return payreply('Reply function/case yang mau dicek')
+
+// hapus markdown
+code = code.replace(/```[a-z]*\n?/gi, '').replace(/```/g, '')
+
+const tempFile = path.join(os.tmpdir(), `realexec_${Date.now()}.js`)
+
+/* ===============================
+ REAL NODE EXECUTION WRAPPER
+=============================== */
+
+const wrapped = `
+"use strict";
+
+process.on('uncaughtException', (err)=>{
+console.error("=== UNCAUGHT_EXCEPTION ===");
+console.error(err.stack || err);
+process.exit(1);
+});
+
+process.on('unhandledRejection', (reason)=>{
+console.error("=== UNHANDLED_REJECTION ===");
+console.error(reason && reason.stack ? reason.stack : reason);
+process.exit(1);
+});
+
+process.on('warning', (w)=>{
+console.warn("=== NODE_WARNING ===");
+console.warn(w.stack || w);
+});
+
+(async()=>{
+${code}
+})()
+.then(()=>{
+process.exit(0);
+})
+.catch((e)=>{
+console.error("=== ASYNC_RUNTIME_ERROR ===");
+console.error(e.stack || e);
+process.exit(1);
+});
+`
+
+fs.writeFileSync(tempFile, wrapped)
+
+/* ===============================
+ SPAWN REAL NODE ENGINE
+=============================== */
+
+let stdout = ""
+let stderr = ""
+
+const child = spawn(process.execPath, [
+'--trace-uncaught',
+'--trace-warnings',
+'--unhandled-rejections=strict',
+tempFile
+], {
+timeout: 10000
+})
+
+child.stdout.on('data', d => stdout += d.toString())
+child.stderr.on('data', d => stderr += d.toString())
+
+let exitCode = await new Promise(resolve=>{
+child.on('close', code=>resolve(code))
+})
+
+// jika hang / infinite loop
+if (exitCode === null) {
+child.kill('SIGKILL')
+stderr += "\n=== TIMEOUT (Possible Infinite Loop) ==="
+}
+
+fs.unlinkSync(tempFile)
+
+/* ===============================
+ RESULT ANALYSIS
+=============================== */
+
+const hasError = exitCode !== 0
+const status = hasError ? "❌ ERROR DETECTED" : "✅ EXECUTION SUCCESS"
+
+function extractLine(stack){
+let m = stack.match(/:(\\d+):(\\d+)/)
+return m ? m[1] : "-"
+}
+
+let errorLine = hasError ? extractLine(stderr) : "-"
+
+let teks = `\`𝗖𝗘𝗞𝗙𝗨𝗡𝗖 — REAL CONSOLE ENGINE\`
+
+Hi \`${pushname}\` 👋
+
+⌲ ENGINE STATUS
+┏━━━━━━━━
+┃✦ Status » ${status}
+┃✦ Exit Code » ${exitCode}
+┃✦ Error Line » ${errorLine}
+┗━━━━━━━━━━
+
+⌲ STDERR (Console Error)
+${stderr.trim() || "Tidak ada error"}
+
+⌲ STDOUT (Console Log)
+${stdout.trim() || "Tidak ada output"}
+
+Mode » Real Node Runtime
+Engine » V8 Original Parser
+Isolation » Child Process
+Accuracy » 100% Setara Console Panel
+Level » ABSOLUTE MAX (No NPM)
+`
+
+await payreply(teks)
+
+} catch (err) {
+console.log("cekfunc fatal:", err)
+await payreply("Engine crash: " + err.message)
+}
+}
+break
+
+case 'tonoenc': {
+ try {
+ if (!isCreator) return payreply(mess.owner)
+
+ let quoted = m.quoted ? m.quoted : m.msg?.contextInfo?.quotedMessage
+ if (!quoted) return payreply('Reply file .high.js nya')
+
+ const fs = require('fs')
+ const path = require('path')
+ const crypto = require('crypto')
+ const { downloadContentFromMessage } = require('@whiskeysockets/baileys')
+
+ await payreply('🔓 Decoding Enchigh...')
+
+ // Download file
+ const stream = await downloadContentFromMessage(quoted, 'document')
+ let buffer = Buffer.from([])
+ for await (const chunk of stream)
+ buffer = Buffer.concat([buffer, chunk])
+
+ let content = buffer.toString('utf8')
+
+ /* =========================
+ 1. Extract HEX wrapper
+ ========================= */
+
+ let hexMatch = content.match(/Buffer\.from\("(.+?)"/)
+ if (!hexMatch) return payreply('❌ Format tidak cocok')
+
+ let hexString = hexMatch[1].replace(/\\x/g, '')
+ let base64 = Buffer.from(hexString, 'hex').toString('utf8')
+ let stealth = Buffer.from(base64, 'base64').toString('utf8')
+
+ /* =========================
+ 2. Extract Payload
+ ========================= */
+
+ let payloadMatch = stealth.match(/const p=(\{[\s\S]*?\});/)
+ if (!payloadMatch) return payreply('❌ Payload tidak ditemukan')
+
+ let payload = eval('(' + payloadMatch[1] + ')')
+
+ /* =========================
+ 3. Extract Keys (exact)
+ ========================= */
+
+ let keyMatches = [...stealth.matchAll(/Buffer\.from\('([^']+)','base64'\)/g)]
+ if (keyMatches.length < 2)
+ return payreply('❌ Key tidak ditemukan')
+
+ const key1 = crypto.createHash('sha256')
+ .update(Buffer.from(keyMatches[0][1], 'base64'))
+ .digest()
+
+ const key2 = crypto.createHash('sha256')
+ .update(Buffer.from(keyMatches[1][1], 'base64'))
+ .digest()
+
+ /* =========================
+ 4. Reverse AES layer 2
+ ========================= */
+
+ const decipher2 = crypto.createDecipheriv(
+ 'aes-256-gcm',
+ key2,
+ Buffer.from(payload.i2, 'base64')
+ )
+ decipher2.setAuthTag(Buffer.from(payload.t2, 'base64'))
+
+ let layer1 = decipher2.update(Buffer.from(payload.d, 'base64'))
+ layer1 = Buffer.concat([layer1, decipher2.final()])
+
+ /* =========================
+ 5. Reverse AES layer 1
+ ========================= */
+
+ const decipher1 = crypto.createDecipheriv(
+ 'aes-256-gcm',
+ key1,
+ Buffer.from(payload.i1, 'base64')
+ )
+ decipher1.setAuthTag(Buffer.from(payload.t1, 'base64'))
+
+ let layer0 = decipher1.update(layer1)
+ layer0 = Buffer.concat([layer0, decipher1.final()])
+
+ /* =========================
+ 6. Reverse XOR
+ ========================= */
+
+ const xorKey = Buffer.from(payload.x, 'base64')
+ const original = Buffer.from(layer0).map((b, i) => b ^ xorKey[i])
+
+ /* =========================
+ 7. Save decoded
+ ========================= */
+
+ const tmpDir = path.join(__dirname, 'tmp')
+ fs.mkdirSync(tmpDir, { recursive: true })
+
+ const outName = (quoted.fileName || 'file.high.js')
+ .replace('.high-3.js', '.decoded.js')
+ .replace('.high.js', '.decoded.js')
+
+ const outPath = path.join(tmpDir, outName)
+ fs.writeFileSync(outPath, original)
+
+ await Asepp.sendMessage(m.chat, {
+ document: fs.readFileSync(outPath),
+ fileName: outName,
+ mimetype: 'text/javascript',
+ caption: '✅ 100% Original Restored'
+ }, { quoted: m })
+
+ fs.unlinkSync(outPath)
+
+ } catch (e) {
+ console.error('tonoenc error:', e)
+ payreply('❌ ' + e.message)
+ }
+}
+break
 break
 
 // END TOD
