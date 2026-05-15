@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AsepXxnx - Full Stack Developer Portofolio</title>
+
+<meta name="description" content="Full Stack Developer specializing in JavaScript, HTML, and UI/UX. View my live terminal portfolio."/>
+<meta property="og:title" content="AsepXxnx Payment"/>
+<meta property="og:description" content="Full Stack Developer specializing in JavaScript, HTML, and UI/UX."/>
+<meta property="og:url" content="https://AsepXyz12.github.io/bot-wa-db/"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="AsepXxnx"/>
+<meta property="og:image" content="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778864999571.jpeg"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { 'mono': ['Fira Code', 'monospace'], 'sans': ['Inter', 'sans-serif'] },
+      colors: {
+        terminal: {
+          bg: '#0d1117', darker: '#010409', card: '#161b22', border: '#30363d',
+          text: '#c9d1d9', comment: '#8b949e', keyword: '#ff7b72', string: '#a5d6ff',
+          function: '#d2a8ff', variable: '#ffa657', number: '#79c0ff', green: '#7ee787',
+          cyan: '#79c0ff', yellow: '#ffa657', purple: '#d2a8ff', pink: '#f778ba'
+        }
+      }
+    }
+  }
+}
+</script>
+
+<style>
+body { font-family: 'Inter', sans-serif; background-color: #0d1117; }
+.typing-cursor { display: inline-block; width: 8px; height: 16px; background-color: #7ee787; margin-left: 2px; animation: blink 0.7s infinite; vertical-align: text-bottom; }
+@keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.code-line { opacity: 0; animation: fadeIn 0.3s ease-in forwards; }
+@keyframes fadeIn { to { opacity: 1; } }
+.terminal-window { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
+.glass-card { background: rgba(22, 27, 34, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(48, 54, 61, 0.5); }
+.online-indicator { position: relative; }
+.online-indicator::after { content: ''; position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; background: #7ee787; border-radius: 50%; border: 3px solid #0d1117; animation: pulse-slow 2s infinite; }
+@keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity:.5; } }
+.syntax-keyword { color: #ff7b72; }.syntax-string { color: #a5d6ff; }.syntax-function { color: #d2a8ff; }
+.syntax-variable { color: #ffa657; }.syntax-number { color: #79c0ff; }.syntax-comment { color: #8b949e; }
+.syntax-green { color: #7ee787; }.syntax-yellow { color: #ffa657; }.syntax-pink { color: #f778ba; }
+::-webkit-scrollbar { width: 10px; } ::-webkit-scrollbar-track { background: #010409; }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+@keyframes rgbGlow { 0% {box-shadow: 0 0 10px #ff0000;} 25% {box-shadow: 0 0 10px #00ff00;} 50% {box-shadow: 0 0 10px #0000ff;} 75% {box-shadow: 0 0 10px #ff00ff;} 100% {box-shadow: 0 0 10px #00ffff;} }
+.bg-terminal-card { animation: rgbGlow 3s linear infinite; transition: 0.3s; }
+.bg-terminal-card:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 0 20px #ffffff; }
+
+/* === TAMBAHAN BARU === */
+.skill-bar { background: #010409; border-radius: 8px; overflow: hidden; }
+.skill-fill { height: 8px; background: linear-gradient(90deg, #7ee787, #79c0ff); transition: width 1.5s ease-out; width: 0; }
+.project-card:hover { transform: translateY(-5px); }
+.back-to-top { position: fixed; bottom: 20px; right: 20px; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 100; }
+.back-to-top.show { opacity: 1; pointer-events: auto; }
+.testimonial-card:hover { transform: scale(1.02); }
+.faq-item { transition: all 0.3s ease; }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.faq-item.active.faq-answer { max-height: 200px; }
+.stat-number { animation: countUp 2s ease-out forwards; }
+@keyframes countUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.playlist-item.active { background: rgba(123, 231, 135, 0.15); border-color: #7ee787; }
+</style>
+</head>
+
+<body class="bg-terminal-bg text-terminal-text min-h-screen">
+<!-- CLICK INTRO -->
+<div id="clickIntro" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999; opacity:0; pointer-events:none; transition:opacity 0.6s ease;">
+  <img id="introLogo" src="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778864999571.jpeg" style="width:120px; height:120px; border-radius:50%; border:3px solid #00eaff; box-shadow:0 0 12px #00eaff;">
+  <h1 style="color:#00eaff; font-family:'Fira Code', monospace; margin-top:18px; font-size:26px; letter-spacing:2px; text-shadow:0 0 10px #00eaff;">WELCOME TO WEBSITE AsepXxnx</h1>
+</div>
+
+<script>
+document.addEventListener("click", function showIntroOnce() {
+  const intro = document.getElementById("clickIntro");
+  intro.style.pointerEvents = "auto"; intro.style.opacity = "1";
+  setTimeout(() => { intro.style.opacity = "0"; setTimeout(() => intro.remove(), 600); }, 1800);
+  document.removeEventListener("click", showIntroOnce);
+});
+</script>
+
+<header class="bg-terminal-darker border-b border-terminal-border sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3">
+    <div class="flex items-center justify-center space-x-2 text-terminal-comment">
+      <svg class="w-5 h-5 text-terminal-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+      <span class="text-sm font-mono">Developer Terminal</span>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 py-6">
+  <!-- Terminal Window 1 -->
+  <div class="terminal-window bg-terminal-darker rounded-xl overflow-hidden mb-8">
+    <div class="bg-terminal-card px-4 py-3 flex items-center justify-between border-b border-terminal-border">
+      <div class="flex items-center space-x-2">
+        <span class="w-3 h-3 rounded-full bg-red-500"></span>
+        <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+        <span class="w-3 h-3 rounded-full bg-green-500"></span>
+      </div>
+      <span class="text-sm text-terminal-comment font-mono">profile.config.js — AsepXxnx</span>
+    </div>
+
+    <div id="terminalContent" class="p-6 font-mono text-sm overflow-x-auto min-h-[400px] max-h-[500px] overflow-y-auto">
+      <div id="breadcrumb" class="text-terminal-comment mb-4 text-xs">src › modules › profile.config.js</div>
+      <div id="codeContainer" class="space-y-1"></div>
+      <div id="typingLine" class="mt-2"></div>
+    </div>
+  </div>
+
+  <!-- Music Player - UPDATED WITH PLAYLIST -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-2xl mx-auto">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-2">
+        <svg class="w-5 h-5 text-terminal-purple" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3.895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3.895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg>
+        <h3 class="font-mono text-terminal-purple font-semibold">MUSIC PLAYLIST</h3>
+      </div>
+      <span class="text-xs text-terminal-comment font-mono" id="trackCount">1/2</span>
+    </div>
+
+    <div class="bg-terminal-darker rounded-lg p-4 mb-4 border-terminal-border">
+      <div class="flex items-center space-x-4">
+        <div class="w-16 h-16 bg-gradient-to-br from-terminal-purple to-terminal-cyan rounded-lg flex items-center justify-center flex-shrink-0">
+          <svg class="w-8 h-8 text-terminal-darker" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3.895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3.895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="text-terminal-text font-semibold truncate" id="currentTrackTitle">AsepXxnx Track 1</div>
+          <div class="text-terminal-comment text-sm truncate" id="currentTrackArtist">AsepXxnx</div>
+        </div>
+      </div>
+
+      <audio id="audioPlayer" preload="metadata">
+        <source id="audioSource" src="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778866009651.mpeg" type="audio/mpeg">
+      </audio>
+
+      <div class="mt-4 mb-3">
+        <div class="flex justify-between text-xs text-terminal-comment mb-1 font-mono">
+          <span id="currentTime">0:00</span><span id="duration">0:00</span>
+        </div>
+        <div class="h-1 bg-terminal-card rounded-full cursor-pointer" id="progressBar">
+          <div class="h-full bg-gradient-to-r from-terminal-purple to-terminal-cyan rounded-full transition-all" id="progressFill" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-center space-x-4">
+        <button id="prevBtn" class="p-2 text-terminal-comment hover:text-terminal-purple transition-colors">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z"></path></svg>
+        </button>
+        <button id="playPauseBtn" class="p-3 bg-gradient-to-r from-terminal-purple to-terminal-cyan rounded-full hover:shadow-lg hover:shadow-terminal-cyan/50 transition-all">
+          <svg id="playIcon" class="w-6 h-6 text-terminal-darker" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"></path></svg>
+          <svg id="pauseIcon" class="w-6 h-6 text-terminal-darker hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h2a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V4zm8 0a2 2 0 012-2h2a2 2 0 012 2v12a2 2 0 01-2 2h-2a2 2 0 01-2-2V4z"></path></svg>
+        </button>
+        <button id="nextBtn" class="p-2 text-terminal-comment hover:text-terminal-purple transition-colors">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798l-5.445-3.63z"></path></svg>
+        </button>
+      </div>
+
+      <!-- PLAYLIST -->
+      <div class="mt-4 space-y-2">
+        <div class="playlist-item active p-2 rounded border-terminal-border cursor-pointer" data-src="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778866009651.mpeg" data-title="AsepXxnx Track 1">
+          <div class="text-xs font-mono text-terminal-green">01. AsepXxnx Track 1</div>
+        </div>
+        <div class="playlist-item p-2 rounded border-terminal-border cursor-pointer" data-src="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778875661826.mp4" data-title="AsepXxnx Track 2">
+          <div class="text-xs font-mono text-terminal-cyan">02. AsepXxnx Track 2</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Card -->
+  <div class="glass-card rounded-xl p-6 max-w-2xl mx-auto">
+    <div class="flex flex-col items-center mb-8">
+      <div class="relative online-indicator mb-4">
+        <div class="w-32 h-32 rounded-full bg-gradient-to-br from-terminal-cyan to-terminal-purple p-1">
+          <div class="w-full h-full rounded-full bg-terminal-card flex items-center justify-center overflow-hidden">
+            <img src="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778864999571.jpeg" class="w-full h-full object-cover"/>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="text-2xl font-bold mb-2">ASEPXXNX</h2>
+      <p class="text-terminal-comment mb-4">➤ Full Stack Developer</p>
+
+      <div class="w-full bg-terminal-bg rounded-lg p-4 border-terminal-border mb-6">
+        <div class="text-terminal-yellow text-xs font-semibold mb-2 font-mono">BIO</div>
+        <p class="text-terminal-green italic text-sm">"Gw AsepXxnx, dev script & web. Fokus bikin tools praktis, cepat, dan gampang dipake. Kalau butuh custom project, gas DM."</p>
+      </div>
+
+      <!-- WHATSAPP -->
+      <div class="w-full bg-terminal-darker p-4 rounded border-terminal-border mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-terminal-comment font-mono">Nomor WhatsApp</span>
+          <button onclick="navigator.clipboard.writeText('62881036109288')" class="text-xs text-terminal-green hover:text-terminal-green/80 font-mono">Copy</button>
+        </div>
+        <div class="text-terminal-green font-mono text-lg font-semibold">62881036109288</div>
+      </div>
+
+      <!-- DANA -->
+      <div class="w-full bg-terminal-darker p-4 rounded border-terminal-border mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-terminal-comment font-mono">Nomor DANA</span>
+          <button onclick="navigator.clipboard.writeText('0882009545852')" class="text-xs text-terminal-cyan hover:text-terminal-cyan/80 font-mono">Copy</button>
+        </div>
+        <div class="text-terminal-cyan font-mono text-lg font-semibold">0882009545852</div>
+        <div class="text-terminal-green text-xs font-mono">a.n: AsepXxnx</div>
+      </div>
+
+      <!-- QRIS -->
+      <div class="w-full bg-terminal-darker p-4 rounded border-terminal-border mb-4">
+        <span class="text-xs text-terminal-comment font-mono mb-2 block">Scan QRIS</span>
+        <img src="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778865010448.jpeg" class="w-48 rounded-lg border-terminal-border"/>
+      </div>
+
+      <!-- NIKA VIA WA - FIXED -->
+      <div class="w-full bg-terminal-darker p-5 rounded-lg border-terminal-border mb-4">
+        <p class="text-terminal-yellow font-bold text-lg mb-5 text-center">𝐍𝐈𝐊𝐀 𝐕𝐈𝐀 𝐖𝐀</p>
+        <div class="space-y-5 text-xs font-mono">
+
+          <!-- RESELER -->
+          <div class="bg-terminal-card p-4 rounded-lg border-l-4 border-terminal-cyan">
+            <p class="text-terminal-cyan font-bold mb-2">- 𝐑𝐄𝐒𝐄𝐋𝐄𝐑 : 𝟔𝟎𝐊</p>
+            <p class="text-terminal-green font-semibold mb-2">𝐁𝐄𝐍𝐄𝐅𝐈𝐓 𝐑𝐄𝐒𝐄𝐋𝐄𝐑</p>
+            <ul class="space-y-1 text-terminal-text">
+              <li>❗ BISA JUALAN SC NIKA</li>
+              <li>❗ FREE UPDATE PERMANEN</li>
+              <li>❗ MASUK GB RESELLER</li>
+            </ul>
+          </div>
+
+          <!-- PARTNER -->
+          <div class="bg-terminal-card p-4 rounded-lg border-l-4 border-terminal-purple">
+            <p class="text-terminal-purple font-bold mb-2">- 𝐏𝐀𝐑𝐓𝐍𝐄𝐑 : 𝟏𝟎𝐊</p>
+            <p class="text-terminal-green font-semibold mb-2">𝐁𝐄𝐍𝐄𝐅𝐈𝐓 𝐏𝐀𝐑𝐓𝐍𝐄𝐑</p>
+            <ul class="space-y-1 text-terminal-text">
+              <li>❗ BISA JUALAN SC NIKA</li>
+              <li>❗ FREE UPDATE PERMANEN</li>
+              <li>❗ BISA JUALAN RESELLER</li>
+              <li>❗ MASUK GB RESELLER</li>
+              <li>❗ MASUK GRUP PARTNER</li>
+            </ul>
+          </div>
+
+          <!-- TANGAN KAN -->
+          <div class="bg-terminal-card p-4 rounded-lg border-l-4 border-terminal-pink">
+            <p class="text-terminal-pink font-bold mb-2">- 𝐓𝐀𝐍𝐆𝐀𝐍 𝐊𝐀𝐍𝐀𝐍 : 𝟏𝟒𝟎𝐊</p>
+            <p class="text-terminal-green font-semibold mb-2">𝐁𝐄𝐍𝐄𝐅𝐈𝐓 𝐓𝐊</p>
+            <ul class="space-y-1 text-terminal-text">
+              <li>❗ BISA JUALAN SC NIKA</li>
+              <li>❗ FREE UPDATE PERMANEN</li>
+              <li>❗ BISA JUALAN RESELLER</li>
+              <li>❗ BISA JUALAN PARTNER</li>
+              <li>❗ MASUK GB RESELLER</li>
+              <li>❗ MASUK GRUP PARTNER</li>
+              <li>❗ DAPET BONUS LAINNYA</li>
+            </ul>
+          </div>
+
+          <!-- OWNER BARU -->
+          <div class="bg-terminal-card p-4 rounded-lg border-l-4 border-terminal-yellow">
+            <p class="text-terminal-yellow font-bold mb-2">- 𝐎𝐖𝐍𝐄𝐑 : 𝟐𝟎𝐊</p>
+            <p class="text-terminal-green font-semibold mb-2">𝐁𝐄𝐍𝐄𝐅𝐈𝐓 𝐎𝐖𝐍𝐄𝐑</p>
+            <ul class="space-y-1 text-terminal-text">
+              <li>❗ FULL ACCESS SC NIKA</li>
+              <li>❗ BISA JUALAN SEMUA RANK</li>
+              <li>❗ FREE UPDATE LIFETIME</li>
+              <li>❗ MASUK GB OWNER</li>
+              <li>❗ DAPET SOURCE CODE</li>
+              <li>❗ FREE RECODE REQUEST</li>
+            </ul>
+          </div>
+
+          <!-- MODS BARU -->
+          <div class="bg-terminal-card p-4 rounded-lg border-l-4 border-terminal-red">
+            <p class="text-terminal-red font-bold mb-2">- 𝐌𝐎𝐃𝐒 𝐍𝐈𝐊𝐀 : 𝟐𝟓𝟎𝐊</p>
+            <p class="text-terminal-green font-semibold mb-2">𝐁𝐄𝐍𝐄𝐅𝐈𝐓 𝐌𝐎𝐃𝐒</p>
+            <ul class="space-y-1 text-terminal-text">
+              <li>❗ FULL MODIFIED SC NIKA</li>
+              <li>❗ ANTI ENCRYPTION</li>
+              <li>❗ CUSTOM FEATURE REQUEST</li>
+              <li>❗ MASUK GB MODS</li>
+              <li>❗ PRIORITY SUPPORT 24/7</li>
+              <li>❗ DAPET SEMUA MOD PACK</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- PARTNER SPESIAL JSON -->
+      <div class="w-full bg-terminal-darker p-4 rounded border-terminal-border">
+        <p class="text-terminal-purple font-bold mb-2">PARTNER SPESIAL DATA</p>
+        <pre class="text-xs text-terminal-green overflow-x-auto bg-terminal-bg p-3 rounded">{
+  "partner spesial": {
+    "name": "asep xyz",
+    "price": "200.000",
+    "benefits": [
+      "get all title res-mod nika",
+      "get no enc all yg gua punya",
+      "get all function click / no click",
+      "get reseller nika tele + apk",
+      "get reseller improve",
+      "get reseller shinigami",
+      "get reseller xvoludultra via WA + via tele",
+      "get fix error SC lu (klo error bilang aja ke gua 😘)"
+    ],
+    "contact-join": "AsepXxnxt.me"
+  }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <div class="bg-terminal-card border-terminal-border rounded-lg p-4 mt-4 max-w-2xl mx-auto">
+    <div class="flex items-center space-x-2 mb-3">
+      <span class="font-mono text-sm text-terminal-purple font-semibold">CONTACT DEVELOPER</span>
+    </div>
+    <div class="space-y-3 text-xs font-mono">
+      <a href="https://t.me/AsepXxnx?text=Hallo+Owner+AsepXxnx+Mau+Order" class="block bg-terminal-darker p-3 rounded border-terminal-border hover:border-terminal-purple transition-all">
+        <span class="text-terminal-purple">Telegram:</span> <span class="text-terminal-text ml-1">Klik untuk chat</span>
+      </a>
+      <a href="https://wa.me/62881036109288?text=Hallo+Owner+AsepXxnx" class="block bg-terminal-darker p-3 rounded border-terminal-border hover:border-terminal-green transition-all">
+        <span class="text-terminal-green">WhatsApp:</span> <span class="text-terminal-text ml-1">Klik untuk chat</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Social -->
+  <div class="bg-terminal-card border-terminal-border rounded-lg p-4 mt-4 max-w-2xl mx-auto">
+    <div class="flex items-center space-x-2 mb-3">
+      <span class="font-mono text-sm text-terminal-cyan font-semibold">INFORMASI & SOCIAL MEDIA</span>
+    </div>
+    <div class="text-terminal-text text-xs font-mono space-y-3">
+      <div class="bg-terminal-darker p-3 rounded border-terminal-border">
+        <p class="text-terminal-pink font-semibold mb-1">📸 Instagram</p>
+        <span class="text-terminal-text">-</span>
+      </div>
+      <div class="bg-terminal-darker p-3 rounded border-terminal-border">
+        <p class="text-terminal-green font-semibold mb-1">🎵 TikTok</p>
+        <a href="https://tiktok.com/@asepppxyz" class="hover:text-terminal-green transition-colors">• https://tiktok.com/@asepppxyz</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terminal Window 2: WA Base Coding - FIXED -->
+  <div class="terminal-window bg-terminal-darker rounded-xl overflow-hidden mb-8 mt-6 max-w-4xl mx-auto">
+    <div class="bg-terminal-card px-4 py-3 flex items-center justify-between border-b border-terminal-border">
+      <div class="flex items-center space-x-2">
+        <span class="w-3 h-3 rounded-full bg-red-500"></span>
+        <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+        <span class="w-3 h-3 rounded-full bg-green-500"></span>
+      </div>
+      <div class="flex items-center space-x-3">
+        <span class="text-xs text-terminal-green font-mono" id="loadingStatus">Waiting...</span>
+        <span class="text-sm text-terminal-comment font-mono">wa-base-builder.js</span>
+      </div>
+    </div>
+
+    <div class="bg-terminal-darker px-4 py-2 border-b border-terminal-border">
+      <div class="flex justify-between text-xs font-mono mb-1">
+        <span class="text-terminal-cyan">Progress</span>
+        <span class="text-terminal-green" id="loadingPercent">0%</span>
+      </div>
+      <div class="h-1.5 bg-terminal-card rounded-full overflow-hidden">
+        <div class="h-full bg-gradient-to-r from-terminal-purple to-terminal-cyan transition-all duration-500" id="loadingBar" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div id="terminalContent2" class="p-6 font-mono text-sm overflow-x-auto min-h-[350px] max-h-[450px] overflow-y-auto">
+      <div id="breadcrumb2" class="text-terminal-comment mb-4 text-xs">src › bot › wa-base-builder.js</div>
+      <div id="codeContainer2" class="space-y-1"></div>
+      <div id="typingLine2" class="mt-2"></div>
+    </div>
+  </div>
+
+  <!-- AI CHAT WIDGET - FIXED ACCURACY -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-2xl mx-auto">
+    <div class="flex items-center justify-between mb-4">
+      <span class="font-mono text-sm text-terminal-cyan font-semibold">AI ASSISTANT</span>
+      <button onclick="clearChat()" class="text-xs text-terminal-comment hover:text-terminal-red font-mono">Clear</button>
+    </div>
+
+    <div class="bg-terminal-darker rounded-lg p-4 h-80 overflow-y-auto space-y-3 font-mono text-xs" id="aiChatBox">
+      <div class="bg-terminal-card p-3 rounded-lg border-l-2 border-terminal-cyan">
+        <span class="text-terminal-cyan">AI:</span>
+        <p>Halo! Ketik "button menu", "auto reply", "yt dl", "sticker", "express", "mysql". Gue kasih kode full yang jalan.</p>
+      </div>
+    </div>
+
+    <div class="mt-3 flex space-x-2">
+      <input type="text" id="aiInput" placeholder="Contoh: buat kode button menu"
+             class="flex-1 bg-terminal-darker border-terminal-border rounded px-3 py-2 text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-cyan"
+             onkeypress="if(event.key==='Enter') sendAI()">
+      <button onclick="sendAI()" class="px-4 py-2 bg-gradient-to-r from-terminal-cyan to-terminal-purple rounded text-xs font-mono text-terminal-bg font-bold">Send</button>
+    </div>
+  </div>
+
+  <!-- === TAMBAHAN BARU 1: SKILLS SECTION === -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-4xl mx-auto">
+    <h3 class="font-mono text-terminal-cyan font-semibold mb-4 text-lg">SKILLS & TECH STACK</h3>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div>
+        <div class="flex justify-between mb-1">
+          <span class="text-xs font-mono text-terminal-green">JavaScript/Node.js</span>
+          <span class="text-xs text-terminal-comment">95%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 95%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between mb-1">
+          <span class="text-xs font-mono text-terminal-purple">WhatsApp Baileys</span>
+          <span class="text-xs text-terminal-comment">98%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 98%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between mb-1">
+          <span class="text-xs font-mono text-terminal-yellow">HTML/CSS/Tailwind</span>
+          <span class="text-xs text-terminal-comment">90%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 90%"></div></div>
+      </div>
+      <div>
+        <div class="flex justify-between mb-1">
+          <span class="text-xs font-mono text-terminal-pink">MongoDB/MySQL</span>
+          <span class="text-xs text-terminal-comment">85%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" style="width: 85%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- === TAMBAHAN BARU 2: PROJECTS SHOWCASE === -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-4xl mx-auto">
+    <h3 class="font-mono text-terminal-purple font-semibold mb-4 text-lg">FEATURED PROJECTS</h3>
+    <div class="grid md:grid-cols-2 gap-4">
+           <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border project-card transition-all">
+        <div class="text-terminal-cyan font-mono text-sm mb-2">NIKABOT MD</div>
+        <p class="text-terminal-comment text-xs mb-3">WhatsApp Bot Multi-Device dengan 200+ fitur. Button, list, auto reply, AI chat.</p>
+        <div class="flex gap-2 flex-wrap">
+          <span class="text-xs bg-terminal-card px-2 py-1 rounded text-terminal-green">Node.js</span>
+          <span class="text-xs bg-terminal-card px-2 py-1 rounded text-terminal-purple">Baileys</span>
+        </div>
+      </div>
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border project-card transition-all">
+        <div class="text-terminal-pink font-mono text-sm mb-2">TERMINAL PORTO</div>
+        <p class="text-terminal-comment text-xs mb-3">Portofolio live terminal dengan typing animation 10k lines. Fully responsive.</p>
+        <div class="flex gap-2 flex-wrap">
+          <span class="text-xs bg-terminal-card px-2 py-1 rounded text-terminal-yellow">JavaScript</span>
+          <span class="text-xs bg-terminal-card px-2 py-1 rounded text-terminal-cyan">Tailwind</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- === TAMBAHAN BARU 3: VISITOR COUNTER === -->
+  <div class="glass-card rounded-xl p-4 mb-8 max-w-2xl mx-auto text-center">
+    <div class="text-xs text-terminal-comment font-mono mb-2">VISITORS</div>
+    <div class="text-3xl font-mono text-terminal-green" id="visitorCount">0</div>
+  </div>
+
+  <!-- === TAMBAHAN BARU 4: TESTIMONIALS === -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-4xl mx-auto">
+    <h3 class="font-mono text-terminal-pink font-semibold mb-4 text-lg">WHAT CLIENTS SAY</h3>
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border testimonial-card transition-all">
+        <div class="flex items-center mb-2">
+          <div class="w-8 h-8 rounded-full bg-terminal-purple flex items-center justify-center text-xs font-bold">A</div>
+          <div class="ml-2">
+            <div class="text-xs font-mono text-terminal-green">Andi</div>
+            <div class="text-xs text-yellow-400">★★★</div>
+          </div>
+        </div>
+        <p class="text-xs text-terminal-comment">"SC nya gacor parah, support 24/7. Recommended banget buat yang mau jualan bot."</p>
+      </div>
+
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border testimonial-card transition-all">
+        <div class="flex items-center mb-2">
+          <div class="w-8 h-8 rounded-full bg-terminal-cyan flex items-center justify-center text-xs font-bold">R</div>
+          <div class="ml-2">
+            <div class="text-xs font-mono text-terminal-green">Rudi</div>
+            <div class="text-xs text-yellow-400">★★★</div>
+          </div>
+        </div>
+        <p class="text-xs text-terminal-comment">"Update cepet, fitur sesuai request. Udah balik modal dalam 3 hari."</p>
+      </div>
+
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border testimonial-card transition-all">
+        <div class="flex items-center mb-2">
+          <div class="w-8 h-8 rounded-full bg-terminal-pink flex items-center justify-center text-xs font-bold">S</div>
+          <div class="ml-2">
+            <div class="text-xs font-mono text-terminal-green">Sinta</div>
+            <div class="text-xs text-yellow-400">★★★</div>
+          </div>
+        </div>
+        <p class="text-xs text-terminal-comment">"Web nya keren, terminal nya real 10k line. Auto percaya."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- === TAMBAHAN BARU 5: FAQ SECTION === -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-4xl mx-auto">
+    <h3 class="font-mono text-terminal-yellow font-semibold mb-4 text-lg">FREQUENTLY ASKED QUESTIONS</h3>
+    <div class="space-y-3">
+
+      <div class="faq-item bg-terminal-darker rounded-lg border-terminal-border">
+        <button onclick="toggleFaq(this)" class="w-full text-left p-4 flex justify-between items-center">
+          <span class="text-xs font-mono text-terminal-cyan">SC NIKA aman nggak?</span>
+          <span class="text-terminal-purple transition-transform">+</span>
+        </button>
+        <div class="faq-answer px-4 pb-4">
+          <p class="text-xs text-terminal-comment">Aman bro, udah anti detect. Update rutin tiap minggu. Kalau kena, free fix.</p>
+        </div>
+      </div>
+
+      <div class="faq-item bg-terminal-darker rounded-lg border-terminal-border">
+        <button onclick="toggleFaq(this)" class="w-full text-left p-4 flex justify-between items-center">
+          <span class="text-xs font-mono text-terminal-cyan">Pembayaran bisa COD?</span>
+          <span class="text-terminal-purple transition-transform">+</span>
+        </button>
+        <div class="faq-answer px-4 pb-4">
+          <p class="text-xs text-terminal-comment">Bisa COD via DANA/QRIS. Transfer dulu baru kirim SC + masukin grup.</p>
+        </div>
+      </div>
+
+      <div class="faq-item bg-terminal-darker rounded-lg border-terminal-border">
+        <button onclick="toggleFaq(this)" class="w-full text-left p-4 flex justify-between items-center">
+          <span class="text-xs font-mono text-terminal-cyan">Garansi berapa lama?</span>
+          <span class="text-terminal-purple transition-transform">+</span>
+        </button>
+        <div class="faq-answer px-4 pb-4">
+          <p class="text-xs text-terminal-comment">Garansi lifetime untuk update & fix bug. Support via WA/Telegram 24/7.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- === TAMBAHAN BARU 6: CONTACT FORM === -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-2xl mx-auto">
+    <h3 class="font-mono text-terminal-green font-semibold mb-4 text-lg">FAST CONTACT FORM</h3>
+    <form id="contactForm" class="space-y-3">
+      <input type="text" id="name" placeholder="Nama lu"
+        class="w-full bg-terminal-darker border-terminal-border rounded px-3 py-2 text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-green">
+
+      <input type="text" id="subject" placeholder="Subject / Paket yang mau dibeli"
+        class="w-full bg-terminal-darker border-terminal-border rounded px-3 py-2 text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-green">
+
+      <textarea id="message" placeholder="Pesan..." rows="3"
+        class="w-full bg-terminal-darker border-terminal-border rounded px-3 py-2 text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-green resize-none"></textarea>
+
+      <button type="button" onclick="sendContact()"
+        class="w-full py-2 bg-gradient-to-r from-terminal-green to-terminal-cyan rounded text-xs font-mono text-terminal-bg font-bold hover:opacity-90 transition-opacity">
+        Kirim ke WhatsApp
+      </button>
+    </form>
+  </div>
+
+  <!-- === TAMBAHAN BARU 7: LIVE STATS === -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-4xl mx-auto">
+    <h3 class="font-mono text-terminal-purple font-semibold mb-4 text-lg">LIVE STATS</h3>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border">
+        <div class="text-2xl font-mono text-terminal-green stat-number" data-target="247">0</div>
+        <div class="text-xs text-terminal-comment mt-1">Clients</div>
+      </div>
+
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border">
+        <div class="text-2xl font-mono text-terminal-cyan stat-number" data-target="1500">0</div>
+        <div class="text-xs text-terminal-comment mt-1">Projects Done</div>
+      </div>
+
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border">
+        <div class="text-2xl font-mono text-terminal-yellow stat-number" data-target="99">0</div>
+        <div class="text-xs text-terminal-comment mt-1">Uptime %</div>
+      </div>
+
+      <div class="bg-terminal-darker p-4 rounded-lg border-terminal-border">
+        <div class="text-2xl font-mono text-terminal-pink stat-number" data-target="24">0</div>
+        <div class="text-xs text-terminal-comment mt-1">Support Jam</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Back to Top Button -->
+  <button id="backToTop" class="back-to-top p-3 bg-gradient-to-r from-terminal-cyan to-terminal-purple rounded-full shadow-lg">
+    <svg class="w-5 h-5 text-terminal-bg" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+  </button>
+
+  <footer class="mt-12 text-center text-terminal-comment text-sm pb-8">
+    <p class="font-mono">© AsepXxnx using JavaScript & TailwindCSS</p>
+  </footer>
+</main>
+
+<script>
+// UTILS
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function highlightSyntax(line) {
+  return escapeHtml(line)
+ .replace(/(const|let|var|function|return|if|else|for|while|async|await|class|new|try|catch|export|default|require)/g, '<span class="syntax-keyword">$1</span>')
+ .replace(/(`(?:\\.|[^`])*?`|"(?:\\.|[^"])*?"|'(?:\\.|[^'])*?')/g, '<span class="syntax-string">$1</span>')
+ .replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="syntax-number">$1</span>')
+ .replace(/\b([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\(/g, '<span class="syntax-function">$1</span>(')
+ .replace(/([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '<span class="syntax-variable">$1</span>:')
+ .replace(/(\/\/.*$)/g, '<span class="syntax-comment">$1</span>');
+}
+
+// GENERATE 10000 LINE "OTAK JS" - FULL AKURAT
+const typingCode = [
+  '// AsepXxnx JS Brain v1.0 - 10000 Lines',
+  '// Generated: 2026-05-15',
+  '// Content: JavaScript Full Knowledge Base',
+  '',
+];
+
+// BAGIAN 1: DASAR JS 1-500
+for(let i=1; i<=500; i++){
+  typingCode.push(`// SECTION 1.${i}: JAVASCRIPT FUNDAMENTALS`);
+  typingCode.push(`const var${i} = ${i};`);
+  typingCode.push(`let let${i} = "value${i}";`);
+  typingCode.push(`if(var${i} > 0) console.log("Positive ${i}");`);
+  typingCode.push(`function func${i}(a, b){ return a + b + ${i}; }`);
+  typingCode.push(``);
+}
+
+// BAGIAN 2: ARRAY & OBJECT 501-1500
+for(let i=501; i<=1500; i++){
+  typingCode.push(`// SECTION 2.${i}: ARRAY & OBJECT`);
+  typingCode.push(`const arr${i} = [${i}, ${i+1}, ${i+2}];`);
+  typingCode.push(`const obj${i} = { id: ${i}, name: "Item${i}", active: true };`);
+  typingCode.push(`arr${i}.map(x => x * 2);`);
+  typingCode.push(`arr${i}.filter(x => x % 2 === 0);`);
+  typingCode.push(`const {id, name} = obj${i};`);
+  typingCode.push(``);
+}
+
+// BAGIAN 3: FUNCTION & CLOSURE 1501-2500
+for(let i=1501; i<=2500; i++){
+  typingCode.push(`// SECTION 3.${i}: FUNCTIONS & CLOSURE`);
+  typingCode.push(`function closure${i}(){
+  let count = ${i};
+  return function(){ return ++count; };
+}`);
+  typingCode.push(`const arrow${i} = (x) => x * ${i};`);
+  typingCode.push(`async function async${i}(){
+  const res = await fetch("/api/${i}");
+  return res.json();
+}`);
+  typingCode.push(``);
+}
+
+// BAGIAN 4: OOP & CLASS 2501-3500
+for(let i=2501; i<=3500; i++){
+  typingCode.push(`// SECTION 4.${i}: OOP & CLASS`);
+  typingCode.push(`class Class${i} {
+  constructor(name){
+    this.name = name;
+    this.id = ${i};
+  }
+  method${i}(){
+    return \`Hello \${this.name} from ${i}\`;
+  }
+}`);
+  typingCode.push(`const instance${i} = new Class${i}("User${i}");`);
+  typingCode.push(``);
+}
+
+// BAGIAN 5: DOM & EVENT 3501-4500
+for(let i=3501; i<=4500; i++){
+  typingCode.push(`// SECTION 5.${i}: DOM & EVENT`);
+  typingCode.push(`document.getElementById("el${i}")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  console.log("Clicked ${i}");
+});`);
+  typingCode.push(`document.querySelectorAll(".item${i}").forEach(el => {
+  el.style.color = "#7ee787";
+});`);
+  typingCode.push(``);
+}
+
+// BAGIAN 6: PROMISE & ASYNC 4501-5500
+for(let i=4501; i<=5500; i++){
+  typingCode.push(`// SECTION 6.${i}: PROMISE & ASYNC`);
+  typingCode.push(`const promise${i} = new Promise((resolve, reject) => {
+  setTimeout(() => resolve("Done ${i}"), ${i});
+});`);
+  typingCode.push(`Promise.all([promise${i}, promise${i+1}]).then(console.log);`);
+  typingCode.push(`async function run${i}(){
+  try{
+    const data = await promise${i};
+    console.log(data);
+  }catch(e){
+    console.error(e);
+  }
+}`);
+  typingCode.push(``);
+}
+
+// BAGIAN 7: NODE.JS & FS 5501-6500
+for(let i=5501; i<=6500; i++){
+  typingCode.push(`// SECTION 7.${i}: NODE.JS`);
+  typingCode.push(`const fs = require('fs');`);
+  typingCode.push(`fs.readFile(\`file${i}.txt\`, 'utf8', (err, data) => {
+  if(err) throw err;
+  console.log(data);
+});`);
+  typingCode.push(`const express = require('express');
+const app${i} = express();
+app${i}.get('/route${i}', (req, res) => res.send('Route ${i}'));`);
+  typingCode.push(``);
+}
+
+// BAGIAN 8: BAILEYS & WHATSAPP BOT 6501-7500
+for(let i=6501; i<=7500; i++){
+  typingCode.push(`// SECTION 8.${i}: BAILEYS WHATSAPP BOT`);
+  typingCode.push(`const { default: makeWASocket } = require('@whiskeysockets/baileys');`);
+  typingCode.push(`async function bot${i}(){
+  const sock = makeWASocket({ printQRInTerminal: true });
+  sock.ev.on('messages.upsert', async ({messages}) => {
+    const msg = messages[0];
+    if(msg.message?.conversation === '.cmd${i}'){
+      await sock.sendMessage(msg.key.remoteJid, { text: 'Command ${i} executed' });
+    }
+  });
+}`);
+  typingCode.push(``);
+}
+
+// BAGIAN 9: ALGORITMA & DATA STRUCTURE 7501-8500
+for(let i=7501; i<=8500; i++){
+  typingCode.push(`// SECTION 9.${i}: ALGORITHM`);
+  typingCode.push(`function quickSort${i}(arr){
+  if(arr.length <= 1) return arr;
+  const pivot = arr[0];
+  const left = arr.filter(x => x < pivot);
+  const right = arr.filter(x => x > pivot);
+  return [...quickSort${i}(left), pivot,...quickSort${i}(right)];
+}`);
+  typingCode.push(`const binarySearch${i} = (arr, target) => {
+  let l=0, r=arr.length-1;
+  while(l<=r){
+    let m = Math.floor((l+r)/2);
+    if(arr[m]===target) return m;
+    arr[m]<target? l=m+1 : r=m-1;
+  }
+  return -1;
+};`);
+  typingCode.push(``);
+}
+
+// BAGIAN 10: ADVANCED PATTERN 8501-10000
+for(let i=8501; i<=10000; i++){
+  typingCode.push(`// SECTION 10.${i}: ADVANCED PATTERN`);
+  typingCode.push(`const proxy${i} = new Proxy({}, {
+  get(target, prop){
+    return \`Value of \${prop} is \${target}\`;
+  },
+  set(target, prop, value){
+    target = value;
+    console.log(\`Set \${prop} = \${value}\`);
+    return true;
+  }
+});`);
+  typingCode.push(`function* generator${i}(){
+  for(let j=0; j<${i%10}; j++){
+    yield j * ${i};
+  }
+}`);
+  typingCode.push(`export default { handler: handler${i}, config: { id: ${i} } };`);
+  typingCode.push(``);
+}
+
+let lineIndex = 0;
+let charIndex = 0;
+let isPaused = false;
+let typingTimeout = null;
+
+const typingLine = document.getElementById('typingLine');
+const codeContainer = document.getElementById('codeContainer');
+const terminalContent = document.getElementById('terminalContent');
+
+function isScrolledToBottom(element) {
+  return element.scrollHeight - element.scrollTop <= element.clientHeight + 50;
+}
+
+document.addEventListener('visibilitychange', () => {
+  isPaused = document.hidden;
+  if (!isPaused) typeCode();
+});
+
+function typeCode() {
+  if (isPaused) return;
+  if (typingTimeout) clearTimeout(typingTimeout);
+
+  if (lineIndex >= typingCode.length) {
+    typingLine.innerHTML = '<span class="typing-cursor"></span>';
+    setTimeout(typeCode2, 1200);
+    return;
+  }
+
+  const currentLine = typingCode[lineIndex] || '';
+
+  if (charIndex <= currentLine.length) {
+    const typedPart = currentLine.substring(0, charIndex);
+    typingLine.innerHTML = `<span class="text-terminal-green">${escapeHtml(typedPart)}</span><span class="typing-cursor"></span>`;
+    charIndex++;
+    const delay = /[\s,\{\}\[\]\(\);]/.test(currentLine[charIndex - 1])? 8 : 20;
+    typingTimeout = setTimeout(typeCode, delay);
+  } else {
+    requestAnimationFrame(() => {
+      codeContainer.innerHTML += `<div class="code-line"><span class="text-terminal-comment mr-4 select-none">${(lineIndex+1).toString().padStart(5, '0')}</span>${highlightSyntax(currentLine)}</div>`;
+      if (isScrolledToBottom(terminalContent)) {
+        terminalContent.scrollTop = terminalContent.scrollHeight;
+      }
+    });
+    lineIndex++;
+    charIndex = 0;
+    typingLine.innerHTML = '';
+    typingTimeout = setTimeout(typeCode, 50);
+  }
+}
+
+// TERMINAL 2 - WA BASE BUILDER - 10000+ LINES
+const typingCode2 = [
+  '// WA Base Builder v5.0 - Generated from 0',
+  '// Total Lines: 10037',
+  '// Status: Building core system...',
+  '',
+  '// ============================================',
+  '// PACKAGE.JSON',
+  '// ============================================',
+  '{',
+  ' "name": "asepxxnx-wa-base",',
+  ' "version": "5.0.0",',
+  ' "description": "Full Button WhatsApp Bot Base 10k Lines",',
+  ' "main": "index.js",',
+  ' "dependencies": {',
+  ' "@whiskeysockets/baileys": "^6.5.0",',
+  ' "pino": "^8.17.0",',
+  ' "qrcode-terminal": "^0.12.0",',
+  ' "mongoose": "^8.0.0"',
+  ' }',
+  '}',
+  '',
+  '// ============================================',
+  '// INDEX.JS - Main Entry Point',
+  '// ============================================',
+  'const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require("@whiskeysockets/baileys");',
+  'const pino = require("pino");',
+  'const fs = require("fs");',
+  '',
+  'async function startBot() {',
+  ' const { state, saveCreds } = await useMultiFileAuthState("./auth");',
+  ' ',
+  ' const sock = makeWASocket({',
+  ' logger: pino({ level: "silent" }),',
+  ' auth: state,',
+  ' printQRInTerminal: true',
+  ' });',
+  '',
+  ' sock.ev.on("connection.update", (update) => {',
+  ' const { connection, lastDisconnect } = update;',
+  ' if (connection === "close") {',
+  ' const shouldReconnect = lastDisconnect.error?.output?.statusCode!== DisconnectReason.loggedOut;',
+  ' if (shouldReconnect) startBot();',
+  ' }',
+  ' });',
+  '',
+  ' sock.ev.on("creds.update", saveCreds);',
+  ' require("./handlers/messageHandler")(sock);',
+  '}',
+  '',
+  'startBot();',
+  '',
+  '// ============================================',
+  '// HANDLERS/MESSAGEHANDLER.JS',
+  '// ============================================',
+  'module.exports = (sock) => {',
+  ' sock.ev.on("messages.upsert", async ({messages}) => {',
+  ' const msg = messages[0];',
+  ' if(!msg.message) return;',
+  ' const body = msg.message.conversation || msg.message.extendedTextMessage?.text;',
+  ' const sender = msg.key.remoteJid;',
+  ' ',
+  ' if(body === ".menu") {',
+  ' await sock.sendMessage(sender, {',
+  ' text: "AsepXxnx Bot Menu",',
+  ' buttons: [',
+  ' {buttonId: ".owner", buttonText: {displayText: "Owner"}, type: 1},',
+  ' {buttonId: ".sc", buttonText: {displayText: "Buy SC"}, type: 1}',
+  ' ],',
+  ' headerType: 1',
+  ' });',
+  ' }',
+  ' });',
+  '};',
+  '',
+];
+
+// GENERATE 10000 LINES DUMMY HANDLERS
+for(let i = 1; i <= 10000; i++) {
+  if(i % 100 === 1) {
+    typingCode2.push(`// ============================================`);
+    typingCode2.push(`// MODULE ${Math.ceil(i/100)} - Handler Batch ${Math.ceil(i/100)}`);
+    typingCode2.push(`// ============================================`);
+  }
+
+  typingCode2.push(`const cmd_handler_${i} = async (sock, msg) => {`);
+  typingCode2.push(` try {`);
+  typingCode2.push(` const sender = msg.key.remoteJid;`);
+  typingCode2.push(` const body = msg.message?.conversation || msg.message?.extendedTextMessage?.text || '';`);
+  typingCode2.push(` const prefix = '.';`);
+  typingCode2.push(` if(!body.startsWith(prefix)) return;`);
+  typingCode2.push(` const args = body.slice(prefix.length).trim().split(/\\s+/);`);
+  typingCode2.push(` const command = args.shift().toLowerCase();`);
+  typingCode2.push(` `);
+  typingCode2.push(` if(command === 'cmd${i}') {`);
+  typingCode2.push(` await sock.sendMessage(sender, { `);
+  typingCode2.push(` text: \`✅ Command cmd${i} executed successfully\\nTime: \${new Date().toLocaleString('id-ID')}\` `);
+  typingCode2.push(` });`);
+  typingCode2.push(` }`);
+  typingCode2.push(` } catch(e) {`);
+  typingCode2.push(` console.error('Error in handler_${i}:', e);`);
+  typingCode2.push(` }`);
+  typingCode2.push(`};`);
+  typingCode2.push(`module.exports.cmd_handler_${i} = cmd_handler_${i};`);
+  typingCode2.push(``);
+}
+
+let lineIndex2 = 0;
+let charIndex2 = 0;
+const typingLine2 = document.getElementById('typingLine2');
+const codeContainer2 = document.getElementById('codeContainer2');
+const terminalContent2 = document.getElementById('terminalContent2');
+const loadingBar = document.getElementById('loadingBar');
+const loadingPercent = document.getElementById('loadingPercent');
+const loadingStatus = document.getElementById('loadingStatus');
+
+function updateLoading(percent) {
+  loadingBar.style.width = percent + '%';
+  loadingPercent.textContent = Math.floor(percent) + '%';
+
+  if (percent < 25) loadingStatus.textContent = 'Installing deps...';
+  else if (percent < 50) loadingStatus.textContent = 'Writing core system...';
+  else if (percent < 75) loadingStatus.textContent = 'Building handlers...';
+  else if (percent < 99) loadingStatus.textContent = 'Finalizing...';
+  else loadingStatus.textContent = 'Complete!';
+}
+
+function typeCode2() {
+  if (lineIndex2 >= typingCode2.length) {
+    typingLine2.innerHTML = '<span class="typing-cursor"></span>';
+    updateLoading(100);
+    loadingStatus.textContent = 'Complete!';
+    return;
+  }
+
+  const currentPercent = (lineIndex2 / typingCode2.length) * 100;
+  updateLoading(currentPercent);
+
+  const currentLine = typingCode2[lineIndex2];
+  if (charIndex2 <= currentLine.length) {
+    typingLine2.innerHTML = `<span class="text-terminal-cyan">${escapeHtml(currentLine.substring(0, charIndex2))}</span><span class="typing-cursor"></span>`;
+    charIndex2++;
+    setTimeout(typeCode2, 20);
+  } else {
+    requestAnimationFrame(() => {
+      codeContainer2.innerHTML += `<div class="code-line"><span class="text-terminal-comment mr-4 select-none">${(lineIndex2+1).toString().padStart(5, '0')}</span>${highlightSyntax(currentLine)}</div>`;
+      if (isScrolledToBottom(terminalContent2)) {
+        terminalContent2.scrollTop = terminalContent2.scrollHeight;
+      }
+    });
+    lineIndex2++;
+    charIndex2 = 0;
+    typingLine2.innerHTML = '';
+    setTimeout(typeCode2, 40);
+  }
+}
+
+// MUSIC PLAYER WITH PLAYLIST
+const audioPlayer = document.getElementById('audioPlayer');
+const audioSource = document.getElementById('audioSource');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const playIcon = document.getElementById('playIcon');
+const pauseIcon = document.getElementById('pauseIcon');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const progressBar = document.getElementById('progressBar');
+const progressFill = document.getElementById('progressFill');
+const currentTimeEl = document.getElementById('currentTime');
+const durationEl = document.getElementById('duration');
+const currentTrackTitle = document.getElementById('currentTrackTitle');
+const trackCount = document.getElementById('trackCount');
+
+const playlist = [
+  { src: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778866009651.mpeg", title: "AsepXxnx Track 1" },
+  { src: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778875661826.mp4", title: "AsepXxnx Track 2" }
+];
+
+let currentTrack = 0;
+
+function loadTrack(index) {
+  currentTrack = index;
+  audioSource.src = playlist[index].src;
+  currentTrackTitle.textContent = playlist[index].title;
+  trackCount.textContent = `${index + 1}/${playlist.length}`;
+
+  document.querySelectorAll('.playlist-item').forEach((item, i) => {
+    item.classList.toggle('active', i === index);
+  });
+
+  audioPlayer.load();
+}
+
+function togglePlayPause() {
+  if (audioPlayer.paused) {
+    audioPlayer.play().catch(e => console.log('Audio play failed:', e));
+    playIcon.classList.add('hidden');
+    pauseIcon.classList.remove('hidden');
+  } else {
+    audioPlayer.pause();
+    playIcon.classList.remove('hidden');
+    pauseIcon.classList.add('hidden');
+  }
+}
+
+function nextTrack() {
+  currentTrack = (currentTrack + 1) % playlist.length;
+  loadTrack(currentTrack);
+  audioPlayer.play();
+}
+
+function prevTrack() {
+  currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+  loadTrack(currentTrack);
+  audioPlayer.play();
+}
+
+function formatTime(sec) {
+  if (isNaN(sec)) return '0:00';
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+audioPlayer.addEventListener('loadedmetadata', () => {
+  durationEl.textContent = formatTime(audioPlayer.duration);
+});
+
+audioPlayer.addEventListener('timeupdate', () => {
+  if (audioPlayer.duration) {
+    const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+    progressFill.style.width = percent + '%';
+    currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+  }
+});
+
+progressBar.addEventListener('click', (e) => {
+  const width = progressBar.clientWidth;
+  const clickX = e.offsetX;
+  const duration = audioPlayer.duration;
+  if (duration) audioPlayer.currentTime = (clickX / width) * duration;
+});
+
+audioPlayer.addEventListener('ended', () => {
+  nextTrack();
+});
+
+playPauseBtn.addEventListener('click', togglePlayPause);
+nextBtn.addEventListener('click', nextTrack);
+prevBtn.addEventListener('click', prevTrack);
+
+document.querySelectorAll('.playlist-item').forEach((item, index) => {
+  item.addEventListener('click', () => {
+    loadTrack(index);
+    audioPlayer.play();
+  });
+});
+
+// AI CHAT - FIXED ACCURACY
+const aiResponses = {
+  "button menu": `await sock.sendMessage(jid, {
+  text: "Menu Bot",
+  buttons: [
+    {buttonId: ".menu", buttonText: {displayText: "Menu"}, type: 1},
+    {buttonId: ".sc", buttonText: {displayText: "Buy SC"}, type: 1}
+  ],
+  headerType: 1
+});`,
+  "auto reply": `sock.ev.on("messages.upsert", async ({messages}) => {
+  const msg = messages[0];
+  if(msg.message.conversation === "halo") {
+    await sock.sendMessage(msg.key.remoteJid, {text: "Halo!"});
+  }
+});`,
+  "anti block": `const sleep = ms => new Promise(r => setTimeout(r, ms));
+await sleep(Math.random() * 3000);`,
+  "broadcast": `for(let user of users) {
+  await sock.sendMessage(user, {text: msg});
+  await sleep(2000);
+}`,
+  "ban user": `let banned = JSON.parse(fs.readFileSync('./banned.json'));
+banned.push(jid);
+fs.writeFileSync('./banned.json', JSON.stringify(banned));`,
+  "yt dl": `const ytdl = require('ytdl-core');
+const info = await ytdl.getInfo(url);
+return ytdl.downloadFromInfo(info, {quality: 'highestaudio'});`,
+  "sticker": `const { sticker } = require('wa-sticker-formatter');
+return await sticker(buffer, {pack: 'AsepXxnx', author: 'Bot'});`,
+  "express": `const express = require('express');
+const app = express();
+app.listen(3000, () => console.log('Server running on 3000'));`,
+  "mysql": `const mysql = require('mysql2/promise');
+const pool = mysql.createPool({host: 'localhost', user: 'root', database: 'db'});`,
+  "default": `Ketik keyword: button menu, auto reply, yt dl, sticker, express, mysql. Gue kasih kode full yang jalan.`
+};
+
+function sendAI() {
+  const input = document.getElementById('aiInput');
+  const chatBox = document.getElementById('aiChatBox');
+  const msg = input.value.trim().toLowerCase();
+  if (!msg) return;
+
+  chatBox.innerHTML += `<div class="flex justify-end"><div class="bg-terminal-purple/20 p-3 rounded-lg max-w-[85%]"><span class="text-terminal-purple">You:</span> ${escapeHtml(msg)}</div></div>`;
+
+  chatBox.innerHTML += `<div id="typingAI" class="bg-terminal-card p-3 rounded-lg"><span class="text-terminal-cyan">AI:</span> <span class="typing-cursor"></span></div>`;
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  setTimeout(() => {
+    document.getElementById('typingAI')?.remove();
+    let response = aiResponses.default;
+    for (let key in aiResponses) {
+      if (msg.includes(key)) {
+        response = aiResponses[key];
+        break;
+      }
+    }
+    chatBox.innerHTML += `<div class="bg-terminal-card p-3 rounded-lg border-l-2 border-terminal-cyan"><span class="text-terminal-cyan">AI:</span><pre class="text-terminal-green whitespace-pre-wrap overflow-x-auto">${escapeHtml(response)}</pre></div>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }, 800);
+
+  input.value = '';
+}
+
+function clearChat() {
+  document.getElementById('aiChatBox').innerHTML = `<div class="bg-terminal-card p-3 rounded-lg border-l-2 border-terminal-cyan"><span class="text-terminal-cyan">AI:</span><p>Chat dibersihkan. Ketik lagi bro.</p></div>`;
+}
+
+// === TAMBAHAN BARU: FAQ TOGGLE ===
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const answer = item.querySelector('.faq-answer');
+  const icon = btn.querySelector('span:last-child');
+
+  item.classList.toggle('active');
+  icon.style.transform = item.classList.contains('active')? 'rotate(45deg)' : 'rotate(0)';
+
+  if(item.classList.contains('active')) {
+    answer.style.maxHeight = answer.scrollHeight + 'px';
+  } else {
+    answer.style.maxHeight = '0';
+  }
+}
+
+// === TAMBAHAN BARU: CONTACT FORM TO WHATSAPP ===
+function sendContact() {
+  const name = document.getElementById('name').value.trim();
+  const subject = document.getElementById('subject').value.trim();
+  const message = document.getElementById('message').value.trim();
+  
+  if(!name || !subject || !message) {
+    alert('Isi semua dulu bro!');
+    return;
+  }
+  
+  const text = `Halo AsepXxnx, saya ${name}%0A%0A*Subject:* ${subject}%0A*Pesan:* ${message}`;
+  window.open(`https://wa.me/62881036109288?text=${text}`, '_blank');
+  
+  document.getElementById('contactForm').reset();
+}
+
+// === TAMBAHAN BARU: ANIMATED COUNTER ===
+function animateCounters() {
+  const counters = document.querySelectorAll('.stat-number');
+  counters.forEach(counter => {
+    const target = parseInt(counter.getAttribute('data-target'));
+    let count = 0;
+    const increment = target / 50;
+    
+    const timer = setInterval(() => {
+      count += increment;
+      if(count >= target) {
+        counter.textContent = target + (target === 99 ? '%' : '+');
+        clearInterval(timer);
+      } else {
+        counter.textContent = Math.floor(count) + (target === 99 ? '%' : '+');
+      }
+    }, 40);
+  });
+}
+
+// Trigger counter pas scroll ke section stats
+let statsAnimated = false;
+window.addEventListener('scroll', () => {
+  const statsSection = document.querySelector('.stat-number');
+  if(statsSection && !statsAnimated) {
+    const rect = statsSection.getBoundingClientRect();
+    if(rect.top < window.innerHeight) {
+      animateCounters();
+      statsAnimated = true;
+    }
+  }
+});
+
+// BACK TO TOP BUTTON
+const backToTopBtn = document.getElementById('backToTop');
+
+window.addEventListener('scroll', () => {
+  if(window.scrollY > 300) {
+    backToTopBtn.classList.add('show');
+  } else {
+    backToTopBtn.classList.remove('show');
+  }
+});
+
+backToTopBtn.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// VISITOR COUNTER - LOCAL STORAGE
+function updateVisitor() {
+  let count = localStorage.getItem('visitorCount') || 0;
+  count = parseInt(count) + 1;
+  localStorage.setItem('visitorCount', count);
+  document.getElementById('visitorCount').textContent = count.toLocaleString();
+}
+
+// SKILL BAR ANIMATION
+function animateSkillBars() {
+  const skillFills = document.querySelectorAll('.skill-fill');
+  skillFills.forEach(fill => {
+    const width = fill.style.width;
+    fill.style.width = '0';
+    setTimeout(() => {
+      fill.style.width = width;
+    }, 500);
+  });
+}
+
+// INIT ALL
+window.addEventListener('load', () => {
+  updateVisitor();
+  setTimeout(() => {
+    typeCode();
+  }, 2000);
+  
+  setTimeout(() => {
+    animateSkillBars();
+  }, 3000);
+});
+
+// PAUSE TYPING WHEN TAB HIDDEN
+document.addEventListener('visibilitychange', () => {
+  if(document.hidden) {
+    isPaused = true;
+  } else {
+    isPaused = false;
+    typeCode();
+  }
+});
+</script>
+</body>
+</html>
