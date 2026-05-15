@@ -710,7 +710,7 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm tr
 → .trinity-bulldozerv2 628xxx
 
    \`[ 𝐔𝐈 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 ]\`
-→ .blank-one 628xxx
+→ .blankInviteGroup(target) 628xxx
 → .blank-phone 628xxx
 → .blank-trinity 628xxx
    
@@ -1384,7 +1384,7 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm tr
 → .trinity-bulldozerv2 628xxx
 
    \`[ 𝐔𝐈 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 ]\`
-→ .blank-one 628xxx
+→ .blankInviteGroup(target) 628xxx
 → .blank-phone 628xxx
 → .blank-trinity 628xxx
    
@@ -3832,7 +3832,7 @@ await dingleyhard(Asepp, target, ptcp = true)
 }
 break
 
-case 'blank-one':
+case 'blankInviteGroup(target)':
 case 'blank-phone':
 case 'blank-trinity': {
 if (!isCreator && !isPremium && !isUnli) return payreply(mess.owner);
@@ -4474,46 +4474,6 @@ break;
 
 
 
-case 'clearakses': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
-
- const GITHUB_OWNER = `AsepXyz12`
- const GITHUB_REPO = `bot-wa-db`
- const AKSES_PATH = `database/akses.json`
-
- const axios = require('axios')
- payreply('Proses clear semua akses...')
-
- try {
- const getUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${AKSES_PATH}`
- const getRes = await axios.get(getUrl, {
- })
-
- let db = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
- const totalSebelum = db.akses?.length || 0
-
- if (totalSebelum === 0) return payreply('List akses udah kosong 🩸')
-
- db.akses = [] // Kosongin array
- const newContent = Buffer.from(JSON.stringify(db, null, 2)).toString('base64')
-
- await axios.put(getUrl, {
- message: `clearakses: hapus ${totalSebelum} akses`,
- content: newContent,
- sha: getRes.data.sha
- }, {
- })
-
- payreply(`Sukses clear akses 🩸\n${totalSebelum} orang dicabut aksesnya\nSekarang cuma lu yang bisa adddb/deldb`)
-
- } catch (e) {
- if (e.response?.status === 404) {
- return payreply('File akses.json ga ada 🩸')
- }
- payreply(`Gagal clear: ${e.response?.data?.message || 'Error'}`)
- }
-}
-break
 
  
  case 'listgh': {
@@ -11512,100 +11472,6 @@ break;
 
 
 
-case 'backupenc': {
- try {
- if (!isCreator) return payreply(mess.owner);
-
- const fs = require("fs");
- const path = require("path");
- const { exec } = require("child_process");
-
- const rootDir = "./";
- const tmpDir = path.join(__dirname, 'tmp', 'backupenc');
- const zipName = `𝐓𝐫𝐢𝐧𝐢𝐭𝐲𝐕𝟏𝐍𝐞𝐰(ENC).zip`;
- const zipPath = path.join(__dirname, 'tmp', zipName);
-
- // Bersihin tmp dulu
- if (fs.existsSync(tmpDir)) fs.rmSync(tmpDir, { recursive: true, force: true });
- if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
- fs.mkdirSync(tmpDir, { recursive: true });
-
- await payreply('⏳ Lagi nge-encrypt & nge-zip, tunggu 15-40 detik...');
-
- // Fungsi encrypt base64
- const encryptFile = (filePath) => {
- const content = fs.readFileSync(filePath, 'utf8');
- const encrypted = Buffer.from(content).toString('base64');
- const wrap = `// Encrypted by Shinigami
-const _0x = "${encrypted}";
-eval(Buffer.from(_0x, 'base64').toString('utf8'));`;
- return wrap;
- };
-
- // Copy semua file kecuali folder exclude
- const exclude = ['node_modules', 'session', '.npm', '.cache', 'tmp'];
- const copyRecursive = (src, dest) => {
- const stat = fs.statSync(src);
- if (stat.isDirectory()) {
- fs.mkdirSync(dest, { recursive: true });
- const files = fs.readdirSync(src);
- for (let file of files) {
- if (exclude.includes(file)) continue;
- copyRecursive(path.join(src, file), path.join(dest, file));
- }
- } else {
- fs.copyFileSync(src, dest);
- }
- };
-
- copyRecursive(rootDir, tmpDir);
-
- // Replace & encrypt file yang mau di-encrypt
- const filesToEncrypt = ['AseppLohya.js', 'start.js'];
- for (let file of filesToEncrypt) {
- const filePath = path.join(tmpDir, file);
- if (fs.existsSync(filePath)) {
- fs.writeFileSync(filePath, encryptFile(filePath));
- console.log(`[ENC] ${file}`);
- }
- }
-
- // Zip folder tmp/backupenc
- const cmd = `cd "${tmpDir}" && zip -r "${zipPath}" .`;
-
- exec(cmd, async (err) => {
- if (err) {
- console.error(err);
- return payreply(`❌ Gagal zip: ${err.message}\nPastikan panel ada perintah 'zip'`);
- }
-
- const sizeMB = (fs.statSync(zipPath).size / 1024 / 1024).toFixed(2);
-
- await payreply(
- `✅ Backup ENC selesai\n` +
- `📦 ${zipName}\n` +
- `📊 Size: ${sizeMB} MB\n` +
- `🔒 Encrypted: AseppLohya.js, start.js\n` +
- `Isi lain tetap polos`
- );
-
- await Asepp.sendMessage(m.chat, {
- document: fs.readFileSync(zipPath),
- fileName: zipName,
- mimetype: 'application/zip',
- caption: 'Backup ENC - AseppLohya.js & start.js udah ke-encrypt'
- }, { quoted: m });
-
- fs.rmSync(tmpDir, { recursive: true, force: true });
- fs.unlinkSync(zipPath);
- });
-
- } catch (e) {
- console.error('backupenc error:', e);
- return payreply(`❌ Error: ${e.message}`);
- }
-}
-break;
 
 
 
@@ -11674,7 +11540,6 @@ break;
 
 case 'encinvis': {
  try {
- if (!isCreator) return payreply(mess.owner);
  
  let quoted = m.quoted ? m.quoted : m.msg?.contextInfo?.quotedMessage;
  if (!quoted) return payreply('Reply file .js nya bro');
@@ -11770,7 +11635,6 @@ break;
 
 case 'encultra': {
  try {
- if (!isCreator) return payreply(mess.owner);
  
  let quoted = m.quoted ? m.quoted : m.msg?.contextInfo?.quotedMessage;
  if (!quoted) return payreply('Reply file .js nya bro');
@@ -13265,6 +13129,327 @@ fs.unlinkSync(outPath)
 console.error(e)
 payreply('Decrypt gagal: '+e.message)
 }
+}
+break
+
+
+
+case 'upmusic': {
+ try {
+ if (!isCreator) return Reply(mess.owner)
+ if (!q) return Reply(`Contoh:
+.upmusic https://link.mp3 | ./image.jpg | namalagu.mp3`)
+
+ const fs = require("fs")
+ const path = require("path")
+ const axios = require("axios")
+ const { exec } = require("child_process")
+
+ let args = q.split("|").map(v => v.trim())
+ if (args.length < 3) return Reply("Format salah.")
+
+ let url = args[0]
+ let imagePath = args[1]
+ let outputName = args[2]
+
+ if (!outputName.endsWith(".mp3")) {
+ outputName += ".mp3"
+ }
+
+ const tmpDir = path.join(__dirname, "tmp")
+ if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir)
+
+ const inputPath = path.join(tmpDir, "raw_audio.mp3")
+ const outputPath = path.join(tmpDir, outputName)
+
+ // download audio dari link
+ const response = await axios({
+ method: "GET",
+ url: url,
+ responseType: "stream",
+ headers: {
+ "User-Agent": "Mozilla/5.0"
+ }
+ })
+
+ const writer = fs.createWriteStream(inputPath)
+ response.data.pipe(writer)
+
+ await new Promise((resolve, reject) => {
+ writer.on("finish", resolve)
+ writer.on("error", reject)
+ })
+
+ // embed thumbnail + metadata
+ exec(`ffmpeg -i "${inputPath}" -i "${imagePath}" -map 0 -map 1 -c copy -id3v2_version 3 -metadata title="${outputName}" -metadata artist="TikTok Music" "${outputPath}" -y`, async (err) => {
+ 
+ if (err) {
+ console.log(err)
+ return Reply("Gagal inject thumbnail.")
+ }
+
+ await Asepp.sendMessage(m.chat, {
+ audio: fs.readFileSync(outputPath),
+ mimetype: "audio/mpeg",
+ fileName: outputName
+ }, { quoted: m })
+
+ fs.unlinkSync(inputPath)
+ fs.unlinkSync(outputPath)
+ })
+
+ } catch (err) {
+ console.log(err)
+ Reply("Error bang 🩸")
+ }
+}
+break
+
+
+
+
+case 'backupenc': {
+try {
+if (!isCreator) return Asepp.sendMessage(m.chat, { text: mess.owner }, { quoted: m });
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const axios = require("axios");
+const { exec } = require("child_process");
+
+// ================= CONFIG =================
+const GITHUB_OWNER = "AsepXyz12";
+const GITHUB_REPO = "bot-wa-db";
+
+}
+
+const rootDir = "./";
+const tmpDir = path.join(__dirname, "tmp", "backupenc");
+const zipName = "BackupEncTrinity.zip";
+const zipPath = path.join(tmpDir, zipName);
+
+// ================= CLEAN =================
+if (fs.existsSync(tmpDir)) fs.rmSync(tmpDir, { recursive: true, force: true });
+fs.mkdirSync(tmpDir, { recursive: true });
+if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
+
+await Asepp.sendMessage(m.chat, { text: "🪖 Running To Script ENC..." }, { quoted: m });
+
+// ================= FILTER =================
+const filterSecret = (t) => {
+return t.split("\n").filter(l =>
+).join("\n");
+};
+
+// ================= BASE64 (START & CONFIG) =================
+const encBase64 = (filePath) => {
+let c = fs.readFileSync(filePath, "utf8");
+c = filterSecret(c);
+
+const b64 = Buffer.from(c).toString("base64");
+
+return `(function(){
+const d="${b64}";
+eval(Buffer.from(d,"base64").toString("utf8"));
+})();`;
+};
+
+// ================= 10-STAGE MILITARY ENC =================
+const enc10 = (filePath) => {
+let c = fs.readFileSync(filePath, "utf8");
+c = filterSecret(c);
+
+// ===== STAGE 1 XOR =====
+const key = 33;
+let s1 = Buffer.from(c).map(b => b ^ key);
+
+// ===== STAGE 2 BASE64 =====
+let s2 = Buffer.from(s1).toString("base64");
+
+// ===== STAGE 3 BASE64 WRAP =====
+let s3 = Buffer.from(s2).toString("base64");
+
+// ===== STAGE 4 HEX =====
+let s4 = Buffer.from(s3).toString("hex");
+
+// ===== STAGE 5 SPLIT =====
+let s5 = s4.match(/.{1,65}/g);
+
+// ===== STAGE 6 JOIN WRAP =====
+let join = s5.map(x => `"${x}"`).join(",");
+
+// ===== FINAL SAFE WRAPPER (1 EXEC ONLY) =====
+return `
+// ===== MILITARY 10 LAYER CORE =====
+// JP-CN-KR-EN HYBRID PIPELINE
+
+(() => {
+
+const a = [${join}].join("");
+
+const b = Buffer.from(a,"hex").toString("utf8"); // stage 1
+const c = Buffer.from(b,"base64").toString("utf8"); // stage 2
+const d = Buffer.from(c,"base64"); // stage 3
+
+const e = Buffer.from(d).map(x => x ^ ${key}); // stage 4
+
+const f = Buffer.from(e).toString("utf8"); // stage 5
+
+(Function("return " + f))(); // execute
+
+})();
+`;
+};
+
+// ================= COPY PROJECT =================
+const exclude = ['node_modules', 'session', '.npm', '.cache', 'tmp'];
+
+const copy = (src, dest) => {
+const stat = fs.statSync(src);
+
+if (stat.isDirectory()) {
+fs.mkdirSync(dest, { recursive: true });
+for (let f of fs.readdirSync(src)) {
+if (exclude.includes(f)) continue;
+copy(path.join(src, f), path.join(dest, f));
+}
+} else {
+fs.copyFileSync(src, dest);
+}
+};
+
+copy(rootDir, tmpDir);
+
+// ================= ENCRYPT FILES =================
+
+// AseppLohya.js → 10 layer
+const asepp = path.join(tmpDir, "AseppLohya.js");
+if (fs.existsSync(asepp)) {
+fs.writeFileSync(asepp, enc10(asepp));
+}
+
+// start.js → base64
+const start = path.join(tmpDir, "start.js");
+if (fs.existsSync(start)) {
+fs.writeFileSync(start, encBase64(start));
+}
+
+// config.js → base64
+const config = path.join(tmpDir, "config.js");
+if (fs.existsSync(config)) {
+fs.writeFileSync(config, encBase64(config));
+}
+
+// ================= GITHUB PUSH =================
+async function pushGit() {
+const file = fs.readFileSync(asepp, "utf8");
+
+const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/AseppLohya.js`;
+
+let sha = null;
+
+try {
+const res = await axios.get(url, {
+});
+sha = res.data.sha;
+} catch {}
+
+await axios.put(url, {
+message: "Trinity backup",
+content: Buffer.from(file).toString("base64"),
+sha
+}, {
+});
+}
+
+await pushGit();
+
+// ================= ZIP =================
+const cmd = `cd "${tmpDir}" && zip -r "${zipPath}" .`;
+
+exec(cmd, async (err) => {
+if (err) {
+return Asepp.sendMessage(m.chat, { text: "❌ Zip error: " + err.message }, { quoted: m });
+}
+
+const size = (fs.statSync(zipPath).size / 1024 / 1024).toFixed(2);
+
+await Asepp.sendMessage(m.chat, {
+text:
+`🪖 Enc To Script Trinity DONE\n` +
+`📦 ${zipName}\n` +
+`📊 ${size} MB\n` +
+`🔐 AseppLohya.js = 10 STAGE PIPELINE`
+}, { quoted: m });
+
+await Asepp.sendMessage(m.chat, {
+document: fs.readFileSync(zipPath),
+fileName: zipName,
+mimetype: "application/zip"
+}, { quoted: m });
+
+fs.rmSync(tmpDir, { recursive: true, force: true });
+fs.unlinkSync(zipPath);
+});
+
+} catch (e) {
+return Asepp.sendMessage(m.chat, { text: "❌ Error: " + e.message }, { quoted: m });
+}
+}
+break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+case 'clearakses': {
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
+
+ const GITHUB_OWNER = `AsepXyz12`
+ const GITHUB_REPO = `bot-wa-db`
+ const AKSES_PATH = `database/akses.json`
+
+ const axios = require('axios')
+ payreply('Proses clear semua akses...')
+
+ try {
+ const getUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${AKSES_PATH}`
+ const getRes = await axios.get(getUrl, {
+ })
+
+ let db = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
+ const totalSebelum = db.akses?.length || 0
+
+ if (totalSebelum === 0) return payreply('List akses udah kosong 🩸')
+
+ db.akses = [] // Kosongin array
+ const newContent = Buffer.from(JSON.stringify(db, null, 2)).toString('base64')
+
+ await axios.put(getUrl, {
+ message: `clearakses: hapus ${totalSebelum} akses`,
+ content: newContent,
+ sha: getRes.data.sha
+ }, {
+ })
+
+ payreply(`Sukses clear akses 🩸\n${totalSebelum} orang dicabut aksesnya\nSekarang cuma lu yang bisa adddb/deldb`)
+
+ } catch (e) {
+ if (e.response?.status === 404) {
+ return payreply('File akses.json ga ada 🩸')
+ }
+ payreply(`Gagal clear: ${e.response?.data?.message || 'Error'}`)
+ }
 }
 break
 break
