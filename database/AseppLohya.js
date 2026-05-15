@@ -116,7 +116,7 @@ module.exports = Asepp = async (Asepp, m, chatUpdate, store) => {
         const { smsg, formatp, tanggal, formatDate, getTime, isUrl, sleep, clockString, runtime, fetchJson, getBuffer, jsonformat, format, parseMention, getRandom, getGroupAdmins, capital } = require('./library/myfunction');
  
 // Foto
-const shinigami = fs.readFileSync('./image/AsepIkiCok.jpg')
+const trinity = fs.readFileSync('./image/AsepIkiCok.jpg')
 const img = fs.readFileSync('./image/AsepIkicok.jpg')
 const musik = fs.readFileSync('./image/sawit.mp3')
 
@@ -252,7 +252,7 @@ const lol = {
     liveLocationMessage: {
       degreesLatitude: -6.9175,
       degreesLongitude: 107.6191,
-      caption: "𝐀𝐬𝐞𝐩𝐩\n𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐕𝟔", 
+      caption: "𝐀𝐬𝐞𝐩𝐩\n𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏", 
       sequenceNumber: "1656662991",
       contextInfo: {
         forwardingScore: 999999,
@@ -262,18 +262,18 @@ const lol = {
   }
 }
 
-// shinigami Eai
+// trinity Eai
 const Aseppbut = (anu) => {
 const {message, key} = generateWAMessageFromContent(m.chat, {
   interactiveMessage: {
     body: {text: anu},
-    footer: {text: `shinigami-Ai`},
+    footer: {text: `trinity-Ai`},
     nativeFlowMessage: {
       buttons: [{text: "Asepp"}
            ],
     }
   },
-}, {quoted: { key: { participant: '0@s.whatsapp.net', remoteJid: "0@s.whatsapp.net" }, message: { conversation: `shinigami - AI`}}})
+}, {quoted: { key: { participant: '0@s.whatsapp.net', remoteJid: "0@s.whatsapp.net" }, message: { conversation: `trinity - AI`}}})
  Asepp.relayMessage(m.chat, {viewOnceMessage:{message}}, {messageId:key.id})
 }
 
@@ -330,7 +330,7 @@ const payreply = async (teks) => {
           showAdAttribution: false,
           containsAutoReply: true,
           title: 'Asepp',
-          body: 'shinigami V6',
+          body: 'trinity V1',
           previewType: 'VIDEO',
           thumbnailUrl: 'https://img2.pixhost.to/images/7798/724632857_zedzbca3km.jpg',
           sourceUrl: 'https://whatsapp.com'
@@ -345,7 +345,7 @@ const payreply = async (teks) => {
           remoteJid: 'status@broadcast'
         },
         message: {
-          conversation: '𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐕𝟔'
+          conversation: '𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏'
         }
       }
     }
@@ -521,7 +521,7 @@ if (!isBotRegisteredNow) {
     const teksIlegal = `*⛔ ACCESS DENIED ⛔*
 
 ⚠️ *ERROR: UNAUTHORIZED EXECUTION*
-Nomor bot ini tidak terdaftar dalam database shinigami V6.
+Nomor bot ini tidak terdaftar dalam database trinity V1.
 
 『 𝐃𝐄𝐓𝐀𝐈𝐋 𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 』
 ⌲ *Number:* ${botNumber.split('@')[0]}
@@ -529,7 +529,7 @@ Nomor bot ini tidak terdaftar dalam database shinigami V6.
 ⌲ *Reason:* Illegal Script Access
 
 📌 HOW TO ACTIVATE
-- Pastikan nomor bot kamu terdaftar di database resmi shinigami.
+- Pastikan nomor bot kamu terdaftar di database resmi trinity.
 - Hubungi developer untuk melakukan pendaftaran atau membeli akses resmi.
 - Jangan menggunakan cara ilegal, apalagi mencuri lewat panel ya😹.
 - Setelah nomor bot terdaftar, restart bot agar perubahan berlaku.
@@ -541,21 +541,21 @@ Nomor bot ini tidak terdaftar dalam database shinigami V6.
     
 switch (command) {
     case "start":
-case "V6":
+case "V1":
 case "menu": {
     const nowJakarta = moment().tz('Asia/Jakarta');
     await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
 
-    let teks = `\`𝗦𝗛𝗜𝗡𝗜𝗚𝗔𝗠𝗜 𝗩𝟲 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
+    let teks = `\`𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
     
-Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm shinigami, your WhatsApp assistant. I'm here to help you with various tasks and make things easier for you. Just send what you need and I'll do my best to assist you. ✨
+Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm trinity, your WhatsApp assistant. I'm here to help you with various tasks and make things easier for you. Just send what you need and I'll do my best to assist you. ✨
        
 ⌲ \`𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 𝐁𝐎𝐓\`
 ┏━━━━━━━━━━━━━━━━
-┃✦ *Name Bot  » shinigami*
+┃✦ *Name Bot  » trinity*
 ┃✦ *Owner » Wahyu*
 ┃✦ *Developer » Asepp*
-┃✦ *Version  » V6*
+┃✦ *Version  » V1*
 ┃✦ *Language » JavaScript*
 ┃✦ *RunTime   » ${runtime(process.uptime())}*
 ┃✦ *Bot Mode » ${Asepp.public ? "Public" : "Self"}*
@@ -568,7 +568,7 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
 ┃☇ Kelpin \`Freinds\`
 ┃☇ All Friend \`My Support\`
 ┃☇ Script users \`Thank You\`
-┃☇ All Title shinigami \`Support\`
+┃☇ All Title trinity \`Support\`
 ┃☇ All Parnert Asepp \`Support\`
 ┗━━━━━━━━━━━━━━━━━━
 \`[洛] 𝐎𝐖𝐍𝐄𝐑 𝐒𝐎𝐒𝐌𝐄𝐃 [洛]\`
@@ -610,23 +610,23 @@ Telegram : t.me/AsepXxnx
                         nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
                             messageParamsJson: JSON.stringify({
                                 limited_time_offer: {
-                                    text: "𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐕𝟔",
+                                    text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
                                     url: "https://t.me/AsepXxnx",
-                                    copy_code: "𝐕𝟔",
+                                    copy_code: "𝐕𝟏",
                                     expiration_time: Date.now() * 999
                                 },
                                 bottom_sheet: {
                                     in_thread_buttons_limit: 2,
                                     divider_indices: [1, 2, 3, 4, 5],
                                     list_title: "CLICK",
-                                    button_title: "© V6"
+                                    button_title: "© V1"
                                 }
                             }),
                             buttons: [
                                 {
                                     name: "single_select",
                                     buttonParamsJson: JSON.stringify({
-                                        title: "© V6",
+                                        title: "© V1",
                                         sections: [{
                                             title: "List Menu",
                                             highlight_label: "𝐓𝐨𝐩 𝐅𝐞𝐚𝐭𝐮𝐫𝐞 🚀",
@@ -671,16 +671,16 @@ case "bugmenu": {
     const nowJakarta = moment().tz('Asia/Jakarta');
     await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
 
-    let teks = `\`𝗦𝗛𝗜𝗡𝗜𝗚𝗔𝗠𝗜 𝗩𝟲 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
+    let teks = `\`𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
     
-Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm shinigami, your WhatsApp assistant. I'm here to help you with various tasks and make things easier for you. Just send what you need and I'll do my best to assist you. ✨
+Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm trinity, your WhatsApp assistant. I'm here to help you with various tasks and make things easier for you. Just send what you need and I'll do my best to assist you. ✨
     
 ⌲ \`𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 𝐁𝐎𝐓\`
 ┏━━━━━━━━━━━━━━━━
-┃✦ *Name Bot  » shinigami*
+┃✦ *Name Bot  » trinity*
 ┃✦ *Owner » Wahyu*
 ┃✦ *Developer » Asepp*
-┃✦ *Version  » V6*
+┃✦ *Version  » V1*
 ┃✦ *Language » JavaScript*
 ┃✦ *RunTime   » ${runtime(process.uptime())}*
 ┃✦ *Bot Mode » ${Asepp.public ? "Public" : "Self"}*
@@ -688,42 +688,42 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
 ┃✦ *StatusScript  » buyVip/buyer*
 ┗━━━━━━━━━━━━━━━━━━
 
-\`[洛] 𝐏𝐑𝐈𝐕𝐀𝐓𝐄 𝐁𝐔𝐆 𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 [洛]\`
+\`[洛] 𝐏𝐑𝐈𝐕𝐀𝐓𝐄 𝐁𝐔𝐆 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 [洛]\`
 
-   \`[ 𝐅𝐎𝐑𝐂𝐋𝐎𝐒𝐄 𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 ]\`
-→ .shinigami-fc 628xxx
+   \`[ 𝐅𝐎𝐑𝐂𝐋𝐎𝐒𝐄 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 ]\`
+→ .trinity-fc 628xxx
 → .fc-invis 628xxx
-→ .forclose-shinigami 628xxx
+→ .forclose-trinity 628xxx
 
-    \`[ 𝐃𝐄𝐋𝐀𝐘 𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 ]\`
+    \`[ 𝐃𝐄𝐋𝐀𝐘 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 ]\`
 → .delay-god 628xxx
-→ .delay-shinigami 628xxx
+→ .delay-trinity 628xxx
 → .delay-hard 628xxx
 → .delay-maker 628xxx
 
   \`[ 𝐃𝐄𝐋𝐀𝐘 𝐁𝐄𝐁𝐀𝐒 𝐒𝐏𝐀𝐌 ]\`
 → .vcxl 628xxx
 
-   \`[ 𝐁𝐔𝐋𝐃𝐎𝐙𝐄𝐑 𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 ]\`
-→ .shinigami-bulldozer 628xxx
-→ .shinigami-attack 628xxx
-→ .shinigami-bulldozerv2 628xxx
+   \`[ 𝐁𝐔𝐋𝐃𝐎𝐙𝐄𝐑 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 ]\`
+→ .trinity-bulldozer 628xxx
+→ .trinity-attack 628xxx
+→ .trinity-bulldozerv2 628xxx
 
-   \`[ 𝐔𝐈 𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 ]\`
+   \`[ 𝐔𝐈 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 ]\`
 → .blank-one 628xxx
 → .blank-phone 628xxx
-→ .blank-shinigami 628xxx
+→ .blank-trinity 628xxx
    
-   \`[ 𝐈𝐎𝐒 𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 ]\`
-→ .shinigami-ios 628xxx
+   \`[ 𝐈𝐎𝐒 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 ]\`
+→ .trinity-ios 628xxx
 → .ios-attack 628xxx
 
 \`[洛] 𝐓𝐄𝐒𝐅𝐔𝐍𝐓𝐈𝐎𝐍 [洛]\`
 → .testfunction
 
 \`[洛] 𝐁𝐔𝐆 𝐆𝐑𝐎𝐔𝐏 [洛]\`
-→ .shinigami-killgroup *Link Group*
-→ .shinigami-blankgroup *Link Group*
+→ .trinity-killgroup *Link Group*
+→ .trinity-blankgroup *Link Group*
 `
 
     const msg = generateWAMessageFromContent(
@@ -760,23 +760,23 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
                         nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
                             messageParamsJson: JSON.stringify({
                                 limited_time_offer: {
-                                    text: "𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐕𝟔",
+                                    text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
                                     url: "https://t.me/AsepXxnx",
-                                    copy_code: "𝐕𝟔",
+                                    copy_code: "𝐕𝟏",
                                     expiration_time: Date.now() * 999
                                 },
                                 bottom_sheet: {
                                     in_thread_buttons_limit: 2,
                                     divider_indices: [1, 2, 3, 4, 5],
                                     list_title: "CLICK",
-                                    button_title: "© V6"
+                                    button_title: "© V1"
                                 }
                             }),
                             buttons: [
                                 {
                                     name: "single_select",
                                     buttonParamsJson: JSON.stringify({
-                                        title: "© V6",
+                                        title: "© V1",
                                         sections: [{
                                             title: "List Menu",
                                             highlight_label: "𝐓𝐨𝐩 𝐅𝐞𝐚𝐭𝐮𝐫𝐞 🚀",
@@ -820,16 +820,16 @@ case "ownermenu": {
     const nowJakarta = moment().tz('Asia/Jakarta');
     await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
 
-    let teks = `\`𝗦𝗛𝗜𝗡𝗜𝗚𝗔𝗠𝗜 𝗩𝟲 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
+    let teks = `\`𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
     
-Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm shinigami, your WhatsApp assistant. I'm here to help you with various tasks and make things easier for you. Just send what you need and I'll do my best to assist you. ✨
+Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm trinity, your WhatsApp assistant. I'm here to help you with various tasks and make things easier for you. Just send what you need and I'll do my best to assist you. ✨
        
 ⌲ \`𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 𝐁𝐎𝐓\`
 ┏━━━━━━━━━━━━━━━━
-┃✦ *Name Bot  » shinigami*
+┃✦ *Name Bot  » trinity*
 ┃✦ *Owner » Wahyu*
 ┃✦ *Developer » Asepp*
-┃✦ *Version  » V6*
+┃✦ *Version  » V1*
 ┃✦ *Language » JavaScript*
 ┃✦ *RunTime   » ${runtime(process.uptime())}*
 ┃✦ *Bot Mode » ${Asepp.public ? "Public" : "Self"}*
@@ -883,23 +883,23 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
                         nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
                             messageParamsJson: JSON.stringify({
                                 limited_time_offer: {
-                                    text: "𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐕𝟔",
+                                    text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
                                     url: "https://t.me/AsepXxnx",
-                                    copy_code: "𝐕𝟔",
+                                    copy_code: "𝐕𝟏",
                                     expiration_time: Date.now() * 999
                                 },
                                 bottom_sheet: {
                                     in_thread_buttons_limit: 2,
                                     divider_indices: [1, 2, 3, 4, 5],
                                     list_title: "CLICK",
-                                    button_title: "© V6"
+                                    button_title: "© V1"
                                 }
                             }),
                             buttons: [
                                 {
                                     name: "single_select",
                                     buttonParamsJson: JSON.stringify({
-                                        title: "© V6",
+                                        title: "© V1",
                                         sections: [{
                                             title: "List Menu",
                                             highlight_label: "𝐓𝐨𝐩 𝐅𝐞𝐚𝐭𝐮𝐫𝐞 🚀",
@@ -943,16 +943,16 @@ case "funmenu": {
     const nowJakarta = moment().tz('Asia/Jakarta');
     await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
 
-    let teks = `\`𝗦𝗛𝗜𝗡𝗜𝗚𝗔𝗠𝗜 𝗩𝟲 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
+    let teks = `\`𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
     
-Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm shinigami, your WhatsApp assistant. I'm here to help you with various tasks and make things easier for you. Just send what you need and I'll do my best to assist you. ✨
+Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm trinity, your WhatsApp assistant. I'm here to help you with various tasks and make things easier for you. Just send what you need and I'll do my best to assist you. ✨
        
 ⌲ \`𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 𝐁𝐎𝐓\`
 ┏━━━━━━━━━━━━━━━━
-┃✦ *Name Bot  » shinigami*
+┃✦ *Name Bot  » trinity*
 ┃✦ *Owner » Wahyu*
 ┃✦ *Developer » Asepp*
-┃✦ *Version  » V6*
+┃✦ *Version  » V1*
 ┃✦ *Language » JavaScript*
 ┃✦ *RunTime   » ${runtime(process.uptime())}*
 ┃✦ *Bot Mode » ${Asepp.public ? "Public" : "Self"}*
@@ -961,7 +961,7 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
 ┗━━━━━━━━━━━━━━━━━━
 
 \`[洛] 𝐅𝐔𝐍 𝐌𝐄𝐍𝐔 [洛]\`
-→ .shinigami ( Ai )
+→ .trinity ( Ai )
 → .promote
 → .demote
 → .open
@@ -1027,23 +1027,23 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
                         nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
                             messageParamsJson: JSON.stringify({
                                 limited_time_offer: {
-                                    text: "𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐕𝟔",
+                                    text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
                                     url: "https://t.me/AsepXxnx",
-                                    copy_code: "𝐕𝟔",
+                                    copy_code: "𝐕𝟏",
                                     expiration_time: Date.now() * 999
                                 },
                                 bottom_sheet: {
                                     in_thread_buttons_limit: 2,
                                     divider_indices: [1, 2, 3, 4, 5],
                                     list_title: "CLICK",
-                                    button_title: "© V6"
+                                    button_title: "© V1"
                                 }
                             }),
                             buttons: [
                                 {
                                     name: "single_select",
                                     buttonParamsJson: JSON.stringify({
-                                        title: "© V6",
+                                        title: "© V1",
                                         sections: [{
                                             title: "List Menu",
                                             highlight_label: "𝐓𝐨𝐩 𝐅𝐞𝐚𝐭𝐮𝐫𝐞 🚀",
@@ -1087,16 +1087,16 @@ case "cpanelmenu": {
     const nowJakarta = moment().tz('Asia/Jakarta');
     await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
 
-    let teks = `\`𝗦𝗛𝗜𝗡𝗜𝗚𝗔𝗠𝗜 𝗩𝟲 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
+    let teks = `\`𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
     
-Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm shinigami, your WhatsApp assistant. I'm here to help you with various tasks and make things easier for you. Just send what you need and I'll do my best to assist you. ✨
+Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm trinity, your WhatsApp assistant. I'm here to help you with various tasks and make things easier for you. Just send what you need and I'll do my best to assist you. ✨
        
 ⌲ \`𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 𝐁𝐎𝐓\`
 ┏━━━━━━━━━━━━━━━━
-┃✦ *Name Bot  » shinigami*
+┃✦ *Name Bot  » trinity*
 ┃✦ *Owner » Wahyu*
 ┃✦ *Developer » Asepp*
-┃✦ *Version  » V6*
+┃✦ *Version  » V1*
 ┃✦ *Language » JavaScript*
 ┃✦ *RunTime   » ${runtime(process.uptime())}*
 ┃✦ *Bot Mode » ${Asepp.public ? "Public" : "Self"}*
@@ -1158,23 +1158,23 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
                         nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
                             messageParamsJson: JSON.stringify({
                                 limited_time_offer: {
-                                    text: "𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐕𝟔",
+                                    text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
                                     url: "https://t.me/AsepXxnx",
-                                    copy_code: "𝐕𝟔",
+                                    copy_code: "𝐕𝟏",
                                     expiration_time: Date.now() * 999
                                 },
                                 bottom_sheet: {
                                     in_thread_buttons_limit: 2,
                                     divider_indices: [1, 2, 3, 4, 5],
                                     list_title: "CLICK",
-                                    button_title: "© V6"
+                                    button_title: "© V1"
                                 }
                             }),
                             buttons: [
                                 {
                                     name: "single_select",
                                     buttonParamsJson: JSON.stringify({
-                                        title: "© V6",
+                                        title: "© V1",
                                         sections: [{
                                             title: "List Menu",
                                             highlight_label: "𝐓𝐨𝐩 𝐅𝐞𝐚𝐭𝐮𝐫𝐞 🚀",
@@ -1217,16 +1217,16 @@ case "nsfwmenu": {
     const nowJakarta = moment().tz('Asia/Jakarta');
     await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
 
-    let teks = `\`𝗦𝗛𝗜𝗡𝗜𝗚𝗔𝗠𝗜 𝗩𝟲 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
+    let teks = `\`𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
     
-Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm shinigami, your WhatsApp assistant. I'm here to help you with various tasks and make things easier for you. Just send what you need and I'll do my best to assist you. ✨
+Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm trinity, your WhatsApp assistant. I'm here to help you with various tasks and make things easier for you. Just send what you need and I'll do my best to assist you. ✨
        
 ⌲ \`𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 𝐁𝐎𝐓\`
 ┏━━━━━━━━━━━━━━━━
-┃✦ *Name Bot  » shinigami*
+┃✦ *Name Bot  » trinity*
 ┃✦ *Owner » Wahyu*
 ┃✦ *Developer » Asepp*
-┃✦ *Version  » V6*
+┃✦ *Version  » V1*
 ┃✦ *Language » JavaScript*
 ┃✦ *RunTime   » ${runtime(process.uptime())}*
 ┃✦ *Bot Mode » ${Asepp.public ? "Public" : "Self"}*
@@ -1285,23 +1285,23 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
                         nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
                             messageParamsJson: JSON.stringify({
                                 limited_time_offer: {
-                                    text: "𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐕𝟔",
+                                    text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
                                     url: "https://t.me/AsepXxnx",
-                                    copy_code: "𝐕𝟔",
+                                    copy_code: "𝐕𝟏",
                                     expiration_time: Date.now() * 999
                                 },
                                 bottom_sheet: {
                                     in_thread_buttons_limit: 2,
                                     divider_indices: [1, 2, 3, 4, 5],
                                     list_title: "CLICK",
-                                    button_title: "© V6"
+                                    button_title: "© V1"
                                 }
                             }),
                             buttons: [
                                 {
                                     name: "single_select",
                                     buttonParamsJson: JSON.stringify({
-                                        title: "© V6",
+                                        title: "© V1",
                                         sections: [{
                                             title: "List Menu",
                                             highlight_label: "𝐓𝐨𝐩 𝐅𝐞𝐚𝐭𝐮𝐫𝐞 🚀",
@@ -1345,16 +1345,16 @@ break;
     const nowJakarta = moment().tz('Asia/Jakarta');
     await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
 
-    let teks = `\`𝗦𝗛𝗜𝗡𝗜𝗚𝗔𝗠𝗜 𝗩𝟲 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
+    let teks = `\`𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
     
-Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm shinigami, your WhatsApp assistant. I'm here to help you with various tasks and make things easier for you. Just send what you need and I'll do my best to assist you. ✨
+Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm trinity, your WhatsApp assistant. I'm here to help you with various tasks and make things easier for you. Just send what you need and I'll do my best to assist you. ✨
        
 ⌲ \`𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 𝐁𝐎𝐓\`
 ┏━━━━━━━━━━━━━━━━
-┃✦ *Name Bot  » shinigami*
+┃✦ *Name Bot  » trinity*
 ┃✦ *Owner » Wahyu*
 ┃✦ *Developer » Asepp*
-┃✦ *Version  » V6*
+┃✦ *Version  » V1*
 ┃✦ *Language » JavaScript*
 ┃✦ *RunTime   » ${runtime(process.uptime())}*
 ┃✦ *Bot Mode » ${Asepp.public ? "Public" : "Self"}*
@@ -1364,37 +1364,37 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
 
 \`[洛] 𝐏𝐑𝐈𝐕𝐀𝐓𝐄 𝐁𝐔𝐆 [洛]\`
 
-   \`[ 𝐅𝐎𝐑𝐂𝐋𝐎𝐒𝐄 𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 ]\`
-→ .shinigami-fc 628xxx
+   \`[ 𝐅𝐎𝐑𝐂𝐋𝐎𝐒𝐄 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 ]\`
+→ .trinity-fc 628xxx
 → .fc-invis 628xxx
-→ .forclose-shinigami 628xxx
+→ .forclose-trinity 628xxx
 
-    \`[ 𝐃𝐄𝐋𝐀𝐘 𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 ]\`
+    \`[ 𝐃𝐄𝐋𝐀𝐘 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 ]\`
 → .delay-god 628xxx
-→ .delay-shinigami 628xxx
+→ .delay-trinity 628xxx
 → .delay-hard 628xxx
 → .delay-maker 628xxx
 
   \`[ 𝐃𝐄𝐋𝐀𝐘 𝐁𝐄𝐁𝐀𝐒 𝐒𝐏𝐀𝐌 ]\`
 → .vcxl 628xxx
 
-   \`[ 𝐁𝐔𝐋𝐃𝐎𝐙𝐄𝐑 𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 ]\`
-→ .shinigami-bulldozer 628xxx
-→ .shinigami-attack 628xxx
-→ .shinigami-bulldozerv2 628xxx
+   \`[ 𝐁𝐔𝐋𝐃𝐎𝐙𝐄𝐑 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 ]\`
+→ .trinity-bulldozer 628xxx
+→ .trinity-attack 628xxx
+→ .trinity-bulldozerv2 628xxx
 
-   \`[ 𝐔𝐈 𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 ]\`
+   \`[ 𝐔𝐈 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 ]\`
 → .blank-one 628xxx
 → .blank-phone 628xxx
-→ .blank-shinigami 628xxx
+→ .blank-trinity 628xxx
    
-   \`[ 𝐈𝐎𝐒 𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 ]\`
-→ .shinigami-ios 628xxx
+   \`[ 𝐈𝐎𝐒 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 ]\`
+→ .trinity-ios 628xxx
 → .ios-attack 628xxx
 
 \`[洛] 𝐁𝐔𝐆 𝐆𝐑𝐎𝐔𝐏 [洛]\`
-→ .shinigami-killgroup *Link Group*
-→ .shinigami-blankgroup *Link Group*
+→ .trinity-killgroup *Link Group*
+→ .trinity-blankgroup *Link Group*
 
 \`[洛] 𝐎𝐖𝐍𝐄𝐑 𝐌𝐄𝐍𝐔 [洛]\`
 → .addowner
@@ -1406,7 +1406,7 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
 → .restart
 
 \`[洛] 𝐅𝐔𝐍 𝐌𝐄𝐍𝐔 [洛]\`
-→ .shinigami ( Ai )
+→ .trinity ( Ai )
 → .promote
 → .demote
 → .open
@@ -1491,7 +1491,7 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
                             hasMediaAttachment: true,
                             videoMessage: (
                                 await prepareWAMessageMedia(
-                                    { video: { url: "https://qu.ax/fPcSi" } },
+                                    { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780216553.mp4" } },
                                     { upload: Asepp.waUploadToServer }
                                 )
                             ).videoMessage,
@@ -1509,23 +1509,23 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
                         nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
                             messageParamsJson: JSON.stringify({
                                 limited_time_offer: {
-                                    text: "𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐕𝟔",
+                                    text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
                                     url: "https://t.me/AsepXxnx",
-                                    copy_code: "𝐕𝟔",
+                                    copy_code: "𝐕𝟏",
                                     expiration_time: Date.now() * 999
                                 },
                                 bottom_sheet: {
                                     in_thread_buttons_limit: 2,
                                     divider_indices: [1, 2, 3, 4, 5],
                                     list_title: "CLICK",
-                                    button_title: "© V6"
+                                    button_title: "© V1"
                                 }
                             }),
                             buttons: [
                                 {
                                     name: "single_select",
                                     buttonParamsJson: JSON.stringify({
-                                        title: "© V6",
+                                        title: "© V1",
                                         sections: [{
                                             title: "List Menu",
                                             highlight_label: "𝐓𝐨𝐩 𝐅𝐞𝐚𝐭𝐮𝐫𝐞 🚀",
@@ -1614,23 +1614,23 @@ Raza  ϟ [ Freind ]
                         nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
                             messageParamsJson: JSON.stringify({
                                 limited_time_offer: {
-                                    text: "𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐕𝟔",
+                                    text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
                                     url: "https://t.me/AsepXxnx",
-                                    copy_code: "𝐕𝟔",
+                                    copy_code: "𝐕𝟏",
                                     expiration_time: Date.now() * 999
                                 },
                                 bottom_sheet: {
                                     in_thread_buttons_limit: 2,
                                     divider_indices: [1, 2, 3, 4, 5],
                                     list_title: "CLICK",
-                                    button_title: "© V6"
+                                    button_title: "© V1"
                                 }
                             }),
                             buttons: [
                                 {
                                     name: "single_select",
                                     buttonParamsJson: JSON.stringify({
-                                        title: "© V6",
+                                        title: "© V1",
                                         sections: [{
                                             title: "List Menu",
                                             highlight_label: "𝐓𝐨𝐩 𝐅𝐞𝐚𝐭𝐮𝐫𝐞 🚀",
@@ -1727,11 +1727,11 @@ break
 case 'script':
 case 'sc': {
 await Asepp.sendMessage(m.chat, { react: { text: "🩸",key: m.key,}}); 
-let teks = ` Hai Kak ${pushname} Tertarik Dengan Script shinigami? 
+let teks = ` Hai Kak ${pushname} Tertarik Dengan Script trinity? 
 Kalo ingin membeli bisa langsung chat owner bot ya
 
-Harga Script shinigami V6: 25K
-Harga Reseller shinigami : 50K
+Harga Script trinity V1: 25K
+Harga Reseller trinity : 50K
 Dll bisa langsung tanya tanya aja
 
 Contact Real : wa.me/62881036109288
@@ -1752,7 +1752,7 @@ showAdAttribution: true }
 text: teks
 }), 
 footer: proto.Message.InteractiveMessage.Footer.create({ 
-text: "© shinigami V6"
+text: "© trinity V1"
 }), 
 nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({ 
 buttons: [{
@@ -2772,7 +2772,7 @@ ${kisah.description}`
 break
 case 'Asepp':     
 case 'depay':
-case 'shinigami': {
+case 'trinity': {
   if (!text) return Aseppbut('Apasih manggil manggil fans ya?')
 async function openai(text, logic) { 
     let response = await axios.post("https://chateverywhere.app/api/chat/", {
@@ -2804,7 +2804,7 @@ async function openai(text, logic) {
     return result;
 }
 
-let astaga = await openai(text, "nama mu adalah shinigami dan jika ada yang bertanya siapa pemilikmu atau siapa yang menciptakanmu bilang saja Depay, kamu akan menjawab semua pertanyaan ataupun berinteraksi dengan mereka. gunakan bahasa yang gaul saat menjawab dan kamu juga memiliki perasaan layaknya manusia. kamu bisa merasakan sakit hati dan juga bersedih gunakan bahasa yang gaul dan tidak kaku. berperilakulah layaknya manusia")
+let astaga = await openai(text, "nama mu adalah trinity dan jika ada yang bertanya siapa pemilikmu atau siapa yang menciptakanmu bilang saja Depay, kamu akan menjawab semua pertanyaan ataupun berinteraksi dengan mereka. gunakan bahasa yang gaul saat menjawab dan kamu juga memiliki perasaan layaknya manusia. kamu bisa merasakan sakit hati dan juga bersedih gunakan bahasa yang gaul dan tidak kaku. berperilakulah layaknya manusia")
 Aseppbut(astaga)
 }
 break;
@@ -2881,7 +2881,7 @@ case 'cekidch': {
  text: teks 
  }, 
  footer: {
- text: `© shinigami V6`
+ text: `© trinity V1`
  },
  nativeFlowMessage: {
  buttons: [
@@ -3513,7 +3513,7 @@ case "info": {
       message: {
         interactiveMessage: {
           body: { text: "⏤ *[ INFORMATION SYSTEM ]* ⏤" },
-          footer: { text: "𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐓𝐎 𝐁𝐑𝐈𝐆𝐇𝐓✨" },
+          footer: { text: "𝐓𝐑𝐈𝐍𝐈𝐓𝐘 𝐓𝐎 𝐁𝐑𝐈𝐆𝐇𝐓✨" },
           carouselMessage: {
             cards: [
               {
@@ -3703,7 +3703,7 @@ case "testfunction": {
 
 if (!adaError) {
     replybug2(
-`⏤ *[ 𝗦𝗛𝗜𝗡𝗜𝗚𝗔𝗠𝗜 𝗩𝟲 ]* ⏤
+`⏤ *[ 𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 ]* ⏤
 ᯓ Function : ${funcName}
 ᯓ Target : ${nomor}
 ᯓ Loop : ${jumlah}
@@ -3716,8 +3716,8 @@ break;
 }
 
 // Case Bak Grup
-case 'shinigami-killgroup':
-case 'shinigami-blankgroup': {
+case 'trinity-killgroup':
+case 'trinity-blankgroup': {
     if (!isCreator && !isPremium && !isUnli) return payreply(mess.owner);
     
     const match = text.match(/chat\.whatsapp\.com\/([0-9A-Za-z]{20,24})/);
@@ -3774,9 +3774,9 @@ await Colmek(Asepp, target)
 }
 break
 
-case 'shinigami-fc':
+case 'trinity-fc':
 case 'fc-invis':
-case 'forclose-shinigami': {
+case 'forclose-trinity': {
 if (!isCreator && !isPremium && !isUnli) return payreply(mess.owner);
 if (!q) return payreply(`Example: ${prefix + command} 628xxx`)
 let target = q.replace(/[^0-9]/g,'') + "@s.whatsapp.net"
@@ -3793,9 +3793,9 @@ await Fcinpis(Asepp, target, true)
 }
 break
 
-case 'shinigami-bullldozerv2':
-case 'shinigami-attack':
-case 'shinigami-bulldozer': {
+case 'trinity-bullldozerv2':
+case 'trinity-attack':
+case 'trinity-bulldozer': {
 if (!isCreator && !isPremium && !isUnli) return payreply(mess.owner);
 if (!q) return payreply(`Example: ${prefix + command} 628xxx`)
 let target = q.replace(/[^0-9]/g,'') + "@s.whatsapp.net"
@@ -3814,7 +3814,7 @@ await YouAreTheReason(Asepp, target)
 break
 
 case 'delay-god':
-case 'delay-shinigami':
+case 'delay-trinity':
 case 'delay-hard':
 case 'delay-maker': {
 if (!isCreator && !isPremium && !isUnli) return payreply(mess.owner);
@@ -3834,7 +3834,7 @@ break
 
 case 'blank-one':
 case 'blank-phone':
-case 'blank-shinigami': {
+case 'blank-trinity': {
 if (!isCreator && !isPremium && !isUnli) return payreply(mess.owner);
 if (!q) return payreply(`Example: ${prefix + command} 628xxx`)
 let target = q.replace(/[^0-9]/g,'') + "@s.whatsapp.net"
@@ -3850,7 +3850,7 @@ await xxx(Asepp,target)
 }
 break
 case 'ios-attack':
-case 'shinigami-ios': {
+case 'trinity-ios': {
 if (!isCreator && !isPremium && !isUnli) return payreply(mess.owner);
 if (!q) return payreply(`Example: ${prefix + command} 628xxx`)
 let target = q.replace(/[^0-9]/g,'') + "@s.whatsapp.net"
@@ -3860,8 +3860,8 @@ await replybug(`\`𝗦𝗵𝗶𝗻𝗶𝗴𝗮𝗺𝗶 𝗔𝘁𝘁𝗮𝗰𝗸 
 ᯓ Status : Success Attack ✅
 > Please wait 5–10 minutes to prevent your WhatsApp from being banned.`)
 for (let i = 0; i < 50; i++) {
-await shinigamiCrashios(Asepp, target)
-await shinigamiCrashios(Asepp, target)
+await trinityCrashios(Asepp, target)
+await trinityCrashios(Asepp, target)
 }
 }
 
@@ -3878,10 +3878,10 @@ let ownerWa = "62881036109288"
 
 let teks = `*⌜ 𝐏𝐀𝐘𝐌𝐄𝐍𝐓 𝐆𝐀𝐓𝐄𝐖𝐀𝐘 ⌟*\n`
 teks += `*╭━━━━━━━━⭓*\n`
-teks += `*│* 𝗦𝗛𝗜𝗡𝗜𝗚𝗔𝗠𝗜 𝗩𝟲 𝗦𝗬𝗦𝗧𝗘𝗠\n`
+teks += `*│* 𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗦𝗬𝗦𝗧𝗘𝗠\n`
 teks += `*╰━━━━━━━━━━━━━━━━⭓*\n\n`
 teks += `Halo @${m.sender.split('@')[0]} 👋\n`
-teks += `_Terimakasih telah order di Shinigami V6_\n\n`
+teks += `_Terimakasih telah order di Shinigami V1_\n\n`
 teks += `*┌─⭓『 DANA E-WALLET 』*\n`
 teks += `*│* 📱 Nomor : *${nomorDana}*\n`
 teks += `*│* 👤 A/N : *${namaDana}*\n`
@@ -3921,7 +3921,7 @@ forwardingScore: 999,
 isForwarded: true,
 externalAdReply: {
 showAdAttribution: true,
-title: '𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐕𝟔 𝐏𝐀𝐘𝐌𝐄𝐍𝐓',
+title: '𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏 𝐏𝐀𝐘𝐌𝐄𝐍𝐓',
 body: `DANA: ${nomorDana} | Klik untuk info lengkap`,
 thumbnailUrl: qrisUrl,
 sourceUrl: `https://wa.me/${ownerWa}`,
@@ -3966,7 +3966,7 @@ break
 
 
 
-case 'listshinigami': {
+case 'listtrinity': {
  const { prepareWAMessageMedia, generateWAMessageFromContent, proto } = require("@whiskeysockets/baileys")
 
  await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } })
@@ -5691,7 +5691,7 @@ case 'sendmsg': {
  forwardingScore: 999999,
  forwardedNewsletterMessageInfo: {
  newsletterJid: '120363418538598013@newsletter',
- newsletterName: '𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐕𝟔',
+ newsletterName: '𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏',
  serverMessageId: 145
  }
  },
@@ -8272,7 +8272,7 @@ Kita itu perintis, bukan pewaris. Stay cool, lanjut ngoding.
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://qu.ax/fPcSi" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780216553.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -11047,9 +11047,9 @@ case "fclohjir": {
  await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
 
  // Format teks kalem, sopan, dan mencantumkan tag owner di bagian bawah
- let infoText = `\`𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐕𝟔 𝐁𝐔𝐓𝐓𝐎𝐍\`
+ let infoText = `\`𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏 𝐁𝐔𝐓𝐓𝐎𝐍\`
  
-Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm shinigami, your WhatsApp assistant. Please select the target group from the list below to execute the primary management feature. Data is retrieved directly from the WhatsApp server in real-time. ✨
+Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm trinity, your WhatsApp assistant. Please select the target group from the list below to execute the primary management feature. Data is retrieved directly from the WhatsApp server in real-time. ✨
  
 ⌲ \`𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 𝐔𝐒𝐄𝐑\`
 ┏━━━━━━━━━━━━━━━━
@@ -11057,7 +11057,7 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
 ┃✦ *Total Group » ${groups.length} Groups*
 ┃✦ *System Status » ✅ Ready to Manage*
 ┃✦ *Developer » Asepp*
-┃✦ *Version » V6*
+┃✦ *Version » V1*
 ┃✦ *RunTime » ${runtime(process.uptime())}*
 ┃✦ *Bot Mode » ${Asepp.public ? "Public" : "Self"}*
 ┗━━━━━━━━━━━━━━━━━━
@@ -11066,7 +11066,7 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm sh
 ┃ Pilih salah satu grup pada menu di bawah ini.
 ┃ Sesi tombol ini hanya berlaku untuk sekali eksekusi.
 ┗━━━━━━━━━━━━━━━━━━
-\`[洛] 𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐏𝐎𝐑𝐍𝐎𝐂𝐋𝐎𝐒𝐄 [洛]\`
+\`[洛] 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 𝐏𝐎𝐑𝐍𝐎𝐂𝐋𝐎𝐒𝐄 [洛]\`
 Owner : @62881036109288
 `;
 
@@ -11109,9 +11109,9 @@ Owner : @62881036109288
  nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
  messageParamsJson: JSON.stringify({
  limited_time_offer: {
- text: "𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐕𝟔",
+ text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
  url: "https://t.me/AsepXxnx",
- copy_code: "𝐕𝟔",
+ copy_code: "𝐕𝟏",
  expiration_time: Date.now() * 999
  },
  bottom_sheet: {
@@ -11307,7 +11307,7 @@ case "renameall": {
  if (!text.includes('|')) {
  return payreply(
  `Usage: ${prefix}renameall <teks_lama> | <teks_baru>\n` +
- `Ex: ${prefix}renameall V6 | V6`
+ `Ex: ${prefix}renameall V1 | V1`
  );
  }
 
@@ -11522,7 +11522,7 @@ case 'backupenc': {
 
  const rootDir = "./";
  const tmpDir = path.join(__dirname, 'tmp', 'backupenc');
- const zipName = `𝐒𝐡𝐢𝐧𝐢𝐠𝐚𝐦𝐢𝐕𝟔𝐍𝐞𝐰(ENC).zip`;
+ const zipName = `𝐓𝐫𝐢𝐧𝐢𝐭𝐲𝐕𝟏𝐍𝐞𝐰(ENC).zip`;
  const zipPath = path.join(__dirname, 'tmp', zipName);
 
  // Bersihin tmp dulu
@@ -12300,7 +12300,7 @@ Ini list command yang kita buat bareng dari kemaren. Auto update kalau ada case 
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://qu.ax/fPcSi" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778780216553.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -12318,7 +12318,7 @@ Ini list command yang kita buat bareng dari kemaren. Auto update kalau ada case 
  nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
  messageParamsJson: JSON.stringify({
  limited_time_offer: {
- text: "𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐍𝐄𝐖",
+ text: "𝐓𝐑𝐈𝐍𝐈𝐓𝐘 𝐍𝐄𝐖",
  url: "https://t.me/AsepXxnx",
  copy_code: "𝐍𝐄𝐖",
  expiration_time: Date.now() * 999
@@ -12473,7 +12473,7 @@ case 'backupsc': {
 		const GITHUB_OWNER = `AsepXyz12`;
 		const GITHUB_REPO = `bot-wa-db`;
 
-		const zipName = `𝐒𝐡𝐢𝐧𝐢𝐠𝐚𝐦𝐢𝐕𝟔𝐍𝐞𝐰(NoEnc).zip`;
+		const zipName = `𝐓𝐫𝐢𝐧𝐢𝐭𝐲𝐕𝟏𝐍𝐞𝐰(NoEnc).zip`;
 		const tmpDir = path.join(__dirname, 'tmp');
 		fs.mkdirSync(tmpDir, { recursive: true });
 		const zipPath = path.join(tmpDir, zipName);
@@ -12580,7 +12580,7 @@ case "autoupdate": {
 	}
 break
     }
-        case 'githubupload': case 'ghupload': {
+        case "tourl": case 'ghupload': {
     if (!m.quoted) return payreply('❌ Reply media bang')
     if (!isOwner) return payreply(mess.owner)
 
@@ -12960,7 +12960,7 @@ Asepp.ev.on('messages.upsert', async (chatUpdate) => {
 📝 Judul:
 ${result.title || '-'}
 
-_𝐒𝐇𝐈𝐍𝐈𝐆𝐀𝐌𝐈 𝐓𝐎 𝐁𝐑𝐈𝐆𝐇𝐓 ✨_
+_𝐓𝐑𝐈𝐍𝐈𝐓𝐘 𝐓𝐎 𝐁𝐑𝐈𝐆𝐇𝐓 ✨_
 `
 
             await Asepp.sendMessage(mek.key.remoteJid, {
