@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RunHTML - Asep Xyz</title>
+</head>
+<body>
+
+<div style="text-align:center;padding:25px;font-family:sans-serif;background:#f5f5f5;border-radius:12px">
+ <h3 style="color:#128C7E;margin:0 0 15px 0">Link Secure</h3>
+ <p style="margin:0 0 20px 0;color:#333">Klik tombol buat buka:</p>
+ <a id="linkBtn" 
+ style="display:inline-block;padding:12px 28px;background:#128C7E;color:#fff;text-decoration:none;border-radius:8px;font-weight:bold;cursor:pointer;">
+ BUKA SEKARANG
+ </a>
+</div>
+
+<script>
+document.getElementById('linkBtn').onclick = function(){
+ let encoded = 'aHR0cHM6Ly9Bc2VwWHl6MTIuZ2l0aHViaW8uY29tL2JvdC13YS1kYi9ob3N0aW5nL3J1bmh0bWxfMTc3ODg3MTI2NDkxMC5odG1s';
+ let decoded = atob(encoded);
+ window.open(decoded, '_blank');
+}
+</script>
+</body>
+</html>
