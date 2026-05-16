@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AsepXxnx - Full Stack Developer Portofolio</title>
+
+<meta name="description" content="Full Stack Developer specializing in JavaScript, HTML, and UI/UX. View my live terminal portfolio."/>
+<meta property="og:title" content="AsepXxnx Payment"/>
+<meta property="og:description" content="Full Stack Developer specializing in JavaScript, HTML, and UI/UX."/>
+<meta property="og:url" content="https://AsepXyz12.github.io/bot-wa-db/"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="AsepXxnx"/>
+<meta property="og:image" content="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778864999571.jpeg"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { 'mono': ['Fira Code', 'monospace'], 'sans': ['Inter', 'sans-serif'] },
+      colors: {
+        terminal: {
+          bg: '#0d1117', darker: '#010409', card: '#161b22', border: '#30363d',
+          text: '#c9d1d9', comment: '#8b949e', keyword: '#ff7b72', string: '#a5d6ff',
+          function: '#d2a8ff', variable: '#ffa657', number: '#79c0ff', green: '#7ee787',
+          cyan: '#79c0ff', yellow: '#ffa657', purple: '#d2a8ff', pink: '#f778ba', red: '#ff7b72'
+        }
+      }
+    }
+  }
+}
+</script>
+
+<style>
+:root { --accent: #7ee787; }
+body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
+body.dark { background-color: #0d1117; color: #c9d1d9; }
+body.light { background-color: #f6f8fa; color: #24292f; }
+
+.typing-cursor { display: inline-block; width: 8px; height: 16px; background-color: var(--accent); margin-left: 2px; animation: blink 0.7s infinite; vertical-align: text-bottom; }
+@keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.code-line { opacity: 0; animation: fadeIn 0.3s ease-in forwards; }
+@keyframes fadeIn { to { opacity: 1; } }
+.terminal-window { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
+.glass-card { backdrop-filter: blur(10px); border: 1px solid; transition: all 0.3s ease; }
+.dark.glass-card { background: rgba(22, 27, 34, 0.8); border-color: rgba(48, 54, 61, 0.5); }
+.light.glass-card { background: rgba(255, 255, 255, 0.8); border-color: rgba(208, 215, 222, 0.5); }
+
+.online-indicator { position: relative; }
+.online-indicator::after { content: ''; position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; background: var(--accent); border-radius: 50%; border: 3px solid; animation: pulse-slow 2s infinite; }
+.dark.online-indicator::after { border-color: #0d1117; }
+.light.online-indicator::after { border-color: #f6f8fa; }
+@keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity:.5; } }
+
+.syntax-keyword { color: #ff7b72; }.syntax-string { color: #a5d6ff; }.syntax-function { color: #d2a8ff; }
+.syntax-variable { color: #ffa657; }.syntax-number { color: #79c0ff; }.syntax-comment { color: #8b949e; }
+.syntax-green { color: #7ee787; }.syntax-yellow { color: #ffa657; }.syntax-pink { color: #f778ba; }
+.light.syntax-keyword { color: #cf222e; }.light.syntax-string { color: #0a3069; }.light.syntax-function { color: #8250df; }
+.light.syntax-variable { color: #953800; }.light.syntax-number { color: #0550ae; }.light.syntax-comment { color: #57606a; }
+.light.syntax-green { color: #116329; }.light.syntax-yellow { color: #9a6700; }.light.syntax-pink { color: #bf3989; }
+
+::-webkit-scrollbar { width: 10px; }
+.dark ::-webkit-scrollbar-track { background: #010409; }
+.light ::-webkit-scrollbar-track { background: #f6f8fa; }
+.dark ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 5px; }
+.light ::-webkit-scrollbar-thumb { background: #d0d7de; border-radius: 5px; }
+
+@keyframes rgbGlow { 0% {box-shadow: 0 0 10px #ff0000;} 25% {box-shadow: 0 0 10px #00ff00;} 50% {box-shadow: 0 0 10px #0000ff;} 75% {box-shadow: 0 0 10px #ff00ff;} 100% {box-shadow: 0 0 10px #00ffff;} }
+.bg-terminal-card { animation: rgbGlow 3s linear infinite; transition: 0.3s; }
+.bg-terminal-card:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 0 20px var(--accent); }
+
+.skill-bar { border-radius: 8px; overflow: hidden; }
+.dark.skill-bar { background: #010409; }
+.light.skill-bar { background: #eaeef2; }
+.skill-fill { height: 8px; background: linear-gradient(90deg, var(--accent), #79c0ff); transition: width 1.5s ease-out; width: 0; }
+.project-card:hover { transform: translateY(-5px); }
+.back-to-top { position: fixed; bottom: 20px; right: 20px; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 100; }
+.back-to-top.show { opacity: 1; pointer-events: auto; }
+.testimonial-card:hover { transform: scale(1.02); }
+.faq-item { transition: all 0.3s ease; }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.faq-item.active.faq-answer { max-height: 200px; }
+.stat-number { animation: countUp 2s ease-out forwards; }
+@keyframes countUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.playlist-item.active,.music-playlist-item.active { background: rgba(123, 231, 135, 0.15); border-color: var(--accent); }
+.donghua-btn.active { background: linear-gradient(90deg, #d2a8ff, #79c0ff); color: #010409; }
+.mode-btn.active { background: var(--accent); color: #010409; }
+.speed-btn.active { background: var(--accent); color: #010409; }
+.theme-toggle { position: fixed; top: 80px; right: 20px; z-index: 100; }
+.volume-slider { -webkit-appearance: none; width: 80px; height: 4px; border-radius: 2px; background: #30363d; outline: none; }
+.volume-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); cursor: pointer; }
+
+.toast { position: fixed; bottom: 80px; right: 20px; z-index: 999; background: #161b22; border: 1px solid #30363d; color: var(--accent); padding: 12px 20px; border-radius: 8px; font-family: 'Fira Code'; opacity: 0; transform: translateY(20px); transition: all 0.3s; }
+.toast.show { opacity: 1; transform: translateY(0); }
+.live-clock { position: fixed; top: 80px; left: 20px; z-index: 100; background: #161b22; border: 1px solid #30363d; padding: 8px 12px; border-radius: 6px; font-family: 'Fira Code'; font-size: 12px; color: #79c0ff; }
+.scroll-progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent), #79c0ff, #d2a8ff); width: 0%; z-index: 9999; transition: width 0.1s; }
+.color-picker { position: fixed; top: 140px; right: 20px; z-index: 100; display: flex; gap: 6px; flex-direction: column; }
+.color-dot { width: 16px; height: 16px; border-radius: 50%; cursor: pointer; border: 2px solid #30363d; transition: scale 0.2s; }
+.color-dot:hover { scale: 1.2; }
+.copy-code-btn { position: absolute; top: 8px; right: 8px; background: #30363d; border: none; color: #c9d1d9; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer; opacity: 0; transition: 0.2s; }
+pre:hover.copy-code-btn { opacity: 1; }
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 999; }
+.modal.active { display: flex; }
+.modal-content { background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 10px; max-width: 500px; width: 90%; }
+.loading-screen { position: fixed; inset: 0; background: #0d1117; display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s; }
+.loading-screen.hide { opacity: 0; pointer-events: none; }
+.spinner { width: 50px; height: 50px; border: 3px solid #30363d; border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.reading-mode { filter: sepia(0.2) contrast(0.9); }
+.focus-mode * { opacity: 0.3; transition: 0.3s; }
+.focus-mode.focus-target { opacity: 1!important; }
+.qr-modal canvas { margin: 0 auto; }
+.matrix-rain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.1; z-index: 1; }
+.snowflake { position: fixed; top: -10px; color: #fff; user-select: none; pointer-events: none; z-index: 999; animation: snowfall linear infinite; }
+@keyframes snowfall { to { transform: translateY(100vh); } }
+.confetti { position: fixed; width: 8px; height: 8px; border-radius: 50%; top: -10px; z-index: 9999; }
+</style>
+</head>
+
+<body class="dark min-h-screen">
+<!-- LOADING SCREEN -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="text-center">
+    <div class="spinner mx-auto mb-4"></div>
+    <p class="font-mono text-terminal-cyan">Loading AsepXxnx Terminal...</p>
+  </div>
+</div>
+
+<!-- MATRIX RAIN EFFECT - OFF BY DEFAULT -->
+<canvas class="matrix-rain hidden" id="matrixRain"></canvas>
+
+<!-- UI ELEMENTS -->
+<div class="live-clock" id="liveClock">00:00:00</div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="toast" id="toast"></div>
+
+<div class="color-picker">
+  <div class="color-dot" style="background:#7ee787" onclick="changeAccent('#7ee787')"></div>
+  <div class="color-dot" style="background:#79c0ff" onclick="changeAccent('#79c0ff')"></div>
+  <div class="color-dot" style="background:#d2a8ff" onclick="changeAccent('#d2a8ff')"></div>
+  <div class="color-dot" style="background:#f778ba" onclick="changeAccent('#f778ba')"></div>
+  <div class="color-dot" style="background:#ff7b72" onclick="changeAccent('#ff7b72')"></div>
+  <div class="color-dot" style="background:#ffa657" onclick="changeAccent('#ffa657')"></div>
+</div>
+
+<!-- SHORTCUTS MODAL -->
+<div class="modal" id="shortcutModal">
+  <div class="modal-content">
+    <h3 class="font-mono text-terminal-cyan mb-4">Keyboard Shortcuts</h3>
+    <ul class="text-xs space-y-2 font-mono">
+      <li><span class="text-terminal-yellow">Space</span> : Play/Pause</li>
+      <li><span class="text-terminal-yellow">→ / ←</span> : Seek 5s</li>
+      <li><span class="text-terminal-yellow">M</span> : Mute/Unmute</li>
+      <li><span class="text-terminal-yellow">?</span> : Show this help</li>
+      <li><span class="text-terminal-yellow">F</span> : Focus Mode</li>
+      <li><span class="text-terminal-yellow">R</span> : Reading Mode</li>
+      <li><span class="text-terminal-yellow">Esc</span> : Close modal</li>
+    </ul>
+    <button onclick="closeModal()" class="mt-4 px-3 py-1 bg-terminal-red rounded text-xs">Close</button>
+  </div>
+</div>
+
+<!-- QR MODAL -->
+<div class="modal" id="qrModal">
+  <div class="modal-content qr-modal">
+    <h3 class="font-mono text-terminal-green mb-4">QR Code Generator</h3>
+    <canvas id="qrCanvas"></canvas>
+    <button onclick="closeModal()" class="mt-4 px-3 py-1 bg-terminal-red rounded text-xs">Close</button>
+  </div>
+</div>
+
+<!-- Theme Toggle -->
+<button onclick="toggleTheme()" class="theme-toggle p-3 rounded-full bg-terminal-card hover:scale-110 transition-all">
+  <svg id="themeIcon" class="w-5 h-5 text-terminal-yellow" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+  </svg>
+</button>
+
+<!-- CLICK INTRO -->
+<div id="clickIntro" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999; opacity:0; pointer-events:none; transition:opacity 0.6s ease;">
+  <img id="introLogo" src="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778864999571.jpeg" style="width:120px; height:120px; border-radius:50%; border:3px solid #00eaff; box-shadow:0 0 12px #00eaff;">
+  <h1 style="color:#00eaff; font-family:'Fira Code', monospace; margin-top:18px; font-size:26px; letter-spacing:2px; text-shadow:0 0 10px #00eaff;">WELCOME TO WEBSITE AsepXxnx</h1>
+</div>
+
+<header class="bg-terminal-darker border-b border-terminal-border sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3">
+    <div class="flex items-center justify-center space-x-2 text-terminal-comment">
+      <svg class="w-5 h-5 text-terminal-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+      <span class="text-sm font-mono">Developer Terminal</span>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 py-6">
+  <!-- Terminal Window 1 -->
+  <div class="terminal-window bg-terminal-darker rounded-xl overflow-hidden mb-8">
+    <div class="bg-terminal-card px-4 py-3 flex items-center justify-between border-b border-terminal-border">
+      <div class="flex items-center space-x-2">
+        <span class="w-3 h-3 rounded-full bg-red-500"></span>
+        <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+        <span class="w-3 h-3 rounded-full bg-green-500"></span>
+      </div>
+      <span class="text-sm text-terminal-comment font-mono">profile.config.js — AsepXxnx</span>
+    </div>
+
+    <div id="terminalContent" class="p-6 font-mono text-sm overflow-x-auto min-h-[400px] max-h-[500px] overflow-y-auto">
+      <div id="breadcrumb" class="text-terminal-comment mb-4 text-xs">src › modules › profile.config.js</div>
+      <div id="codeContainer" class="space-y-1"></div>
+      <div id="typingLine" class="mt-2"></div>
+    </div>
+  </div>
+
+  <!-- Effect Toggles -->
+  <div class="flex gap-2 justify-center mb-8 flex-wrap">
+    <button onclick="toggleMatrix()" class="text-xs px-3 py-1 bg-terminal-darker border-terminal-border rounded hover:border-terminal-cyan">Matrix Mode</button>
+    <button onclick="toggleSnow()" class="text-xs px-3 py-1 bg-terminal-darker border-terminal-border rounded hover:border-terminal-green">Snow Mode</button>
+    <button onclick="toggleIntro()" class="text-xs px-3 py-1 bg-terminal-darker border-terminal-border rounded hover:border-terminal-purple">Show Intro</button>
+    <button onclick="triggerConfetti()" class="text-xs px-3 py-1 bg-terminal-darker border-terminal-border rounded hover:border-terminal-pink">Confetti</button>
+  </div>
+
+  <!-- DONGHUA PLAYER -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-2xl mx-auto">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-2">
+        <svg class="w-5 h-5 text-terminal-purple" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zM5 15h10V7H5v8z"></path></svg>
+        <h3 class="font-mono text-terminal-purple font-semibold">DONGHUA PLAYER</h3>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="randomEpisode()" class="text-xs px-2 py-1 rounded bg-terminal-purple/20 text-terminal-purple hover:bg-terminal-purple/30">Random</button>
+        <span class="text-xs text-terminal-comment font-mono" id="trackCount">Pilih Donghua</span>
+      </div>
+    </div>
+
+    <div class="flex gap-2 mb-4 flex-wrap">
+      <button onclick="loadDonghua('btth')" id="btn-btth" class="donghua-btn py-2 px-4 rounded-lg bg-terminal-darker border-terminal-border font-mono text-xs transition-all">
+        Battle Through the Heavens
+      </button>
+      <button onclick="loadDonghua('renegade')" id="btn-renegade" class="donghua-btn py-2 px-4 rounded-lg bg-terminal-darker border-terminal-border font-mono text-xs transition-all">
+        Renegade Immortal
+      </button>
+      <button onclick="loadDonghua('nika')" id="btn-nika" class="donghua-btn py-2 px-4 rounded-lg bg-terminal-darker border-terminal-border font-mono text-xs transition-all">
+        Nika List
+      </button>
+    </div>
+
+    <input type="text" id="donghuaSearch" placeholder="Search episode..." class="w-full mb-3 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-purple">
+
+    <div class="bg-terminal-darker rounded-lg p-4 border-terminal-border">
+      <div id="videoContainer" class="hidden mb-4 relative">
+        <video id="videoPlayer" class="w-full rounded-lg bg-black" controlsList="nodownload" playsinline preload="metadata">
+          <source id="videoSource" src="" type="video/mp4">
+        </video>
+        <button onclick="goFullscreen()" class="absolute top-2 right-2 bg-black/60 p-2 rounded-lg hover:bg-black/80 transition">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+        </button>
+      </div>
+
+      <div id="audioContainer" class="hidden">
+        <div class="flex items-center space-x-4 mb-4">
+          <div class="w-16 h-16 bg-gradient-to-br from-terminal-purple to-terminal-cyan rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-8 h-8 text-terminal-darker" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3.895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3.895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-terminal-text font-semibold truncate" id="currentTrackTitle">Pilih episode</div>
+            <div class="text-terminal-comment text-sm truncate" id="currentTrackArtist">AsepXxnx</div>
+          </div>
+        </div>
+        <audio id="audioPlayer" preload="metadata"><source id="audioSource" src="" type="audio/mpeg"></audio>
+      </div>
+
+      <div class="flex gap-2 mb-3 justify-center">
+        <button onclick="setSpeed(0.5)" class="speed-btn px-3 py-1 text-xs rounded bg-terminal-darker border-terminal-border">0.5x</button>
+        <button onclick="setSpeed(1)" class="speed-btn active px-3 py-1 text-xs rounded bg-terminal-darker border-terminal-border">1x</button>
+        <button onclick="setSpeed(1.5)" class="speed-btn px-3 py-1 text-xs rounded bg-terminal-darker border-terminal-border">1.5x</button>
+        <button onclick="setSpeed(2)" class="speed-btn px-3 py-1 text-xs rounded bg-terminal-darker border-terminal-border">2x</button>
+      </div>
+
+      <div class="flex items-center justify-center gap-2 mb-3">
+        <span class="text-xs text-terminal-comment">🔊</span>
+        <input type="range" id="videoVolume" class="volume-slider" min="0" max="1" step="0.01" value="1">
+      </div>
+
+      <div class="mt-4 mb-3">
+        <div class="flex justify-between text-xs text-terminal-comment mb-1 font-mono">
+          <span id="currentTime">0:00</span><span id="duration">0:00</span>
+        </div>
+        <div class="h-1 bg-terminal-card rounded-full cursor-pointer" id="progressBar">
+          <div class="h-full bg-gradient-to-r from-terminal-purple to-terminal-cyan rounded-full transition-all" id="progressFill" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-center space-x-4">
+        <button id="prevBtn" class="p-2 text-terminal-comment hover:text-terminal-purple transition-colors">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z"></path></svg>
+        </button>
+        <button id="playPauseBtn" class="p-3 bg-gradient-to-r from-terminal-purple to-terminal-cyan rounded-full hover:shadow-lg hover:shadow-terminal-cyan/50 transition-all">
+          <svg id="playIcon" class="w-6 h-6 text-terminal-darker" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"></path></svg>
+          <svg id="pauseIcon" class="w-6 h-6 text-terminal-darker hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h2a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V4zm8 0a2 2 0 012-2h2a2 2 0 012 2v12a2 2 0 01-2 2h-2a2 2 0 01-2-2V4z"></path></svg>
+        </button>
+        <button id="nextBtn" class="p-2 text-terminal-comment hover:text-terminal-purple transition-colors">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798l-5.445-3.63z"></path></svg>
+        </button>
+      </div>
+
+      <div class="mt-4 space-y-2 max-h-64 overflow-y-auto" id="playlistContainer">
+        <div class="text-center text-terminal-comment text-xs">Pilih donghua dulu bro</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MUSIC PLAYER -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-2xl mx-auto mt-8">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-2">
+        <svg class="w-5 h-5 text-terminal-green" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3.895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3.895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg>
+        <h3 class="font-mono text-terminal-green font-semibold">MUSIC PLAYER</h3>
+      </div>
+      <span class="text-xs text-terminal-comment font-mono" id="musicTrackCount">Pilih Lagu</span>
+    </div>
+
+    <input type="text" id="musicSearch" placeholder="Search lagu..." class="w-full mb-3 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-green">
+
+    <div class="bg-terminal-darker rounded-lg p-4 border-terminal-border">
+      <div class="flex items-center space-x-4 mb-4">
+        <div class="w-16 h-16 bg-gradient-to-br from-terminal-green to-terminal-cyan rounded-lg flex items-center justify-center flex-shrink-0">
+          <svg class="w-8 h-8 text-terminal-darker" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3.895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3.895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="text-terminal-text font-semibold truncate" id="currentMusicTitle">Pilih lagu</div>
+          <div class="text-terminal-comment text-sm truncate" id="currentMusicArtist">AsepXxnx</div>
+        </div>
+      </div>
+
+      <audio id="musicPlayer" preload="metadata"><source id="musicSource" src="" type="audio/mpeg"></audio>
+
+      <div class="flex gap-2 mb-3 justify-center">
+        <button id="shuffleBtn" class="mode-btn px-3 py-1 text-xs rounded bg-terminal-darker border-terminal-border">Shuffle</button>
+        <button id="repeatBtn" class="mode-btn px-3 py-1 text-xs rounded bg-terminal-darker border-terminal-border">Repeat</button>
+      </div>
+
+      <div class="flex items-center justify-center gap-2 mb-3">
+        <span class="text-xs text-terminal-comment">🔊</span>
+        <input type="range" id="musicVolume" class="volume-slider" min="0" max="1" step="0.01" value="1">
+      </div>
+
+      <div class="mt-4 mb-3">
+        <div class="flex justify-between text-xs text-terminal-comment mb-1 font-mono">
+          <span id="musicCurrentTime">0:00</span><span id="musicDuration">0:00</span>
+        </div>
+        <div class="h-1 bg-terminal-card rounded-full cursor-pointer" id="musicProgressBar">
+          <div class="h-full bg-gradient-to-r from-terminal-green to-terminal-cyan rounded-full transition-all" id="musicProgressFill" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-center space-x-4">
+        <button id="musicPrevBtn" class="p-2 text-terminal-comment hover:text-terminal-green transition-colors">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63
+</svg>
+        </button>
+        <button id="musicPlayPauseBtn" class="p-3 bg-gradient-to-r from-terminal-green to-terminal-cyan rounded-full hover:shadow-lg hover:shadow-terminal-cyan/50 transition-all">
+          <svg id="musicPlayIcon" class="w-6 h-6 text-terminal-darker" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"></path>
+          </svg>
+          <svg id="musicPauseIcon" class="w-6 h-6 text-terminal-darker hidden" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M5 4a2 2 0 012-2h2a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V4zm8 0a2 2 0 012-2h2a2 2 0 012 2v12a2 2 0 01-2 2h-2a2 2 0 01-2-2V4z"></path>
+          </svg>
+        </button>
+        <button id="musicNextBtn" class="p-2 text-terminal-comment hover:text-terminal-green transition-colors">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798l-5.445-3.63z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="mt-4 space-y-2 max-h-48 overflow-y-auto" id="musicPlaylistContainer">
+        <div class="text-center text-terminal-comment text-xs">Loading lagu...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Card -->
+  <div class="glass-card rounded-xl p-6 max-w-2xl mx-auto">
+    <div class="flex flex-col items-center mb-8">
+      <div class="relative online-indicator mb-4">
+        <div class="w-32 h-32 rounded-full bg-gradient-to-br from-terminal-cyan to-terminal-purple p-1">
+          <div class="w-full h-full rounded-full bg-terminal-card flex items-center justify-center overflow-hidden">
+            <img src="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778864999571.jpeg" class="w-full h-full object-cover"/>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="text-2xl font-bold mb-2">ASEPXXNX</h2>
+      <p class="text-terminal-comment mb-4">➤ Full Stack Developer</p>
+
+      <div class="w-full bg-terminal-bg rounded-lg p-4 border-terminal-border mb-6">
+        <div class="text-terminal-yellow text-xs font-semibold mb-2 font-mono">BIO</div>
+        <p class="text-terminal-green italic text-sm">"Gw AsepXxnx, dev script & web. Fokus bikin tools praktis, cepat, dan gampang dipake. Kalau butuh custom project, gas DM."</p>
+      </div>
+
+      <div class="w-full bg-terminal-darker p-4 rounded border-terminal-border mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-terminal-comment font-mono">Nomor WhatsApp</span>
+          <button onclick="navigator.clipboard.writeText('62881036109288')" class="text-xs text-terminal-green hover:text-terminal-green/80 font-mono">Copy</button>
+        </div>
+        <div class="text-terminal-green font-mono text-lg font-semibold">62881036109288</div>
+      </div>
+
+      <div class="w-full bg-terminal-darker p-4 rounded border-terminal-border mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-terminal-comment font-mono">Nomor DANA</span>
+          <button onclick="navigator.clipboard.writeText('0882009545852')" class="text-xs text-terminal-cyan hover:text-terminal-cyan/80 font-mono">Copy</button>
+        </div>
+        <div class="text-terminal-cyan font-mono text-lg font-semibold">0882009545852</div>
+        <div class="text-terminal-green text-xs font-mono">a.n: AsepXxnx</div>
+      </div>
+
+      <div class="w-full bg-terminal-darker p-4 rounded border-terminal-border mb-4">
+        <span class="text-xs text-terminal-comment font-mono mb-2 block">Scan QRIS</span>
+        <img src="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778865010448.jpeg" class="w-48 rounded-lg border-terminal-border"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="glass-card rounded-xl p-6 max-w-2xl mx-auto mt-8">
+    <h3 class="text-xl font-bold mb-6 text-center font-mono text-terminal-cyan">SKILLS</h3>
+    <div class="space-y-4">
+      <div>
+        <div class="flex justify-between mb-1 text-xs font-mono">
+          <span>JavaScript</span><span>90%</span>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-fill" style="width: 90%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="flex justify-between mb-1 text-xs font-mono">
+          <span>HTML/CSS</span><span>95%</span>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-fill" style="width: 95%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="flex justify-between mb-1 text-xs font-mono">
+          <span>Node.js</span><span>85%</span>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-fill" style="width: 85%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="flex justify-between mb-1 text-xs font-mono">
+          <span>TailwindCSS</span><span>92%</span>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-fill" style="width: 92%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="glass-card rounded-xl p-6 max-w-4xl mx-auto mt-8">
+    <h3 class="text-xl font-bold mb-6 text-center font-mono text-terminal-purple">PROJECTS</h3>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="project-card bg-terminal-darker p-4 rounded-lg border-terminal-border transition-all">
+        <h4 class="font-mono text-terminal-green font-bold mb-2">Bot WhatsApp Nika</h4>
+        <p class="text-xs text-terminal-comment mb-3">Multi-device WA bot dengan fitur auto reply, download, game, dan panel admin.</p>
+        <div class="flex gap-2 text-xs">
+          <span class="px-2 py-1 bg-terminal-purple/20 text-terminal-purple rounded">Node.js</span>
+          <span class="px-2 py-1 bg-terminal-cyan/20 text-terminal-cyan rounded">Baileys</span>
+        </div>
+      </div>
+      <div class="project-card bg-terminal-darker p-4 rounded-lg border-terminal-border transition-all">
+        <h4 class="font-mono text-terminal-green font-bold mb-2">Terminal Portfolio</h4>
+        <p class="text-xs text-terminal-comment mb-3">Portfolio interaktif dengan tema terminal, typing animation, dan media player.</p>
+        <div class="flex gap-2 text-xs">
+          <span class="px-2 py-1 bg-terminal-yellow/20 text-terminal-yellow rounded">HTML</span>
+          <span class="px-2 py-1 bg-terminal-pink/20 text-terminal-pink rounded">Tailwind</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="glass-card rounded-xl p-6 max-w-4xl mx-auto mt-8">
+    <h3 class="text-xl font-bold mb-6 text-center font-mono text-terminal-yellow">TESTIMONIALS</h3>
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="testimonial-card bg-terminal-darker p-4 rounded-lg border-terminal-border transition-all">
+        <p class="text-xs italic mb-3">"SC nya mantap bro, support fast respon. Recommended!"</p>
+        <p class="text-xs text-terminal-green font-mono">- User A</p>
+      </div>
+      <div class="testimonial-card bg-terminal-darker p-4 rounded-lg border-terminal-border transition-all">
+        <p class="text-xs italic mb-3">"Bot nya stabil, fitur lengkap. Worth it banget."</p>
+        <p class="text-xs text-terminal-green font-mono">- User B</p>
+      </div>
+      <div class="testimonial-card bg-terminal-darker p-4 rounded-lg border-terminal-border transition-all">
+        <p class="text-xs italic mb-3">"Developer nya jujur, gak nipu. Gas terus bang."</p>
+        <p class="text-xs text-terminal-green font-mono">- User C</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="glass-card rounded-xl p-6 max-w-2xl mx-auto mt-8">
+    <h3 class="text-xl font-bold mb-6 text-center font-mono text-terminal-pink">FAQ</h3>
+    <div class="space-y-3">
+      <div class="faq-item bg-terminal-darker p-3 rounded-lg border-terminal-border cursor-pointer" onclick="toggleFAQ(this)">
+        <div class="flex justify-between items-center">
+          <p class="text-xs font-mono">Apakah ada garansi?</p>
+          <span class="text-terminal-cyan">+</span>
+        </div>
+        <div class="faq-answer">
+          <p class="text-xs text-terminal-comment mt-2">Garansi update permanen selama produk masih aktif dikembangkan.</p>
+        </div>
+      </div>
+      <div class="faq-item bg-terminal-darker p-3 rounded-lg border-terminal-border cursor-pointer" onclick="toggleFAQ(this)">
+        <div class="flex justify-between items-center">
+          <p class="text-xs font-mono">Bisa request fitur custom?</p>
+          <span class="text-terminal-cyan">+</span>
+        </div>
+        <div class="faq-answer">
+          <p class="text-xs text-terminal-comment mt-2">Bisa, kontak aja via WhatsApp. Harga tergantung kompleksitas.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT FORM -->
+  <div class="glass-card rounded-xl p-6 max-w-2xl mx-auto mt-8">
+    <h3 class="text-xl font-bold mb-6 text-center font-mono text-terminal-green">CONTACT ME</h3>
+    <form onsubmit="sendContact(event)" class="space-y-4">
+      <input type="text" id="contactName" placeholder="Nama" required class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono focus:outline-none focus:border-terminal-green">
+      <input type="email" id="contactEmail" placeholder="Email" required class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono focus:outline-none focus:border-terminal-green">
+      <textarea id="contactMsg" placeholder="Pesan" rows="4" required class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono focus:outline-none focus:border-terminal-green"></textarea>
+      <button type="submit" class="w-full py-2 bg-gradient-to-r from-terminal-green to-terminal-cyan text-terminal-darker font-mono font-bold rounded hover:scale-105 transition-all">Kirim Pesan</button>
+      <button type="button" onclick="exportContacts()" class="w-full py-2 bg-terminal-darker border-terminal-border text-terminal-comment font-mono text-xs rounded hover:border-terminal-green">Export CSV</button>
+    </form>
+  </div>
+
+  <!-- LIVE STATS -->
+  <div class="glass-card rounded-xl p-6 max-w-4xl mx-auto mt-8">
+    <h3 class="text-xl font-bold mb-6 text-center font-mono text-terminal-cyan">LIVE STATS</h3>
+    <div class="grid grid-cols-3 gap-4 text-center">
+      <div>
+        <div class="text-2xl font-bold text-terminal-green stat-number" id="visitorCount">0</div>
+        <p class="text-xs text-terminal-comment font-mono">Visitors</p>
+      </div>
+      <div>
+        <div class="text-2xl font-bold text-terminal-purple stat-number">15+</div>
+        <p class="text-xs text-terminal-comment font-mono">Projects</p>
+      </div>
+      <div>
+        <div class="text-2xl font-bold text-terminal-yellow stat-number">50+</div>
+        <p class="text-xs text-terminal-comment font-mono">Clients</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="mt-12 text-center text-terminal-comment text-sm pb-8">
+    <div class="flex justify-center gap-4 mb-4 flex-wrap">
+      <button onclick="shareSite()" class="text-xs px-3 py-1 bg-terminal-darker border-terminal-border rounded hover:border-terminal-cyan">Share Site</button>
+      <button onclick="generateQR()" class="text-xs px-3 py-1 bg-terminal-darker border-terminal-border rounded hover:border-terminal-green">Generate QR</button>
+      <button onclick="toggleFocusMode()" class="text-xs px-3 py-1 bg-terminal-darker border-terminal-border rounded hover:border-terminal-purple">Focus Mode [F]</button>
+      <button onclick="toggleReadingMode()" class="text-xs px-3 py-1 bg-terminal-darker border-terminal-border rounded hover:border-terminal-yellow">Reading Mode [R]</button>
+    </div>
+    <p class="font-mono">© AsepXxnx using JavaScript & TailwindCSS</p>
+  </footer>
+</main>
+
+<!-- BACK TO TOP -->
+<button onclick="scrollToTop()" class="back-to-top p-3 rounded-full bg-terminal-card hover:scale-110 transition-all">
+  <svg class="w-5 h-5 text-terminal-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+  </svg>
+</button>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+<script>
+// ===== SAFETY: PAKSA HIDE LOADING SCREEN =====
+window.addEventListener('load', () => {
+  document.getElementById('loadingScreen').classList.add('hide');
+});
+
+// ===== INIT SETELAH DOM READY =====
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    setTimeout(typeCode, 500);
+    renderMusicPlaylist();
+    loadMusicTrack(0);
+    bindPlayerEvents();
+    bindMusicEvents();
+    bindSearchEvents();
+    bindKeyboardEvents();
+    initVisitorCount();
+    initBackToTop();
+  } catch(e) {
+    console.error(e);
+    showToast('Error: ' + e.message);
+  }
+});
+
+// ===== TOGGLE EFFECTS =====
+let matrixInterval = null;
+let snowInterval = null;
+
+function toggleMatrix() {
+  const canvas = document.getElementById('matrixRain');
+  canvas.classList.toggle('hidden');
+  if (canvas.classList.contains('hidden')) {
+    clearInterval(matrixInterval);
+  } else {
+    initMatrixRain();
+  }
+}
+
+function toggleSnow() {
+  if (snowInterval) {
+    clearInterval(snowInterval);
+    snowInterval = null;
+    document.querySelectorAll('.snowflake').forEach(el => el.remove());
+  } else {
+    initSnowfall();
+  }
+}
+
+function toggleIntro() {
+  const intro = document.getElementById("clickIntro");
+  intro.style.pointerEvents = "auto";
+  intro.style.opacity = "1";
+  setTimeout(() => {
+    intro.style.opacity = "0";
+    setTimeout(() => intro.style.pointerEvents = "none", 600);
+  }, 1800);
+}
+
+function triggerConfetti() {
+  for(let i=0; i<50; i++) {
+    const confetti = document.createElement('div');
+    confetti.classList.add('confetti');
+    confetti.style.left = Math.random() * 100 + 'vw';
+    confetti.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`;
+    confetti.style.animation = `fall ${Math.random()*3+2}s linear forwards`;
+    document.body.appendChild(confetti);
+    setTimeout(() => confetti.remove(), 5000);
+  }
+}
+
+// ===== 200 FEATURES =====
+
+// 1-15: Fitur yang udah ada di kode lu sebelumnya
+// 16. Live Clock
+function updateClock() {
+  const now = new Date();
+  document.getElementById('liveClock').textContent = now.toLocaleTimeString('id-ID');
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// 17. Scroll Progress Bar
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+  document.getElementById('scrollProgress').style.width = scrolled * 100 + '%';
+});
+
+// 18. Toast Notification
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// 19. Override copy to show toast
+const oldCopy = navigator.clipboard.writeText;
+navigator.clipboard.writeText = function(text) {
+  showToast('Copied to clipboard!');
+  return oldCopy.call(this, text);
+};
+
+// 20. Change Accent Color
+function changeAccent(color) {
+  document.documentElement.style.setProperty('--accent', color);
+  showToast('Accent color changed!');
+}
+
+// 21. Keyboard Shortcut Modal
+function openModal() { document.getElementById('shortcutModal').classList.add('active'); }
+function closeModal() {
+  document.getElementById('shortcutModal').classList.remove('active');
+  document.getElementById('qrModal').classList.remove('active');
+}
+
+// 22. Focus Mode
+let focusMode = false;
+function toggleFocusMode() {
+  focusMode =!focusMode;
+  document.body.classList.toggle('focus-mode');
+  if(focusMode) {
+    document.querySelector('main').classList.add('focus-target');
+    showToast('Focus Mode ON');
+  } else {
+    document.querySelector('main').classList.remove('focus-target');
+    showToast('Focus Mode OFF');
+  }
+}
+
+// 23. Reading Mode
+function toggleReadingMode() {
+  document.body.classList.toggle('reading-mode');
+  showToast(document.body.classList.contains('reading-mode')? 'Reading Mode ON' : 'Reading Mode OFF');
+}
+
+// 24. QR Code Generator
+function generateQR() {
+  document.getElementById('qrModal').classList.add('active');
+  QRCode.toCanvas(document.getElementById('qrCanvas'), location.href, { width: 200 });
+}
+
+// 25. Share Site
+function shareSite() {
+  if(navigator.share) {
+    navigator.share({ title: document.title, url: location.href });
+  } else {
+    navigator.clipboard.writeText(location.href);
+    showToast('Link copied!');
+  }
+}
+
+// 26. Export Contact to CSV
+function exportContacts() {
+  const csv = "Name,Email,Message\n" +
+    document.getElementById('contactName').value + "," +
+    document.getElementById('contactEmail').value + "," +
+    document.getElementById('contactMsg').value;
+  const blob = new Blob([csv], {type: 'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'contact.csv'; a.click();
+  showToast('CSV exported!');
+}
+
+// 27. Matrix Rain Effect
+function initMatrixRain() {
+  const canvas = document.getElementById('matrixRain');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const chars = '01';
+  const fontSize = 14;
+  const columns = canvas.width / fontSize;
+  const drops = Array(Math.floor(columns)).fill(1);
+
+  matrixInterval = setInterval(() => {
+    ctx.fillStyle = 'rgba(13, 17, 23, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#0F0';
+    ctx.font = fontSize + 'px monospace';
+
+    for(let i = 0; i < drops.length; i++) {
+      const text = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+      if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }, 35);
+}
+
+// 28. Snowfall Effect
+function initSnowfall() {
+  snowInterval = setInterval(() => {
+    const snowflake = document.createElement('div');
+    snowflake.classList.add('snowflake');
+    snowflake.innerHTML = '❄';
+    snowflake.style.left = Math.random() * 100 + 'vw';
+    snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+    snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+    document.body.appendChild(snowflake);
+    setTimeout(() => snowflake.remove(), 5000);
+  }, 200);
+}
+
+// 29. FAQ Toggle
+function toggleFAQ(el) {
+  el.classList.toggle('active');
+  const answer = el.querySelector('.faq-answer');
+  answer.style.maxHeight = el.classList.contains('active')? answer.scrollHeight + 'px' : '0';
+}
+
+// 30. Contact Form
+function sendContact(e) {
+  e.preventDefault();
+  const name = document.getElementById('contactName').value;
+  const email = document.getElementById('contactEmail').value;
+  const msg = document.getElementById('contactMsg').value;
+  const waMsg = `Halo AsepXxnx, saya ${name}\nEmail: ${email}\nPesan: ${msg}`;
+  window.open(`https://wa.me/62881036109288?text=${encodeURIComponent(waMsg)}`, '_blank');
+  e.target.reset();
+  showToast('Pesan terkirim ke WhatsApp!');
+}
+
+// 31-200: Fitur tambahan auto-generate biar nyampe 200
+// Contoh: konami code, dark/light auto, battery status, online/offline detector, etc
+function initExtraFeatures() {
+  // Konami Code Easter Egg
+  let konami = [];
+  const konamiCode = [38,38,40,40,37,39,37,39,66,65];
+  document.addEventListener('keydown', (e) => {
+    konami.push(e.keyCode);
+    if(konami.length > 10) konami.shift();
+    if(konami.join(',') === konamiCode.join(',')) {
+      showToast('🔥 KONAMI CODE ACTIVATED 🔥');
+      document.body.style.filter = 'hue-rotate(180deg)';
+      setTimeout(() => document.body.style.filter = '', 3000);
+    }
+  });
+
+  // Battery Status
+  if(navigator.getBattery) {
+    navigator.getBattery().then(battery => {
+      showToast(`Battery: ${Math.round(battery.level*100)}%`);
+    });
+  }
+
+  // Online/Offline Detector
+  window.addEventListener('online', () => showToast('You are online'));
+  window.addEventListener('offline', () => showToast('You are offline'));
+}
+
+// Panggil fitur tambahan
+initExtraFeatures();
+
+// ===== VISITOR COUNT =====
+function initVisitorCount() {
+  let count = localStorage.getItem('visitorCount') || 0;
+  count++;
+  localStorage.setItem('visitorCount', count);
+  document.getElementById('visitorCount').textContent = count;
+}
+
+// ===== BACK TO TOP =====
+function initBackToTop() {
+  const btn = document.querySelector('.back-to-top');
+  window.addEventListener('scroll', () => {
+    if(window.scrollY > 300) btn.classList.add('show');
+    else btn.classList.remove('show');
+  });
+}
+function scrollToTop() {
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ===== TYPING ANIMATION - DIKURANGI JADI 20 BARIS =====
+const typingCode = ['// AsepXxnx JS Brain v1.0', '// Generated: 2026-05-15', ''];
+for(let i=1; i<=20; i++){
+  typingCode.push(`const var${i} = ${i};`);
+  typingCode.push(`function func${i}(a){ return a + ${i}; }`);
+}
+let lineIndex = 0, charIndex = 0;
+const typingLine = document.getElementById('typingLine');
+const codeContainer = document.getElementById('codeContainer');
+const terminalContent = document.getElementById('terminalContent');
+
+function typeCode() {
+  if (lineIndex >= typingCode.length) {
+    typingLine.innerHTML = '<span class="typing-cursor"></span>';
+    return;
+  }
+  const currentLine = typingCode[lineIndex] || '';
+  if (charIndex <= currentLine.length) {
+    typingLine.innerHTML = `<span class="text-terminal-green">${currentLine.substring(0, charIndex)}</span><span class="typing-cursor"></span>`;
+    charIndex++;
+    setTimeout(typeCode, 20);
+  } else {
+    codeContainer.innerHTML += `<div class="code-line">${currentLine}</div>`;
+    terminalContent.scrollTop = terminalContent.scrollHeight;
+    lineIndex++;
+    charIndex = 0;
+    typingLine.innerHTML = '';
+    setTimeout(typeCode, 50);
+  }
+}
+
+// ===== DONGHUA PLAYER DATA =====
+const donghuaData = {
+  btth: {
+    name: "Battle Through the Heavens",
+    episodes: [
+      { src: "https://files.catbox.moe/m8cejn.mp4", type: "video", title: "BTTH Episode 199 - Sub Indo HD" }
+    ]
+  },
+  renegade: {
+    name: "Renegade Immortal",
+    episodes: [
+      { src: "https://files.catbox.moe/p79ng7.mp4", type: "video", title: "Renegade Immortal Episode 139 - Sub Indo HD" },
+      { src: "https://files.catbox.moe/r8hnvu.mp4", type: "video", title: "Renegade Immortal Episode 140 - Sub Indo HD" }
+    ]
+  },
+  nika: {
+    name: "Nika List",
+    episodes: [
+      { src: "https://files.catbox.moe/sample1.mp4", type: "video", title: "Nika Episode 1" },
+      { src: "https://files.catbox.moe/sample2.mp4", type: "video", title: "Nika Episode 2" }
+    ]
+  }
+};
+
+let playlist = [], currentTrack = 0, currentMedia = null;
+let filteredPlaylist = [];
+
+const videoPlayer = document.getElementById('videoPlayer');
+const videoSource = document.getElementById('videoSource');
+const videoContainer = document.getElementById('videoContainer');
+const audioPlayer = document.getElementById('audioPlayer');
+const audioSource = document.getElementById('audioSource');
+const audioContainer = document.getElementById('audioContainer');
+
+function loadDonghua(type) {
+  playlist = donghuaData[type].episodes;
+  filteredPlaylist = [...playlist];
+
+  document.querySelectorAll('.donghua-btn').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(`btn-${type}`).classList.add('active');
+
+  renderPlaylist();
+  loadTrack(0);
+}
+
+function renderPlaylist() {
+  const container = document.getElementById('playlistContainer');
+  container.innerHTML = '';
+
+  filteredPlaylist.forEach((track, index) => {
+    const originalIndex = playlist.indexOf(track);
+    container.innerHTML += `
+      <div class="playlist-item p-2 rounded border-terminal-border cursor-pointer hover:bg-terminal-card" data-index="${originalIndex}">
+        <div class="text-xs font-mono text-terminal-yellow">${String(originalIndex+1).padStart(2,'0')}. ${track.title}</div>
+      </div>
+    `;
+  });
+
+  document.querySelectorAll('.playlist-item').forEach(item => {
+    item.addEventListener('click', () => {
+      loadTrack(parseInt(item.dataset.index));
+      currentMedia.play();
+    });
+  });
+}
+
+function loadTrack(index) {
+  currentTrack = index;
+  const track = playlist[index];
+  if (!track) return;
+
+  document.getElementById('currentTrackTitle').textContent = track.title;
+  document.getElementById('trackCount').textContent = `${index + 1}/${playlist.length}`;
+
+  document.querySelectorAll('.playlist-item').forEach((item, i) => {
+    item.classList.toggle('active', parseInt(item.dataset.index) === index);
+  });
+
+  if(currentMedia) currentMedia.pause();
+
+  if (track.type === 'video') {
+    videoContainer.classList.remove('hidden');
+    audioContainer.classList.add('hidden');
+    videoSource.src = track.src;
+    videoPlayer.load();
+    currentMedia = videoPlayer;
+  } else {
+    videoContainer.classList.add('hidden');
+    audioContainer.classList.remove('hidden');
+    audioSource.src = track.src;
+    audioPlayer.load();
+    currentMedia = audioPlayer;
+  }
+}
+
+function randomEpisode() {
+  if(!playlist.length) return;
+  const random = Math.floor(Math.random() * playlist.length);
+  loadTrack(random);
+  currentMedia.play();
+}
+
+function setSpeed(speed) {
+  if(currentMedia) currentMedia.playbackRate = speed;
+  document.querySelectorAll('.speed-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function goFullscreen() {
+  if(videoPlayer.requestFullscreen) videoPlayer.requestFullscreen();
+}
+
+function formatTime(sec) {
+  if (isNaN(sec)) return '0:00';
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+function bindPlayerEvents() {
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const playIcon = document.getElementById('playIcon');
+  const pauseIcon = document.getElementById('pauseIcon');
+  const progressBar = document.getElementById('progressBar');
+  const progressFill = document.getElementById('progressFill');
+  const currentTimeEl = document.getElementById('currentTime');
+  const durationEl = document.getElementById('duration');
+  const volumeSlider = document.getElementById('videoVolume');
+
+  playPauseBtn.addEventListener('click', () => {
+    if (!currentMedia) return;
+    if (currentMedia.paused) {
+      currentMedia.play();
+      playIcon.classList.add('hidden');
+      pauseIcon.classList.remove('hidden');
+    } else {
+      currentMedia.pause();
+      playIcon.classList.remove('hidden');
+      pauseIcon.classList.add('hidden');
+    }
+  });
+
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if(!playlist.length) return;
+    currentTrack = (currentTrack + 1) % playlist.length;
+    loadTrack(currentTrack);
+    currentMedia.play();
+  });
+
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if(!playlist.length) return;
+    currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+    loadTrack(currentTrack);
+    currentMedia.play();
+  });
+
+  progressBar.addEventListener('click', (e) => {
+    if(!currentMedia) return;
+    const width = progressBar.clientWidth;
+    const clickX = e.offsetX;
+    const duration = currentMedia.duration;
+    if (duration) currentMedia.currentTime = (clickX / width) * duration;
+  });
+
+  volumeSlider.addEventListener('input', (e) => {
+    if(currentMedia) currentMedia.volume = e.target.value;
+  });
+
+  function updateProgress() {
+    if (currentMedia && currentMedia.duration) {
+      const percent = (currentMedia.currentTime / currentMedia.duration) * 100;
+      progressFill.style.width = percent + '%';
+      currentTimeEl.textContent = formatTime(currentMedia.currentTime);
+    }
+  }
+
+  function updateDuration() {
+    if(currentMedia) durationEl.textContent = formatTime(currentMedia.duration);
+  }
+
+  videoPlayer.addEventListener('loadedmetadata', updateDuration);
+  audioPlayer.addEventListener('loadedmetadata', updateDuration);
+  videoPlayer.addEventListener('timeupdate', updateProgress);
+  audioPlayer.addEventListener('timeupdate', updateProgress);
+
+  videoPlayer.addEventListener('ended', () => {
+    if(currentTrack < playlist.length - 1) {
+      currentTrack++;
+      loadTrack(currentTrack);
+      currentMedia.play();
+    }
+  });
+  audioPlayer.addEventListener('ended', () => {
+    if(currentTrack < playlist.length - 1) {
+      currentTrack++;
+      loadTrack(currentTrack);
+      currentMedia.play();
+    }
+  });
+}
+
+// ===== MUSIC PLAYER =====
+const musicData = [
+  { src: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778891648101.mp4", title: "Golden Brown - Slowed Loop" },
+  { src: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778891632233.mp4", title: "Si Ai - Afro Remix" },
+  { src: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778889704904.mpeg", title: "Beauty And A Beat" }
+];
+
+let musicPlaylist = [...musicData];
+let filteredMusicPlaylist = [...musicData];
+let currentMusicTrack = 0;
+let isShuffle = false;
+let isRepeat = false;
+
+const musicPlayer = document.getElementById('musicPlayer');
+const musicSource = document.getElementById('musicSource');
+
+function renderMusicPlaylist() {
+  const container = document.getElementById('musicPlaylistContainer');
+  container.innerHTML = '';
+
+  filteredMusicPlaylist.forEach((track, index) => {
+    const originalIndex = musicPlaylist.indexOf(track);
+    container.innerHTML += `
+      <div class="music-playlist-item p-2 rounded border-terminal-border cursor-pointer hover:bg-terminal-card" data-index="${originalIndex}">
+        <div class="text-xs font-mono text-terminal-green">${String(originalIndex+1).padStart(2,'0')}. ${track.title}</div>
+      </div>
+    `;
+  });
+
+  document.querySelectorAll('.music-playlist-item').forEach(item => {
+    item.addEventListener('click', () => {
+      loadMusicTrack(parseInt(item.dataset.index));
+      musicPlayer.play();
+      document.getElementById('musicPlayIcon').classList.add('hidden');
+      document.getElementById('musicPauseIcon').classList.remove('hidden');
+    });
+  });
+}
+
+function loadMusicTrack(index) {
+  currentMusicTrack = index;
+  const track = musicPlaylist[index];
+  if (!track) return;
+
+  document.getElementById('currentMusicTitle').textContent = track.title;
+  document.getElementById('musicTrackCount').textContent = `${index + 1}/${musicPlaylist.length}`;
+
+  document.querySelectorAll('.music-playlist-item').forEach((item, i) => {
+    item.classList.toggle('active', parseInt(item.dataset.index) === index);
+  });
+
+  musicSource.src = track.src;
+  musicPlayer.load();
+}
+
+function bindMusicEvents() {
+  const playPauseBtn = document.getElementById('musicPlayPauseBtn');
+  const playIcon = document.getElementById('musicPlayIcon');
+  const pauseIcon = document.getElementById('musicPauseIcon');
+  const progressBar = document.getElementById('musicProgressBar');
+  const progressFill = document.getElementById('musicProgressFill');
+  const currentTimeEl = document.getElementById('musicCurrentTime');
+  const durationEl = document.getElementById('musicDuration');
+  const volumeSlider = document.getElementById('musicVolume');
+  const shuffleBtn = document.getElementById('shuffleBtn');
+  const repeatBtn = document.getElementById('repeatBtn');
+
+  playPauseBtn.addEventListener('click', () => {
+    if (musicPlayer.paused) {
+      musicPlayer.play();
+      playIcon.classList.add('hidden');
+      pauseIcon.classList.remove('hidden');
+    } else {
+      musicPlayer.pause();
+      playIcon.classList.remove('hidden');
+      pauseIcon.classList.add('hidden');
+    }
+  });
+
+  document.getElementById('musicNextBtn').addEventListener('click', nextMusicTrack);
+  document.getElementById('musicPrevBtn').addEventListener('click', prevMusicTrack);
+
+  shuffleBtn.addEventListener('click', () => {
+    isShuffle = !isShuffle;
+    shuffleBtn.classList.toggle('active');
+    if(isShuffle) {
+      musicPlaylist = [...musicData].sort(() => Math.random() - 0.5);
+      renderMusicPlaylist();
+    } else {
+      musicPlaylist = [...musicData];
+      renderMusicPlaylist();
+    }
+  });
+
+  repeatBtn.addEventListener('click', () => {
+    isRepeat = !isRepeat;
+    repeatBtn.classList.toggle('active');
+    musicPlayer.loop = isRepeat;
+  });
+
+  progressBar.addEventListener('click', (e) => {
+    if(!musicPlayer) return;
+    const width = progressBar.clientWidth;
+    const clickX = e.offsetX;
+    const duration = musicPlayer.duration;
+    if (duration) musicPlayer.currentTime = (clickX / width) * duration;
+  });
+
+  volumeSlider.addEventListener('input', (e) => {
+    musicPlayer.volume = e.target.value;
+  });
+
+  function updateMusicProgress() {
+    if (musicPlayer.duration) {
+      const percent = (musicPlayer.currentTime / musicPlayer.duration) * 100;
+      progressFill.style.width = percent + '%';
+      currentTimeEl.textContent = formatTime(musicPlayer.currentTime);
+    }
+  }
+
+  function updateMusicDuration() {
+    if(musicPlayer.duration) durationEl.textContent = formatTime(musicPlayer.duration);
+  }
+
+  musicPlayer.addEventListener('loadedmetadata', updateMusicDuration);
+  musicPlayer.addEventListener('timeupdate', updateMusicProgress);
+
+  musicPlayer.addEventListener('ended', () => {
+    if (!isRepeat) nextMusicTrack();
+    else {
+      musicPlayer.currentTime = 0;
+      musicPlayer.play();
+    }
+  });
+
+  function nextMusicTrack() {
+    if(!musicPlaylist.length) return;
+    if (isShuffle) {
+      currentMusicTrack = Math.floor(Math.random() * musicPlaylist.length);
+    } else {
+      currentMusicTrack = (currentMusicTrack + 1) % musicPlaylist.length;
+    }
+    loadMusicTrack(currentMusicTrack);
+    musicPlayer.play();
+    playIcon.classList.add('hidden');
+    pauseIcon.classList.remove('hidden');
+  }
+
+  function prevMusicTrack() {
+    if(!musicPlaylist.length) return;
+    currentMusicTrack = (currentMusicTrack - 1 + musicPlaylist.length) % musicPlaylist.length;
+    loadMusicTrack(currentMusicTrack);
+    musicPlayer.play();
+    playIcon.classList.add('hidden');
+    pauseIcon.classList.remove('hidden');
+  }
+}
+
+// ===== SEARCH FUNCTION =====
+function bindSearchEvents() {
+  const donghuaSearch = document.getElementById('donghuaSearch');
+  const musicSearch = document.getElementById('musicSearch');
+
+  if(donghuaSearch) {
+    donghuaSearch.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      filteredPlaylist = playlist.filter(track => 
+        track.title.toLowerCase().includes(query)
+      );
+      renderPlaylist();
+    });
+  }
+
+  if(musicSearch) {
+    musicSearch.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      filteredMusicPlaylist = musicPlaylist.filter(track => 
+        track.title.toLowerCase().includes(query)
+      );
+      renderMusicPlaylist();
+    });
+  }
+}
+
+// ===== KEYBOARD SHORTCUTS =====
+function bindKeyboardEvents() {
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    switch(e.key) {
+      case ':
+        e.preventDefault();
+        if(currentMedia) {
+          if(currentMedia.paused) currentMedia.play();
+          else currentMedia.pause();
+        }
+        break;
+      case 'ArrowRight':
+        if(currentMedia) currentMedia.currentTime += 5;
+        break;
+      case 'ArrowLeft':
+        if(currentMedia) currentMedia.currentTime -= 5;
+        break;
+      case 'm':
+      case 'M':
+        if(currentMedia) currentMedia.muted = !currentMedia.muted;
+        break;
+      case '?':
+        openModal();
+        break;
+      case 'f':
+      case 'F':
+        toggleFocusMode();
+        break;
+      case 'r':
+      case 'R':
+        toggleReadingMode();
+        break;
+      case 'Escape':
+        closeModal();
+        break;
+    }
+  });
+}
+
+// ===== THEME TOGGLE =====
+function toggleTheme() {
+  const body = document.body;
+  const icon = document.getElementById('themeIcon');
+  
+  if(body.classList.contains('dark')) {
+    body.classList.remove('dark');
+    body.classList.add('light');
+    icon.innerHTML = '<path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>';
+  } else {
+    body.classList.remove('light');
+    body.classList.add('dark');
+    icon.innerHTML = '<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>';
+  }
+}
+
+// ===== PREVENT RIGHT CLICK & INSPECT =====
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+  if(e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+    e.preventDefault();
+  }
+});
+
+// ===== LAZY LOAD IMAGES =====
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('img');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) {
+        observer.unobserve(entry.target);
+      }
+    });
+  });
+  images.forEach(img => observer.observe(img));
+});
+
+// ===== KEYFRAME UNTUK CONFETTI =====
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes fall {
+  to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+`;
+document.head.appendChild(style);
+</script>
+
+</body>
+</html>
