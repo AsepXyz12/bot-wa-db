@@ -13452,7 +13452,339 @@ case 'clearakses': {
  }
 }
 break
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+case 'gethtml': {
+ if (!text) return payreply(`Masukin link nya bro\nContoh: ${prefix}gethtml https://example.com`)
+
+ const axios = require('axios')
+ let url = text.trim()
+
+ // Auto tambah https kalau nggak ada
+ if (!url.startsWith('http://') && !url.startsWith('https://')) {
+ url = 'https://' + url
+ }
+
+ await Asepp.sendMessage(m.chat, { react: { text: "🌐", key: m.key } })
+
+ try {
+ const res = await axios.get(url, {
+ timeout: 30000,
+ headers: {
+ 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+ },
+ maxContentLength: 10 * 1024 * 1024 // limit 10MB
+ })
+
+ let html = res.data
+
+ // Kalau bukan string, convert
+ if (typeof html !== 'string') {
+ html = JSON.stringify(html, null, 2)
+ }
+
+ // Cek panjang, WA max 4096 char per message
+ if (html.length > 4000) {
+ // Simpen ke file txt terus kirim
+ const fs = require('fs')
+ const path = `./tmp/${Date.now()}.html`
+ 
+ if (!fs.existsSync('./tmp')) fs.mkdirSync('./tmp')
+ fs.writeFileSync(path, html)
+ 
+ await Asepp.sendMessage(m.chat, {
+ document: fs.readFileSync(path),
+ fileName: `gethtml_${new URL(url).hostname}.html`,
+ mimetype: 'text/html'
+ }, { quoted: m })
+ 
+ fs.unlinkSync(path)
+ 
+ return payreply(`✅ HTML kegedean ${html.length} char, udah gue kirim jadi file bro`)
+ } else {
+ return payreply(`\`𝗚𝗘𝗧𝗛𝗧𝗠𝗟 𝗦𝗨𝗖𝗘𝗦\`\n\nURL: ${url}\nSize: ${html.length} char\n\`\`html\n${html}\n\`\``)
+ }
+
+ } catch (e) {
+ return payreply(`Gagal get HTML bro: ${e.message}`)
+ }
+}
 break
+
+
+
+
+
+case 'runhtml': {
+ if (!m.isGroup) return payreply('Menu RUNHTML khusus group 🩸')
+
+ const GITHUB_OWNER = `AsepXyz12`
+ const GITHUB_REPO = `bot-wa-db`
+ const axios = require('axios')
+ const crypto = require('crypto')
+
+
+ const headers = {
+ "Accept": "application/vnd.github.v3+json"
+ }
+
+ await Asepp.sendMessage(m.chat, { react: { text: "🚀", key: m.key } })
+
+ if (!m.quoted ||!m.quoted.text) {
+ return payreply(`Kirim kode HTML nya dulu, terus reply pesan itu pake ${prefix}runhtml`)
+ }
+
+ let htmlCode = m.quoted.text
+
+ try {
+ // Cek apakah ini HTML encinvis
+ if (htmlCode.includes('let p=') && htmlCode.includes('"d":"') && htmlCode.includes('"k":"')) {
+ await payreply('⏳ Deteksi HTML terenkrip, dekrip dulu...')
+
+ // Ambil JSON payload dengan regex yang lebih aman
+ const jsonMatch = htmlCode.match(/let p=\s*(\{.*?\});/s)
+ if (!jsonMatch) throw new Error('Payload JSON nggak ketemu')
+
+ let p
+ try {
+ p = JSON.parse(jsonMatch[1])
+ } catch {
+ throw new Error('Gagal parse payload JSON')
+ }
+
+ // Dekrip
+ const keyBuf = Buffer.from(p.k, 'base64')
+ const ivBuf = Buffer.from(p.i, 'base64')
+ const dataBuf = Buffer.from(p.d, 'base64')
+ const tagBuf = Buffer.from(p.t, 'base64')
+
+ const decipher = crypto.createDecipheriv('aes-256-gcm', keyBuf, ivBuf)
+ decipher.setAuthTag(tagBuf)
+ let decrypted = decipher.update(dataBuf)
+ decrypted = Buffer.concat([decrypted, decipher.final()])
+
+ htmlCode = decrypted.toString('utf8')
+ await payreply('✅ Dekrip berhasil, upload ke GitHub...')
+ }
+
+ // Auto wrap
+ if (!htmlCode.includes('<html') &&!htmlCode.includes('<!DOCTYPE')) {
+ htmlCode = `<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RunHTML - ${pushname}</title>
+</head>
+<body>
+${htmlCode}
+</body>
+</html>`
+ }
+
+ let filename = `runhtml_${Date.now()}.html`
+ let PATH = `hosting/${filename}`
+
+ const encoded = Buffer.from(htmlCode).toString('base64')
+ const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${PATH}`
+
+ await axios.put(url, {
+ message: `RUNHTML upload by ${pushname}`,
+ content: encoded,
+ branch: 'main'
+ }, { headers })
+
+ const link = `https://${GITHUB_OWNER}.github.io/${GITHUB_REPO}/${PATH}`
+
+ return payreply(`\`𝗥𝗨𝗡𝗛𝗧𝗠𝗟 𝗦𝗨𝗖𝗘𝗦\`\n\nLink: ${link}\n\nStatus: ${htmlCode.includes('<script>eval("\\\\x')? 'Dekrip dari encinvis' : 'Plain HTML'}`)
+
+ } catch (e) {
+ console.log('RUNHTML ERROR:', e)
+ return payreply(`Gagal bro: ${e.message}\n\nCek console bot buat detailnya.`)
+ }
+}
+
+
+
+case 'enchtml': {
+ try {
+ // Ambil HTML dari reply
+ if (!m.quoted || !m.quoted.text) {
+ return payreply(`Kirim kode HTML nya dulu, terus reply pesan itu pake ${prefix}enchtml`)
+ }
+ 
+ let html = m.quoted.text.trim()
+ 
+ // Auto wrap kalau bukan full HTML
+ if (!html.includes('<html') && !html.includes('<!DOCTYPE')) {
+ html = `<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Link</title>
+</head>
+<body>
+${html}
+</body>
+</html>`
+ }
+
+ const crypto = require("crypto")
+ const fs = require("fs")
+ const path = require("path")
+
+ // Encrypt HTML pakai AES-256-GCM
+ const key = crypto.randomBytes(32)
+ const iv = crypto.randomBytes(12)
+ const cipher = crypto.createCipheriv('aes-256-gcm', key, iv)
+ let enc = cipher.update(html, 'utf8')
+ enc = Buffer.concat([enc, cipher.final()])
+ const tag = cipher.getAuthTag()
+
+ const payload = {
+ d: enc.toString('base64'),
+ i: iv.toString('base64'),
+ t: tag.toString('base64'),
+ k: key.toString('base64')
+ }
+
+ // Loader JS buat browser
+ const loader = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body{margin:0;font-family:sans-serif;background:#f5f5f5}
+#x{text-align:center;padding:50px}
+</style>
+</head>
+<body>
+<div id="x">Loading...</div>
+<script>
+(async()=>{
+try{
+let p=${JSON.stringify(payload)};
+let keyBuf=Uint8Array.from(atob(p.k),c=>c.charCodeAt(0));
+let ivBuf=Uint8Array.from(atob(p.i),c=>c.charCodeAt(0));
+let dataBuf=Uint8Array.from(atob(p.d),c=>c.charCodeAt(0));
+let tagBuf=Uint8Array.from(atob(p.t),c=>c.charCodeAt(0));
+
+let cryptoKey=await crypto.subtle.importKey('raw',keyBuf,{name:'AES-GCM'},false,['decrypt']);
+let decrypted=await crypto.subtle.decrypt({name:'AES-GCM',iv:ivBuf,tagLength:128},cryptoKey,Uint8Array.from([...dataBuf,...tagBuf]));
+
+document.getElementById('x').innerHTML=new TextDecoder().decode(decrypted);
+}catch(e){
+document.getElementById('x').innerText='Decrypt failed: '+e.message;
+}
+})();
+</script>
+</body>
+</html>`.trim()
+
+ // Hex obfuscate
+ const invis = loader.split('').map(c => '\\x' + c.charCodeAt(0).toString(16).padStart(2,'0')).join('')
+ const finalHTML = `<!DOCTYPE html><html><body><script>eval("${invis}".replace(/\\\\x/g,'%'))</script></body></html>`
+
+ // Simpen ke file
+ const tmpDir = path.join(__dirname, 'tmp')
+ fs.mkdirSync(tmpDir, { recursive: true })
+ const outPath = path.join(tmpDir, 'secure.html')
+ fs.writeFileSync(outPath, finalHTML, 'utf8')
+
+ await Asepp.sendMessage(m.chat, {
+ document: fs.readFileSync(outPath),
+ fileName: 'secure.html',
+ mimetype: 'text/html',
+ caption: 'Buka file ini di browser. HTML asli udah di-embed, nggak ada redirect.'
+ }, { quoted: m })
+
+ fs.unlinkSync(outPath)
+
+ } catch(e){
+ await payreply('❌ Error: ' + e.message)
+ }
+}
+break
+
+case "toapk": {
+ if (!m.quoted || !m.quoted.text) {
+ return payreply("Reply pesan yang isinya kode HTML bro.\nContoh: reply HTML lu terus ketik .toapk");
+ }
+
+ let html = m.quoted.text;
+
+ // Cek HTML valid
+ if (!html.includes("<html") && !html.includes("<!DOCTYPE")) {
+ return payreply("Itu bukan HTML valid bro. Kirim HTML lengkapnya.");
+ }
+
+ // Auto-inject bridge biar fungsi JS bisa ngomong ke Android
+ if (!html.includes("window.Android")) {
+ html = html.replace("</body>", `
+<script>
+// Bridge Android - jangan dihapus
+window.Android = window.Android || {
+ paySuccess: function(amount) { console.log("paySuccess", amount); },
+ aseppReply: function(msg) { console.log("aseppReply", msg); }
+};
+
+// Fungsi lu
+function payreply(status, amount) {
+ if(status === 'success') {
+ alert('Pembayaran Rp' + amount + ' berhasil!');
+ if(window.Android) Android.paySuccess(amount);
+ window.open('https://wa.me/62881036109288?text=Pembayaran+Rp'+amount+'+berhasil', '_blank');
+ }
+}
+
+function Asepp(msg) {
+ let reply = 'Halo, ini Asepp. Lu bilang: ' + msg;
+ alert(reply);
+ if(window.Android) Android.aseppReply(reply);
+ return reply;
+}
+</script>
+</body>`);
+ }
+
+ await Asepp.sendMessage(m.chat, {
+ document: Buffer.from(html, "utf-8"),
+ fileName: "index.html",
+ mimetype: "text/html",
+ caption: `✅ File index.html siap.
+
+*Cara jadi APK 1 menit:*
+1. Download file index.html ini
+2. Buka https://webtoapk.com di HP/PC
+3. Klik "Upload HTML file" > pilih index.html
+4. Nama app: AsepXxnx
+5. Klik Build APK > tunggu 30 detik
+6. Download APK > Install
+
+*Catatan:*
+- Fungsi payreply() dan Asepp() udah nyambung ke Android
+- Gak perlu install Android Studio, gak perlu PC berat
+- Gratis, langsung jadi APK`
+ });
+}
+break
+
 
 // END TOD
 Asepp.ev.on('messages.upsert', async (chatUpdate) => {
