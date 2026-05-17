@@ -15,7 +15,7 @@
 
 <script>
 (function(){
-  const VERSION = "3.4.3";
+  const VERSION = "3.4.2";
   const ALLOW_HOSTS = ["asepxyz12.github.io", "localhost", "127.0.0.1"];
   const ALLOW_URL = "https://asepxyz12.github.io/bot-wa-db/MamakluYtm/Punyaspainijirngentotytmlusemua.html";
 
@@ -47,55 +47,67 @@
 
   const isAuthorized = isHostAllowed && isUrlAllowed;
 
-  // Fitur Nuklir: Hancurkan halaman, kunci klik, dan paksa tutup tab
-  function forceClosePage() {
-    // 1. Hapus semua elemen HTML asli agar tidak bisa di-inspect/disalin
-    if(document.body) document.body.remove();
-    document.documentElement.innerHTML = '';
-    
-    // 2. Kunci layar total biar gak bisa diklik, diseleksi, atau discroll
-    const heavyStyle = document.createElement('style');
-    heavyStyle.innerHTML = `
-      html, body { 
-        background: #000 !important; color: #fff !important;
-        pointer-events: none !important; user-select: none !important; 
-        cursor: not-allowed !important; overflow: hidden !important;
-      }
+  function showBlockedPage() {
+    document.documentElement.innerHTML = `
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@700&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        html,body{
+          height:100%; width:100%;
+          background:#110000; color:#ff3b3b;
+          font-family:'Fira Code', monospace;
+          overflow:hidden;
+        }
+       .wrap{
+          display:flex; align-items:center; justify-content:center;
+          height:100vh; width:100vw;
+          flex-direction:column; gap:25px; padding:20px;
+          text-align:center;
+        }
+        h1{
+          font-size:48px; font-weight:700;
+          text-shadow:0 0 20px #ff3b3b;
+        }
+        p{font-size:18px;line-height:1.7;color:#ffdddd;max-width:750px;}
+       .url{color:#fff;background:#300;padding:12px 20px;border-radius:8px;word-break:break-all;border:1px solid #ff3b3b;}
+      </style>
+      <div class="wrap">
+        <h1>ACCESS DENIED</h1>
+        <p>
+          File ini tidak diizinkan berjalan di domain ini.<br><br>
+          URL yang diizinkan:<br>
+          <span class="url">${ALLOW_URL}</span><br><br>
+          URL yang kamu buka:<br>
+          <span class="url">${location.href}</span>
+        </p>
+      </div>
     `;
-    document.documentElement.appendChild(heavyStyle);
 
-    // 3. Blokir interaksi input / klik manual
-    const killEvent = (e) => { e.preventDefault(); e.stopPropagation(); return false; };
-    ['click', 'mousedown', 'mouseup', 'keydown', 'keyup', 'contextmenu', 'touchstart'].forEach(evt => {
-      document.addEventListener(evt, killEvent, true);
-    });
+    // Blok devtools
+    const blockKeys = (e)=>{
+      if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C','U'].includes(e.key))||(e.ctrlKey&&e.key==='u')){
+        e.preventDefault();
+      }
+    };
+    document.addEventListener('contextmenu',e=>e.preventDefault());
+    document.addEventListener('keydown',blockKeys);
 
-    // 4. Paksa Force Close Tab (Bekerja jika dibuka via redirect/script)
-    window.close();
-    
-    // 5. Cadangan jika window.close() gagal (Kunci tab dengan crash-loop ringan)
-    setTimeout(() => {
-      window.location.href = "about:blank";
-    }, 100);
-
-    throw new Error("CRITICAL: Unauthorized runtime execution.");
+    throw new Error("Unauthorized domain");
   }
 
-  // Cek otorisasi domain & url
   if (!isAuthorized) {
-    forceClosePage();
+    showBlockedPage();
   } else {
     // Hapus loading kalau lolos
     const loader = document.getElementById('__loading');
     if (loader) loader.remove();
 
-    // Proteksi anti-devtools untuk domain yang benar
+    // Proteksi ringan untuk domain yang benar
     const blockKeys = (e)=>{
       if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C','U'].includes(e.key))||(e.ctrlKey&&e.key==='u')){
         e.preventDefault();
         console.clear();
         console.log("%cSTOP!","color:red;font-size:40px;font-weight:bold");
-        forceClosePage(); // Jika nekat buka devtools di domain asli, langsung kick!
       }
     };
     document.addEventListener('contextmenu',e=>e.preventDefault());
@@ -103,9 +115,6 @@
 
     console.log(`%cAsepXxnx Secure Runtime v${VERSION} Active`,"color:#7ee787;font-weight:bold");
   }
-
-  // Cegah user mengubah variabel ALLOW_HOSTS / ALLOW_URL via console/script injection
-  Object.freeze(ALLOW_HOSTS);
 })();
 
 window.tailwind = window.tailwind || {};
@@ -125,7 +134,6 @@ tailwind.config = {
   }
 }
 </script>
-
 
 (<style/> 
 body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
