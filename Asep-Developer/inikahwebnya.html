@@ -39,7 +39,7 @@
     // ===== GANTI INI AJA =====
     const USERNAME = "asepxyz12";
     const REPO = "bot-wa-db";
-    const FILE = "Asep-Developer/inikahwebnya.html";
+    const FILE = "Asep-Developer/inikahwebnya.js";
     // =========================
 
     const url = `https://raw.githubusercontent.com/${USERNAME}/${REPO}/main/${FILE}`;
@@ -53,13 +53,13 @@
 
     const code = await res.text();
     
-    // Jalanin kode asli
+    // Jalanin kode JS
     new Function(code)();
 
   } catch(e) {
     document.getElementById('app').innerHTML = `
       <h1>Error: ${e.message}</h1>
-      <p>Buka F12 > Console buat liat detail</p>
+      <p>Cek console F12 buat detail</p>
     `;
     console.error("URL:", url);
     console.error(e);
