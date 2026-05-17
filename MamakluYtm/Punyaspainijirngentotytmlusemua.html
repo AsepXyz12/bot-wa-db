@@ -15,109 +15,145 @@
 
 <script>
 (function(){
-  const VERSION = "3.4.2";
-  const ALLOW_HOSTS = ["asepxyz12.github.io", "localhost", "127.0.0.1"];
-  const ALLOW_URL = "https://asepxyz12.github.io/bot-wa-db/MamakluYtm/Punyaspainijirngentotytmlusemua.html";
+  const __v = "3.4.1";
+  const __env = {stage:"prod", sig:"0x9f3a", ts:Date.now()};
+  const __key = atob("c2VjcmV0X2tleV8xMjM=");
+  const __noop = ()=>{try{return Function("return "+[].filter.constructor(2).name)()}catch(e){return false}};
 
-  // Tunjukin loading dulu biar gak blank
-  if (!document.getElementById('__loading')) {
-    const loader = document.createElement('div');
-    loader.id = '__loading';
-    loader.style.cssText = `
-      position:fixed;inset:0;background:#0d1117;color:#7ee787;
-      display:flex;align-items:center;justify-content:center;
-      font-family:'Fira Code',monospace;font-size:18px;z-index:99999;
-      flex-direction:column;gap:12px;
-    `;
-    loader.innerHTML = `
-      <div>Loading Secure Runtime...</div>
-      <div style="width:200px;height:4px;background:#161b22;border-radius:2px;overflow:hidden;">
-        <div style="width:0;height:100%;background:#7ee787;animation:__load 1.2s ease-in-out infinite;"></div>
-      </div>
-      <style>@keyframes __load{0%{width:0;}50%{width:100%;}100%{width:0;}}</style>
-    `;
-    document.documentElement.appendChild(loader);
-  }
+  const __crc32 = s=>{let c=-1;for(let i=0;i<s.length;i++){c=(c>>>8)^"éd4þî©".charCodeAt((c^s.charCodeAt(i))&0xFF)}return ~c>>>0};
+  const __chk = __crc32(location.href+__v)===__crc32(location.href+__v);
 
-  const currentHost = location.hostname;
-  const currentUrl = location.href.split('?')[0].split('#')[0];
+  const _ALLOW = ["asepxyz12.github.io","localhost"];
+  const _URL = "https://asepxyz12.github.io/bot-wa-db/MamakluYtm/Punyaspainijirngentotytmlusemua.html";
+  const _WA = "62881036109288";
 
-  const isHostAllowed = ALLOW_HOSTS.includes(currentHost);
-  const isUrlAllowed = currentUrl === ALLOW_URL;
+  let _locked = false;
 
-  const isAuthorized = isHostAllowed && isUrlAllowed;
+  const _fp = (()=>{
+    try{
+      const c=document.createElement('canvas'),x=c.getContext('2d');
+      x.textBaseline="top";x.font="16px Arial";
+      x.fillText(navigator.hardwareConcurrency+"|"+navigator.deviceMemory+"|"+navigator.userAgent,1,1);
+      return btoa(c.toDataURL().slice(0,100)).slice(0,12);
+    }catch(e){return "fp_"+Math.random().toString(16).slice(2,8)}
+  })();
 
-  function showBlockedPage() {
-    document.documentElement.innerHTML = `
+  const _h=location.hostname,_f=location.href;
+  const _ok1=_ALLOW.includes(_h);
+  const _ok2=_f === _URL;
+  const _ok3=__chk && __noop();
+
+  if(!(_ok1 && _ok2)){
+    _locked=true;
+    
+    document.documentElement.innerHTML=`
       <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@700&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}
         html,body{
-          height:100%; width:100%;
+          height:100%; width:100%; 
           background:#110000; color:#ff3b3b;
           font-family:'Fira Code', monospace;
           overflow:hidden;
+          user-select: none;
+          -webkit-user-select: none;
         }
-       .wrap{
+        .wrap{
           display:flex; align-items:center; justify-content:center;
           height:100vh; width:100vw;
           flex-direction:column; gap:25px; padding:20px;
-          text-align:center;
+          animation:flash 0.8s infinite alternate;
+        }
+        @keyframes flash{
+          from{background:#110000;}
+          to{background:#2a0000;}
         }
         h1{
-          font-size:48px; font-weight:700;
-          text-shadow:0 0 20px #ff3b3b;
+          font-size:52px; font-weight:700;
+          text-shadow:0 0 20px #ff3b3b, 0 0 40px #ff0000;
+          animation:shake 0.2s infinite;
         }
-        p{font-size:18px;line-height:1.7;color:#ffdddd;max-width:750px;}
-       .url{color:#fff;background:#300;padding:12px 20px;border-radius:8px;word-break:break-all;border:1px solid #ff3b3b;}
+        @keyframes shake{
+          0%,100%{transform:translateX(0);}
+          25%{transform:translateX(-8px);}
+          75%{transform:translateX(8px);}
+        }
+        p{
+          font-size:18px; line-height:1.7; color:#ffdddd;
+          max-width:750px; text-align:center;
+        }
+        .url{
+          color:#fff; background:#300; padding:12px 20px; 
+          border-radius:8px; word-break:break-all;
+          border:1px solid #ff3b3b;
+        }
+        .big{
+          font-size:24px; color:#ff5555; font-weight:700;
+        }
       </style>
       <div class="wrap">
-        <h1>ACCESS DENIED</h1>
+        <h1>NGAPAIN NYOLONG BANGSAT?</h1>
+        <p class="big">
+          INI BUKAN PUNYA LU. INI PUNYA ASEPXXNX.
+        </p>
         <p>
-          File ini tidak diizinkan berjalan di domain ini.<br><br>
-          URL yang diizinkan:<br>
-          <span class="url">${ALLOW_URL}</span><br><br>
-          URL yang kamu buka:<br>
-          <span class="url">${location.href}</span>
+          File ini ada di:<br>
+          <span class="url">${location.href}</span><br><br>
+          Maling kok bangga? Gak punya harga diri apa?<br>
+          Hapus sekarang juga. Gue tau lu buka ini.<br><br>
+          DASAR SAMPAH INTERNET. GAK BISA BIKIN SENDIRI?
         </p>
       </div>
     `;
 
-    // Blok devtools
-    const blockKeys = (e)=>{
+    // Blok klik kanan + F12
+    document.addEventListener('contextmenu',e=>e.preventDefault());
+    document.addEventListener('keydown',e=>{
       if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C','U'].includes(e.key))||(e.ctrlKey&&e.key==='u')){
         e.preventDefault();
       }
-    };
-    document.addEventListener('contextmenu',e=>e.preventDefault());
-    document.addEventListener('keydown',blockKeys);
+    });
 
-    throw new Error("Unauthorized domain");
-  }
-
-  if (!isAuthorized) {
-    showBlockedPage();
-  } else {
-    // Hapus loading kalau lolos
-    const loader = document.getElementById('__loading');
-    if (loader) loader.remove();
-
-    // Proteksi ringan untuk domain yang benar
-    const blockKeys = (e)=>{
-      if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C','U'].includes(e.key))||(e.ctrlKey&&e.key==='u')){
+    // === PROTEKSI EKSTREM NO CLICK & ANTI INTERAKSI ===
+    ['mousedown', 'mouseup', 'click', 'dblclick', 'touchstart', 'touchend', 'pointerdown'].forEach(evt => {
+      document.addEventListener(evt, e => {
         e.preventDefault();
-        console.clear();
-        console.log("%cSTOP!","color:red;font-size:40px;font-weight:bold");
-      }
-    };
-    document.addEventListener('contextmenu',e=>e.preventDefault());
-    document.addEventListener('keydown',blockKeys);
+        e.stopPropagation();
+      }, { capture: true, passive: false });
+    });
 
-    console.log(`%cAsepXxnx Secure Runtime v${VERSION} Active`,"color:#7ee787;font-weight:bold");
+    document.addEventListener('selectstart', e => e.preventDefault());
+    document.addEventListener('dragstart', e => e.preventDefault());
+
+    document.addEventListener('pointerover', function fs() {
+      try {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen();
+        }
+      } catch (e) {}
+      document.removeEventListener('pointerover', fs);
+    });
+
+    setInterval(() => { debugger; }, 50);
+    // ==================================================
+
+    throw new Error("Unauthorized");
   }
+
+  // Kalau lolos, aktifkan proteksi ringan
+  document.addEventListener('contextmenu',e=>e.preventDefault());
+  document.addEventListener('keydown',e=>{
+    if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C','U'].includes(e.key))||(e.ctrlKey&&e.key==='u')){
+      e.preventDefault();
+      console.clear();
+      console.log("%cSTOP!","color:red;font-size:40px;font-weight:bold");
+      console.log("%cThis is a protected resource.","color:#ff7b72;font-size:16px");
+    }
+  });
+
+  console.log("%cAsepXxnx Secure Runtime Active","color:#7ee787;font-weight:bold");
 })();
 
-window.tailwind = window.tailwind || {};
 tailwind.config = {
   theme: {
     extend: {
@@ -134,6 +170,7 @@ tailwind.config = {
   }
 }
 </script>
+
 
 (<style/> 
 body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
