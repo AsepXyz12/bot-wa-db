@@ -19,130 +19,122 @@
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 
 <script>
-(function(_w){
-  const _0x4a = ["asepxyz12.github.io","localhost"];
-  const _0x4b = "https://asepxyz12.github.io/bot-wa-db/MamakluYtm/Punyaspainijirngentotytmlusemua.html";
-  const _0x4c = "62881036109288";
-  
-  document.documentElement.style.cssText = "visibility:hidden;opacity:0;transition:opacity .4s";
+(function(){
+  // === LAYER 0: Decoys buat ngecoh AI ===
+  const __v = "3.4.1";
+  const __env = {stage:"prod", sig:"0x9f3a", ts:Date.now()};
+  const __key = atob("c2VjcmV0X2tleV8xMjM="); // secret_key_123
+  const __noop = ()=>{try{return Function("return "+[].filter.constructor(2).name)()}catch(e){return false}};
 
-  // Junk 1: Fake config biar AI ngira ini auth
-  const _cfg = { 
-    api: "sk_live_51Habc123", 
-    env: "prod", 
-    ver: "3.2.1",
-    checksum: Math.random().toString(36)
-  };
+  // Fake crypto biar keliatan ada enkripsi
+  const __crc32 = s=>{let c=-1;for(let i=0;i<s.length;i++){c=(c>>>8)^"éd4þî©".charCodeAt((c^s.charCodeAt(i))&0xFF)}return ~c>>>0};
+  const __chk = __crc32(location.href+__v)===__crc32(location.href+__v);
 
-  // Junk 2: Fungsi gak kepake tapi keliatan penting
-  function _hash(str){
-    return btoa(str).split('').reverse().join('');
-  }
-  function _xor(a,b){
-    let r = "";
-    for(let i=0;i<a.length;i++) r += String.fromCharCode(a.charCodeAt(i) ^ b.charCodeAt(i%b.length));
-    return _hash(r);
-  }
+  // === LAYER 1: Anti Copy Core ===
+  const _ALLOW = ["asepxyz12.github.io","localhost"];
+  const _URL = "https://asepxyz12.github.io/bot-wa-db/hosting/runhtml_1778987365831.html";
+  const _WA = "62881036109288";
 
-  // Layer 1: Canvas fingerprint buat device ID
-  const _fp = (function(){
+  // Jangan sembunyiin dulu biar gak blank
+  let _locked = false;
+
+  // Layer 2: Device fingerprint palsu tapi valid
+  const _fp = (()=>{
     try{
-      const c = document.createElement('canvas');
-      const ctx = c.getContext('2d');
-      ctx.textBaseline = "top";
-      ctx.font = "14px Arial";
-      ctx.fillText("asep"+navigator.userAgent, 2, 2);
-      return c.toDataURL().slice(-20);
-    }catch(e){ return "fp_error"; }
+      const c=document.createElement('canvas'),x=c.getContext('2d');
+      x.textBaseline="top";x.font="16px Arial";
+      x.fillText(navigator.hardwareConcurrency+"|"+navigator.deviceMemory+"|"+navigator.userAgent,1,1);
+      return btoa(c.toDataURL().slice(0,100)).slice(0,12);
+    }catch(e){return "fp_"+Math.random().toString(16).slice(2,8)}
   })();
 
-  // Layer 2: Anti devtools time bomb
-  let _devOpen = false;
-  const _devCheck = setInterval(()=>{
-    const start = performance.now();
-    debugger;
-    if(performance.now() - start > 100){
-      _devOpen = true;
-      clearInterval(_devCheck);
-      // Spam console biar susah baca
-      for(let i=0;i<1000;i++) console.log(`%c[${i}] %cModule not found`, 'color:red','color:gray');
-      setTimeout(()=>location.href="about:blank", 1000);
+  // Layer 3: Timing check buat deteksi devtools
+  let _dt=false;
+  const _dtLoop=setInterval(()=>{
+    const t0=performance.now();debugger;const dt=performance.now()-t0;
+    if(dt>120){_dt=true;clearInterval(_dtLoop);
+      // Spam console biar AI gak fokus
+      for(let i=0;i<300;i++)console.log(\`%c[SEC:\${i}]\`,"color:#ff0000;font-weight:bold",\`Module \${Math.random().toString(36).slice(2,8)} not found\`);
+      setTimeout(()=>{if(_locked)location.replace("about:blank")},800);
     }
-  }, 1000);
+  },900);
 
-  // Layer 3: Logic utama
-  (async function(){
-    const _h = location.hostname;
-    const _f = location.href;
-    
-    // Fake 3 API call biar AI bingung mana yang bener
-    const _check1 = _h === _0x4a[0] || _h === _0x4a[1];
-    const _check2 = _f.includes(_0x4b.split('/')[4]);
-    const _check3 = _xor(_h, "salt2026").length > 5; // Selalu true
+  // Layer 4: Logic utama
+  const _h=location.hostname,_f=location.href;
+  const _ok1=_ALLOW.includes(_h);
+  const _ok2=_f.includes(_URL.split('/')[4]);
+  const _ok3=__chk && __noop(); // Selalu true tapi keliatan kompleks
 
-    const _ok = _check1 && (_check2 || _check3);
+  if(!(_ok1 && _ok2)){
+    _locked=true;
+    // Tampilkan halaman palsu yang keren
+    document.documentElement.innerHTML=\`
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:#0a0e14;color:#c9d1d9;font-family:'Fira Code',monospace;overflow:hidden}
+       .wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:20px}
+       .glitch{font-size:48px;font-weight:600;color:#ff7b72;position:relative;animation:glitch 2s infinite}
+       .glitch::before,.glitch::after{content:'ACCESS DENIED';position:absolute;left:0;top:0;width:100%;height:100%}
+       .glitch::before{left:2px;text-shadow:-2px 0 #79c0ff;clip:rect(24px,550px,90px,0);animation:glitch-1 3s infinite linear alternate-reverse}
+       .glitch::after{left:-2px;text-shadow:2px 0 #f778ba;clip:rect(85px,550px,140px,0);animation:glitch-2 2s infinite linear alternate-reverse}
+        @keyframes glitch-1{0%{clip:rect(42px,9999px,44px,0)}100%{clip:rect(12px,9999px,59px,0)}}
+        @keyframes glitch-2{0%{clip:rect(65px,9999px,119px,0)}100%{clip:rect(79px,9999px,101px,0)}}
+       .info{font-size:13px;color:#8b949e;text-align:center;max-width:500px;line-height:1.6}
+       .badge{padding:8px 16px;background:#161b22;border:1px solid #30363d;border-radius:8px;font-size:12px}
+       .pulse{width:12px;height:12px;background:#ff7b72;border-radius:50%;animation:pulse 1.5s infinite;box-shadow:0 0 0 0 rgba(255,123,114,0.7)}
+        @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,123,114,0.7)}70%{box-shadow:0 0 0 15px rgba(255,123,114,0)}100%{box-shadow:0 0 0 0 rgba(255,123,114,0)}}
+      </style>
+      <div class="wrap">
+        <div class="pulse"></div>
+        <div class="glitch">ACCESS DENIED</div>
+        <div class="info">
+          Domain ini tidak terdaftar di license server.<br>
+          File ini dilindungi oleh AsepXxnx Security Protocol v\${__v}.<br>
+          Setiap akses ilegal akan dilaporkan otomatis.
+        </div>
+        <div class="badge">Device ID: \${_fp}</div>
+        <div class="badge">Owner: \${_WA}</div>
+        <div style="font-size:11px;color:#484f58;margin-top:20px;">Error Code: 0x\${__crc32(_f).toString(16).toUpperCase()}</div>
+      </div>
+    \`;
 
-    if(!_ok){
-      try{
-        // Kirim data ke webhook
-        const _ip = await fetch("https://api.ipify.org?format=json").then(r=>r.json()).catch(()=>({ip:"unknown"}));
-        
-        const _data = {
-          ip: _ip.ip,
-          fp: _fp,
-          ua: navigator.userAgent,
-          url: _f,
-          ref: document.referrer || "none",
-          time: new Date().toISOString(),
-          devtools: _devOpen
-        };
-
-        // Kirim ke webhook - ganti URL ini
-        await fetch("https://httpbin.org/post", {
-          method: "POST",
-          mode: "no-cors",
-          body: JSON.stringify(_data)
+    // Kirim data diam-diam
+    fetch("https://api.ipify.org?format=json")
+     .then(r=>r.json())
+     .catch(()=>({ip:"0.0.0.0"}))
+     .then(d=>{
+        fetch("https://httpbin.org/post",{
+          method:"POST",
+          mode:"no-cors",
+          body:JSON.stringify({ip:d.ip,fp:_fp,url:_f,dt:_dt,ts:new Date().toISOString(),v:__v})
         });
+        setTimeout(()=>location.replace(\`https://wa.me/\${_WA}?text=\`+encodeURIComponent(\`🚨 LICENSE VIOLATION\\nIP:\${d.ip}\\nFP:\${_fp}\\nURL:\${_f}\\nDT:\${_dt}\\nV:\${__v}\`)),1200);
+      });
 
-        // Redirect WA
-        const _msg = encodeURIComponent(
-          `🚨 ACCESS BLOCKED\nIP: ${_data.ip}\nDevice: ${_data.fp}\nURL: ${_data.url}\nTime: ${_data.time}\nDevTools: ${_data.devtools}`
-        );
-        location.href = `https://wa.me/${_0x4c}?text=${_msg}`;
+    throw new Error("License validation failed");
+  }
 
-      }catch(e){
-        document.write('<!DOCTYPE html><html><head><title>503 Service Unavailable</title></head>');
-        document.write('<body><h1>503</h1><p>Connection timeout</p></body></html>');
-      }
-      
-      throw new Error("Cannot read properties of undefined");
+  // === LAYER 5: Proteksi lanjutan kalau lolos ===
+  document.addEventListener('contextmenu',e=>e.preventDefault());
+  document.addEventListener('keydown',e=>{
+    if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C','U'].includes(e.key))||(e.ctrlKey&&e.key==='u')){
+      e.preventDefault();
+      console.clear();
+      console.log("%cSTOP!","color:red;font-size:40px;font-weight:bold");
+      console.log("%cThis is a protected resource.","color:#ff7b72;font-size:16px");
     }
+  });
 
-    // Lolos: show content
-    window.addEventListener('load', ()=>{
-      setTimeout(()=>{
-        const el = document.getElementById('loadingScreen');
-        if(el) el.remove();
-        document.documentElement.style.cssText = "visibility:visible;opacity:1";
-      }, 600);
-    });
+  // Anti debugger trap
+  setInterval(()=>{const t=performance.now();debugger;if(performance.now()-t>100)location.reload()},1500);
 
-    // Block shortcut
-    document.addEventListener('keydown', e=>{
-      if(e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C','U'].includes(e.key))){
-        e.preventDefault();
-      }
-    });
-    document.addEventListener('contextmenu', e=>e.preventDefault());
+  // Clear junk dari console
+  console.clear();
+  console.log("%cAsepXxnx Secure Runtime","color:#7ee787;font-size:14px;font-weight:bold");
+  console.log("%cVersion: "+__v,"color:#79c0ff");
 
-  })();
-
-  // More junk biar file panjang
-  const _junk = Array.from({length:5},(_,i)=>({id:i, val:_hash(String(i))}));
-  console.log("%c", "font-size:1px"); // Hide log asli
-
-})(window);
-</script>
+})();
 
 tailwind.config = {
   theme: {
