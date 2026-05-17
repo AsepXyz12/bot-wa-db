@@ -1568,29 +1568,23 @@ function csvToJson() {
 }
 // TIKTOK PREVIEW
 async function getTikTokPreview() {
-  let url = document.getElementById("ttUrl").value.trim();
-
-  // Kalau input kosong, coba cari link tiktok di seluruh halaman
-  if (!url) {
-    const pageText = document.body.innerText;
-    const match = pageText.match(/https:\/\/(www\.)?tiktok\.com\/[^\s"']+/);
-    if (match) {
-      url = match[0];
-      document.getElementById("ttUrl").value = url; // auto isi biar keliatan
-      showToast("URL TikTok ditemukan, auto isi!");
-    } else {
-      return showToast("Masukkan URL dulu atau paste HTML yang ada link TikToknya!");
-    }
-  }
+  const url = document.getElementById("ttUrl").value.trim();
+  if (!url) return showToast("Masukkan URL dulu!");
+  
+  if (!url.includes("tiktok.com")) return showToast("URL TikTok tidak valid!");
 
   showToast("Fetching...");
+  const btn = document.querySelector("#content-tiktok button");
+  btn.disabled = true;
+  btn.textContent = "Loading...";
 
   try {
-    const res = await fetch(
-      "https://www.tiktok.com/oembed?url=" + encodeURIComponent(url)
-    );
-
-    if (!res.ok) throw new Error("Invalid URL");
+    const proxyUrl = "https://api.allorigins.win/raw?url=";
+    const apiUrl = `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
+    
+    const res = await fetch(proxyUrl + encodeURIComponent(apiUrl));
+    
+    if (!res.ok) throw new Error("Gagal ambil data");
 
     const data = await res.json();
 
@@ -1600,11 +1594,15 @@ async function getTikTokPreview() {
     document.getElementById("ttOpen").href = url;
 
     document.getElementById("ttResult").classList.remove("hidden");
-
     trackUse();
     showToast("Preview loaded!");
+    
   } catch (err) {
-    showToast("Gagal ambil data!");
+    console.error(err);
+    showToast("Gagal ambil data! Coba link lain");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Get Preview";
   }
 }
 // BASE64 IMAGE DOWNLOADER
