@@ -38,6 +38,32 @@ document.documentElement.style.visibility = 'hidden';
     throw new Error("Unauthorized access");
   }
 
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const loadingEl = document.getElementById('loadingScreen');
+      if(loadingEl) loadingEl.classList.add('hide');
+      document.documentElement.style.visibility = 'visible';
+    }, 1200);
+  });
+})();
+
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { 'mono': ['Fira Code', 'monospace'], 'sans': ['Inter', 'sans-serif'] },
+      colors: {
+        terminal: {
+          bg: '#0d1117', darker: '#010409', card: '#161b22', border: '#30363d',
+          text: '#c9d1d9', comment: '#8b949e', keyword: '#ff7b72', string: '#a5d6ff',
+          function: '#d2a8ff', variable: '#ffa657', number: '#79c0ff', green: '#7ee787',
+          cyan: '#79c0ff', yellow: '#ffa657', purple: '#d2a8ff', pink: '#f778ba', red: '#ff7b72'
+        }
+      }
+    }
+  }
+}
+</script>
+
 
 
 body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
