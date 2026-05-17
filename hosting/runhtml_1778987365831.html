@@ -698,30 +698,37 @@ video::-webkit-media-controls-panel { background: rgba(1, 4, 9, 0.8); }
 </button>
 </div>
 
-<!-- PAGE 2: TOOLS DASHBOARD - UPLOAD FILE -->
+  <!-- PAGE 2: TOOLS DASHBOARD - UPLOAD FILE -->
 <div id="page2" class="page">
   <header class="bg-terminal-darker border-b border-terminal-border sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-4 text-center">
-      <h2 class="text-2xl font-mono font-bold bg-gradient-to-r from-terminal-cyan to-terminal-green bg-clip-text text-transparent">DEV TOOLS V2</h2>
-      <p class="text-xs text-terminal-comment font-mono mt-1">Upload file JS/HTML/TXT buat di-obfuscate & download</p>
+      <h2 class="text-2xl font-mono font-bold bg-gradient-to-r from-terminal-cyan to-terminal-green bg-clip-text text-transparent">DEV TOOLS V3</h2>
+      <p class="text-xs text-terminal-comment font-mono mt-1">Upload file JS/HTML/TXT buat di-obfuscate, encrypt, minify & download</p>
     </div>
   </header>
 
-  <main class="max-w-4xl mx-auto px-4 py-8 pb-32">
+  <main class="max-w-5xl mx-auto px-4 py-8 pb-32">
 
     <!-- TAB NAV -->
     <div class="flex gap-2 mb-6 border-b border-terminal-border pb-3 overflow-x-auto">
       <button onclick="switchTool('obf')" id="tool-obf" class="tool-tab active px-4 py-2 text-xs rounded bg-terminal-cyan text-terminal-darker font-mono whitespace-nowrap">🔒 Obfuscator</button>
       <button onclick="switchTool('b64')" id="tool-b64" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📦 Base64</button>
-      <button onclick="switchTool('json')" id="tool-json" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📋 JSON Tool</button>
+      <button onclick="switchTool('json')" id="tool-json" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📋 JSON</button>
+      <button onclick="switchTool('aes')" id="tool-aes" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🔐 AES</button>
+      <button onclick="switchTool('hash')" id="tool-hash" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🧮 Hash</button>
+      <button onclick="switchTool('diff')" id="tool-diff" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📊 Diff</button>
+      <button onclick="switchTool('regex')" id="tool-regex" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🔍 Regex</button>
       <button onclick="switchTool('color')" id="tool-color" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🎨 Color</button>
-      <button onclick="switchTool('qr')" id="tool-qr" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📱 QR Code</button>
+      <button onclick="switchTool('qr')" id="tool-qr" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📱 QR</button>
     </div>
+
+    <!-- TOAST NOTIF -->
+    <div id="toast" class="fixed top-20 right-4 bg-terminal-green text-terminal-darker px-4 py-2 rounded-lg font-mono text-xs opacity-0 pointer-events-none transition-all z-50">Copied!</div>
 
     <!-- TOOL 1: OBFUSCATOR WITH UPLOAD -->
     <div id="content-obf" class="tool-content active">
       <div class="glass-card rounded-xl p-6">
-        <h3 class="font-mono text-terminal-cyan font-semibold mb-4">JS/HTML/TXT Obfuscator</h3>
+        <h3 class="font-mono text-terminal-cyan font-semibold mb-4">JS/HTML/TXT Obfuscator Pro</h3>
 
         <div class="file-drop mb-4" id="obfDrop">
           <input type="file" id="obfFile" accept=".js,.html,.txt,.css,.json" class="hidden">
@@ -731,15 +738,28 @@ video::-webkit-media-controls-panel { background: rgba(1, 4, 9, 0.8); }
           </div>
         </div>
 
-        <textarea id="obfInput" placeholder="Atau paste kode manual disini..." class="w-full h-40 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-cyan mb-3"></textarea>
-
         <div class="flex gap-2 mb-3">
-          <button onclick="obfuscateCode()" class="flex-1 py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Obfuscate</button>
-          <button onclick="downloadObfuscated()" class="px-4 py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Download</button>
-          <button onclick="copyResult('obfOutput')" class="px-4 py-2 bg-terminal-purple text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Copy</button>
+          <select id="obfLevel" class="px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text">
+            <option value="1">Level 1 - Basic</option>
+            <option value="2">Level 2 - Medium</option>
+            <option value="3">Level 3 - Heavy</option>
+          </select>
+          <button onclick="clearInput('obfInput')" class="px-3 py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded text-xs">Clear</button>
+          <button onclick="swapInputOutput('obfInput','obfOutput')" class="px-3 py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded text-xs">⇅ Swap</button>
         </div>
 
-        <textarea id="obfOutput" readonly placeholder="Hasil obfuscate muncul disini..." class="w-full h-40 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text"></textarea>
+        <textarea id="obfInput" placeholder="Paste kode manual disini..." class="w-full h-40 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-cyan mb-3"></textarea>
+
+        <div class="flex gap-2 mb-3 flex-wrap">
+          <button onclick="obfuscateCode()" class="flex-1 py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">🔒 Obfuscate</button>
+          <button onclick="minifyCode()" class="px-4 py-2 bg-terminal-purple text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">🗜️ Minify</button>
+          <button onclick="beautifyCode()" class="px-4 py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">✨ Beautify</button>
+          <button onclick="downloadObfuscated()" class="px-4 py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">💾 Download</button>
+          <button onclick="copyResult('obfOutput')" class="px-4 py-2 bg-terminal-pink text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">📋 Copy</button>
+        </div>
+
+        <textarea id="obfOutput" readonly placeholder="Hasil muncul disini..." class="w-full h-40 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text"></textarea>
+        <p class="text-xs text-terminal-comment mt-2">Stats: <span id="obfStats">0 chars</span></p>
       </div>
     </div>
 
@@ -752,6 +772,7 @@ video::-webkit-media-controls-panel { background: rgba(1, 4, 9, 0.8); }
           <button onclick="encodeB64()" class="flex-1 py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Encode</button>
           <button onclick="decodeB64()" class="flex-1 py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Decode</button>
           <button onclick="copyResult('b64Output')" class="px-4 py-2 bg-terminal-purple text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Copy</button>
+          <button onclick="downloadResult('b64Output','base64.txt')" class="px-4 py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Download</button>
         </div>
         <textarea id="b64Output" readonly class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mt-3"></textarea>
       </div>
@@ -760,18 +781,85 @@ video::-webkit-media-controls-panel { background: rgba(1, 4, 9, 0.8); }
     <!-- TOOL 3: JSON TOOL -->
     <div id="content-json" class="tool-content">
       <div class="glass-card rounded-xl p-6">
-        <h3 class="font-mono text-terminal-purple font-semibold mb-4">JSON Formatter & Minifier</h3>
+        <h3 class="font-mono text-terminal-purple font-semibold mb-4">JSON Formatter & Validator</h3>
         <textarea id="jsonInput" placeholder='{"key":"value"}' class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-purple mb-3"></textarea>
-        <div class="flex gap-2">
+        <div class="flex gap-2 flex-wrap">
           <button onclick="formatJSON()" class="flex-1 py-2 bg-terminal-purple text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Format</button>
           <button onclick="minifyJSON()" class="flex-1 py-2 bg-terminal-pink text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Minify</button>
+          <button onclick="validateJSON()" class="px-4 py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Validate</button>
           <button onclick="copyResult('jsonOutput')" class="px-4 py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Copy</button>
         </div>
         <textarea id="jsonOutput" readonly class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mt-3"></textarea>
       </div>
     </div>
 
-    <!-- TOOL 4: COLOR -->
+    <!-- TOOL 4: AES ENCRYPT -->
+    <div id="content-aes" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-yellow font-semibold mb-4">AES Encrypt/Decrypt</h3>
+        <input type="password" id="aesKey" placeholder="Secret Key" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mb-3">
+        <textarea id="aesInput" placeholder="Text disini..." class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-yellow mb-3"></textarea>
+        <div class="flex gap-2">
+          <button onclick="aesEncrypt()" class="flex-1 py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Encrypt</button>
+          <button onclick="aesDecrypt()" class="flex-1 py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Decrypt</button>
+          <button onclick="copyResult('aesOutput')" class="px-4 py-2 bg-terminal-purple text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Copy</button>
+        </div>
+        <textarea id="aesOutput" readonly class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mt-3"></textarea>
+      </div>
+    </div>
+
+    <!-- TOOL 5: HASH -->
+    <div id="content-hash" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-pink font-semibold mb-4">Hash Generator MD5/SHA256/SHA512</h3>
+        <textarea id="hashInput" placeholder="Text disini..." class="w-full h-24 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-pink mb-3"></textarea>
+        <div class="grid grid-cols-3 gap-2">
+          <div class="bg-terminal-darker p-3 rounded">
+            <p class="text-xs text-terminal-comment mb-1">MD5</p>
+            <p id="md5Out" class="text-xs font-mono text-terminal-text break-all">-</p>
+            <button onclick="copyText(document.getElementById('md5Out').textContent)" class="mt-2 w-full py-1 bg-terminal-pink text-terminal-darker text-xs rounded">Copy</button>
+          </div>
+          <div class="bg-terminal-darker p-3 rounded">
+            <p class="text-xs text-terminal-comment mb-1">SHA256</p>
+            <p id="sha256Out" class="text-xs font-mono text-terminal-text break-all">-</p>
+            <button onclick="copyText(document.getElementById('sha256Out').textContent)" class="mt-2 w-full py-1 bg-terminal-pink text-terminal-darker text-xs rounded">Copy</button>
+          </div>
+          <div class="bg-terminal-darker p-3 rounded">
+            <p class="text-xs text-terminal-comment mb-1">SHA512</p>
+            <p id="sha512Out" class="text-xs font-mono text-terminal-text break-all">-</p>
+            <button onclick="copyText(document.getElementById('sha512Out').textContent)" class="mt-2 w-full py-1 bg-terminal-pink text-terminal-darker text-xs rounded">Copy</button>
+          </div>
+        </div>
+        <button onclick="generateHash()" class="w-full py-2 bg-terminal-pink text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all mt-3">Generate Hash</button>
+      </div>
+    </div>
+
+    <!-- TOOL 6: DIFF -->
+    <div id="content-diff" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-cyan font-semibold mb-4">Text Diff Checker</h3>
+        <div class="grid grid-cols-2 gap-3">
+          <textarea id="diff1" placeholder="Text 1" class="w-full h-40 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text"></textarea>
+          <textarea id="diff2" placeholder="Text 2" class="w-full h-40 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text"></textarea>
+        </div>
+        <button onclick="compareDiff()" class="w-full py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all mt-3">Compare</button>
+        <pre id="diffOut" class="mt-3 p-3 bg-terminal-darker rounded text-xs font-mono text-terminal-text overflow-x-auto"></pre>
+      </div>
+    </div>
+
+    <!-- TOOL 7: REGEX -->
+    <div id="content-regex" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-green font-semibold mb-4">Regex Tester</h3>
+        <input type="text" id="regexPattern" placeholder="Pattern: \d+" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mb-2">
+        <input type="text" id="regexFlags" placeholder="Flags: gim" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mb-3">
+        <textarea id="regexTest" placeholder="Test string" class="w-full h-24 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mb-3"></textarea>
+        <button onclick="testRegex()" class="w-full py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Test Regex</button>
+        <div id="regexResult" class="mt-3 p-3 bg-terminal-darker rounded text-xs font-mono text-terminal-text"></div>
+      </div>
+    </div>
+
+    <!-- TOOL 8: COLOR -->
     <div id="content-color" class="tool-content">
       <div class="glass-card rounded-xl p-6">
         <h3 class="font-mono text-terminal-pink font-semibold mb-4">Color Picker & Palette</h3>
@@ -789,12 +877,12 @@ video::-webkit-media-controls-panel { background: rgba(1, 4, 9, 0.8); }
       </div>
     </div>
 
-    <!-- TOOL 5: QR CODE -->
+    <!-- TOOL 9: QR CODE -->
     <div id="content-qr" class="tool-content">
       <div class="glass-card rounded-xl p-6">
         <h3 class="font-mono text-terminal-yellow font-semibold mb-4">QR Code Generator</h3>
         <input type="text" id="qrInput" placeholder="Masukkan link/text..." class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-yellow mb-3">
-                <button onclick="generateQR()" class="w-full py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all mb-4">Generate QR</button>
+        <button onclick="generateQR()" class="w-full py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all mb-4">Generate QR</button>
         <div id="qrResult" class="flex justify-center"></div>
       </div>
     </div>
@@ -804,10 +892,11 @@ video::-webkit-media-controls-panel { background: rgba(1, 4, 9, 0.8); }
 
 <!-- PAGINATION -->
 <div class="pagination">
-  <button class="pagination-btn active" onclick="switchPage(1)">1</button>
-  <button class="pagination-btn" onclick="switchPage(2)">2</button>
+  <button class="pagination-btn" onclick="switchPage(1)">1</button>
+  <button class="pagination-btn active" onclick="switchPage(2)">2</button>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 <script>
 // SWITCH PAGE
 function switchPage(pageNum) {
@@ -826,11 +915,53 @@ function switchTool(tool) {
   document.getElementById('content-' + tool).classList.add('active');
 }
 
+// TOAST NOTIF
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.remove('opacity-0', 'pointer-events-none');
+  setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 2000);
+}
+
 // COPY RESULT
 function copyResult(id) {
   const el = document.getElementById(id);
+  if(!el.value) return showToast('Nothing to copy!');
   navigator.clipboard.writeText(el.value);
-  alert('Copied!');
+  showToast('Copied to clipboard!');
+}
+function copyText(txt) {
+  if(!txt || txt === '-') return showToast('Nothing to copy!');
+  navigator.clipboard.writeText(txt);
+  showToast('Copied!');
+}
+
+// DOWNLOAD RESULT
+function downloadResult(id, filename) {
+  const el = document.getElementById(id);
+  if(!el.value) return showToast('Nothing to download!');
+  const blob = new Blob([el.value], {type: 'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Downloaded!');
+}
+
+// CLEAR & SWAP
+function clearInput(id) {
+  document.getElementById(id).value = '';
+  updateStats();
+}
+function swapInputOutput(inputId, outputId) {
+  const input = document.getElementById(inputId);
+  const output = document.getElementById(outputId);
+  const temp = input.value;
+  input.value = output.value;
+  output.value = temp;
+  updateStats();
 }
 
 // FILE UPLOAD FOR OBFUSCATOR
@@ -860,41 +991,107 @@ function handleFile(file) {
   reader.onload = (e) => {
     document.getElementById('obfInput').value = e.target.result;
     obfDropText.innerHTML = `<p class="text-terminal-green font-mono text-sm">✅ ${file.name} loaded</p>`;
+    updateStats();
   };
   reader.readAsText(file);
 }
 
-// TOOL 1: OBFUSCATOR
+// STATS UPDATE
+function updateStats() {
+  const input = document.getElementById('obfInput').value;
+  document.getElementById('obfStats').textContent = `${input.length} chars | ${input.split('\n').length} lines`;
+}
+
+// TOOL 1: OBFUSCATOR PRO
 function obfuscateCode() {
   const input = document.getElementById('obfInput').value;
-  if(!input) return alert('Masukkan kode atau upload file dulu!');
-  let obf = btoa(unescape(encodeURIComponent(input.split('').reverse().join(''))));
-  document.getElementById('obfOutput').value = `eval(atob('${obf}').split('').reverse().join(''))`;
+  const level = document.getElementById('obfLevel').value;
+  if(!input) return showToast('Masukkan kode dulu!');
+
+  let output = input;
+
+  // Level 1: String encoding + variable rename
+  if(level >= 1) {
+    output = output.replace(/"([^"]+)"/g, (match, str) => {
+      return `"${btoa(str)}"`;
+    });
+    output = `eval(atob("${btoa(output)}"))`;
+  }
+
+  // Level 2: Control flow flattening
+  if(level >= 2) {
+    output = `(function(){
+      var _0x1a2b = "${btoa(output)}";
+      var _0x3c4d = atob(_0x1a2b);
+      eval(_0x3c4d);
+    })()`;
+  }
+
+  // Level 3: Heavy obfuscation
+  if(level >= 3) {
+    const randVar = () => '0x' + Math.floor(Math.random()*0xffffff).toString(16);
+    output = `var ${randVar()}=${JSON.stringify(output)};eval(atob(${randVar()}))`;
+  }
+
+  document.getElementById('obfOutput').value = output;
+  updateStats();
+  showToast('Obfuscated!');
+}
+
+function minifyCode() {
+  const input = document.getElementById('obfInput').value;
+  if(!input) return showToast('Masukkan kode dulu!');
+  const minified = input.replace(/\s+/g, ' ').replace(/\/\*[\s\S]*?\*\//g, '').trim();
+  document.getElementById('obfOutput').value = minified;
+  updateStats();
+  showToast('Minified!');
+}
+
+function beautifyCode() {
+  const input = document.getElementById('obfInput').value;
+  if(!input) return showToast('Masukkan kode dulu!');
+  try {
+    // Basic beautify for JS/JSON
+    let beautified = input;
+    if(input.trim().startsWith('{') || input.trim().startsWith('[')) {
+      beautified = JSON.stringify(JSON.parse(input), null, 2);
+    } else {
+      beautified = input.replace(/{/g, '{\n ').replace(/}/g, '\n}').replace(/;/g, ';\n ');
+    }
+    document.getElementById('obfOutput').value = beautified;
+    updateStats();
+    showToast('Beautified!');
+  } catch(e) {
+    showToast('Invalid syntax!');
+  }
 }
 
 function downloadObfuscated() {
   const output = document.getElementById('obfOutput').value;
-  if(!output) return alert('Obfuscate dulu!');
+  if(!output) return showToast('Obfuscate dulu!');
   const blob = new Blob([output], {type: 'text/javascript'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'obfuscated.js';
+  a.download = `obfuscated_${Date.now()}.js`;
   a.click();
   URL.revokeObjectURL(url);
+  showToast('Downloaded!');
 }
 
 // TOOL 2: BASE64
 function encodeB64() {
   const input = document.getElementById('b64Input').value;
+  if(!input) return showToast('Masukkan text dulu!');
   document.getElementById('b64Output').value = btoa(unescape(encodeURIComponent(input)));
 }
 function decodeB64() {
   try {
     const input = document.getElementById('b64Input').value;
+    if(!input) return showToast('Masukkan text dulu!');
     document.getElementById('b64Output').value = decodeURIComponent(escape(atob(input)));
   } catch(e) {
-    alert('Base64 tidak valid!');
+    showToast('Base64 tidak valid!');
   }
 }
 
@@ -902,21 +1099,105 @@ function decodeB64() {
 function formatJSON() {
   try {
     const input = document.getElementById('jsonInput').value;
+    if(!input) return showToast('Masukkan JSON dulu!');
     document.getElementById('jsonOutput').value = JSON.stringify(JSON.parse(input), null, 2);
+    showToast('Formatted!');
   } catch(e) {
-    alert('JSON tidak valid!');
+    showToast('JSON tidak valid!');
   }
 }
 function minifyJSON() {
   try {
     const input = document.getElementById('jsonInput').value;
+    if(!input) return showToast('Masukkan JSON dulu!');
     document.getElementById('jsonOutput').value = JSON.stringify(JSON.parse(input));
+    showToast('Minified!');
   } catch(e) {
-    alert('JSON tidak valid!');
+    showToast('JSON tidak valid!');
+  }
+}
+function validateJSON() {
+  try {
+    JSON.parse(document.getElementById('jsonInput').value);
+    showToast('Valid JSON ✅');
+  } catch(e) {
+    showToast('Invalid JSON ❌');
   }
 }
 
-// TOOL 4: COLOR PICKER
+// TOOL 4: AES
+function aesEncrypt() {
+  const key = document.getElementById('aesKey').value;
+  const input = document.getElementById('aesInput').value;
+  if(!key ||!input) return showToast('Key dan text wajib diisi!');
+  const encrypted = CryptoJS.AES.encrypt(input, key).toString();
+  document.getElementById('aesOutput').value = encrypted;
+  showToast('Encrypted!');
+}
+function aesDecrypt() {
+  const key = document.getElementById('aesKey').value;
+  const input = document.getElementById('aesInput').value;
+  if(!key ||!input) return showToast('Key dan text wajib diisi!');
+  try {
+    const decrypted = CryptoJS.AES.decrypt(input, key).toString(CryptoJS.enc.Utf8);
+    document.getElementById('aesOutput').value = decrypted;
+    showToast('Decrypted!');
+  } catch(e) {
+    showToast('Wrong key or invalid data!');
+  }
+}
+
+// TOOL 5: HASH
+async function generateHash() {
+  const input = document.getElementById('hashInput').value;
+  if(!input) return showToast('Masukkan text dulu!');
+
+  document.getElementById('md5Out').textContent = CryptoJS.MD5(input).toString();
+  document.getElementById('sha256Out').textContent = CryptoJS.SHA256(input).toString();
+  document.getElementById('sha512Out').textContent = CryptoJS.SHA512(input).toString();
+  showToast('Hash generated!');
+}
+
+// TOOL 6: DIFF
+function compareDiff() {
+  const text1 = document.getElementById('diff1').value.split('\n');
+  const text2 = document.getElementById('diff2').value.split('\n');
+  let result = '';
+
+  const maxLen = Math.max(text1.length, text2.length);
+  for(let i=0; i<maxLen; i++) {
+    if(text1[i] === text2[i]) {
+      result += ` ${text1[i] || ''}\n`;
+    } else {
+      if(text1[i]) result += `- ${text1[i]}\n`;
+      if(text2[i]) result += `+ ${text2[i]}\n`;
+    }
+  }
+  document.getElementById('diffOut').textContent = result || 'No differences';
+  showToast('Compared!');
+}
+
+// TOOL 7: REGEX
+function testRegex() {
+  const pattern = document.getElementById('regexPattern').value;
+  const flags = document.getElementById('regexFlags').value;
+  const testStr = document.getElementById('regexTest').value;
+
+  if(!pattern ||!testStr) return showToast('Pattern dan test string wajib!');
+
+  try {
+    const regex = new RegExp(pattern, flags);
+    const matches = testStr.match(regex);
+    const result = matches? `Match found:\n${matches.join('\n')}` : 'No match';
+    document.getElementById('regexResult').textContent = result;
+    showToast('Tested!');
+  } catch(e) {
+    document.getElementById('regexResult').textContent = 'Invalid regex pattern';
+    showToast('Invalid regex!');
+  }
+}
+
+// TOOL 8: COLOR PICKER
 document.getElementById('colorPicker').addEventListener('input', (e) => {
   const hex = e.target.value;
   document.getElementById('colorHex').value = hex;
@@ -942,86 +1223,21 @@ function generatePalette() {
     const lighten2 = Math.min(255, rgb.g + i*30);
     const lighten3 = Math.min(255, rgb.b + i*30);
     const color = `rgb(${lighten},${lighten2},${lighten3})`;
-    palette.innerHTML += `<div style="background:${color}; height:60px; border-radius:8px; cursor:pointer;" onclick="navigator.clipboard.writeText('${color}')" title="Click to copy ${color}"></div>`;
+    palette.innerHTML += `<div style="background:${color}; height:60px; border-radius:8px; cursor:pointer;" onclick="navigator.clipboard.writeText('${color}');showToast('Copied!')" title="Click to copy ${color}"></div>`;
   }
 }
 
-// TOOL 5: QR CODE
+// TOOL 9: QR CODE
 function generateQR() {
   const text = document.getElementById('qrInput').value;
-  if(!text) return alert('Masukkan text/link dulu!');
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(text)}`;
-  document.getElementById('qrResult').innerHTML = `<img src="${qrUrl}" class="rounded-lg border-terminal-border">`;
+  if(!text) return showToast('Masukkan text/link dulu!');
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(text)}`;
+  document.getElementById('qrResult').innerHTML = `<img src="${qrUrl}" class="rounded-lg border-2 border-terminal-border">`;
+  showToast('QR Generated!');
 }
 
-// SEMUA FUNCTION PAGE 1 LU TETEP TARUH DISINI
-function switchTab(tab) {
-  document.querySelectorAll('.downloader-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.downloader-content').forEach(c => c.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-  document.getElementById('content-' + tab).classList.add('active');
-}
-
-function toggleTheme() {
-  document.body.classList.toggle('dark');
-  const icon = document.getElementById('themeIcon');
-  if (document.body.classList.contains('dark')) {
-    icon.innerHTML = '<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>';
-  } else {
-    icon.innerHTML = '<path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>';
-  }
-}
-
-function updateCountdown() {
-  const endDate = new Date();
-  endDate.setDate(endDate.getDate() + 7);
-  const now = new Date().getTime();
-  const distance = endDate - now;
-  if (distance < 0) return;
-  document.getElementById('days').textContent = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
-  document.getElementById('hours').textContent = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
-  document.getElementById('minutes').textContent = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
-  document.getElementById('seconds').textContent = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
-}
-setInterval(updateCountdown, 1000);
-updateCountdown();
-
-window.addEventListener('load', () => {
-  const intro = document.getElementById('clickIntro');
-  if (intro) {
-    intro.style.opacity = '1';
-    intro.style.pointerEvents = 'all';
-    intro.addEventListener('click', () => {
-      intro.style.opacity = '0';
-      intro.style.pointerEvents = 'none';
-    });
-  }
-});
-
-function initVisitorCount() {
-  let count = localStorage.getItem('visitorCount') || 0;
-  count = parseInt(count) + 1;
-  localStorage.setItem('visitorCount', count);
-  document.getElementById('visitorCount').textContent = count;
-}
-function initBackToTop() {
-  const btn = document.querySelector('.back-to-top');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) {
-      btn.classList.add('show');
-    } else {
-      btn.classList.remove('show');
-    }
-  });
-}
-function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  initVisitorCount();
-  initBackToTop();
-});
+// Update stats on input
+document.getElementById('obfInput').addEventListener('input', updateStats);
 </script>
 </body>
 </html>
