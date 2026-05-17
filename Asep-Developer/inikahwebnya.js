@@ -22,7 +22,76 @@ document.getElementById('app').innerHTML = `
 <script>
 // === ANTI COPY PROTECTION ===
 const allowedDomain = ["asepxyz12.github.io", "localhost"];
-const allowedURL = "https://asepxyz12.github.io/bot-wa-db/MamakluYtm/Punyaspainijirngentotytmlusemua.com.html";
+const allowedURL = "https://asepxyz12.github.io/bot-wa-db/<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loading...</title>
+<style>
+  body{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    text-align:center;
+    margin-top:100px;
+    background:#0f172a;
+    color:#e2e8f0;
+  }
+  .loader{
+    display:inline-block;
+    width:40px;
+    height:40px;
+    border:3px solid #334155;
+    border-top:3px solid #3b82f6;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+  }
+  @keyframes spin{
+    0%{transform:rotate(0deg)}
+    100%{transform:rotate(360deg)}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="loader"></div>
+  <p>Loading...</p>
+</div>
+
+<script>
+(async () => {
+  try {
+    // ===== GANTI INI AJA =====
+    const USERNAME = "asepxyz12";
+    const REPO = "bot-wa-db";
+    const FILE = "Asep-Developer/inikahwebnya.js";
+    // =========================
+
+    const url = `https://raw.githubusercontent.com/${USERNAME}/${REPO}/main/${FILE}`;
+    
+    const res = await fetch(url, { 
+      cache: "no-store",
+      headers: { "Accept": "text/plain" }
+    });
+    
+    if(!res.ok) throw new Error("Failed to load: " + res.status);
+
+    const code = await res.text();
+    
+    // Jalanin kode JS
+    new Function(code)();
+
+  } catch(e) {
+    document.getElementById('app').innerHTML = `
+      <h1>Error: ${e.message}</h1>
+      <p>Cek console F12 buat detail</p>
+    `;
+    console.error("URL:", url);
+    console.error(e);
+  }
+})();
+</script>
+</body>
+</html>";
 
 document.documentElement.style.visibility = 'hidden';
 
