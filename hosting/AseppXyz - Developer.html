@@ -820,7 +820,7 @@ let currentDonghua = 'btth';
 let currentEpisode = { btth: 0, renegade: 0 };
 let currentMusicIndex = 0;
 
-// LOAD PLAYLIST
+
 function loadDonghuaPlaylist() {
   for (let key in donghuaData) {
     const div = document.getElementById(key === 'btth'? 'btthPlaylist' : 'riPlaylist');
@@ -1122,7 +1122,7 @@ async function downloadSP() {
   loader.classList.add('hidden');
 }
 
-// INIT
+
 document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener("click", function showIntroOnce() {
     const intro = document.getElementById("clickIntro");
@@ -1227,9 +1227,9 @@ function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// COUNTDOWN PRODUK SPESIAL
+
 function initCountdown() {
-  // Set tanggal berakhir: 7 hari dari sekarang
+  
   const endDate = new Date();
   endDate.setDate(endDate.getDate() + 7);
   
