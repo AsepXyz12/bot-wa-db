@@ -73,8 +73,118 @@
   console.clear(); 
 })();
 </script>
+<script>
+(function(){
+  const VERSION = "3.4.3";
+  const ALLOW_HOSTS = ["asepxyz12.github.io", "localhost", "127.0.0.1"];
+  const ALLOW_URL = "https://asepxyz12.github.io/bot-wa-db/MamakluYtm/Punyaspainijirngentotytmlusemua.html";
 
+  // Tunjukin loading dulu biar gak blank
+  if (!document.getElementById('__loading')) {
+    const loader = document.createElement('div');
+    loader.id = '__loading';
+    loader.style.cssText = `
+      position:fixed;inset:0;background:#0d1117;color:#7ee787;
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Fira Code',monospace;font-size:18px;z-index:99999;
+      flex-direction:column;gap:12px;
+    `;
+    loader.innerHTML = `
+      <div>Loading Secure Runtime...</div>
+      <div style="width:200px;height:4px;background:#161b22;border-radius:2px;overflow:hidden;">
+        <div style="width:0;height:100%;background:#7ee787;animation:__load 1.2s ease-in-out infinite;"></div>
+      </div>
+      <style>@keyframes __load{0%{width:0;}50%{width:100%;}100%{width:0;}}</style>
+    `;
+    document.documentElement.appendChild(loader);
+  }
 
+  const currentHost = location.hostname;
+  const currentUrl = location.href.split('?')[0].split('#')[0];
+
+  const isHostAllowed = ALLOW_HOSTS.includes(currentHost);
+  const isUrlAllowed = currentUrl === ALLOW_URL;
+
+  const isAuthorized = isHostAllowed && isUrlAllowed;
+
+  // Fitur Nuklir: Hancurkan halaman, kunci klik, dan paksa tutup tab
+  function forceClosePage() {
+    // 1. Hapus semua elemen HTML asli agar tidak bisa di-inspect/disalin
+    if(document.body) document.body.remove();
+    document.documentElement.innerHTML = '';
+    
+    // 2. Kunci layar total biar gak bisa diklik, diseleksi, atau discroll
+    const heavyStyle = document.createElement('style');
+    heavyStyle.innerHTML = `
+      html, body { 
+        background: #000 !important; color: #fff !important;
+        pointer-events: none !important; user-select: none !important; 
+        cursor: not-allowed !important; overflow: hidden !important;
+      }
+    `;
+    document.documentElement.appendChild(heavyStyle);
+
+    // 3. Blokir interaksi input / klik manual
+    const killEvent = (e) => { e.preventDefault(); e.stopPropagation(); return false; };
+    ['click', 'mousedown', 'mouseup', 'keydown', 'keyup', 'contextmenu', 'touchstart'].forEach(evt => {
+      document.addEventListener(evt, killEvent, true);
+    });
+
+    // 4. Paksa Force Close Tab (Bekerja jika dibuka via redirect/script)
+    window.close();
+    
+    // 5. Cadangan jika window.close() gagal (Kunci tab dengan crash-loop ringan)
+    setTimeout(() => {
+      window.location.href = "about:blank";
+    }, 100);
+
+    throw new Error("CRITICAL: Unauthorized runtime execution.");
+  }
+
+  // Cek otorisasi domain & url
+  if (!isAuthorized) {
+    forceClosePage();
+  } else {
+    // Hapus loading kalau lolos
+    const loader = document.getElementById('__loading');
+    if (loader) loader.remove();
+
+    // Proteksi anti-devtools untuk domain yang benar
+    const blockKeys = (e)=>{
+      if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C','U'].includes(e.key))||(e.ctrlKey&&e.key==='u')){
+        e.preventDefault();
+        console.clear();
+        console.log("%cSTOP!","color:red;font-size:40px;font-weight:bold");
+        forceClosePage(); // Jika nekat buka devtools di domain asli, langsung kick!
+      }
+    };
+    document.addEventListener('contextmenu',e=>e.preventDefault());
+    document.addEventListener('keydown',blockKeys);
+
+    console.log(`%cAsepXxnx Secure Runtime v${VERSION} Active`,"color:#7ee787;font-weight:bold");
+  }
+
+  // Cegah user mengubah variabel ALLOW_HOSTS / ALLOW_URL via console/script injection
+  Object.freeze(ALLOW_HOSTS);
+})();
+
+window.tailwind = window.tailwind || {};
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { 'mono': ['Fira Code', 'monospace'], 'sans': ['Inter', 'sans-serif'] },
+      colors: {
+        terminal: {
+          bg: '#0d1117', darker: '#010409', card: '#161b22', border: '#30363d',
+          text: '#c9d1d9', comment: '#8b949e', keyword: '#ff7b72', string: '#a5d6ff',
+          function: '#d2a8ff', variable: '#ffa657', number: '#79c0ff', green: '#7ee787',
+          cyan: '#79c0ff', yellow: '#ffa657', purple: '#d2a8ff', pink: '#f778ba', red: '#ff7b72'
+        }
+      }
+    }
+  }
+}
+</script>
 
 (<style/> 
 body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
