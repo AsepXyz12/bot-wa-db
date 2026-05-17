@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpg" href="levi.jpg">
+    <title>Depaydev</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="digital-clock">
+    <div id="clock-time">00:00</div>
+    <div id="clock-date">Senin, 1 Januari</div>
+</div>
+
+
+<hr class="garis-pembatas-atas">
+
+<a href="ai.html" class="floating-ai-btn" title="Tanya Depay AI">
+    <span class="ai-text">AI</span>
+</a>
+
+    <body>
+
+    <div class="depay-burger-menu" id="depay-burger" onclick="toggleMenu()">
+        <div class="burger-lines">
+            <span class="line-1"></span>
+            <span class="line-2"></span>
+            <span class="line-3"></span>
+        </div>
+    </div>
+
+    <nav id="sidebar" class="sidebar">
+    <ul>
+        <li><a href="#about" onclick="toggleMenu()">Tentang Saya</a></li>
+        <li><a href="produk.html">Produk Depay</a></li>
+        <li><a href="#projects" onclick="toggleMenu()">Project Script</a></li>
+        <li><a href="downloader.html">Musik Downloader</a></li>
+        <li><a href="deploy.html">Deploy Website</a></li>
+        <li><a href="tiktok.html">Tiktok Downloader</a></li>
+        <li><a href="ytdlmp3.html">YTmp3 Downloader</a></li>
+        <li><a href="ytdlmp4.html">YTmp4 Downloader</a></li>
+        <li><a href="spotify.html">Spotify Downloader</a></li>
+        <li><a href="capcut.html">Capcut Downloader</a></li>
+        <li><a href="#contact" onclick="toggleMenu()">Kontak</a></li>
+    </ul>
+</nav>
+<div id="overlay" onclick="toggleMenu()"></div>
+    <main>
+     <section id="about">
+    <div class="profile-section">
+      
+        <div class="profile-banner">
+    <video autoplay loop muted playsinline class="banner-video">
+        <source src="banner.mp4" type="video/mp4">
+        </video>
+    <div class="banner-overlay"></div>
+</div>
+
+        <div class="profile-info">
+            <h2 class="dev-title-glow">⚝ ᗪΞᎮᗑƔ - DEV</h2>
+            <img src="foto.jpeg" alt="Profil" class="profile-img">
+            <h1>
+    DEPAY
+    <span class="verified-badge" title="Verified Developer">
+        <svg viewBox="0 0 24 24" aria-label="Verified account" class="svg-verified">
+            <g><path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.99-3.818-3.99-.48 0-.94.1-1.348.27C14.825 2.515 13.512 1.5 12 1.5s-2.825 1.015-3.422 2.28c-.406-.17-.866-.27-1.348-.27-2.108 0-3.818 1.78-3.818 3.99 0 .495.084.965.238 1.4-1.273.65-2.148 2.02-2.148 3.6 0 1.58.875 2.95 2.148 3.6-.154.435-.238.905-.238 1.4 0 2.21 1.71 3.99 3.818 3.99.48 0 .94-.1 1.348-.27.597 1.265 1.91 2.28 3.422 2.28s2.825-1.015 3.422-2.28c.406.17.866.27 1.348.27 2.108 0 3.818-1.78 3.818-3.99 0-.495-.084-.965-.238-1.4 1.273-.65 2.148-2.02 2.148-3.6zm-12.606 4.31l-3.323-3.35 1.152-1.163 2.17 2.19 5.372-5.42 1.152 1.162-6.523 6.58z"></path></g>
+        </svg>
+    </span>
+            <p class="sub-title">Depay Official | Dev</p>
+            </h1>
+            <p class="sub-title">Halo, Saya Depay
+Bukan developer pro, cuma orang biasa yang punya hobi ngulik baris kode kalau lagi ada waktu luang. Suka bereksperimen dengan automasi dan bikin sesuatu yang seru di game.
+
+Saya suka bikin dan modifikasi bot modular pakai library Baileys biar aktivitas harian lebih praktis.
+<p class="sub-title">Main-main di Roblox Studio, bikin sistem game/map (kayak checkpoint, UI scaling) pake Luau.</p>
+            <p class="support-title">Support system: [Aaiiurs] 🤍</p>
+        </div>
+    </div>
+</div>
+    <div class="music-box">
+    <h3>My Favorite Song</h3>
+    <div class="spotify-player">
+        <div class="player-content">
+          
+            <div class="album-art">
+                <img src="fotomusik.jpeg" alt="Album Art" class="vinyl" id="vinylImg">
+                <div class="vinyl-center"></div>
+            </div>
+            
+            <div class="song-info">
+                <div class="title-wrapper">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" class="spot-logo" alt="Spotify">
+                    <h4 id="songTitle">Bunga Abadi</h4>
+                </div>
+                <p id="artistName">Rio Clappy</p>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+
+            <div class="player-controls">
+                <button id="playBtn" class="control-btn" onclick="putarMusik()">▶</button>
+            </div>
+        </div>
+    </div>
+    
+    <audio id="mainAudio" src="musikk.mp3"></audio>
+    </div>
+<div class="product-section">
+    <h3 class="section-title">
+        <svg viewBox="0 0 448 512" fill="#2196f3" class="title-svg"><path d="M160 112c0-35.3 28.7-64 64-64s64 28.7 64 64v48H160V112zm-48 48H48c-26.5 0-48 21.5-48 48V416c0 53 43 96 96 96H352c53 0 96-43 96-96V208c0-26.5-21.5-48-48-48H336V112C336 50.1 285.9 0 224 0S112 50.1 112 112v48zm272 48v48c0 13.3-10.7 24-24 24s-24-10.7-24-24V208H112v48c0 13.3-10.7 24-24 24s-24-10.7-24-24V208H48v208c0 26.5 21.5 48 48 48H352c26.5 0 48-21.5 48-48V208h-16z"/></svg>
+        Produk Depay
+    </h3>
+    <div class="product-card-clean">
+        <h4 class="prod-headline">Script Bot Whatsapp</h4>
+        <p class="prod-desc">Semua Produk Script Bot Whatsapp Buatan Depay.</p>
+        
+        <a href="produk.html" class="btn-produk-clean">
+            Lihat Produk 
+            <svg viewBox="0 0 448 512" fill="#2196f3" class="title-svg"><path d="M160 112c0-35.3 28.7-64 64-64s64 28.7 64 64v48H160V112zm-48 48H48c-26.5 0-48 21.5-48 48V416c0 53 43 96 96 96H352c53 0 96-43 96-96V208c0-26.5-21.5-48-48-48H336V112C336 50.1 285.9 0 224 0S112 50.1 112 112v48zm272 48v48c0 13.3-10.7 24-24 24s-24-10.7-24-24V208H112v48c0 13.3-10.7 24-24 24s-24-10.7-24-24V208H48v208c0 26.5 21.5 48 48 48H352c26.5 0 48-21.5 48-48V208h-16z"/></svg>
+        </a>
+    </div>
+</div>
+
+<div class="product-section">
+    <h3 class="section-title">
+        <svg viewBox="0 0 512 512" fill="#00bcd4" class="title-svg"><path d="M504.1 4.3c-5-4.5-12.4-5.2-18.2-1.7L327.3 98.2c-15.1 9.1-24.4 25.3-24.7 43l-.4 26.9L170.7 301.1l-24.2-24.2c-10-10-25.1-12.5-37.8-6.1l-96 48c-12 6-17.7 20-13 32.7L46.8 480 32 494.8c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l14.8-14.8 128.5 47c12.7 4.7 26.7-1 32.7-13l48-96c6.4-12.7 3.9-27.8-6.1-37.8l-24.2-24.2 133-131.4 26.9-.4c17.6-.3 33.8-9.6 43-24.7l95.6-158.6c3.5-5.8 2.8-13.2-1.7-18.2zm-286 385.6l-22.6-22.6 148.6-146.5 22.6 22.6L218.1 389.9z"/></svg>
+        Deployer Fiture
+    </h3>
+    <div class="product-card-clean">
+        <h4 class="prod-headline">Deploy Website</h4>
+        <p class="prod-desc">Deploy file HTML atau ZIP secara instan ke Vercel.</p>
+        
+        <a href="deploy.html" class="btn-produk-clean btn-deploy-color">
+            Deploy Website 
+            <svg viewBox="0 0 512 512" class="btn-svg"><path d="M504.1 4.3c-5-4.5-12.4-5.2-18.2-1.7L327.3 98.2c-15.1 9.1-24.4 25.3-24.7 43l-.4 26.9L170.7 301.1l-24.2-24.2c-10-10-25.1-12.5-37.8-6.1l-96 48c-12 6-17.7 20-13 32.7L46.8 480 32 494.8c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l14.8-14.8 128.5 47c12.7 4.7 26.7-1 32.7-13l48-96c6.4-12.7 3.9-27.8-6.1-37.8l-24.2-24.2 133-131.4 26.9-.4c17.6-.3 33.8-9.6 43-24.7l95.6-158.6c3.5-5.8 2.8-13.2-1.7-18.2zm-286 385.6l-22.6-22.6 148.6-146.5 22.6 22.6L218.1 389.9z"/></svg>
+        </a>
+    </div>
+</div>
+<div class="quick-nav">
+    <h2>Downloader Fiture</h2>
+    
+    <div class="text-tab-nav">
+        <span class="tab-text-btn active" onclick="switchSlideTab('tab-fitur')">Fitur</span>
+        <span class="tab-text-btn" onclick="switchSlideTab('tab-curl')">cURL</span>
+    </div>
+
+    <div class="tab-slider-content">
+        
+        <div id="tab-fitur" class="slide-panel active">
+            <div class="nav-cards">
+                <a href="tiktok.html" class="nav-card">
+                    <span class="nav-icon"><svg viewBox="0 0 448 512" fill="#fff"><path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/></svg></span>
+                    <div class="nav-text">
+                        <h3>Tiktok Downloader</h3>
+                        <p>Download tiktok hd tanpa watermark.</p>
+                    </div>
+                </a>
+                 <a href="spotify.html" class="nav-card">
+                    <span class="nav-icon"><svg viewBox="0 0 496 512" fill="#1ed760"><path d="M248 8C111.1 8 0 119.1 0 256s111.1 248 248 248 248-111.1 248-248S384.9 8 248 8zm113 357c-4.3 7-13.4 9.2-20.3 5-51.2-31.3-115.5-38.4-191.5-21-8 1.8-16-3.2-17.8-11.2-1.8-8 3.2-16 11.2-17.8 83.1-19 154.2-11 211.6 23.9 6.8 4.3 9.2 13.4 5 20.3zm27.4-67.4c-5.5 8.9-17.2 11.8-26.1 6.3-58.6-36-147.9-46.4-217.1-25.4-10 3-20.7-2.7-23.7-12.7-3-10.1 2.7-20.7 12.7-23.7 82-24.9 180.3-13.4 247.9 28.2 8.9 5.4 11.8 17.1 6.3 26.1zm2-69.8c-70.3-41.8-186.3-45.6-253.4-25.3-10.8 3.3-22.1-2.8-25.4-13.6-3.3-10.8 2.8-22.1 13.6-25.4 77-23.3 205.1-18.9 286.3 29.4 9.7 5.8 12.9 18.4 7.1 28.1-5.8 9.7-18.4 12.8-28.1 7.1z"/></svg></span>
+                    <div class="nav-text">
+                        <h3>Spotify Download</h3>
+                        <p>Download lagu dari Spotify</p>
+                    </div>
+                </a>
+
+                <a href="downloader.html" class="nav-card">
+                    <span class="nav-icon"><svg viewBox="0 0 576 512" fill="#ff0000"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg></span>
+                    <div class="nav-text">
+                        <h3>Musik Downloader</h3>
+                        <p>Download MP3 dari YouTube dengan cepat.</p>
+                    </div>
+                </a>
+                <a href="ytdlmp3.html" class="nav-card">
+                    <span class="nav-icon"><svg viewBox="0 0 576 512" fill="#ff0000"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg></span>
+                    <div class="nav-text">
+                        <h3>YouTube MP3 download</h3>
+                        <p>Download MP3 dari YouTube Menggunakan Link.</p>
+                    </div>
+                </a>
+                <a href="ytdlmp4.html" class="nav-card">
+                    <span class="nav-icon"><svg viewBox="0 0 576 512" fill="#ff0000"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg></span>
+                    <div class="nav-text">
+                        <h3>YouTube MP4 download</h3>
+                        <p>Download MP4 dari YouTube Menggunakan Link.</p>
+                    </div>
+                </a>
+               
+                <a href="capcut.html" class="nav-card">
+                    <span class="nav-icon"><svg viewBox="0 0 576 512" fill="#00bcd4"><path d="M0 128C0 92.7 28.7 64 64 64H320c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-44.8-28.7-44.8-64V128zM509.5 137.3l-81.4 62.1c-10.4 7.9-16.1 19.4-16.1 31.7v61.8c0 12.4 5.7 23.8 16.1 31.7l81.4 62.1c17.8 13.6 43.1 1 43.1-21.4V158.7c0-22.4-25.3-35-43.1-21.4z"/></svg></span>
+                    <div class="nav-text">
+                        <h3>Capcut Downloader</h3>
+                        <p>Download Video dari Capcut</p>
+                    </div>
+                </a>
+
+                <a href="#projects" class="nav-card">
+                    <span class="nav-icon"><svg viewBox="0 0 576 512" fill="#ffeb3b"><path d="M572.6 202.9C564.8 193.6 553.2 188 541 188H151.2c-15.1 0-28.8 9.1-34.7 23L64 352H16c-8.8 0-16 7.2-16 16v16c0 8.8 7.2 16 16 16h496c12.2 0 23.8-5.6 31.6-14.9l56-67.2c11.7-14 11.7-34.4 0-48.4l-43-51.6zM464 124V80c0-26.5-21.5-48-48-48H224L160 96H48C21.5 96 0 117.5 0 144v148l49.4-118.6C61 144.3 84.4 128 110.4 128H464z"/></svg></span>
+                    <div class="nav-text">
+                        <h3>Project Script</h3>
+                        <p>Cek koleksi script free.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div id="tab-curl" class="slide-panel">
+    <div class="api-merged-container">
+        
+        <div class="api-case-box">
+            <div class="api-link-row">
+                <div class="api-info">
+                    <span class="badge-method">GET</span>
+                    <span class="api-url-text" id="url-ytmp3">https://depay.sbs/api/ytmp3</span>
+                </div>
+                <button class="btn-copy-api" onclick="copyApiUrl('url-ytmp3')">Copy</button>
+            </div>
+        </div>
+
+        <div class="api-case-box">
+            <div class="api-link-row">
+                <div class="api-info">
+                    <span class="badge-method">GET</span>
+                    <span class="api-url-text" id="url-ytmp4">https://depay.sbs/api/ytmp4</span>
+                </div>
+                <button class="btn-copy-api" onclick="copyApiUrl('url-ytmp4')">Copy</button>
+            </div>
+        </div>
+
+        <div class="api-case-box">
+            <div class="api-link-row">
+                <div class="api-info">
+                    <span class="badge-method">GET</span>
+                    <span class="api-url-text" id="url-ytmp4">https://depay.sbs/api/spotify</span>
+                </div>
+                <button class="btn-copy-api" onclick="copyApiUrl('url-ytmp4')">Copy</button>
+            </div>
+        </div>
+
+        <div class="api-case-box">
+            <div class="api-link-row">
+                <div class="api-info">
+                    <span class="badge-method">GET</span>
+                    <span class="api-url-text" id="url-ytmp4">https://depay.sbs/api/capcut</span>
+                </div>
+                <button class="btn-copy-api" onclick="copyApiUrl('url-ytmp4')">Copy</button>
+            </div>
+        </div>
+
+        <div class="api-case-box">
+            <div class="api-link-row">
+                <div class="api-info">
+                    <span class="badge-method">GET</span>
+                    <span class="api-url-text" id="url-tt">https://depay.sbs/api/tiktok</span>
+                </div>
+                <button class="btn-copy-api" onclick="copyApiUrl('url-tt')">Copy</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+    <div class="skills">
+        <h2>My Aw</h2>
+        
+        <div class="skill-item">
+            <div class="skill-info"><span>JavaScript</span><span>5%</span></div>
+            <div class="progress-bar"><div class="progress js" style="width: 3%;"></div></div>
+        </div>
+
+        <div class="skill-item">
+            <div class="skill-info"><span>C++</span><span>3%</span></div> <div class="progress-bar"><div class="progress cpp" style="width: 3%;"></div></div>
+        </div>
+
+        <div class="skill-item">
+            <div class="skill-info"><span>PHP</span><span>2%</span></div> <div class="progress-bar"><div class="progress php" style="width: 2%;"></div></div>
+        </div>
+
+        <div class="skill-item">
+            <div class="skill-info"><span>Luau (Roblox)</span><span>3%</span></div>
+            <div class="progress-bar"><div class="progress lua" style="width: 3%;"></div></div>
+        </div>
+
+        <div class="skill-item">
+            <div class="skill-info"><span>Python</span><span>2%</span></div>
+            <div class="progress-bar"><div class="progress python" style="width: 2%;"></div></div>
+        </div>
+
+        <div class="skill-item">
+            <div class="skill-info"><span>HTML & CSS</span><span>3%</span></div>
+            <div class="progress-bar"><div class="progress web" style="width: 3%;"></div></div>
+        </div>
+    </div>
+        </section>
+
+        <hr>
+
+   <section id="projects">
+    <h2>Project Script Free</h2>
+    <p>Kumpulan script buatan saya yang bisa kamu unduh gratis.</p>
+
+    <div class="project-container">
+        <div class="project-card">
+            <div class="project-info">
+                <h3>⚝ ᗪΞᎮᗑƔ - Bug WhatsApp V1</h3>
+                <p>PASSWORD: depay1</p>
+            </div>
+            
+            <div class="project-stats">
+                <div class="stat-item">
+                    <span class="icon">📥</span>
+                    <span class="stat-value" id="download-v1">0</span>
+                    <span class="stat-label">Downloads</span>
+                </div>
+                <div class="stat-item">
+                    <span class="icon">❤️</span>
+                    <span class="stat-value" id="like-v1">0</span>
+                    <span class="stat-label">Likes</span>
+                </div>
+            </div>
+
+            <div class="project-actions">
+                <button class="btn-like" onclick="handleLike('v1')">Like Script</button>
+                <a href="depayv1.zip" download onclick="handleDownload('v1')" class="download-btn">
+                    Download ZIP
+                </a>
+            </div>
+        </div>
+
+        </div>
+</section>
+
+        <hr>
+
+        <section id="contact">
+            <h2>Kontak</h2>
+            <p>⚝ ᗪΞᎮᗑƔ - DEV</p>
+            <div class="social-links">
+                <a href="https://t.me/DepayAsli">Telegram</a>
+                <a href="https://tiktok.com/@payeyeye_">TikTok</a>
+                <a href="https://wa.me/6285198398265">WhatsApp</a>
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</html>
