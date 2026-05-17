@@ -39,10 +39,10 @@
     // ===== GANTI INI AJA =====
     const USERNAME = "asepxyz12";
     const REPO = "bot-wa-db";
-    const FILE = "assets/secret.js";
+    const FILE = "Asep-Developer/inikahwebnya.html";
     // =========================
 
-    const url = `https://raw.githubusercontent.com/asepxyz12/bot-wa-db/main/assets/secret.js`;
+    const url = `https://raw.githubusercontent.com/${USERNAME}/${REPO}/main/${FILE}`;
     
     const res = await fetch(url, { 
       cache: "no-store",
@@ -58,9 +58,10 @@
 
   } catch(e) {
     document.getElementById('app').innerHTML = `
-      <h1>403 Forbidden</h1>
-      <p>Failed to load resources</p>
+      <h1>Error: ${e.message}</h1>
+      <p>Buka F12 > Console buat liat detail</p>
     `;
+    console.error("URL:", url);
     console.error(e);
   }
 })();
