@@ -22,7 +22,7 @@ document.getElementById('app').innerHTML = `
 <script>
 // === ANTI COPY PROTECTION ===
 const allowedDomain = ["asepxyz12.github.io", "localhost"];
-const allowedURL = "https://asepxyz12.github.io/bot-wa-db/
+const allowedURL = "https://asepxyz12.github.io/bot-wa-db/Asep-Developer/inikahwebnya.html"
 <html lang="id">
 <head>
 <meta charset="utf-8">
