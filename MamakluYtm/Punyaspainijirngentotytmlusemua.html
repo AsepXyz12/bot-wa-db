@@ -13,138 +13,30 @@
 <meta property="og:site_name" content="AsepXxnx"/>
 <meta property="og:image" content="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778864999571.jpeg"/>
 
-<script>
+  <script>
+// === ANTI COPY PROTECTION ===
+const allowedDomain = ["asepxyz12.github.io", "localhost"];
+const allowedURL = "https://asepxyz12.github.io/bot-wa-db/hosting/runhtml_1778987365831.html";
+
+document.documentElement.style.visibility = 'hidden';
+
 (function(){
-  const __v = "3.4.1";
-  const __env = {stage:"prod", sig:"0x9f3a", ts:Date.now()};
-  const __key = atob("c2VjcmV0X2tleV8xMjM=");
-  const __noop = ()=>{try{return Function("return "+[].filter.constructor(2).name)()}catch(e){return false}};
+  const currentDomain = window.location.hostname;
+  const currentURL = window.location.href;
 
-  const __crc32 = s=>{let c=-1;for(let i=0;i<s.length;i++){c=(c>>>8)^"éd4þî©".charCodeAt((c^s.charCodeAt(i))&0xFF)}return ~c>>>0};
-  const __chk = __crc32(location.href+__v)===__crc32(location.href+__v);
+  const domainOK = allowedDomain.includes(currentDomain);
+  const urlOK = currentURL === allowedURL || currentDomain === "localhost";
 
-  const _ALLOW = ["asepxyz12.github.io","localhost"];
-  const _URL = "https://asepxyz12.github.io/bot-wa-db/MamakluYtm/Punyaspainijirngentotytmlusemua.html";
-  const _WA = "62881036109288";
-
-  let _locked = false;
-
-  const _fp = (()=>{
-    try{
-      const c=document.createElement('canvas'),x=c.getContext('2d');
-      x.textBaseline="top";x.font="16px Arial";
-      x.fillText(navigator.hardwareConcurrency+"|"+navigator.deviceMemory+"|"+navigator.userAgent,1,1);
-      return btoa(c.toDataURL().slice(0,100)).slice(0,12);
-    }catch(e){return "fp_"+Math.random().toString(16).slice(2,8)}
-  })();
-
-  const _h=location.hostname,_f=location.href;
-  const _ok1=_ALLOW.includes(_h);
-  const _ok2=_f === _URL;
-  const _ok3=__chk && __noop();
-
-  if(!(_ok1 && _ok2)){
-    _locked=true;
-    
-    document.documentElement.innerHTML=`
-      <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@700&display=swap');
-        *{margin:0;padding:0;box-sizing:border-box}
-        html,body{
-          height:100%; width:100%; 
-          background:#110000; color:#ff3b3b;
-          font-family:'Fira Code', monospace;
-          overflow:hidden;
-        }
-        .wrap{
-          display:flex; align-items:center; justify-content:center;
-          height:100vh; width:100vw;
-          flex-direction:column; gap:25px; padding:20px;
-          animation:flash 0.8s infinite alternate;
-        }
-        @keyframes flash{
-          from{background:#110000;}
-          to{background:#2a0000;}
-        }
-        h1{
-          font-size:52px; font-weight:700;
-          text-shadow:0 0 20px #ff3b3b, 0 0 40px #ff0000;
-          animation:shake 0.2s infinite;
-        }
-        @keyframes shake{
-          0%,100%{transform:translateX(0);}
-          25%{transform:translateX(-8px);}
-          75%{transform:translateX(8px);}
-        }
-        p{
-          font-size:18px; line-height:1.7; color:#ffdddd;
-          max-width:750px; text-align:center;
-        }
-        .url{
-          color:#fff; background:#300; padding:12px 20px; 
-          border-radius:8px; word-break:break-all;
-          border:1px solid #ff3b3b;
-        }
-        .big{
-          font-size:24px; color:#ff5555; font-weight:700;
-        }
-      </style>
-      <div class="wrap">
-        <h1>NGAPAIN NYOLONG BANGSAT?</h1>
-        <p class="big">
-          INI BUKAN PUNYA LU. INI PUNYA ASEPXXNX.
-        </p>
-        <p>
-          File ini ada di:<br>
-          <span class="url">${location.href}</span><br><br>
-          Maling kok bangga? Gak punya harga diri apa?<br>
-          Hapus sekarang juga. Gue tau lu buka ini.<br><br>
-          DASAR SAMPAH INTERNET. GAK BISA BIKIN SENDIRI?
-        </p>
+  if(!domainOK ||!urlOK){
+    document.body.innerHTML = `
+      <div style="position:fixed;inset:0;background:#0d1117;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#c9d1d9;font-family:monospace;z-index:999;">
+        <h1 style="color:#ff7b72;font-size:32px;margin-bottom:10px;">ACCESS DENIED</h1>
+        <p style="color:#8b949e;">Domain tidak terdaftar atau file di-copy ilegal</p>
+        <p style="color:#8b949e;font-size:12px;margin-top:20px;">Owner: 62881036109288</p>
       </div>
     `;
-
-    // Blok klik kanan + F12
-    document.addEventListener('contextmenu',e=>e.preventDefault());
-    document.addEventListener('keydown',e=>{
-      if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C','U'].includes(e.key))||(e.ctrlKey&&e.key==='u')){
-        e.preventDefault();
-      }
-    });
-
-    throw new Error("Unauthorized");
+    throw new Error("Unauthorized access");
   }
-
-  // Kalau lolos, aktifkan proteksi ringan
-  document.addEventListener('contextmenu',e=>e.preventDefault());
-  document.addEventListener('keydown',e=>{
-    if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C','U'].includes(e.key))||(e.ctrlKey&&e.key==='u')){
-      e.preventDefault();
-      console.clear();
-      console.log("%cSTOP!","color:red;font-size:40px;font-weight:bold");
-      console.log("%cThis is a protected resource.","color:#ff7b72;font-size:16px");
-    }
-  });
-
-  console.log("%cAsepXxnx Secure Runtime Active","color:#7ee787;font-weight:bold");
-})();
-
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: { 'mono': ['Fira Code', 'monospace'], 'sans': ['Inter', 'sans-serif'] },
-      colors: {
-        terminal: {
-          bg: '#0d1117', darker: '#010409', card: '#161b22', border: '#30363d',
-          text: '#c9d1d9', comment: '#8b949e', keyword: '#ff7b72', string: '#a5d6ff',
-          function: '#d2a8ff', variable: '#ffa657', number: '#79c0ff', green: '#7ee787',
-          cyan: '#79c0ff', yellow: '#ffa657', purple: '#d2a8ff', pink: '#f778ba', red: '#ff7b72'
-        }
-      }
-    }
-  }
-}
-</script>
 
 
 
