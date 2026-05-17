@@ -1124,6 +1124,248 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+// HIDE LOADING SCREEN
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loadingScreen').classList.add('hide');
+  }, 2000);
+});
+
+// EFEK SALJU
+let snowCount = 0;
+const MAX_SNOW = 25;
+
+function createSnow() {
+  if (snowCount >= MAX_SNOW) return;
+  const snow = document.createElement('div');
+  snow.classList.add('snowflake');
+  snow.innerHTML = '❄';
+  const startLeft = Math.random() * 100;
+  const drift = (Math.random() - 0.5) * 200 + 'px';
+  const size = Math.random() * 8 + 10;
+  const duration = Math.random() * 4 + 4;
+  snow.style.left = startLeft + '%';
+  snow.style.fontSize = size + 'px';
+  snow.style.opacity = Math.random() * 0.6 + 0.4;
+  snow.style.setProperty('--drift', drift);
+  snow.style.animationDuration = duration + 's';
+  document.body.appendChild(snow);
+  snowCount++;
+  setTimeout(() => {
+    snow.remove();
+    snowCount--;
+  }, duration * 1000);
+}
+setInterval(createSnow, 400);
+
+// DATA PLAYER
+const donghuaData = {
+  btth: {
+    name: "Battle Through the Heavens",
+    cover: "https://files.catbox.moe/m8cejn.mp4",
+    episodes: [
+      {
+        src: "https://files.catbox.moe/m8cejn.mp4",
+        title: "BTTH Episode 199 - Sub Indo HD",
+        duration: "23:45"
+      }
+    ]
+  },
+  renegade: {
+    name: "Renegade Immortal",
+    cover: "https://files.catbox.moe/p79ng7.mp4",
+    episodes: [
+      {
+        src: "https://files.catbox.moe/p79ng7.mp4",
+        title: "Renegade Immortal Episode 139 - Sub Indo HD",
+        duration: "24:12"
+      },
+      {
+        src: "https://files.catbox.moe/r8hnvu.mp4",
+        title: "Renegade Immortal Episode 140 - Sub Indo HD",
+        duration: "24:03"
+      }
+    ]
+  }
+};
+
+const musicData = [
+  {
+    src: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778891648101.mp4",
+    title: "Golden Brown - Slowed Loop",
+    duration: "3:24"
+  },
+  {
+    src: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778891632233.mp4",
+    title: "Si Ai - Afro Remix",
+    duration: "2:58"
+  },
+  {
+    src: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778889704904.mpeg",
+    title: "Beauty And A Beat",
+    duration: "3:49"
+  }
+];
+
+let currentDonghua = 'btth';
+let currentEpisode = { btth: 0, renegade: 0 };
+let currentMusicIndex = 0;
+
+// LOAD PLAYLIST
+function loadDonghuaPlaylist() {
+  for (let key in donghuaData) {
+    const div = document.getElementById(key === 'btth'? 'btthPlaylist' : 'riPlaylist');
+    const data = donghuaData[key];
+
+    div.innerHTML = data.episodes.map((item, i) => `
+      <div onclick="playDonghua('${key}', ${i})"
+        class="playlist-item group flex gap-3 p-3 rounded-xl border-terminal-border cursor-pointer hover:border-terminal-purple transition-all">
+
+        <div class="relative flex-shrink-0 w-24 h-14 bg-terminal-darker rounded-lg overflow-hidden">
+          <video src="${item.src}#t=1" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all"></video>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <svg class="w-6 h-6 text-white opacity-80 group-hover:opacity-100" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M6.3 2.841A1 1 0 005 3.11V16.89a1 1 0 001.3.989l10-8a1 1 0 000-1.778l-10-8z"/>
+            </svg>
+          </div>
+          <span class="absolute bottom-1 right-1 text-[10px] bg-black/70 px-1 rounded">${item.duration}</span>
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <p class="text-xs font-mono text-terminal-text line-clamp-2 group-hover:text-terminal-purple transition-colors">
+            ${item.title}
+          </p>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function loadMusicPlaylist() {
+  const musicDiv = document.getElementById('musicPlaylist');
+  musicDiv.innerHTML = musicData.map((item, i) => `
+    <div onclick="playMusic(${i})"
+      class="music-playlist-item group flex items-center justify-between p-3 rounded-xl border-terminal-border cursor-pointer hover:border-terminal-pink transition-all">
+
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-8 h-8 flex items-center justify-center rounded-lg bg-terminal-darker group-hover:bg-terminal-pink/20 transition-colors">
+          <svg class="w-4 h-4 text-terminal-pink" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A2 2 0 105 15c0 1.103.897 2 2 2s2-.897 2-2V7.976l8-1.6v2.519z"/>
+          </svg>
+        </div>
+        <p class="text-xs font-mono text-terminal-text truncate group-hover:text-terminal-pink transition-colors">
+          ${item.title}
+        </p>
+      </div>
+
+      <span class="text-xs font-mono text-terminal-comment">${item.duration}</span>
+    </div>
+  `).join('');
+}
+
+// PLAY FUNCTIONS
+function playDonghua(type, index) {
+  currentDonghua = type;
+  currentEpisode[type] = index;
+  const video = document.getElementById(type === 'btth'? 'btthVideo' : 'riVideo');
+  const nowPlaying = document.getElementById(type === 'btth'? 'btthNowPlaying' : 'riNowPlaying');
+  const duration = document.getElementById(type === 'btth'? 'btthDuration' : 'riDuration');
+  const playlist = donghuaData[type].episodes;
+
+  video.src = playlist[index].src;
+  video.poster = playlist[index].src + '#t=1';
+  video.play();
+  nowPlaying.textContent = playlist[index].title;
+  duration.textContent = playlist[index].duration;
+
+  updateActivePlaylist(type, index);
+}
+
+function playMusic(index) {
+  currentMusicIndex = index;
+  const audio = document.getElementById('musicAudio');
+  const nowPlaying = document.getElementById('musicNowPlaying');
+  const duration = document.getElementById('musicDuration');
+
+  audio.src = musicData[index].src;
+  audio.play();
+  nowPlaying.textContent = musicData[index].title;
+  duration.textContent = musicData[index].duration;
+
+  document.querySelectorAll('#musicPlaylist.music-playlist-item').forEach((item, i) => {
+    item.classList.toggle('active', i === index);
+  });
+}
+
+function playNext(type) {
+  const playlist = donghuaData[type].episodes;
+  let nextIndex = currentEpisode[type] + 1;
+  if (nextIndex >= playlist.length) nextIndex = 0;
+  playDonghua(type, nextIndex);
+}
+
+function updateActivePlaylist(type, index) {
+  const selector = type === 'btth'? '#btthPlaylist' : '#riPlaylist';
+  document.querySelectorAll(`${selector}.playlist-item`).forEach((item, i) => {
+    item.classList.remove('active', 'playing');
+    if (i === index) item.classList.add('active', 'playing');
+  });
+}
+
+function searchEpisode() {
+  const search = document.getElementById('donghuaSearch').value.toLowerCase();
+  const playlist = donghuaData[currentDonghua].episodes;
+  const filtered = playlist.filter(ep => ep.title.toLowerCase().includes(search));
+  const div = document.getElementById(currentDonghua === 'btth'? 'btthPlaylist' : 'riPlaylist');
+
+  div.innerHTML = filtered.map((item, i) => {
+    const realIndex = playlist.indexOf(item);
+    return `
+      <div onclick="playDonghua('${currentDonghua}', ${realIndex})"
+        class="playlist-item group flex gap-3 p-3 rounded-xl border-terminal-border cursor-pointer hover:border-terminal-purple transition-all">
+
+        <div class="relative flex-shrink-0 w-24 h-14 bg-terminal-darker rounded-lg overflow-hidden">
+          <video src="${item.src}#t=1" class="w-full h-full object-cover opacity-60 group-hover:opacity-100"></video>
+          <span class="absolute bottom-1 right-1 text-[10px] bg-black/70 px-1 rounded">${item.duration}</span>
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <p class="text-xs font-mono text-terminal-text line-clamp-2">${item.title}</p>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function switchDonghua(type) {
+  document.querySelectorAll('.donghua-btn').forEach(btn => {
+    btn.classList.remove('active');
+    btn.classList.add('bg-terminal-darker', 'text-terminal-comment');
+  });
+  document.getElementById(`donghua-${type}`).classList.add('active');
+  document.getElementById(`donghua-${type}`).classList.remove('bg-terminal-darker', 'text-terminal-comment');
+
+  document.querySelectorAll('.donghua-content').forEach(c => c.classList.add('hidden'));
+  document.getElementById(`content-${type}`).classList.remove('hidden');
+
+  currentDonghua = type;
+  searchEpisode();
+}
+
+function setVolume(id, volume) {
+  document.getElementById(id).volume = volume;
+}
+
+function downloadCurrent(type) {
+  const index = currentEpisode[type];
+  const item = donghuaData[type].episodes[index];
+  if(item) window.open(item.src, '_blank');
+}
+
+function downloadCurrentMusic() {
+  const item = musicData[currentMusicIndex];
+  if(item) window.open(item.src, '_blank');
+}
 
 function switchPage(pageNum) {
   document.querySelectorAll('.page').forEach(p => {
