@@ -13528,199 +13528,6 @@ break
 
 
 
-case 'runhtml': {
- if (!m.isGroup) return payreply('Menu RUNHTML khusus group 🩸')
-
- const GITHUB_OWNER = `AsepXyz12`
- const GITHUB_REPO = `bot-wa-db`
- const axios = require('axios')
- const crypto = require('crypto')
-
-
- const headers = {
- "Accept": "application/vnd.github.v3+json"
- }
-
- await Asepp.sendMessage(m.chat, { react: { text: "🚀", key: m.key } })
-
- if (!m.quoted ||!m.quoted.text) {
- return payreply(`Kirim kode HTML nya dulu, terus reply pesan itu pake ${prefix}runhtml`)
- }
-
- let htmlCode = m.quoted.text
-
- try {
- // Cek apakah ini HTML encinvis
- if (htmlCode.includes('let p=') && htmlCode.includes('"d":"') && htmlCode.includes('"k":"')) {
- await payreply('⏳ Deteksi HTML terenkrip, dekrip dulu...')
-
- // Ambil JSON payload dengan regex yang lebih aman
- const jsonMatch = htmlCode.match(/let p=\s*(\{.*?\});/s)
- if (!jsonMatch) throw new Error('Payload JSON nggak ketemu')
-
- let p
- try {
- p = JSON.parse(jsonMatch[1])
- } catch {
- throw new Error('Gagal parse payload JSON')
- }
-
- // Dekrip
- const keyBuf = Buffer.from(p.k, 'base64')
- const ivBuf = Buffer.from(p.i, 'base64')
- const dataBuf = Buffer.from(p.d, 'base64')
- const tagBuf = Buffer.from(p.t, 'base64')
-
- const decipher = crypto.createDecipheriv('aes-256-gcm', keyBuf, ivBuf)
- decipher.setAuthTag(tagBuf)
- let decrypted = decipher.update(dataBuf)
- decrypted = Buffer.concat([decrypted, decipher.final()])
-
- htmlCode = decrypted.toString('utf8')
- await payreply('✅ Dekrip berhasil, upload ke GitHub...')
- }
-
- // Auto wrap
- if (!htmlCode.includes('<html') &&!htmlCode.includes('<!DOCTYPE')) {
- htmlCode = `<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RunHTML - ${pushname}</title>
-</head>
-<body>
-${htmlCode}
-</body>
-</html>`
- }
-
- let filename = `runhtml_${Date.now()}.html`
- let PATH = `hosting/${filename}`
-
- const encoded = Buffer.from(htmlCode).toString('base64')
- const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${PATH}`
-
- await axios.put(url, {
- message: `RUNHTML upload by ${pushname}`,
- content: encoded,
- branch: 'main'
- }, { headers })
-
- const link = `https://${GITHUB_OWNER}.github.io/${GITHUB_REPO}/${PATH}`
-
- return payreply(`\`𝗥𝗨𝗡𝗛𝗧𝗠𝗟 𝗦𝗨𝗖𝗘𝗦\`\n\nLink: ${link}\n\nStatus: ${htmlCode.includes('<script>eval("\\\\x')? 'Dekrip dari encinvis' : 'Plain HTML'}`)
-
- } catch (e) {
- console.log('RUNHTML ERROR:', e)
- return payreply(`Gagal bro: ${e.message}\n\nCek console bot buat detailnya.`)
- }
-}
-
-
-
-case 'enchtml': {
- try {
- // Ambil HTML dari reply
- if (!m.quoted || !m.quoted.text) {
- return payreply(`Kirim kode HTML nya dulu, terus reply pesan itu pake ${prefix}enchtml`)
- }
- 
- let html = m.quoted.text.trim()
- 
- // Auto wrap kalau bukan full HTML
- if (!html.includes('<html') && !html.includes('<!DOCTYPE')) {
- html = `<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Secure Link</title>
-</head>
-<body>
-${html}
-</body>
-</html>`
- }
-
- const crypto = require("crypto")
- const fs = require("fs")
- const path = require("path")
-
- // Encrypt HTML pakai AES-256-GCM
- const key = crypto.randomBytes(32)
- const iv = crypto.randomBytes(12)
- const cipher = crypto.createCipheriv('aes-256-gcm', key, iv)
- let enc = cipher.update(html, 'utf8')
- enc = Buffer.concat([enc, cipher.final()])
- const tag = cipher.getAuthTag()
-
- const payload = {
- d: enc.toString('base64'),
- i: iv.toString('base64'),
- t: tag.toString('base64'),
- k: key.toString('base64')
- }
-
- // Loader JS buat browser
- const loader = `
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<style>
-body{margin:0;font-family:sans-serif;background:#f5f5f5}
-#x{text-align:center;padding:50px}
-</style>
-</head>
-<body>
-<div id="x">Loading...</div>
-<script>
-(async()=>{
-try{
-let p=${JSON.stringify(payload)};
-let keyBuf=Uint8Array.from(atob(p.k),c=>c.charCodeAt(0));
-let ivBuf=Uint8Array.from(atob(p.i),c=>c.charCodeAt(0));
-let dataBuf=Uint8Array.from(atob(p.d),c=>c.charCodeAt(0));
-let tagBuf=Uint8Array.from(atob(p.t),c=>c.charCodeAt(0));
-
-let cryptoKey=await crypto.subtle.importKey('raw',keyBuf,{name:'AES-GCM'},false,['decrypt']);
-let decrypted=await crypto.subtle.decrypt({name:'AES-GCM',iv:ivBuf,tagLength:128},cryptoKey,Uint8Array.from([...dataBuf,...tagBuf]));
-
-document.getElementById('x').innerHTML=new TextDecoder().decode(decrypted);
-}catch(e){
-document.getElementById('x').innerText='Decrypt failed: '+e.message;
-}
-})();
-</script>
-</body>
-</html>`.trim()
-
- // Hex obfuscate
- const invis = loader.split('').map(c => '\\x' + c.charCodeAt(0).toString(16).padStart(2,'0')).join('')
- const finalHTML = `<!DOCTYPE html><html><body><script>eval("${invis}".replace(/\\\\x/g,'%'))</script></body></html>`
-
- // Simpen ke file
- const tmpDir = path.join(__dirname, 'tmp')
- fs.mkdirSync(tmpDir, { recursive: true })
- const outPath = path.join(tmpDir, 'secure.html')
- fs.writeFileSync(outPath, finalHTML, 'utf8')
-
- await Asepp.sendMessage(m.chat, {
- document: fs.readFileSync(outPath),
- fileName: 'secure.html',
- mimetype: 'text/html',
- caption: 'Buka file ini di browser. HTML asli udah di-embed, nggak ada redirect.'
- }, { quoted: m })
-
- fs.unlinkSync(outPath)
-
- } catch(e){
- await payreply('❌ Error: ' + e.message)
- }
-}
-break
 
 case "toapk": {
  if (!m.quoted || !m.quoted.text) {
@@ -13786,7 +13593,258 @@ function Asepp(msg) {
 break
 
 
+case 'runhtml': {
+ if (!m.isGroup) return payreply('Menu RUNHTML khusus group 🩸')
+
+ const GITHUB_OWNER = `AsepXyz12`
+ const GITHUB_REPO = `bot-wa-db`
+ const axios = require('axios')
+ const crypto = require('crypto')
+ const { downloadContentFromMessage } = require('@whiskeysockets/baileys')
+
+
+ const headers = {
+ "Accept": "application/vnd.github.v3+json"
+ }
+
+ await Asepp.sendMessage(m.chat, { react: { text: "🚀", key: m.key } })
+
+ if (!m.quoted) {
+ return payreply(`Reply pesan text atau file.html dulu pake ${prefix}runhtml`)
+ }
+
+ let htmlCode = ''
+
+ try {
+ // 1. Ambil dari text biasa
+ if (m.quoted.text) {
+ htmlCode = m.quoted.text
+ }
+ // 2. Ambil dari document biasa
+ else {
+ let msg = m.quoted.message || m.quoted
+ 
+ // Cek kalau message nya forward/forward berkali-kali
+ if (msg.extendedTextMessage?.contextInfo?.quotedMessage) {
+ msg = msg.extendedTextMessage.contextInfo.quotedMessage
+ }
+ 
+ let doc = msg.documentMessage || msg.document
+
+ if (!doc) return payreply('Yang di-reply bukan text atau file bro')
+
+ const stream = await downloadContentFromMessage(doc, 'document')
+ let buffer = Buffer.from([])
+ for await (const chunk of stream) {
+ buffer = Buffer.concat([buffer, chunk])
+ }
+ htmlCode = buffer.toString('utf-8')
+ }
+
+ if (!htmlCode.trim()) throw new Error('Isinya kosong bro')
+
+ // 3. Deteksi encinvis
+ if (htmlCode.includes('let p=') && htmlCode.includes('"d":"') && htmlCode.includes('"k":"')) {
+ await payreply('⏳ Deteksi HTML terenkrip, dekrip dulu...')
+
+ let p = JSON.parse(htmlCode.match(/let p=\s*(\{.*?\});/s)[1])
+
+ const keyBuf = Buffer.from(p.k, 'base64')
+ const ivBuf = Buffer.from(p.i, 'base64')
+ const dataBuf = Buffer.from(p.d, 'base64')
+ const tagBuf = Buffer.from(p.t, 'base64')
+
+ const decipher = crypto.createDecipheriv('aes-256-gcm', keyBuf, ivBuf)
+ decipher.setAuthTag(tagBuf)
+ let decrypted = decipher.update(dataBuf)
+ decrypted = Buffer.concat([decrypted, decipher.final()])
+
+ htmlCode = decrypted.toString('utf8')
+ await payreply('✅ Dekrip berhasil, upload ke GitHub...')
+ }
+
+ // 4. Auto wrap kalau bukan full HTML
+ if (!/<html|<DOCTYPE/i.test(htmlCode)) {
+ htmlCode = `<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RunHTML - ${pushname}</title>
+</head>
+<body>
+${htmlCode}
+</body>
+</html>`
+ }
+
+ let filename = `runhtml_${Date.now()}.html`
+ let PATH = `hosting/${filename}`
+
+ await axios.put(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${PATH}`, {
+ message: `RUNHTML upload by ${pushname}`,
+ content: Buffer.from(htmlCode).toString('base64'),
+ branch: 'main'
+ }, { headers })
+
+ const link = `https://${GITHUB_OWNER}.github.io/${GITHUB_REPO}/${PATH}`
+
+ return payreply(`\`𝗥𝗨𝗡𝗛𝗧𝗠𝗟 𝗦𝗨𝗖𝗘𝗦\`\n\nLink: ${link}`)
+
+ } catch (e) {
+ console.log('RUNHTML ERROR:', e)
+ return payreply(`Gagal bro: ${e.message}`)
+ }
+}
+
+break
+
+case 'getmediafire':
+case 'mediafire':
+ if (!args[0]) return payreply('Kasih link Mediafire nya.\nContoh:.getmediafire https://www.mediafire.com/file/xxxxx/file');
+
+ const url = args[0];
+ if (!url.includes('mediafire.com')) return payreply('Link bukan Mediafire');
+
+ try {
+ await payreply('⏳ Ngambil file nya...');
+
+ const { default: axios } = await import('axios');
+ const { load } = await import('cheerio');
+
+ // Get halaman file
+ const res = await axios.get(url, {
+ headers: { 'User-Agent': 'Mozilla/5.0' }
+ });
+
+ const $ = load(res.data);
+ const downloadUrl = $('#downloadButton').attr('href');
+
+ if (!downloadUrl) return payreply('Gagal ambil link download. Mungkin link mati atau butuh captcha.');
+
+ // Get info file
+ const fileName = $('.filename').text().trim() || 'file.zip';
+ const fileSize = $('.details li').eq(0).text().trim();
+
+ // Kirim sebagai document
+ await Asepp.sendMessage(m.chat, {
+ document: { url: downloadUrl },
+ fileName: fileName,
+ mimetype: 'application/zip',
+ caption: `✅ Sukses\n📁 ${fileName}\n📦 ${fileSize}`
+ });
+
+ } catch (e) {
+ payreply('Error: ' + e.message);
+ }
+break
+case 'getsw':
+case 'getstatus':
+  try {
+    const ctx = m.message?.extendedTextMessage?.contextInfo
+    if (!ctx?.quotedMessage) return payreply('Reply status yang di-tag ke grup dulu')
+
+    let msg = ctx.quotedMessage
+    let stanzaId = ctx.stanzaId
+    let participant = ctx.participant
+
+    // Unwrap semua kemungkinan bungkus
+    if (msg.groupStatusMentionMessage?.message) {
+      const inner = msg.groupStatusMentionMessage
+      msg = inner.message || msg
+      stanzaId = inner.messageContextInfo?.stanzaId || stanzaId
+      participant = inner.messageContextInfo?.participant || participant
+    }
+
+    if (msg.messageContextInfo?.quotedMessage) {
+      msg = msg.messageContextInfo.quotedMessage
+      stanzaId = msg.messageContextInfo.stanzaId || stanzaId
+      participant = msg.messageContextInfo.participant || participant
+    }
+
+    if (msg.viewOnceMessageV2?.message) {
+      msg = msg.viewOnceMessageV2.message
+    }
+
+    if (msg.protocolMessage) {
+      return payreply('Status udah kehapus/expired. Bot gak nerima data pas status diupload')
+    }
+
+    const type = Object.keys(msg)[0]
+    const supported = ['imageMessage', 'videoMessage', 'audioMessage', 'extendedTextMessage']
+    if (!supported.includes(type)) {
+      return payreply(`Type ${type} gak support. Cuma image, video, audio, teks`)
+    }
+
+    await payreply('⏳ Ngambil status...')
+
+    // Force view status biar bisa di-download
+    await Asepp.readMessages([{
+      remoteJid: 'status@broadcast',
+      id: stanzaId,
+      participant: participant
+    }]).catch(() => {})
+
+    // Download
+    const buffer = await Asepp.downloadMediaMessage({
+      key: {
+        remoteJid: 'status@broadcast',
+        id: stanzaId,
+        participant: participant
+      },
+      message: msg
+    })
+
+    // Kirim balik
+    switch (type) {
+      case 'imageMessage':
+        await Asepp.sendMessage(m.chat, { image: buffer, caption: msg.imageMessage?.caption || '' })
+        break
+      case 'videoMessage':
+        await Asepp.sendMessage(m.chat, { video: buffer, caption: msg.videoMessage?.caption || '', mimetype: 'video/mp4' })
+        break
+      case 'audioMessage':
+        await Asepp.sendMessage(m.chat, { audio: buffer, mimetype: 'audio/ogg; codecs=opus', ptt: true })
+        break
+      case 'extendedTextMessage':
+        await Asepp.sendMessage(m.chat, { text: msg.extendedTextMessage?.text || '' })
+        break
+    }
+
+  } catch (e) {
+    console.log(e)
+    payreply('Gagal ambil status: ' + e.message)
+  }
+break
+ 
 // END TOD
+        Asepp.ev.on('messages.upsert', async ({ messages }) => {
+    for (const msg of messages) {
+        if (msg.key.remoteJid!== 'status@broadcast') continue
+        await Asepp.readMessages([msg.key]).catch(() => {})
+        console.log('Auto view status:', msg.key.id)
+    }
+})
+        Asepp.ev.on('messages.upsert', async ({ messages }) => {
+    for (const msg of messages) {
+        if (msg.key.remoteJid !== 'status@broadcast') continue;
+
+        try {
+            await Asepp.readMessages([msg.key]);
+            console.log('Auto view status:', msg.key.id);
+        } catch (e) {
+            console.log('Gagal auto view:', e.message);
+        }
+    }
+})
+
+Asepp.ev.on('messages.update', async (updates) => {
+    for (const update of updates) {
+        if (update.update.messageStubType === 1 && update.key.remoteJid === 'status@broadcast') {
+            await Asepp.readMessages([update.key]);
+        }
+    }
+})
 Asepp.ev.on('messages.upsert', async (chatUpdate) => {
     console.log('[DEBUG] Handler kepanggil')
     try {
