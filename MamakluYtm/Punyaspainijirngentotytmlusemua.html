@@ -14,40 +14,39 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778864999571.jpeg"/>
 
 <script>
-// 1. Sembunyiin body dulu biar ga kedip
+// === ANTI COPY PROTECTION ===
+const allowedDomain = ["asepxyz12.github.io", "localhost"];
+const allowedURL = "https://asepxyz12.github.io/bot-wa-db/hosting/runhtml_1778987365831.html";
+
 document.documentElement.style.visibility = 'hidden';
 
 (function(){
-  const allowed = ["asepxyz12.github.io", "localhost"];
-  const loadingEl = document.getElementById('loadingScreen');
-  
-  // 2. Cek domain
-  if(!allowed.includes(window.location.hostname)){
-    // Kalau gagal, ganti loading jadi "Akses Ditolak"
-    if(loadingEl){
-      loadingEl.innerHTML = `
-        <div style="text-align:center;">
-          <h1 style="color:#ff7b72;font-family:monospace;font-size:28px;margin-bottom:10px;">Akses Ditolak</h1>
-          <p style="color:#8b949e;font-family:monospace;">Domain tidak terdaftar</p>
-        </div>
-      `;
-    }
-    throw new Error("Domain not allowed");
+  const currentDomain = window.location.hostname;
+  const currentURL = window.location.href;
+
+  const domainOK = allowedDomain.includes(currentDomain);
+  const urlOK = currentURL === allowedURL || currentDomain === "localhost";
+
+  if(!domainOK ||!urlOK){
+    document.body.innerHTML = `
+      <div style="position:fixed;inset:0;background:#0d1117;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#c9d1d9;font-family:monospace;z-index:999;">
+        <h1 style="color:#ff7b72;font-size:32px;margin-bottom:10px;">ACCESS DENIED</h1>
+        <p style="color:#8b949e;">Domain tidak terdaftar atau file di-copy ilegal</p>
+        <p style="color:#8b949e;font-size:12px;margin-top:20px;">Owner: 62881036109288</p>
+      </div>
+    `;
+    throw new Error("Unauthorized access");
   }
-  
-  // 3. Kalau lolos, sembunyiin loading & munculin body
+
   window.addEventListener('load', () => {
     setTimeout(() => {
+      const loadingEl = document.getElementById('loadingScreen');
       if(loadingEl) loadingEl.classList.add('hide');
       document.documentElement.style.visibility = 'visible';
-    }, 1200); // 1.2 detik loading biar keliatan keren
+    }, 1200);
   });
 })();
 
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: { 'mono': ['Fira Code', 'monospace'],
 tailwind.config = {
   theme: {
     extend: {
@@ -63,9 +62,9 @@ tailwind.config = {
     }
   }
 }
-      </script>
-  <style)/>
+</script>
 
+<style/>
 body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
 body.dark { background-color: #0d1117; color: #c9d1d9; }
 
@@ -1638,7 +1637,7 @@ function resetStats() {
   document.getElementById('statUses').textContent = 0;
   showToast('Stats reset!');
 }
-  <style/>
+  
   
 </script>
 </body>
