@@ -296,25 +296,37 @@ video::-webkit-media-controls-panel { background: rgba(1, 4, 9, 0.8); }
     </div>
   </div>
 
-  <!-- DONGHUA PLAYER -->
+    <!-- DONGHUA PLAYER -->
   <div class="glass-card rounded-2xl p-5 mb-8 max-w-3xl mx-auto">
     <div class="flex items-center gap-2 mb-4">
       <div class="w-1 h-6 bg-gradient-to-b from-terminal-purple to-terminal-pink rounded-full"></div>
       <h3 class="font-mono text-terminal-purple font-semibold tracking-wider">DONGHUA PLAYER</h3>
     </div>
+
     <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
-      <button onclick="switchDonghua('btth')" id="donghua-btth" class="donghua-btn active whitespace-nowrap px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all">Battle Through The Heavens</button>
-      <button onclick="switchDonghua('renegade')" id="donghua-renegade" class="donghua-btn whitespace-nowrap px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all bg-terminal-darker text-terminal-comment">Renegade Immortal</button>
+      <button onclick="switchDonghua('btth')" id="donghua-btth"
+        class="donghua-btn active whitespace-nowrap px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all">
+        Battle Through The Heavens
+      </button>
+      <button onclick="switchDonghua('renegade')" id="donghua-renegade"
+        class="donghua-btn whitespace-nowrap px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all bg-terminal-darker text-terminal-comment">
+        Renegade Immortal
+      </button>
     </div>
+
     <div class="mb-4 relative">
-      <input type="text" id="donghuaSearch" placeholder="🔍 Cari episode..." class="search-box pl-10" onkeyup="searchEpisode()">
+      <input type="text" id="donghuaSearch" placeholder="🔍 Cari episode..."
+        class="search-box pl-10" onkeyup="searchEpisode()">
       <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-terminal-comment" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
       </svg>
     </div>
+
     <div id="content-btth" class="donghua-content active">
       <div class="bg-terminal-darker p-4 rounded-xl mb-4 border-terminal-border">
-        <video id="btthVideo" controls class="w-full rounded-lg mb-3" poster="" preload="metadata" onended="playNext('btth')"></video>
+        <video id="btthVideo" controls class="w-full rounded-lg mb-3"
+          poster="" preload="metadata" onended="playNext('btth')"></video>
+
         <div class="flex items-center justify-between gap-3">
           <div class="flex-1 min-w-0">
             <p id="btthNowPlaying" class="text-sm font-mono text-terminal-text truncate">Select an episode</p>
@@ -322,15 +334,19 @@ video::-webkit-media-controls-panel { background: rgba(1, 4, 9, 0.8); }
           </div>
           <div class="flex items-center gap-2">
             <button onclick="downloadCurrent('btth')" class="px-3 py-1 bg-terminal-purple/20 hover:bg-terminal-purple/40 text-terminal-purple rounded-lg text-xs font-mono transition-all">Download</button>
-            <input type="range" min="0" max="1" step="0.1" value="0.8" class="volume-slider" onchange="setVolume('btthVideo', this.value)">
+            <input type="range" min="0" max="1" step="0.1" value="0.8"
+              class="volume-slider" onchange="setVolume('btthVideo', this.value)">
           </div>
         </div>
       </div>
       <div id="btthPlaylist" class="space-y-2 max-h-80 overflow-y-auto pr-2"></div>
     </div>
+
     <div id="content-renegade" class="donghua-content hidden">
       <div class="bg-terminal-darker p-4 rounded-xl mb-4 border-terminal-border">
-        <video id="riVideo" controls class="w-full rounded-lg mb-3" poster="" preload="metadata" onended="playNext('renegade')"></video>
+        <video id="riVideo" controls class="w-full rounded-lg mb-3"
+          poster="" preload="metadata" onended="playNext('renegade')"></video>
+
         <div class="flex items-center justify-between gap-3">
           <div class="flex-1 min-w-0">
             <p id="riNowPlaying" class="text-sm font-mono text-terminal-text truncate">Select an episode</p>
@@ -338,7 +354,8 @@ video::-webkit-media-controls-panel { background: rgba(1, 4, 9, 0.8); }
           </div>
           <div class="flex items-center gap-2">
             <button onclick="downloadCurrent('renegade')" class="px-3 py-1 bg-terminal-purple/20 hover:bg-terminal-purple/40 text-terminal-purple rounded-lg text-xs font-mono transition-all">Download</button>
-            <input type="range" min="0" max="1" step="0.1" value="0.8" class="volume-slider" onchange="setVolume('riVideo', this.value)">
+            <input type="range" min="0" max="1" step="0.1" value="0.8"
+              class="volume-slider" onchange="setVolume('riVideo', this.value)">
           </div>
         </div>
       </div>
@@ -352,6 +369,7 @@ video::-webkit-media-controls-panel { background: rgba(1, 4, 9, 0.8); }
       <div class="w-1 h-6 bg-gradient-to-b from-terminal-pink to-terminal-purple rounded-full"></div>
       <h3 class="font-mono text-terminal-pink font-semibold tracking-wider">MUSIC PLAYER</h3>
     </div>
+
     <div class="bg-terminal-darker p-4 rounded-xl mb-4 border-terminal-border">
       <audio id="musicAudio" controls class="w-full mb-3"></audio>
       <div class="flex items-center justify-between gap-3">
@@ -360,9 +378,11 @@ video::-webkit-media-controls-panel { background: rgba(1, 4, 9, 0.8); }
           <p id="musicDuration" class="text-xs font-mono text-terminal-comment">0:00</p>
         </div>
         <button onclick="downloadCurrentMusic()" class="px-3 py-1 bg-terminal-pink/20 hover:bg-terminal-pink/40 text-terminal-pink rounded-lg text-xs font-mono transition-all">Download</button>
-        <input type="range" min="0" max="1" step="0.1" value="0.8" class="volume-slider" onchange="setVolume('musicAudio', this.value)">
+        <input type="range" min="0" max="1" step="0.1" value="0.8"
+          class="volume-slider" onchange="setVolume('musicAudio', this.value)">
       </div>
     </div>
+
     <div id="musicPlaylist" class="space-y-2 max-h-64 overflow-y-auto pr-2"></div>
   </div>
 
