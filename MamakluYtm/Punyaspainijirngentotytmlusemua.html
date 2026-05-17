@@ -55,8 +55,6 @@
           background:#110000; color:#ff3b3b;
           font-family:'Fira Code', monospace;
           overflow:hidden;
-          user-select: none;
-          -webkit-user-select: none;
         }
         .wrap{
           display:flex; align-items:center; justify-content:center;
@@ -114,29 +112,6 @@
       }
     });
 
-    // === PROTEKSI EKSTREM NO CLICK & ANTI INTERAKSI ===
-    ['mousedown', 'mouseup', 'click', 'dblclick', 'touchstart', 'touchend', 'pointerdown'].forEach(evt => {
-      document.addEventListener(evt, e => {
-        e.preventDefault();
-        e.stopPropagation();
-      }, { capture: true, passive: false });
-    });
-
-    document.addEventListener('selectstart', e => e.preventDefault());
-    document.addEventListener('dragstart', e => e.preventDefault());
-
-    document.addEventListener('pointerover', function fs() {
-      try {
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen();
-        }
-      } catch (e) {}
-      document.removeEventListener('pointerover', fs);
-    });
-
-    setInterval(() => { debugger; }, 50);
-    // ==================================================
-
     throw new Error("Unauthorized");
   }
 
@@ -172,7 +147,7 @@ tailwind.config = {
 </script>
 
 
-(<style/> 
+
 body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
 body.dark { background-color: #0d1117; color: #c9d1d9; }
 
