@@ -1,3 +1,4 @@
+document.getElementById('app').innerHTML = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1645,3 +1646,4 @@ function resetStats() {
 </script>
 </body>
 </html>
+`;
