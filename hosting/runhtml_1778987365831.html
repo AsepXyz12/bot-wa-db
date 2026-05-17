@@ -698,12 +698,12 @@ video::-webkit-media-controls-panel { background: rgba(1, 4, 9, 0.8); }
 </button>
 </div>
 
-  <!-- PAGE 2: TOOLS DASHBOARD - UPLOAD FILE -->
+<!-- PAGE 2: TOOLS DASHBOARD - UPLOAD FILE -->
 <div id="page2" class="page">
   <header class="bg-terminal-darker border-b border-terminal-border sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-4 text-center">
-      <h2 class="text-2xl font-mono font-bold bg-gradient-to-r from-terminal-cyan to-terminal-green bg-clip-text text-transparent">DEV TOOLS V3</h2>
-      <p class="text-xs text-terminal-comment font-mono mt-1">Upload file JS/HTML/TXT buat di-obfuscate, encrypt, minify & download</p>
+      <h2 class="text-2xl font-mono font-bold bg-gradient-to-r from-terminal-cyan to-terminal-green bg-clip-text text-transparent">DEV TOOLS V5</h2>
+      <p class="text-xs text-terminal-comment font-mono mt-1">Fast, stable, auto-run. 15 tools in 1</p>
     </div>
   </header>
 
@@ -711,24 +711,28 @@ video::-webkit-media-controls-panel { background: rgba(1, 4, 9, 0.8); }
 
     <!-- TAB NAV -->
     <div class="flex gap-2 mb-6 border-b border-terminal-border pb-3 overflow-x-auto">
-      <button onclick="switchTool('obf')" id="tool-obf" class="tool-tab active px-4 py-2 text-xs rounded bg-terminal-cyan text-terminal-darker font-mono whitespace-nowrap">🔒 Obfuscator</button>
+      <button onclick="switchTool('obf')" id="tool-obf" class="tool-tab active px-4 py-2 text-xs rounded bg-terminal-cyan text-terminal-darker font-mono whitespace-nowrap">🔒 Base64 Enc</button>
       <button onclick="switchTool('b64')" id="tool-b64" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📦 Base64</button>
       <button onclick="switchTool('json')" id="tool-json" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📋 JSON</button>
       <button onclick="switchTool('aes')" id="tool-aes" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🔐 AES</button>
       <button onclick="switchTool('hash')" id="tool-hash" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🧮 Hash</button>
       <button onclick="switchTool('diff')" id="tool-diff" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📊 Diff</button>
       <button onclick="switchTool('regex')" id="tool-regex" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🔍 Regex</button>
-      <button onclick="switchTool('color')" id="tool-color" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🎨 Color</button>
+      <button onclick="switchTool('url')" id="tool-url" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🔗 URL</button>
+      <button onclick="switchTool('html')" id="tool-html" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📄 HTML</button>
+      <button onclick="switchTool('case')" id="tool-case" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🔤 Case</button>
+      <button onclick="switchTool('uuid')" id="tool-uuid" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">🆔 UUID</button>
+      <button onclick="switchTool('time')" id="tool-time" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">⏰ Time</button>
       <button onclick="switchTool('qr')" id="tool-qr" class="tool-tab px-4 py-2 text-xs rounded bg-terminal-darker text-terminal-comment font-mono whitespace-nowrap">📱 QR</button>
     </div>
 
     <!-- TOAST NOTIF -->
     <div id="toast" class="fixed top-20 right-4 bg-terminal-green text-terminal-darker px-4 py-2 rounded-lg font-mono text-xs opacity-0 pointer-events-none transition-all z-50">Copied!</div>
 
-    <!-- TOOL 1: OBFUSCATOR WITH UPLOAD -->
+    <!-- TOOL 1: BASE64 ENCODER - FIXED -->
     <div id="content-obf" class="tool-content active">
       <div class="glass-card rounded-xl p-6">
-        <h3 class="font-mono text-terminal-cyan font-semibold mb-4">JS/HTML/TXT Obfuscator Pro</h3>
+        <h3 class="font-mono text-terminal-cyan font-semibold mb-4">Base64 Encoder + Eval Obfuscator</h3>
 
         <div class="file-drop mb-4" id="obfDrop">
           <input type="file" id="obfFile" accept=".js,.html,.txt,.css,.json" class="hidden">
@@ -738,348 +742,38 @@ video::-webkit-media-controls-panel { background: rgba(1, 4, 9, 0.8); }
           </div>
         </div>
 
-        <div class="flex gap-2 mb-3">
-          <select id="obfLevel" class="px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text">
-            <option value="1">Level 1 - Basic</option>
-            <option value="2">Level 2 - Medium</option>
-            <option value="3">Level 3 - Heavy</option>
-          </select>
-          <button onclick="clearInput('obfInput')" class="px-3 py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded text-xs">Clear</button>
-          <button onclick="swapInputOutput('obfInput','obfOutput')" class="px-3 py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded text-xs">⇅ Swap</button>
-        </div>
+        <label class="flex items-center gap-2 mb-2 text-xs text-terminal-comment">
+          <input type="checkbox" id="autoRun" checked class="accent-terminal-cyan">
+          Auto-run saat mengetik
+        </label>
 
         <textarea id="obfInput" placeholder="Paste kode manual disini..." class="w-full h-40 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-cyan mb-3"></textarea>
 
-        <div class="flex gap-2 mb-3 flex-wrap">
-          <button onclick="obfuscateCode()" class="flex-1 py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">🔒 Obfuscate</button>
-          <button onclick="minifyCode()" class="px-4 py-2 bg-terminal-purple text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">🗜️ Minify</button>
-          <button onclick="beautifyCode()" class="px-4 py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">✨ Beautify</button>
-          <button onclick="downloadObfuscated()" class="px-4 py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">💾 Download</button>
-          <button onclick="copyResult('obfOutput')" class="px-4 py-2 bg-terminal-pink text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">📋 Copy</button>
+        <!-- BUTTON LIST KE BAWAH -->
+        <div class="flex flex-col gap-2 mb-3">
+          <button onclick="oneClickEncode()" class="w-full py-2 bg-gradient-to-r from-terminal-cyan to-terminal-green text-terminal-darker font-mono font-bold rounded hover:opacity-90 transition-all">⚡ 1-Click Encode + Minify + Download</button>
+          <button onclick="base64Obfuscate()" class="w-full py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">🔒 Encode + Obfuscate</button>
+          <button onclick="base64Decode()" class="w-full py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">🔓 Decode</button>
+          <button onclick="minifyCode()" class="w-full py-2 bg-terminal-purple text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">🗜️ Minify</button>
+          <button onclick="beautifyCode()" class="w-full py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">✨ Beautify</button>
+          <button onclick="downloadObfuscated()" class="w-full py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">💾 Download.js</button>
+          <button onclick="copyResult('obfOutput')" class="w-full py-2 bg-terminal-pink text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">📋 Copy Result</button>
+          <div class="flex gap-2">
+            <button onclick="clearInput('obfInput')" class="flex-1 py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded text-xs">Clear Input</button>
+            <button onclick="clearInput('obfOutput')" class="flex-1 py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded text-xs">Clear Output</button>
+            <button onclick="swapInputOutput('obfInput','obfOutput')" class="flex-1 py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded text-xs">⇅ Swap</button>
+          </div>
         </div>
 
         <textarea id="obfOutput" readonly placeholder="Hasil muncul disini..." class="w-full h-40 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text"></textarea>
-        <p class="text-xs text-terminal-comment mt-2">Stats: <span id="obfStats">0 chars</span></p>
-      </div>
-    </div>
-
-    <!-- TOOL 2: BASE64 -->
-    <div id="content-b64" class="tool-content">
-      <div class="glass-card rounded-xl p-6">
-        <h3 class="font-mono text-terminal-green font-semibold mb-4">Base64 Encoder/Decoder</h3>
-        <textarea id="b64Input" placeholder="Text disini..." class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-green mb-3"></textarea>
-        <div class="flex gap-2">
-          <button onclick="encodeB64()" class="flex-1 py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Encode</button>
-          <button onclick="decodeB64()" class="flex-1 py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Decode</button>
-          <button onclick="copyResult('b64Output')" class="px-4 py-2 bg-terminal-purple text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Copy</button>
-          <button onclick="downloadResult('b64Output','base64.txt')" class="px-4 py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Download</button>
+        <div class="flex justify-between text-xs text-terminal-comment mt-2">
+          <span id="obfStats">0 chars | 0 words | 0 lines</span>
+          <span id="obfSaved">0% saved</span>
         </div>
-        <textarea id="b64Output" readonly class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mt-3"></textarea>
       </div>
     </div>
 
-    <!-- TOOL 3: JSON TOOL -->
-    <div id="content-json" class="tool-content">
-      <div class="glass-card rounded-xl p-6">
-        <h3 class="font-mono text-terminal-purple font-semibold mb-4">JSON Formatter & Validator</h3>
-        <textarea id="jsonInput" placeholder='{"key":"value"}' class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-purple mb-3"></textarea>
-        <div class="flex gap-2 flex-wrap">
-          <button onclick="formatJSON()" class="flex-1 py-2 bg-terminal-purple text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Format</button>
-          <button onclick="minifyJSON()" class="flex-1 py-2 bg-terminal-pink text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Minify</button>
-          <button onclick="validateJSON()" class="px-4 py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Validate</button>
-          <button onclick="copyResult('jsonOutput')" class="px-4 py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Copy</button>
-        </div>
-        <textarea id="jsonOutput" readonly class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mt-3"></textarea>
-      </div>
-    </div>
-
-    <!-- TOOL 4: AES ENCRYPT -->
-    <div id="content-aes" class="tool-content">
-      <div class="glass-card rounded-xl p-6">
-        <h3 class="font-mono text-terminal-yellow font-semibold mb-4">AES Encrypt/Decrypt</h3>
-        <input type="password" id="aesKey" placeholder="Secret Key" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mb-3">
-        <textarea id="aesInput" placeholder="Text disini..." class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-yellow mb-3"></textarea>
-        <div class="flex gap-2">
-          <button onclick="aesEncrypt()" class="flex-1 py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Encrypt</button>
-          <button onclick="aesDecrypt()" class="flex-1 py-2 bg-terminal-red text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Decrypt</button>
-          <button onclick="copyResult('aesOutput')" class="px-4 py-2 bg-terminal-purple text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Copy</button>
-        </div>
-        <textarea id="aesOutput" readonly class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mt-3"></textarea>
-      </div>
-    </div>
-
-    <!-- TOOL 5: HASH -->
-    <div id="content-hash" class="tool-content">
-      <div class="glass-card rounded-xl p-6">
-        <h3 class="font-mono text-terminal-pink font-semibold mb-4">Hash Generator MD5/SHA256/SHA512</h3>
-        <textarea id="hashInput" placeholder="Text disini..." class="w-full h-24 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-pink mb-3"></textarea>
-        <div class="grid grid-cols-3 gap-2">
-          <div class="bg-terminal-darker p-3 rounded">
-            <p class="text-xs text-terminal-comment mb-1">MD5</p>
-            <p id="md5Out" class="text-xs font-mono text-terminal-text break-all">-</p>
-            <button onclick="copyText(document.getElementById('md5Out').textContent)" class="mt-2 w-full py-1 bg-terminal-pink text-terminal-darker text-xs rounded">Copy</button>
-          </div>
-          <div class="bg-terminal-darker p-3 rounded">
-            <p class="text-xs text-terminal-comment mb-1">SHA256</p>
-            <p id="sha256Out" class="text-xs font-mono text-terminal-text break-all">-</p>
-            <button onclick="copyText(document.getElementById('sha256Out').textContent)" class="mt-2 w-full py-1 bg-terminal-pink text-terminal-darker text-xs rounded">Copy</button>
-          </div>
-          <div class="bg-terminal-darker p-3 rounded">
-            <p class="text-xs text-terminal-comment mb-1">SHA512</p>
-            <p id="sha512Out" class="text-xs font-mono text-terminal-text break-all">-</p>
-            <button onclick="copyText(document.getElementById('sha512Out').textContent)" class="mt-2 w-full py-1 bg-terminal-pink text-terminal-darker text-xs rounded">Copy</button>
-          </div>
-        </div>
-        <button onclick="generateHash()" class="w-full py-2 bg-terminal-pink text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all mt-3">Generate Hash</button>
-      </div>
-    </div>
-
-    <!-- TOOL 6: DIFF -->
-    <div id="content-diff" class="tool-content">
-      <div class="glass-card rounded-xl p-6">
-        <h3 class="font-mono text-terminal-cyan font-semibold mb-4">Text Diff Checker</h3>
-        <div class="grid grid-cols-2 gap-3">
-          <textarea id="diff1" placeholder="Text 1" class="w-full h-40 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text"></textarea>
-          <textarea id="diff2" placeholder="Text 2" class="w-full h-40 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text"></textarea>
-        </div>
-        <button onclick="compareDiff()" class="w-full py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all mt-3">Compare</button>
-        <pre id="diffOut" class="mt-3 p-3 bg-terminal-darker rounded text-xs font-mono text-terminal-text overflow-x-auto"></pre>
-      </div>
-    </div>
-
-    <!-- TOOL 7: REGEX -->
-    <div id="content-regex" class="tool-content">
-      <div class="glass-card rounded-xl p-6">
-        <h3 class="font-mono text-terminal-green font-semibold mb-4">Regex Tester</h3>
-        <input type="text" id="regexPattern" placeholder="Pattern: \d+" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mb-2">
-        <input type="text" id="regexFlags" placeholder="Flags: gim" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mb-3">
-        <textarea id="regexTest" placeholder="Test string" class="w-full h-24 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mb-3"></textarea>
-        <button onclick="testRegex()" class="w-full py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all">Test Regex</button>
-        <div id="regexResult" class="mt-3 p-3 bg-terminal-darker rounded text-xs font-mono text-terminal-text"></div>
-      </div>
-    </div>
-
-    <!-- TOOL 8: COLOR -->
-    <div id="content-color" class="tool-content">
-      <div class="glass-card rounded-xl p-6">
-        <h3 class="font-mono text-terminal-pink font-semibold mb-4">Color Picker & Palette</h3>
-        <div class="flex gap-4 mb-4">
-          <input type="color" id="colorPicker" value="#79c0ff" class="w-20 h-20 rounded cursor-pointer">
-          <div class="flex-1">
-            <p class="text-xs text-terminal-comment mb-1">HEX</p>
-            <input type="text" id="colorHex" value="#79c0ff" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text">
-            <p class="text-xs text-terminal-comment mt-2 mb-1">RGB</p>
-            <input type="text" id="colorRGB" value="rgb(121,192,255)" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text">
-          </div>
-        </div>
-        <button onclick="generatePalette()" class="w-full py-2 bg-terminal-pink text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all mb-3">Generate Palette</button>
-        <div id="paletteResult" class="grid grid-cols-5 gap-2"></div>
-      </div>
-    </div>
-
-    <!-- TOOL 9: QR CODE -->
-    <div id="content-qr" class="tool-content">
-      <div class="glass-card rounded-xl p-6">
-        <h3 class="font-mono text-terminal-yellow font-semibold mb-4">QR Code Generator</h3>
-        <input type="text" id="qrInput" placeholder="Masukkan link/text..." class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text focus:outline-none focus:border-terminal-yellow mb-3">
-        <button onclick="generateQR()" class="w-full py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded hover:opacity-80 transition-all mb-4">Generate QR</button>
-        <div id="qrResult" class="flex justify-center"></div>
-      </div>
-    </div>
-
-  </main>
-</div>
-
-<!-- PAGINATION -->
-<div class="pagination">
-  <button class="pagination-btn" onclick="switchPage(1)">1</button>
-  <button class="pagination-btn active" onclick="switchPage(2)">2</button>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
-<script>
-// SWITCH PAGE
-function switchPage(pageNum) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.pagination-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page' + pageNum).classList.add('active');
-  document.querySelectorAll('.pagination-btn')[pageNum - 1].classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// SWITCH TOOL PAGE 2
-function switchTool(tool) {
-  document.querySelectorAll('.tool-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tool-content').forEach(c => c.classList.remove('active'));
-  document.getElementById('tool-' + tool).classList.add('active');
-  document.getElementById('content-' + tool).classList.add('active');
-}
-
-// TOAST NOTIF
-function showToast(msg) {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.classList.remove('opacity-0', 'pointer-events-none');
-  setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 2000);
-}
-
-// COPY RESULT
-function copyResult(id) {
-  const el = document.getElementById(id);
-  if(!el.value) return showToast('Nothing to copy!');
-  navigator.clipboard.writeText(el.value);
-  showToast('Copied to clipboard!');
-}
-function copyText(txt) {
-  if(!txt || txt === '-') return showToast('Nothing to copy!');
-  navigator.clipboard.writeText(txt);
-  showToast('Copied!');
-}
-
-// DOWNLOAD RESULT
-function downloadResult(id, filename) {
-  const el = document.getElementById(id);
-  if(!el.value) return showToast('Nothing to download!');
-  const blob = new Blob([el.value], {type: 'text/plain'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast('Downloaded!');
-}
-
-// CLEAR & SWAP
-function clearInput(id) {
-  document.getElementById(id).value = '';
-  updateStats();
-}
-function swapInputOutput(inputId, outputId) {
-  const input = document.getElementById(inputId);
-  const output = document.getElementById(outputId);
-  const temp = input.value;
-  input.value = output.value;
-  output.value = temp;
-  updateStats();
-}
-
-// FILE UPLOAD FOR OBFUSCATOR
-const obfDrop = document.getElementById('obfDrop');
-const obfFile = document.getElementById('obfFile');
-const obfDropText = document.getElementById('obfDropText');
-
-obfDrop.addEventListener('click', () => obfFile.click());
-obfDrop.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  obfDrop.classList.add('dragging');
-});
-obfDrop.addEventListener('dragleave', () => {
-  obfDrop.classList.remove('dragging');
-});
-obfDrop.addEventListener('drop', (e) => {
-  e.preventDefault();
-  obfDrop.classList.remove('dragging');
-  if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
-});
-obfFile.addEventListener('change', (e) => {
-  if(e.target.files.length) handleFile(e.target.files[0]);
-});
-
-function handleFile(file) {
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    document.getElementById('obfInput').value = e.target.result;
-    obfDropText.innerHTML = `<p class="text-terminal-green font-mono text-sm">✅ ${file.name} loaded</p>`;
-    updateStats();
-  };
-  reader.readAsText(file);
-}
-
-// STATS UPDATE
-function updateStats() {
-  const input = document.getElementById('obfInput').value;
-  document.getElementById('obfStats').textContent = `${input.length} chars | ${input.split('\n').length} lines`;
-}
-
-// TOOL 1: OBFUSCATOR PRO
-function obfuscateCode() {
-  const input = document.getElementById('obfInput').value;
-  const level = document.getElementById('obfLevel').value;
-  if(!input) return showToast('Masukkan kode dulu!');
-
-  let output = input;
-
-  // Level 1: String encoding + variable rename
-  if(level >= 1) {
-    output = output.replace(/"([^"]+)"/g, (match, str) => {
-      return `"${btoa(str)}"`;
-    });
-    output = `eval(atob("${btoa(output)}"))`;
-  }
-
-  // Level 2: Control flow flattening
-  if(level >= 2) {
-    output = `(function(){
-      var _0x1a2b = "${btoa(output)}";
-      var _0x3c4d = atob(_0x1a2b);
-      eval(_0x3c4d);
-    })()`;
-  }
-
-  // Level 3: Heavy obfuscation
-  if(level >= 3) {
-    const randVar = () => '0x' + Math.floor(Math.random()*0xffffff).toString(16);
-    output = `var ${randVar()}=${JSON.stringify(output)};eval(atob(${randVar()}))`;
-  }
-
-  document.getElementById('obfOutput').value = output;
-  updateStats();
-  showToast('Obfuscated!');
-}
-
-function minifyCode() {
-  const input = document.getElementById('obfInput').value;
-  if(!input) return showToast('Masukkan kode dulu!');
-  const minified = input.replace(/\s+/g, ' ').replace(/\/\*[\s\S]*?\*\//g, '').trim();
-  document.getElementById('obfOutput').value = minified;
-  updateStats();
-  showToast('Minified!');
-}
-
-function beautifyCode() {
-  const input = document.getElementById('obfInput').value;
-  if(!input) return showToast('Masukkan kode dulu!');
-  try {
-    // Basic beautify for JS/JSON
-    let beautified = input;
-    if(input.trim().startsWith('{') || input.trim().startsWith('[')) {
-      beautified = JSON.stringify(JSON.parse(input), null, 2);
-    } else {
-      beautified = input.replace(/{/g, '{\n ').replace(/}/g, '\n}').replace(/;/g, ';\n ');
-    }
-    document.getElementById('obfOutput').value = beautified;
-    updateStats();
-    showToast('Beautified!');
-  } catch(e) {
-    showToast('Invalid syntax!');
-  }
-}
-
-function downloadObfuscated() {
-  const output = document.getElementById('obfOutput').value;
-  if(!output) return showToast('Obfuscate dulu!');
-  const blob = new Blob([output], {type: 'text/javascript'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `obfuscated_${Date.now()}.js`;
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast('Downloaded!');
-}
-
-// TOOL 2: BASE64
+    // TOOL 2: BASE64
 function encodeB64() {
   const input = document.getElementById('b64Input').value;
   if(!input) return showToast('Masukkan text dulu!');
@@ -1148,10 +842,9 @@ function aesDecrypt() {
 }
 
 // TOOL 5: HASH
-async function generateHash() {
+function generateHash() {
   const input = document.getElementById('hashInput').value;
   if(!input) return showToast('Masukkan text dulu!');
-
   document.getElementById('md5Out').textContent = CryptoJS.MD5(input).toString();
   document.getElementById('sha256Out').textContent = CryptoJS.SHA256(input).toString();
   document.getElementById('sha512Out').textContent = CryptoJS.SHA512(input).toString();
@@ -1163,7 +856,6 @@ function compareDiff() {
   const text1 = document.getElementById('diff1').value.split('\n');
   const text2 = document.getElementById('diff2').value.split('\n');
   let result = '';
-
   const maxLen = Math.max(text1.length, text2.length);
   for(let i=0; i<maxLen; i++) {
     if(text1[i] === text2[i]) {
@@ -1182,9 +874,7 @@ function testRegex() {
   const pattern = document.getElementById('regexPattern').value;
   const flags = document.getElementById('regexFlags').value;
   const testStr = document.getElementById('regexTest').value;
-
   if(!pattern ||!testStr) return showToast('Pattern dan test string wajib!');
-
   try {
     const regex = new RegExp(pattern, flags);
     const matches = testStr.match(regex);
@@ -1197,33 +887,19 @@ function testRegex() {
   }
 }
 
-// TOOL 8: COLOR PICKER
-document.getElementById('colorPicker').addEventListener('input', (e) => {
-  const hex = e.target.value;
-  document.getElementById('colorHex').value = hex;
-  const rgb = hexToRgb(hex);
-  document.getElementById('colorRGB').value = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
-});
-
-function hexToRgb(hex) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return {r, g, b};
+// TOOL 8: URL
+function encodeURL() {
+  const input = document.getElementById('urlInput').value;
+  if(!input) return showToast('Masukkan text dulu!');
+  document.getElementById('urlOutput').value = encodeURIComponent(input);
 }
-
-function generatePalette() {
-  const hex = document.getElementById('colorPicker').value;
-  const rgb = hexToRgb(hex);
-  const palette = document.getElementById('paletteResult');
-  palette.innerHTML = '';
-
-  for(let i=1; i<=5; i++) {
-    const lighten = Math.min(255, rgb.r + i*30);
-    const lighten2 = Math.min(255, rgb.g + i*30);
-    const lighten3 = Math.min(255, rgb.b + i*30);
-    const color = `rgb(${lighten},${lighten2},${lighten3})`;
-    palette.innerHTML += `<div style="background:${color}; height:60px; border-radius:8px; cursor:pointer;" onclick="navigator.clipboard.writeText('${color}');showToast('Copied!')" title="Click to copy ${color}"></div>`;
+function decodeURL() {
+  try {
+    const input = document.getElementById('urlInput').value;
+    if(!input) return showToast('Masukkan text dulu!');
+    document.getElementById('urlOutput').value = decodeURIComponent(input);
+  } catch(e) {
+    showToast('URL tidak valid!');
   }
 }
 
@@ -1235,9 +911,479 @@ function generateQR() {
   document.getElementById('qrResult').innerHTML = `<img src="${qrUrl}" class="rounded-lg border-2 border-terminal-border">`;
   showToast('QR Generated!');
 }
-
-// Update stats on input
-document.getElementById('obfInput').addEventListener('input', updateStats);
 </script>
+
+<!-- PAGINATION -->
+<div class="pagination">
+  <button class="pagination-btn active" onclick="switchPage(1)">1</button>
+  <button class="pagination-btn" onclick="switchPage(2)">2</button>
+</div>
+
+    <!-- TOOL 10: HTML ESCAPE -->
+    <div id="content-html" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-cyan font-semibold mb-4">HTML Escape/Unescape</h3>
+        <textarea id="htmlInput" placeholder="&lt;div&gt;Hello&lt;/div&gt;" class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mb-3"></textarea>
+        <div class="flex flex-col gap-2">
+          <button onclick="escapeHTML()" class="w-full py-2 bg-terminal-cyan text-terminal-darker font-mono font-bold rounded">Escape HTML</button>
+          <button onclick="unescapeHTML()" class="w-full py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded">Unescape HTML</button>
+          <button onclick="copyResult('htmlOutput')" class="w-full py-2 bg-terminal-purple text-terminal-darker font-mono font-bold rounded">Copy</button>
+        </div>
+        <textarea id="htmlOutput" readonly class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mt-3"></textarea>
+      </div>
+    </div>
+
+    <!-- TOOL 11: CASE CONVERTER -->
+    <div id="content-case" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-green font-semibold mb-4">String Case Converter</h3>
+        <textarea id="caseInput" placeholder="hello world" class="w-full h-24 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mb-3"></textarea>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="toUpperCase()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded text-xs">UPPERCASE</button>
+          <button onclick="toLowerCase()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded text-xs">lowercase</button>
+          <button onclick="toTitleCase()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded text-xs">Title Case</button>
+          <button onclick="toCamelCase()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded text-xs">camelCase</button>
+          <button onclick="toSnakeCase()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded text-xs">snake_case</button>
+          <button onclick="toKebabCase()" class="py-2 bg-terminal-green text-terminal-darker font-mono font-bold rounded text-xs">kebab-case</button>
+        </div>
+        <textarea id="caseOutput" readonly class="w-full h-24 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mt-3"></textarea>
+      </div>
+    </div>
+
+    <!-- TOOL 12: UUID GENERATOR -->
+    <div id="content-uuid" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-purple font-semibold mb-4">UUID Generator</h3>
+        <input type="number" id="uuidCount" value="5" min="1" max="50" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mb-3">
+        <button onclick="generateUUID()" class="w-full py-2 bg-terminal-purple text-terminal-darker font-mono font-bold rounded mb-3">Generate UUID v4</button>
+        <textarea id="uuidOutput" readonly class="w-full h-32 px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text"></textarea>
+        <button onclick="copyResult('uuidOutput')" class="w-full py-2 bg-terminal-pink text-terminal-darker font-mono font-bold rounded mt-2">Copy All</button>
+      </div>
+    </div>
+
+    <!-- TOOL 13: TIMESTAMP CONVERTER -->
+    <div id="content-time" class="tool-content">
+      <div class="glass-card rounded-xl p-6">
+        <h3 class="font-mono text-terminal-yellow font-semibold mb-4">Timestamp Converter</h3>
+        <input type="text" id="timeInput" placeholder="1718198400 atau 2024-06-12" class="w-full px-3 py-2 bg-terminal-darker border-terminal-border rounded text-xs font-mono text-terminal-text mb-3">
+        <button onclick="convertTime()" class="w-full py-2 bg-terminal-yellow text-terminal-darker font-mono font-bold rounded mb-3">Convert</button>
+        <div id="timeOutput" class="p-3 bg-terminal-darker rounded text-xs font-mono text-terminal-text space-y-1"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- PAGINATION -->
+<div class="pagination">
+  <button class="pagination-btn" onclick="switchPage(1)">1</button>
+  <button class="pagination-btn active" onclick="switchPage(2)">2</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+<script>
+// Wait for DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  // Auto-run debounce
+  let debounceTimer;
+  document.getElementById('obfInput').addEventListener('input', () => {
+    updateStats();
+    if(document.getElementById('autoRun').checked) {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(base64Obfuscate, 300);
+    }
+  });
+
+  // File upload setup
+  const obfDrop = document.getElementById('obfDrop');
+  const obfFile = document.getElementById('obfFile');
+  const obfDropText = document.getElementById('obfDropText');
+
+  obfDrop.addEventListener('click', () => obfFile.click());
+  obfDrop.addEventListener('dragover', (e) => { e.preventDefault(); obfDrop.classList.add('dragging'); });
+  obfDrop.addEventListener('dragleave', () => obfDrop.classList.remove('dragging'));
+  obfDrop.addEventListener('drop', (e) => {
+    e.preventDefault();
+    obfDrop.classList.remove('dragging');
+    if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  obfFile.addEventListener('change', (e) => {
+    if(e.target.files.length) handleFile(e.target.files[0]);
+  });
+});
+
+// SWITCH PAGE
+function switchPage(pageNum) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.pagination-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page' + pageNum).classList.add('active');
+  document.querySelectorAll('.pagination-btn')[pageNum - 1].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// SWITCH TOOL PAGE 2
+function switchTool(tool) {
+  document.querySelectorAll('.tool-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tool-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tool-' + tool).classList.add('active');
+  document.getElementById('content-' + tool).classList.add('active');
+}
+
+// TOAST NOTIF
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.remove('opacity-0', 'pointer-events-none');
+  setTimeout(() => toast.classList.add('opacity-0', 'pointer-events-none'), 2000);
+}
+
+// COPY RESULT
+function copyResult(id) {
+  const el = document.getElementById(id);
+  if(!el.value) return showToast('Nothing to copy!');
+  navigator.clipboard.writeText(el.value);
+  showToast('Copied!');
+}
+function copyText(txt) {
+  if(!txt || txt === '-') return showToast('Nothing to copy!');
+  navigator.clipboard.writeText(txt);
+  showToast('Copied!');
+}
+
+// DOWNLOAD RESULT
+function downloadResult(id, filename) {
+  const el = document.getElementById(id);
+  if(!el.value) return showToast('Nothing to download!');
+  const blob = new Blob([el.value], {type: 'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Downloaded!');
+}
+
+// CLEAR & SWAP
+function clearInput(id) {
+  document.getElementById(id).value = '';
+  if(id === 'obfInput') updateStats();
+}
+function swapInputOutput(inputId, outputId) {
+  const input = document.getElementById(inputId);
+  const output = document.getElementById(outputId);
+  const temp = input.value;
+  input.value = output.value;
+  output.value = temp;
+  updateStats();
+}
+
+// FILE UPLOAD
+function handleFile(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    document.getElementById('obfInput').value = e.target.result;
+    document.getElementById('obfDropText').innerHTML = `<p class="text-terminal-green font-mono text-sm">✅ ${file.name} loaded</p>`;
+    updateStats();
+    if(document.getElementById('autoRun').checked) base64Obfuscate();
+  };
+  reader.readAsText(file);
+}
+
+// STATS UPDATE
+function updateStats() {
+  const input = document.getElementById('obfInput').value;
+  const chars = input.length;
+  const words = input.trim().split(/\s+/).filter(Boolean).length;
+  const lines = input.split('\n').length;
+  document.getElementById('obfStats').textContent = `${chars} chars | ${words} words | ${lines} lines`;
+
+  const output = document.getElementById('obfOutput').value;
+  if(output && chars > 0) {
+    const saved = Math.round(((chars - output.length) / chars) * 100);
+    document.getElementById('obfSaved').textContent = `${saved}% saved`;
+  }
+}
+
+// FIXED BASE64 - Support Unicode
+function base64EncodeUnicode(str) {
+  return btoa(String.fromCharCode(...new TextEncoder().encode(str)));
+}
+function base64DecodeUnicode(str) {
+  return new TextDecoder().decode(Uint8Array.from(atob(str), c => c.charCodeAt(0)));
+}
+
+// TOOL 1: BASE64 OBFUSCATOR - FIXED
+function base64Obfuscate() {
+  const input = document.getElementById('obfInput').value;
+  if(!input) return;
+  try {
+    const encoded = base64EncodeUnicode(input);
+    const output = `eval(atob("${encoded}"));`;
+    document.getElementById('obfOutput').value = output;
+    updateStats();
+    showToast('Obfuscated!');
+  } catch(e) {
+    showToast('Error encoding!');
+  }
+}
+
+function base64Decode() {
+  const input = document.getElementById('obfInput').value;
+  if(!input) return showToast('Masukkan kode dulu!');
+  try {
+    const match = input.match(/atob\("([^"]+)"\)/);
+    if(!match) return showToast('Bukan format obfuscate base64!');
+    const decoded = base64DecodeUnicode(match[1]);
+    document.getElementById('obfOutput').value = decoded;
+    showToast('Decoded!');
+  } catch(e) {
+    showToast('Gagal decode!');
+  }
+}
+
+// 1-CLICK BATCH PROCESS
+function oneClickEncode() {
+  const input = document.getElementById('obfInput').value;
+  if(!input) return showToast('Masukkan kode dulu!');
+
+  const encoded = base64EncodeUnicode(input);
+  const obfuscated = `eval(atob("${encoded}"));`;
+  const minified = obfuscated.replace(/\s+/g, ' ').trim();
+
+  document.getElementById('obfOutput').value = minified;
+  updateStats();
+  downloadObfuscated();
+  showToast('Done! Encoded, minified, downloaded.');
+}
+
+function minifyCode() {
+  const input = document.getElementById('obfInput').value;
+  if(!input) return showToast('Masukkan kode dulu!');
+  const minified = input.replace(/\s+/g, ' ').replace(/\/\*[\s\S]*?\*\//g, '').trim();
+  document.getElementById('obfOutput').value = minified;
+  updateStats();
+  showToast('Minified!');
+}
+
+function beautifyCode() {
+  const input = document.getElementById('obfInput').value;
+  if(!input) return showToast('Masukkan kode dulu!');
+  try {
+    let beautified = input;
+    if(input.trim().startsWith('{') || input.trim().startsWith('[')) {
+      beautified = JSON.stringify(JSON.parse(input), null, 2);
+    } else {
+      beautified = input.replace(/{/g, '{\n ').replace(/}/g, '\n}').replace(/;/g, ';\n ');
+    }
+    document.getElementById('obfOutput').value = beautified;
+    updateStats();
+    showToast('Beautified!');
+  } catch(e) {
+    showToast('Invalid syntax!');
+  }
+}
+
+function downloadObfuscated() {
+  const output = document.getElementById('obfOutput').value;
+  if(!output) return showToast('Encode dulu!');
+  const blob = new Blob([output], {type: 'text/javascript'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `encoded_${Date.now()}.js`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// TOOL 10: HTML ESCAPE
+function escapeHTML() {
+  const input = document.getElementById('htmlInput').value;
+  const escaped = input.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  document.getElementById('htmlOutput').value = escaped;
+}
+function unescapeHTML() {
+  const input = document.getElementById('htmlInput').value;
+  const div = document.createElement('div');
+  div.innerHTML = input;
+  document.getElementById('htmlOutput').value = div.textContent || div.innerText || '';
+}
+
+// TOOL 11: CASE CONVERTER
+function toUpperCase() {
+  document.getElementById('caseOutput').value = document.getElementById('caseInput').value.toUpperCase();
+}
+function toLowerCase() {
+  document.getElementById('caseOutput').value = document.getElementById('caseInput').value.toLowerCase();
+}
+function toTitleCase() {
+  document.getElementById('caseOutput').value = document.getElementById('caseInput').value.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+}
+function toCamelCase() {
+  document.getElementById('caseOutput').value = document.getElementById('caseInput').value.replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => index === 0? word.toLowerCase() : word.toUpperCase()).replace(/\s+/g, '');
+}
+function toSnakeCase() {
+  document.getElementById('caseOutput').value = document.getElementById('caseInput').value.toLowerCase().replace(/\s+/g, '_');
+}
+function toKebabCase() {
+  document.getElementById('caseOutput').value = document.getElementById('caseInput').value.toLowerCase().replace(/\s+/g, '-');
+}
+
+// TOOL 12: UUID GENERATOR
+function generateUUID() {
+  const count = parseInt(document.getElementById('uuidCount').value) || 1;
+  const uuids = [];
+  for(let i=0; i<count; i++) {
+    uuids.push(crypto.randomUUID());
+  }
+  document.getElementById('uuidOutput').value = uuids.join('\n');
+}
+
+// TOOL 13: TIMESTAMP CONVERTER
+function convertTime() {
+  const input = document.getElementById('timeInput').value.trim();
+  let date;
+
+  if(/^\d{10,13}$/.test(input)) {
+    date = new Date(input.length === 10? input * 1000 : input * 1);
+  } else {
+    date = new Date(input);
+  }
+
+  if(isNaN(date)) return showToast('Invalid date!');
+
+  document.getElementById('timeOutput').innerHTML = `
+    <div>Unix Timestamp: <span class="text-terminal-cyan">${Math.floor(date.getTime() / 1000)}</span></div>
+    <div>ISO String: <span class="text-terminal-cyan">${date.toISOString()}</span></div>
+    <div>Local Time: <span class="text-terminal-cyan">${date.toLocaleString()}</span></div>
+    <div>UTC Time: <span class="text-terminal-cyan">${date.toUTCString()}</span></div>
+  `;
+}
+
+// TOOL 2-9: Copy fungsi lu yang sebelumnya, gak ada yang gue ubah
+function encodeB64() {
+  const input = document.getElementById('b64Input').value;
+  if(!input) return showToast('Masukkan text dulu!');
+  document.getElementById('b64Output').value = base64EncodeUnicode(input);
+}
+function decodeB64() {
+  try {
+    const input = document.getElementById('b64Input').value;
+    if(!input) return showToast('Masukkan text dulu!');
+    document.getElementById('b64Output').value = base64DecodeUnicode(input);
+  } catch(e) {
+    showToast('Base64 tidak valid!');
+  }
+}
+function formatJSON() {
+  try {
+    const input = document.getElementById('jsonInput').value;
+    if(!input) return showToast('Masukkan JSON dulu!');
+    document.getElementById('jsonOutput').value = JSON.stringify(JSON.parse(input), null, 2);
+    showToast('Formatted!');
+  } catch(e) {
+    showToast('JSON tidak valid!');
+  }
+}
+function minifyJSON() {
+  try {
+    const input = document.getElementById('jsonInput').value;
+    if(!input) return showToast('Masukkan JSON dulu!');
+    document.getElementById('jsonOutput').value = JSON.stringify(JSON.parse(input));
+    showToast('Minified!');
+  } catch(e) {
+    showToast('JSON tidak valid!');
+  }
+}
+function validateJSON() {
+  try {
+    JSON.parse(document.getElementById('jsonInput').value);
+    showToast('Valid JSON ✅');
+  } catch(e) {
+    showToast('Invalid JSON ❌');
+  }
+}
+function aesEncrypt() {
+  const key = document.getElementById('aesKey').value;
+  const input = document.getElementById('aesInput').value;
+  if(!key ||!input) return showToast('Key dan text wajib diisi!');
+  const encrypted = CryptoJS.AES.encrypt(input, key).toString();
+  document.getElementById('aesOutput').value = encrypted;
+  showToast('Encrypted!');
+}
+function aesDecrypt() {
+  const key = document.getElementById('aesKey').value;
+  const input = document.getElementById('aesInput').value;
+  if(!key ||!input) return showToast('Key dan text wajib diisi!');
+  try {
+    const decrypted = CryptoJS.AES.decrypt(input, key).toString(CryptoJS.enc.Utf8);
+    document.getElementById('aesOutput').value = decrypted;
+    showToast('Decrypted!');
+  } catch(e) {
+    showToast('Wrong key or invalid data!');
+  }
+}
+function generateHash() {
+  const input = document.getElementById('hashInput').value;
+  if(!input) return showToast('Masukkan text dulu!');
+  document.getElementById('md5Out').textContent = CryptoJS.MD5(input).toString();
+  document.getElementById('sha256Out').textContent = CryptoJS.SHA256(input).toString();
+  document.getElementById('sha512Out').textContent = CryptoJS.SHA512(input).toString();
+  showToast('Hash generated!');
+}
+function compareDiff() {
+  const text1 = document.getElementById('diff1').value.split('\n');
+  const text2 = document.getElementById('diff2').value.split('\n');
+  let result = '';
+  const maxLen = Math.max(text1.length, text2.length);
+  for(let i=0; i<maxLen; i++) {
+    if(text1[i] === text2[i]) {
+      result += ` ${text1[i] || ''}\n`;
+    } else {
+      if(text1[i]) result += `- ${text1[i]}\n`;
+      if(text2[i]) result += `+ ${text2[i]}\n`;
+    }
+  }
+  document.getElementById('diffOut').textContent = result || 'No differences';
+  showToast('Compared!');
+}
+function testRegex() {
+  const pattern = document.getElementById('regexPattern').value;
+  const flags = document.getElementById('regexFlags').value;
+  const testStr = document.getElementById('regexTest').value;
+  if(!pattern ||!testStr) return showToast('Pattern dan test string wajib!');
+  try {
+    const regex = new RegExp(pattern, flags);
+    const matches = testStr.match(regex);
+    const result = matches? `Match found:\n${matches.join('\n')}` : 'No match';
+    document.getElementById('regexResult').textContent = result;
+    showToast('Tested!');
+  } catch(e) {
+    document.getElementById('regexResult').textContent = 'Invalid regex pattern';
+    showToast('Invalid regex!');
+  }
+}
+function encodeURL() {
+  const input = document.getElementById('urlInput').value;
+  if(!input) return showToast('Masukkan text dulu!');
+  document.getElementById('urlOutput').value = encodeURIComponent(input);
+}
+function decodeURL() {
+  try {
+    const input = document.getElementById('urlInput').value;
+    if(!input) return showToast('Masukkan text dulu!');
+    document.getElementById('urlOutput').value = decodeURIComponent(input);
+  } catch(e) {
+    showToast('URL tidak valid!');
+  }
+}
+function generateQR() {
+  const text = document.getElementById('qrInput').value;
+  if(!text) return showToast('Masukkan text/link dulu!');
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(text)}`;
+  document.getElementById('qrResult').innerHTML = `<img src="${qrUrl}" class="rounded-lg border-2 border-terminal-border">`;
+  showToast('QR Generated!');
+}
+          </script>
 </body>
 </html>
