@@ -1568,8 +1568,20 @@ function csvToJson() {
 }
 // TIKTOK PREVIEW
 async function getTikTokPreview() {
-  const url = document.getElementById("ttUrl").value.trim();
-  if (!url) return showToast("Masukkan URL dulu!");
+  let url = document.getElementById("ttUrl").value.trim();
+
+  // Kalau input kosong, coba cari link tiktok di seluruh halaman
+  if (!url) {
+    const pageText = document.body.innerText;
+    const match = pageText.match(/https:\/\/(www\.)?tiktok\.com\/[^\s"']+/);
+    if (match) {
+      url = match[0];
+      document.getElementById("ttUrl").value = url; // auto isi biar keliatan
+      showToast("URL TikTok ditemukan, auto isi!");
+    } else {
+      return showToast("Masukkan URL dulu atau paste HTML yang ada link TikToknya!");
+    }
+  }
 
   showToast("Fetching...");
 
