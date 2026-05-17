@@ -19,16 +19,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 
 <script>
-// 1. Sembunyiin body dulu biar ga kedip
 document.documentElement.style.visibility = 'hidden';
 
 (function(){
   const allowed = ["asepxyz12.github.io", "localhost"];
   const loadingEl = document.getElementById('loadingScreen');
   
-  // 2. Cek domain
+  
   if(!allowed.includes(window.location.hostname)){
-    // Kalau gagal, ganti loading jadi "Akses Ditolak"
+    
     if(loadingEl){
       loadingEl.innerHTML = `
         <div style="text-align:center;">
@@ -40,12 +39,12 @@ document.documentElement.style.visibility = 'hidden';
     throw new Error("Domain not allowed");
   }
   
-  // 3. Kalau lolos, sembunyiin loading & munculin body
+  
   window.addEventListener('load', () => {
     setTimeout(() => {
       if(loadingEl) loadingEl.classList.add('hide');
       document.documentElement.style.visibility = 'visible';
-    }, 1200); // 1.2 detik loading biar keliatan keren
+    }, 1200); 
   });
 })();
 
@@ -734,14 +733,14 @@ video::-webkit-media-controls-panel {
 </button>
 
 <script>
-// HIDE LOADING SCREEN
+
 window.addEventListener('load', () => {
   setTimeout(() => {
     document.getElementById('loadingScreen').classList.add('hide');
   }, 2000);
 });
 
-// EFEK SALJU
+
 let snowCount = 0;
 const MAX_SNOW = 25;
 
@@ -768,7 +767,7 @@ function createSnow() {
 }
 setInterval(createSnow, 400);
 
-// DATA PLAYER
+
 const donghuaData = {
   btth: {
     name: "Battle Through the Heavens",
@@ -873,7 +872,7 @@ function loadMusicPlaylist() {
   `).join('');
 }
 
-// PLAY FUNCTIONS
+
 function playDonghua(type, index) {
   currentDonghua = type;
   currentEpisode[type] = index;
@@ -977,7 +976,7 @@ function downloadCurrentMusic() {
   if(item) window.open(item.src, '_blank');
 }
 
-// DOWNLOADER
+
 let currentTab = 'ig';
 function switchTab(tab) {
   currentTab = tab;
@@ -1140,7 +1139,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadMusicPlaylist();
 });
 
-// TYPING ANIMATION
+
 const typingCode = ['// AsepXxnx JS Brain v1.0', '// Generated: 2026-05-15', 'const profile = {', ' name: "AsepXxnx",', ' role: "Full Stack Developer",', ' skills: ["JavaScript", "Node.js", "HTML/CSS", "TailwindCSS"],', ' location: "Indonesia",', ' status: "Online"','};'];
 let lineIndex = 0, charIndex = 0;
 const typingLine = document.getElementById('typingLine');
