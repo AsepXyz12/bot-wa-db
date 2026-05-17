@@ -21,7 +21,7 @@
 <script>
 // === ANTI COPY PROTECTION ===
 const allowedDomain = ["asepxyz12.github.io", "localhost"];
-const allowedURL = "https://asepxyz12.github.io/bot-wa-db/MamakluYtm/Punyaspainijirngentotytmlusemua.com.html";
+const allowedURL = "https://asepxyz12.github.io/bot-wa-db/Asep-Developer/inikahwebnya?.html
 
 document.documentElement.style.visibility = 'hidden';
 
