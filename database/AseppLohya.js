@@ -13816,6 +13816,287 @@ case 'getstatus':
     payreply('Gagal ambil status: ' + e.message)
   }
 break
+
+
+
+
+case 'runhtmlfile': {
+ if (!m.isGroup) return payreply('Menu RUNHTML khusus group 🩸')
+ if (!m.quoted) return payreply(`Reply file.html dulu pake ${prefix}runhtml`)
+
+ try {
+ await Asepp.sendMessage(m.chat, { react: { text: "🚀", key: m.key } })
+
+ let msg = m.quoted.message || m.quoted
+ 
+ const findDoc = (obj) => {
+ if (!obj || typeof obj !== 'object') return null
+ if (obj.documentMessage) return obj.documentMessage
+ if (obj.documentWithCaptionMessage?.message?.documentMessage) return obj.documentWithCaptionMessage.message.documentMessage
+ if (obj.document) return obj.document
+ for (let key in obj) {
+ const result = findDoc(obj[key])
+ if (result) return result
+ }
+ return null
+ }
+
+ const doc = findDoc(msg)
+ if (!doc) return payreply('Gagal: Ga nemu file. Kirim file.html as Document')
+ if (doc.mimetype!== 'text/html' &&!doc.fileName?.toLowerCase().endsWith('.html')) {
+ return payreply(`File harus.html. File lu: ${doc.fileName || doc.mimetype}`)
+ }
+
+ const { downloadContentFromMessage } = require('@whiskeysockets/baileys')
+ const axios = require('axios')
+ 
+ const stream = await downloadContentFromMessage(doc, 'document')
+ let buffer = Buffer.from([])
+ for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk])
+
+ let htmlCode = buffer.toString('utf-8')
+ if (!htmlCode.trim()) throw new Error('File kosong')
+
+ if (!/<html|<DOCTYPE/i.test(htmlCode)) {
+ htmlCode = `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head><body>${htmlCode}</body></html>`
+ }
+
+ const filename = `runhtml_${Date.now()}.html`
+ const path = `hosting/${filename}`
+
+ await axios.put(`https://api.github.com/repos/AsepXyz12/bot-wa-db/contents/${path}`, {
+ message: `RUNHTML by ${pushname}`,
+ content: Buffer.from(htmlCode).toString('base64'),
+ branch: 'main'
+ }, {
+ headers: {
+ "Accept": "application/vnd.github.v3+json"
+ }
+ })
+
+ const link = `https://AsepXyz12.github.io/bot-wa-db/${path}`
+ await Asepp.sendMessage(m.chat, { react: { text: "✅", key: m.key } })
+
+ const groupMetadata = await Asepp.groupMetadata(m.chat)
+ const groupName = groupMetadata.subject || 'Unknown Group'
+ const dateNow = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })
+ const ownerNum = '62881036109288'
+ const ownerJid = `${ownerNum}@s.whatsapp.net`
+
+ let teks = `\`𝗥𝗨𝗡𝗛𝗧𝗠𝗟 𝗥𝗘𝗦𝗨𝗟𝗧\`
+
+Hi \`${pushname}\` 👋 Upload selesai 🩸
+
+⌲ \`𝐈𝐍𝐅𝐎 𝐔𝐏𝐋𝐎𝐀𝐃\`
+┏━━━━━━━━
+┃✦ *Group »* ${groupName}
+┃✦ *File »* ${doc.fileName}
+┃✦ *Size »* ${(doc.fileLength / 1024).toFixed(2)} KB
+┃✦ *Link »* ${link}
+┃✦ *Waktu »* ${dateNow}
+┗━━━━━━━━━━
+
+⌲ \`𝐒𝐓𝐀𝐓𝐔𝐒\`
+✅ HTML berhasil di-host ke GitHub Pages
+\`[洛] 𝐑𝐔𝐍𝐇𝐓𝐌𝐋 𝐋𝐎𝐆 [洛]\`
+Owner : @${ownerNum}
+`
+
+ const { proto, generateWAMessageFromContent } = require('@whiskeysockets/baileys')
+
+ const qkontak = {
+ key: { fromMe: false, participant: `0@s.whatsapp.net`, remoteJid: m.chat },
+ message: { 
+ contactMessage: { 
+ displayName: "RUNHTML System", 
+ vcard: "BEGIN:VCARD\nVERSION:3.0\nN:RUNHTML;System;;;\nFN:RUNHTML System\nEND:VCARD"
+ }
+ }
+ }
+
+ const msgResult = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+ body: proto.Message.InteractiveMessage.Body.create({ text: "" }),
+ footer: proto.Message.InteractiveMessage.Footer.create({ text: teks }),
+ header: proto.Message.InteractiveMessage.Header.create({
+ title: "𝗥𝗨𝗡𝗛𝗧𝗠𝗟 𝗗𝗢𝗡𝗘"
+ }),
+ contextInfo: {
+ mentionedJid: [ownerJid, m.sender],
+ forwardingScore: 999,
+ isForwarded: true
+ },
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "cta_url",
+ buttonParamsJson: JSON.stringify({
+ display_text: "🌐 Buka Link",
+ url: link
+ })
+ },
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© RESULT MENU",
+ sections: [{
+ title: "RUNHTML Log",
+ highlight_label: "𝐒𝐓𝐀𝐓𝐒 📊",
+ rows: [
+ { title: "𝐔𝐥𝐚𝐧𝐠𝐢 𝐔𝐩𝐥𝐨𝐚𝐝", description: `Upload file yang sama lagi`, id: `${prefix}runhtml` }
+ ]
+ }]
+ })
+ }
+ ]
+ })
+ })
+ }
+ }
+ },
+ { quoted: qkontak }
+ )
+
+ await Asepp.relayMessage(m.chat, msgResult.message, { messageId: msgResult.key.id })
+
+ } catch (e) {
+ console.log("Error runhtml:", e)
+ await payreply("❌ Error: " + e.message)
+ }
+}
+break
+
+        case 'getfinalhtml': {
+  if (!text) return payreply(`Masukin link nya bro\nContoh: ${prefix}getfinalhtml https://example.com`)
+
+  const fs = require('fs')
+  const puppeteer = require('puppeteer-extra')
+  const StealthPlugin = require('puppeteer-extra-plugin-stealth')
+  puppeteer.use(StealthPlugin())
+
+  let url = text.trim()
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    url = 'https://' + url
+  }
+
+  const hostname = new URL(url).hostname
+  await Asepp.sendMessage(m.chat, { react: { text: "🌐", key: m.key } })
+
+  const startTime = Date.now()
+  await payreply(`⏳ Launching headless Chrome & render JS...`)
+
+  let browser
+  try {
+    browser = await puppeteer.launch({
+      headless: 'new',
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--no-first-run',
+        '--no-zygote'
+      ]
+    })
+
+    const page = await browser.newPage()
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+    await page.setViewport({ width: 1920, height: 1080 })
+
+    // Blok gambar & font biar lebih cepat
+    await page.setRequestInterception(true)
+    page.on('request', req => {
+      if (['image', 'stylesheet', 'font', 'media'].includes(req.resourceType())) {
+        req.abort()
+      } else {
+        req.continue()
+      }
+    })
+
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 120000 })
+
+    // Scroll dikit biar lazy load jalan
+    await page.evaluate(async () => {
+      await new Promise(resolve => {
+        let totalHeight = 0
+        const distance = 100
+        const timer = setInterval(() => {
+          window.scrollBy(0, distance)
+          totalHeight += distance
+          if (totalHeight >= document.body.scrollHeight) {
+            clearInterval(timer)
+            resolve()
+          }
+        }, 100)
+      })
+    })
+
+    // Tunggu 2 detik buat JS terakhir
+    await new Promise(r => setTimeout(r, 2000))
+
+    const html = await page.evaluate(() => document.documentElement.outerHTML)
+    await browser.close()
+
+    if (!html || html.length < 500) {
+      return payreply(`Gagal ambil HTML. Web ini pakai proteksi bot atau JS error.`)
+    }
+
+    const duration = ((Date.now() - startTime) / 1000).toFixed(1)
+    const dateNow = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })
+    const ownerNum = '62881036109288'
+    const ownerJid = `${ownerNum}@s.whatsapp.net`
+
+    const filePath = `./tmp/getfinalhtml_${Date.now()}.html`
+    if (!fs.existsSync('./tmp')) fs.mkdirSync('./tmp', { recursive: true })
+    fs.writeFileSync(filePath, html)
+
+    let teks = `\`𝗚𝗘𝗧𝗙𝗜𝗡𝗔𝗟𝗛𝗧𝗠𝗟 𝗥𝗘𝗦𝗨𝗟𝗧\`
+
+Hi \`${pushname}\` 👋 Render 100% selesai 🩸
+
+⌲ \`𝐈𝐍𝐅𝐎\`
+┏━━━━━━━━
+┃✦ *URL »* ${url}
+┃✦ *Domain »* ${hostname}
+┃✦ *Size »* ${(html.length / 1024).toFixed(2)} KB
+┃✦ *Engine »* Puppeteer Stealth
+┃✦ *Durasi »* ${duration}s
+┃✦ *Waktu »* ${dateNow}
+┗━━━━━━━━━━
+
+⌲ \`𝐒𝐓𝐀𝐓𝐔𝐒\`
+✅ JS, XHR, Lazy Load ke-render
+✅ Siap jalan offline
+Owner : @${ownerNum}
+`
+
+    await Asepp.sendMessage(m.chat, {
+      document: fs.readFileSync(filePath),
+      fileName: `getfinalhtml_${hostname}.html`,
+      mimetype: 'text/html',
+      contextInfo: {
+        forwardingScore: 999,
+        isForwarded: true,
+        mentionedJid: [ownerJid, m.sender]
+      }
+    }, { quoted: m })
+
+    fs.unlinkSync(filePath)
+
+  } catch (e) {
+    if (browser) await browser.close()
+    console.log("Error getfinalhtml:", e)
+    return payreply(`Gagal bro: ${e.message}\n\nBiasanya kena Cloudflare Turnstile atau server lu gak kuat jalanin Chrome.`)
+  }
+
+} // tutup case
+break
+        
+  
  
 // END TOD
         Asepp.ev.on('messages.upsert', async ({ messages }) => {
