@@ -322,6 +322,121 @@ async function randomNsFw() {
 			})
 		}
 
+        // === FUNCTION INTI ===
+// Taroh di bawah switch case
+async function handleObfuscate(m, mode) {
+  try {
+    await Asepp.sendMessage(m.chat, { react: { text: "🔒", key: m.key } })
+
+    const fs = require("fs")
+    const path = require("path")
+    const obfuscator = require("javascript-obfuscator")
+    const { downloadContentFromMessage } = require('@whiskeysockets/baileys')
+
+    // Cara deteksi file.js yang bener, sama kayak decjs lu
+    const msg = m.quoted.message || m.quoted
+    const doc = msg.documentMessage || msg.documentWithCaptionMessage?.message?.documentMessage || msg.document
+    if (!doc) return payreply('Gagal: Ga nemu file. Kirim file.js as Document')
+    if (!doc.fileName?.endsWith('.js')) return payreply('File harus .js')
+
+    // Download file
+    const stream = await downloadContentFromMessage(doc, 'document')
+    let buf = Buffer.alloc(0)
+    for await (const chunk of stream) buf = Buffer.concat([buf, chunk])
+    let code = buf.toString('utf-8')
+
+    // Parse argumen
+    let args = m.text.split(' ').slice(1)
+    let customPrefix = args.find(a => !a.startsWith('--')) || ''
+    let isSafe = args.includes('--safe')
+    let expArg = args.find(a => a.startsWith('--exp'))
+    let expDate = expArg ? expArg.split('=')[1] || expArg.split(' ')[1] : null
+
+    // Setting obfuscate
+    let options = {
+      compact: true,
+      stringArray: true,
+      stringArrayThreshold: 0.8,
+      renameGlobals: false,
+      rotateStringArray: true,
+      shuffleStringArray: true,
+      splitStrings: true,
+      splitStringsChunkLength: 10,
+    }
+
+    if (mode === 'enc2') {
+      options.controlFlowFlattening = false
+      options.deadCodeInjection = false
+      options.stringArrayEncoding = ['base64']
+    }
+
+    if (mode === 'enc3') {
+      options.controlFlowFlattening = true
+      options.controlFlowFlatteningThreshold = 0.75
+      options.deadCodeInjection = true
+      options.deadCodeInjectionThreshold = 0.4
+      options.stringArrayEncoding = ['base64']
+    }
+
+    if (mode === 'zenc') {
+      options.controlFlowFlattening = true
+      options.controlFlowFlatteningThreshold = 0.75
+      options.deadCodeInjection = false
+      options.stringArrayEncoding = ['none']
+      options.unicodeEscapeSequence = true
+      options.transformObjectKeys = true
+    }
+
+    if (customPrefix) {
+      options.identifierNamesGenerator = 'hexadecimal'
+      options.identifiersPrefix = customPrefix
+    }
+
+    if (isSafe) {
+      options.controlFlowFlattening = false
+      options.deadCodeInjection = false
+      options.transformObjectKeys = false
+    }
+
+    if (expDate) {
+      let parts = expDate.split('-')
+      if (parts.length === 3) {
+        let expTime = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`).getTime()
+        code = `
+(function(){
+  if(Date.now() > ${expTime}){
+    console.log('License Expired')
+    process.exit(1)
+  }
+})();
+${code}`
+      }
+    }
+
+    // Jalankan obfuscate
+    let obfuscated = obfuscator.obfuscate(code, options).getObfuscatedCode()
+
+    // Simpan & kirim
+    const tmpDir = './tmp'
+    if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true })
+    const outPath = path.join(tmpDir, `obf_${doc.fileName}`)
+    fs.writeFileSync(outPath, obfuscated)
+
+    await Asepp.sendMessage(m.chat, { react: { text: "✅", key: m.key } })
+    await Asepp.sendMessage(m.chat, {
+      document: fs.readFileSync(outPath),
+      fileName: `obf_${doc.fileName}`,
+      mimetype: 'text/javascript',
+      caption: `🔒 Selesai Encrypt\nMode: ${mode}\n${customPrefix ? `Prefix: ${customPrefix}\n` : ''}${expDate ? `Exp: ${expDate}\n` : ''}${isSafe ? 'Safe Mode: ON' : ''}`
+    }, { quoted: m })
+
+    fs.unlinkSync(outPath)
+
+  } catch (e) {
+    console.log('Error encrypt:', e)
+    await payreply(`❌ Error: ${e.message}`)
+  }
+}
 // Reply Text
 // Reply Text
 const payreply = async (teks) => {
@@ -1293,6 +1408,26 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm tr
     );
 }
 break;
+        // === ENC2 ===
+case 'enc2': {
+  if (!m.quoted) return payreply(`Reply file.js lalu ketik ${prefix}enc2 [prefix]`)
+  await handleObfuscate(m, 'enc2')
+  break
+}
+
+// === ENC3 ===
+case 'enc3': {
+  if (!m.quoted) return payreply(`Reply file.js lalu ketik ${prefix}enc3 [prefix]`)
+  await handleObfuscate(m, 'enc3')
+  break
+}
+
+// === ZENC ===
+case 'zenc': {
+  if (!m.quoted) return payreply(`Reply file.js lalu ketik ${prefix}zenc [--safe] [--exp DD-MM-YYYY]`)
+  await handleObfuscate(m, 'zenc')
+  break
+}
 case "nsfwmenu": {
     const nowJakarta = moment().tz('Asia/Jakarta');
     await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
@@ -2488,6 +2623,285 @@ case 'tiktok': {
     }
 }
 break;
+case 'dekcjs': {
+  if (!m.quoted) return payreply(`Reply file.js yang mau dibersihin pake ${prefix}decjs`)
+
+  try {
+    await Asepp.sendMessage(m.chat, { react: { text: "🚀", key: m.key } })
+
+    let msg = m.quoted.message || m.quoted
+
+    const findDoc = (obj) => {
+      if (!obj || typeof obj !== 'object') return null
+      if (obj.documentMessage) return obj.documentMessage
+      if (obj.documentWithCaptionMessage?.message?.documentMessage) return obj.documentWithCaptionMessage.message.documentMessage
+      if (obj.document) return obj.document
+      for (let key in obj) {
+        const result = findDoc(obj[key])
+        if (result) return result
+      }
+      return null
+    }
+
+    const doc = findDoc(msg)
+    if (!doc) return payreply('Gagal: Ga nemu file. Kirim file.js as Document')
+    if (!doc.fileName?.endsWith('.js')) return payreply('File harus .js')
+
+    const fs = require("fs");
+    const { downloadContentFromMessage } = require('@whiskeysockets/baileys')
+    
+    // AUTO-INSTALL SEMUA LIBRARY YANG DIBUTUHKAN DI DUNIA JAVASCRIPT
+    try { 
+      require('js-beautify');
+      require('astring');
+      require('acorn');
+    } catch {
+      const { execSync } = require('child_process');
+      execSync('npm install js-beautify astring acorn --no-audit --no-fund');
+    }
+    const beautify = require('js-beautify').js;
+    const acorn = require('acorn');
+    const astring = require('astring');
+    const vm = require('vm');
+
+    // Download file ter-encrypt
+    const stream = await downloadContentFromMessage(doc, 'document')
+    let buffer = Buffer.from([])
+    for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk])
+
+    let code = buffer.toString('utf-8')
+    if (!code.trim()) throw new Error('File kosong')
+
+    // Clean invisible characters bawaan fitur 'ghost' agar teks terbaca normal oleh regex & parser
+    code = code.replace(/[\u200B-\u200D\uFEFF]/g, '');
+
+    // =========================================================================
+    // THE ULTIMATE MULTI-TIER GLOBAL DEOBFUSCATOR ENGINE (DARI TERENDAH - TERTINGGI)
+    // =========================================================================
+    const bypassAndCrackEngine = (sourceCode) => {
+      
+      // -----------------------------------------------------------------------
+      // TIER 1: ENKRIPSI TINGKAT TERENDAH (TEXT ENCODING, PACKER, & ESCAPE STRINGS)
+      // -----------------------------------------------------------------------
+      const decodeLowLevel = (text) => {
+        try {
+          // A. Bersihkan Unicode Escape (\u0061 -> a) & Hex Escape (\x61 -> a) secara massal
+          text = text.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+          text = text.replace(/\\x([0-9a-fA-F]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+          
+          // B. Deteksi dan Bongkar Base64 otomatis di dalam eval/string (contoh: atob("YWJj"))
+          text = text.replace(/(?:atob|Buffer\.from)\s*\(\s*['"`]([A-Za-z0-9+/={}\s]+)['"`]\s*(?:,\s*['"`]base64['"`])?\s*\)/g, (_, b64) => {
+            try { return JSON.stringify(Buffer.from(b64.trim(), 'base64').toString('utf-8')); } catch { return _; }
+          });
+
+          // C. Deteksi dan Bongkar URL/Percent Encoding (contoh: decodeURIComponent("%20"))
+          text = text.replace(/decodeURIComponent\s*\(\s*['"`]([^'"`]+)['"`]\s*\)/g, (_, enc) => {
+            try { return JSON.stringify(decodeURIComponent(enc)); } catch { return _; }
+          });
+
+          // D. Unpack Dean Edwards Packer bawaan web-web lama (eval(function(p,a,c,k,e,d)...))
+          if (text.includes('function(p,a,c,k,e,d)')) {
+            try {
+              const sandbox = { evalOutput: "" };
+              vm.createContext(sandbox);
+              // Manipulasi eval bawaan packer agar mengeluarkan kodenya ke variabel sandbox kita
+              let packerOverride = text.replace(/^eval/, "evalOutput = ");
+              vm.runInContext(packerOverride, sandbox);
+              if (sandbox.evalOutput) text = sandbox.evalOutput;
+            } catch {}
+          }
+
+          // E. Sikat trik manipulasi Boolean khas obfuscator modern
+          text = text.replace(/!!\[\]/g, 'true').replace(/!\[\]/g, 'false');
+          text = text.replace(/!!\{\}/g, 'true').replace(/!\{\}/g, 'false');
+          
+          return text;
+        } catch { return text; }
+      };
+
+      // Eksekusi pembersihan dasar sebelum masuk ke engine berat
+      sourceCode = decodeLowLevel(sourceCode);
+
+
+      // -----------------------------------------------------------------------
+      // TIER 2: ENKRIPSI TINGKAT TERTINGGI (AST TREE PARSING & DYNAMIC VM SANDBOX)
+      // -----------------------------------------------------------------------
+      try {
+        const ast = acorn.parse(sourceCode, { ecmaVersion: 'latest', sourceType: 'script' });
+        const sandbox = {};
+        vm.createContext(sandbox);
+
+        // Isolasi database array string besar dan fungsi pemutar logika (control flow)
+        let extractionCode = "";
+        ast.body.forEach(node => {
+          if (node.type === 'VariableDeclaration' || node.type === 'FunctionDeclaration') {
+            const codeString = astring.generate(node);
+            if (codeString.includes('[') || codeString.includes('function') || codeString.includes('while') || codeString.includes('switch')) {
+              extractionCode += codeString + "\n";
+            }
+          }
+        });
+
+        // Hidupkan database enkripsi di dalam memori VM aman untuk menangkap fungsi penjemput string asli
+        if (extractionCode.trim()) {
+          try { vm.runInContext(extractionCode, sandbox); } catch {}
+
+          // Bedah dan susun ulang struktur pohon logika JavaScript
+          const TololEncResolver = (node) => {
+            if (!node || typeof node !== 'object') return;
+
+            // Bongkar Fungsi Dekoder Kelas Kakap: namaFungsi(0x1b) atau namaFungsi(245)
+            if (node.type === 'CallExpression' && node.callee.type === 'Identifier') {
+              const funcName = node.callee.name;
+              if (sandbox[funcName] && typeof sandbox[funcName] === 'function' && node.arguments.length >= 1) {
+                const arg = node.arguments[0];
+                let val;
+                if (arg.type === 'Literal') val = arg.value;
+                
+                if (val !== undefined) {
+                  try {
+                    const resolvedValue = sandbox[funcName](val);
+                    if (typeof resolvedValue === 'string' || typeof resolvedValue === 'number' || typeof resolvedValue === 'boolean') {
+                      node.type = 'Literal';
+                      node.value = resolvedValue;
+                      node.raw = JSON.stringify(resolvedValue);
+                    }
+                  } catch {}
+                }
+              }
+            }
+
+            // Bongkar Pola Akses Array Langsung Dua Tingkat Khas Mod Menu (seperti kasus Foto 4)
+            if (node.type === 'MemberExpression' && node.object.type === 'Identifier' && node.property.type === 'Literal') {
+              const arrName = node.object.name;
+              const idxValue = node.property.value;
+              if (sandbox[arrName] && Array.isArray(sandbox[arrName])) {
+                const resolvedValue = sandbox[arrName][idxValue];
+                if (resolvedValue !== undefined) {
+                  node.type = 'Literal';
+                  node.value = resolvedValue;
+                  node.raw = JSON.stringify(resolvedValue);
+                }
+              }
+            }
+
+            // Rekursif: Telusuri seluruh rantai kode ke bawah tanpa ada bagian yang terlewat
+            for (let key in node) {
+              if (Array.isArray(node[key])) {
+                node[key].forEach(TololEncResolver);
+              } else if (node[key] && typeof node[key] === 'object') {
+                TololEncResolver(node[key]);
+              }
+            }
+          };
+
+          TololEncResolver(ast);
+          sourceCode = astring.generate(ast); // Rakit kembali kode yang hancur menjadi No-Enc Polos
+        }
+      } catch (astErr) {
+        console.log("AST Engine dilewati, beralih ke Fallback Regex Massal:", astErr);
+      }
+
+
+      // -----------------------------------------------------------------------
+      // TIER 3: ENKRIPSI TINGKAT MENENGAH (REGEX EXTRACTOR & BRUTE-FORCE FALLBACK)
+      // -----------------------------------------------------------------------
+      try {
+        // 1. Ekstrak database array string bawaan regex lama milikmu (Proteksi Cadangan)
+        const arrayRegex = /(?:const|let|var)\s+(_0x[a-f0-9]+)\s*=\s*\[([^\]]+)\];/i;
+        const matchArray = sourceCode.match(arrayRegex);
+        
+        if (matchArray) {
+          const arrayName = matchArray[1];
+          const stringArray = matchArray[2].split(',').map(s => s.trim().replace(/^['"`]|['"`]$/g, ''));
+          
+          // 2. Deteksi fungsi penjemput/decoder string hex asli milikmu
+          const funcRegex = new RegExp(`function\\s+(_0x[a-f0-9]+)\\s*\\(\\s*(_0x[a-f0-9]+)\\s*,\\s*[^)]*\\)\\s*\\{\\s*\\2\\s*=\\s*\\2\\s*-\\s*(0x[0-9a-f]+);`, 'i');
+          const matchFunc = sourceCode.match(funcRegex);
+          
+          if (matchFunc) {
+            const decoderName = matchFunc[1];
+            const offsetValue = parseInt(matchFunc[3], 16);
+
+            const callRegex = new RegExp(`${decoderName}\\s*\\(\\s*(0x[0-9a-f0-9]+|\\d+)\\s*\\)`, 'gi');
+            sourceCode = sourceCode.replace(callRegex, (match, hexIndex) => {
+              const currentIndex = hexIndex.startsWith('0x') ? parseInt(hexIndex, 16) : parseInt(hexIndex, 10);
+              const realIndex = currentIndex - offsetValue;
+              let decodedValue = stringArray[realIndex];
+              
+              if (decodedValue && (decodedValue.includes('\\x') || decodedValue.includes('\\u'))) {
+                try { decodedValue = eval(`"${decodedValue}"`); } catch {}
+              }
+              return JSON.stringify(decodedValue || '');
+            });
+
+            sourceCode = sourceCode.replace(arrayRegex, '').replace(new RegExp(`function\\s+${decoderName}[\\s\\S]*?\\{\\s*return\\s+[^\\}]+\\s*\\}`, 'i'), '');
+          }
+        }
+
+        // 3. Pembersih Massal untuk Tipe Array Kustom Bahasa Manusia (Foto 1 & 3 Cadangan)
+        const globalArrayMatch = sourceCode.match(/(?:const|let|var)\s+([a-zA-Z0-9_$]+)\s*=\s*\[([\s\S]*?)\]\s*;/i);
+        if (globalArrayMatch && !globalArrayMatch[1].startsWith('_0x')) {
+          try {
+            const gArrayName = globalArrayMatch[1];
+            const gItems = eval(`[${globalArrayMatch[2]}]`);
+            for (let d = 0; d < 7; d++) {
+              sourceCode = sourceCode.replace(new RegExp(`${gArrayName}\\s*\\[\\s*(\\d+)\\s*\\]`, 'g'), (_, index) => {
+                return gItems[parseInt(index, 10)] !== undefined ? JSON.stringify(gItems[parseInt(index, 10)]) : _;
+              });
+            }
+          } catch {}
+        }
+      } catch {}
+
+      // Lakukan pembersihan akhir level rendah sekali lagi untuk memastikan tidak ada sisa encoding pasca deobfuscate
+      sourceCode = decodeLowLevel(sourceCode);
+
+      // ==========================================
+      // TAHAP 3: STRIP DATABASE GITHUB & LISENSI
+      // ==========================================
+      sourceCode = sourceCode.replace(/function\s+isBotNumberRegistered\s*\([^)]*\)\s*\{[\s\S]*?\}/gi, 'function isBotNumberRegistered(botNumber){ return true; }');
+      sourceCode = sourceCode.replace(/(?:let|const|var)\s+\w+\s*=\s*['"`]https:\/\/raw\.githubusercontent\.com\/[^'"`]+['"`];?/gi, '');
+      sourceCode = sourceCode.replace(/axios\.(?:get|post)\(['"`]https:\/\/raw\.githubusercontent\.com\/[^'"`]+['"`]\);?/gi, '');
+      sourceCode = sourceCode.replace(/setInterval\s*\(\s*function\s*\(\s*\)\s*\{\s*debugger;?\s*\}\s*,\s*\d+\s*\);?/gi, '');
+      sourceCode = sourceCode.replace(/debugger;?/gi, '');
+
+      return sourceCode;
+    };
+
+    // Eksekusi pemrosesan gabungan semesta enkripsi
+    code = bypassAndCrackEngine(code);
+    
+    // Rapikan baris-baris kode hasil bypass-crack (Unminify)
+    code = beautify(code, { indent_size: 2, space_in_empty_paren: true });
+
+    // Pastikan jika ada error tidak terduga, file tidak tersimpan dalam kondisi kosong 0 KB
+    if (!code || code.trim().length === 0) {
+      throw new Error("Proses bypass gagal menghasilkan output teks kode.");
+    }
+
+    // Menyimpan file output bersih
+    const outPath = `./tmp/clean_${doc.fileName}`
+    fs.mkdirSync('./tmp', { recursive: true })
+    fs.writeFileSync(outPath, code)
+
+    await Asepp.sendMessage(m.chat, { react: { text: "✅", key: m.key } })
+    await Asepp.sendMessage(m.chat, {
+      document: fs.readFileSync(outPath),
+      fileName: `clean_${doc.fileName}`,
+      mimetype: "text/javascript",
+      caption: `👑 THE MASTER-KEY GLOBAL DEOBFUSCATOR 100% 👑\n\n🛡️ Hasil Eksekusi:\n• Dari Enkoding Terendah (Base64, Hex, URL-Enc) sampai Enkripsi Tertinggi (AST Parsing & VM Loop Sandbox) sukses dilibas habis!\n• Kode bersih total, polos asli (No-Enc), dan siap dipakai.`
+    }, { quoted: m })
+
+    fs.unlinkSync(outPath)
+
+  } catch (e) {
+    console.log("Error decjs:", e)
+    await payreply("❌ Error Decoder: " + e.message)
+  }
+  break
+}
+
 
 case "brat": {
     const text = q;
@@ -14765,21 +15179,189 @@ case 'offantitagall': {
  
  payreply('❌ Anti-tagall dimatiin')
 }
+
+
+break
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+case 'getpp': {
+ try {
+
+ const fs = require("fs")
+
+ let args = m.text.trim().split(/ +/).slice(1)
+ let target = null
+
+ // ==============================
+ // PARSING TARGET
+ // ==============================
+
+ if (m.quoted?.sender) {
+ target = m.quoted.sender
+ } else if (m.mentionedJid?.[0]) {
+ target = m.mentionedJid[0]
+ } else if (args[0]) {
+ target = args[0]
+ }
+
+ if (!target)
+ return payreply(`Reply orangnya, tag @orang, atau ${prefix}getpp 628xx`)
+
+ // ==============================
+ // NORMALISASI JID
+ // ==============================
+
+ target = target.replace(/[^0-9]/g, "") + "@s.whatsapp.net"
+
+ // jangan pernah ambil PP bot
+ if (target === Asepp.user.id)
+ return payreply("Tidak bisa ambil PP bot.")
+
+ await Asepp.sendMessage(m.chat, {
+ react: { text: "📸", key: m.key }
+ })
+
+ // ==============================
+ // AMBIL PP TARGET
+ // ==============================
+
+ let pp
+ try {
+ pp = await Asepp.profilePictureUrl(target, "image")
+ } catch (e) {
+ console.log("PP ERROR:", e)
+ return payreply("PP private atau tidak ada.")
+ }
+
+ let userNumber = target.split("@")[0]
+ let senderNumber = m.sender.split("@")[0]
+ let dateNow = new Date().toLocaleString("id-ID", {
+ timeZone: "Asia/Jakarta"
+ })
+
+ const ownerNum = "62881036109288"
+ const ownerJid = ownerNum + "@s.whatsapp.net"
+
+ // ==============================
+ // 1️⃣ KIRIM FOTO TARGET
+ // ==============================
+
+ await Asepp.sendMessage(m.chat, {
+ image: { url: pp },
+ caption: `Nih pp nya @${userNumber}`,
+ mentions: [target]
+ }, { quoted: m })
+
+ await new Promise(r => setTimeout(r, 800))
+
+ // ==============================
+ // 2️⃣ INTERACTIVE MESSAGE
+ // ==============================
+
+ let infoText = `\`𝐇𝐀𝐒𝐈𝐋 𝐆𝐄𝐓𝐏𝐏\`
+
+Hi @${senderNumber} 👋 ini hasil getpp 🩸
+
+⌲ \`𝐈𝐍𝐅𝐎\`
+┏━━━━━━━━
+┃✦ *Case »* getpp
+┃✦ *File »* AseppLohya.js
+┃✦ *Target »* @${userNumber}
+┃✦ *Status »* ✅ Berhasil
+┃✦ *Waktu »* ${dateNow}
+┗━━━━━━━━━━
+
+\`[洛] 𝗞𝗘𝗡𝗔 𝗔𝗠𝗕𝗜𝗟 𝗠𝗜𝗡 [洛]\`
+Owner : @${ownerNum}
+`
+
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+ header: proto.Message.InteractiveMessage.Header.create({
+ title: "𝗚𝗘𝗧 𝗣𝗣 𝗗𝗢𝗡𝗘"
+ }),
+ body: proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+ footer: proto.Message.InteractiveMessage.Footer.create({
+ text: infoText
+ }),
+ contextInfo: {
+ mentionedJid: [target, ownerJid, m.sender]
+ },
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© RESULT MENU",
+ sections: [
+ {
+ title: "Get PP",
+ highlight_label: "𝐏 𝐒𝐓𝐄𝐀𝐋𝐄𝐑 📸",
+ rows: [
+ {
+ title: "𝐋𝐢𝐡𝐚𝐭 𝐏𝐏",
+ description: "Ambil ulang pp",
+ id: `${prefix}getpp ${userNumber}` // kirim nomor saja biar parsing ulang normal
+ }
+ ]
+ }
+ ]
+ })
+ }
+ ]
+ })
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ await Asepp.relayMessage(m.chat, msg.message, {
+ messageId: msg.key.id
+ })
+
+ await new Promise(r => setTimeout(r, 800))
+
+ // ==============================
+ // 3️⃣ MUSIC TERAKHIR
+ // ==============================
+
+ await Asepp.sendMessage(m.chat, {
+ audio: fs.readFileSync("./image/aku?.mp3"),
+ mimetype: "audio/mpeg",
+ ptt: false
+ }, { quoted: m })
+
+ } catch (err) {
+ console.log("GETPP ERROR:", err)
+ await payreply("❌ Error: " + err.message)
+ }
+}
 break
 break
 
 
-
-
-
-
-
-
-
-
-
-
-
+ 
 
   
  
