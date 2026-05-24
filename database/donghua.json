@@ -1,3 +1,12 @@
 {
-  "Donghua": []
+  "Donghua": [
+    {
+      "judul": "BTTH Eps",
+      "ep": "200¹",
+      "url": "https://github.com/AsepXyz12/bot-wa-db/releases/download/donghua_1779626998276/BTTH_Eps_200._1779626998171.mp4",
+      "method": "GitHub Releases",
+      "size": "42.8MB",
+      "date": "2026-05-24T12:50:02.709Z"
+    }
+  ]
 }
