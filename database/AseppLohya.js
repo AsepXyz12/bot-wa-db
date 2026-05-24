@@ -17552,7 +17552,548 @@ case "pornoclose": {
  }
 }
 break
-break;
+
+case 'menudh': {
+
+const axios = require('axios')
+const fs = require('fs')
+
+const sender = m.sender.split('@')[0]
+const GITHUB_OWNER = 'AsepXyz12'
+const GITHUB_REPO = 'bot-wa-db'
+const AKSES_PATH = 'database/akses.json'
+const TANDA_PATH = 'database/tandagc.json'
+
+if (!m.isGroup) return payreply('Menu Donghua khusus group 🩸')
+
+await Asepp.sendMessage(m.chat, {
+ react: {
+  text: '🩸',
+  key: m.key
+ }
+})
+
+let isTagged = false
+
+try {
+ const tandaRes = await axios.get(
+  `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${TANDA_PATH}`
+ )
+
+ const tandaDb = JSON.parse(
+  Buffer.from(
+   tandaRes.data.content,
+   'base64'
+  ).toString()
+ )
+
+ if (tandaDb.list?.some(v => v.id === m.chat)) {
+  isTagged = true
+ }
+} catch {}
+
+if (!isTagged) {
+ return payreply(
+  'Group ini belum ditandai 🩸\nSuruh owner ketik .tandatogc dulu'
+ )
+}
+
+let isOwner = sender === '62881036109288'
+let isMember = false
+let totalAkses = 0
+
+if (!isOwner) {
+ try {
+  const aksesRes = await axios.get(
+   `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${AKSES_PATH}`
+  )
+
+  const aksesDb = JSON.parse(
+   Buffer.from(
+    aksesRes.data.content,
+    'base64'
+   ).toString()
+  )
+
+  totalAkses = aksesDb.akses?.length || 0
+
+  if (aksesDb.akses?.includes(sender)) {
+   isMember = true
+  }
+ } catch {}
+}
+
+let teks = `\`𝗗𝗢𝗡𝗚𝗛𝗨𝗔 𝗠𝗘𝗡𝗨\`
+
+Hi \`${pushname}\` 👋 Pilih donghua di bawah buat liat semua episode. 🩸
+
+⌲ \`𝐋𝐈𝐒𝐓 𝐃𝐎𝐍𝐆𝐇𝐔𝐀\`
+┏━━━━━━━━
+┃1. Perfect World
+┃2. Battle Through The Heavens (BTTH)
+┃3. Renegade Immortal
+┗━━━━━━━━━━
+
+⌲ \`𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍\`
+┏━━━━━━━━
+┃✦ *Status Lu » ${isOwner ? '👑 Super Admin' : isMember ? '✅ Member Akses' : '❌ No Akses'}*
+┃✦ *Total Akses » ${totalAkses} orang*
+┃✦ *Repo » ${GITHUB_OWNER}/${GITHUB_REPO}*
+┗━━━━━━━━━━
+
+\`[洛] 𝐃𝐎𝐍𝐆𝐇𝐔𝐀 𝐒𝐋𝐀𝐘𝐄𝐑 [洛]\`
+`
+
+const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+  viewOnceMessage: {
+   message: {
+    interactiveMessage:
+     proto.Message.InteractiveMessage.create({
+      body: proto.Message.InteractiveMessage.Body.create({
+       text: ''
+      }),
+      footer: proto.Message.InteractiveMessage.Footer.create({
+       text: teks
+      }),
+      header: proto.Message.InteractiveMessage.Header.create({
+       hasMediaAttachment: true,
+       videoMessage: (
+        await prepareWAMessageMedia(
+         {
+          video: {
+           url: 'https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1779595156307.mp4'
+          }
+         },
+         {
+          upload: Asepp.waUploadToServer
+         }
+        )
+       ).videoMessage,
+       gifPlayback: true
+      }),
+      nativeFlowMessage:
+       proto.Message.InteractiveMessage.NativeFlowMessage.create({
+        buttons: [
+         {
+          name: 'single_select',
+          buttonParamsJson: JSON.stringify({
+           title: '© DONGHUA MENU',
+           sections: [
+            {
+             title: 'Pilih Donghua',
+             rows: [
+              {
+               title: '𝐏𝐞𝐫𝐟𝐞𝐜𝐭 𝐖𝐨𝐫𝐥𝐝',
+               description: 'Lihat semua episode PW',
+               id: `${prefix}perfect`
+              },
+              {
+               title: '𝐁𝐓𝐓𝐇',
+               description: 'Lihat semua episode BTTH',
+               id: `${prefix}btth`
+              },
+              {
+               title: '𝐑𝐞𝐧𝐞𝐠𝐚𝐝𝐞 𝐈𝐦𝐦𝐨𝐫𝐭𝐚𝐥',
+               description: 'Lihat semua episode RI',
+               id: `${prefix}renegade`
+              }
+             ]
+            }
+           ]
+          })
+         }
+        ]
+       })
+     })
+   }
+  }
+ },
+ {
+  quoted: m
+ }
+)
+
+await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ {
+  messageId: msg.key.id
+ }
+)
+
+try {
+ await Asepp.sendMessage(
+  m.chat,
+  {
+   audio: fs.readFileSync('./image/donghub.mp3'),
+   mimetype: 'audio/mp4',
+   ptt: false
+  },
+  {
+   quoted: m
+  }
+ )
+} catch (e) {
+ console.log('Gagal kirim audio:', e)
+}
+
+}
+break
+
+case 'btth':
+case 'renegade':
+case 'perfect': {
+const axios = require('axios')
+const { generateWAMessageFromContent, proto } = require('@whiskeysockets/baileys')
+
+if (!m.isGroup) return payreply('Khusus group 🩸')
+
+await Asepp.sendMessage(m.chat, {
+ react: {
+ text: '🩸',
+ key: m.key
+ }
+})
+
+try {
+
+ const DB_PATH = 'database/donghua.json'
+
+ const getRes = await axios.get(
+ `https://api.github.com/repos/AsepXyz12/bot-wa-db/contents/${DB_PATH}`
+ )
+
+ const db = JSON.parse(
+ Buffer.from(
+ getRes.data.content,
+ 'base64'
+ ).toString()
+ )
+
+ let namaDonghua = ''
+
+ if (command === 'btth') {
+ namaDonghua = 'BTTH'
+ } else if (command === 'renegade') {
+ namaDonghua = 'Renegade Immortal'
+ } else {
+ namaDonghua = 'Perfect World'
+ }
+
+ const list = db.Donghua.filter(
+ x =>
+ x.judul &&
+ x.judul.toLowerCase() === namaDonghua.toLowerCase()
+ )
+
+ if (!list.length) {
+ return payreply(`${namaDonghua} belum ada di database 🩸`)
+ }
+
+ const cards = []
+
+ for (const item of list.slice(0, 20)) {
+
+ cards.push({
+ header: proto.Message.InteractiveMessage.Header.fromObject({
+ title:
+`${namaDonghua}
+
+Episode ${item.ep}`,
+ hasMediaAttachment: false
+ }),
+
+ nativeFlowMessage:
+ proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+ buttons: [
+ {
+ name: 'cta_url',
+ buttonParamsJson: JSON.stringify({
+ display_text: `Tonton Episode ${item.ep} 🎬`,
+ url: item.url,
+ merchant_url: item.url
+ })
+ }
+ ]
+ })
+ })
+
+ }
+
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ interactiveMessage:
+ proto.Message.InteractiveMessage.fromObject({
+
+ body:
+ proto.Message.InteractiveMessage.Body.fromObject({
+ text:
+`🎬 *${namaDonghua}*
+
+Total Episode: ${list.length}
+
+Geser ke kanan untuk melihat semua episode 🩸`
+ }),
+
+ footer:
+ proto.Message.InteractiveMessage.Footer.fromObject({
+ text: '© Donghua Manager'
+ }),
+
+ carouselMessage:
+ proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+ cards
+ })
+
+ })
+ },
+ {
+ quoted: m
+ }
+ )
+
+ await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ {
+ messageId: msg.key.id
+ }
+ )
+
+} catch (e) {
+ console.log(e)
+
+ payreply(
+ `Error: ${
+ e.response?.data?.message ||
+ e.message
+ }`
+ )
+}
+
+}
+
+
+
+
+
+
+
+case 'adddonghua': {
+ if (!m.isGroup) return payreply('Fitur ini khusus group 🩸')
+
+ const sender = m.sender.split('@')[0]
+ const GITHUB_OWNER = `AsepXyz12`
+ const GITHUB_REPO = `bot-wa-db`
+ const AKSES_PATH = `database/akses.json`
+ const DB_PATH = `database/donghua.json`
+
+ const axios = require('axios')
+ const fs = require('fs')
+ const FormData = require('form-data')
+ const { downloadContentFromMessage } = require('@whiskeysockets/baileys')
+
+ const headers = {
+ 'User-Agent': 'Asepp-Bot',
+ 'Accept': 'application/vnd.github.v3+json'
+ }
+
+ // Cek akses
+ let isOwner = sender === '62881036109288'
+ let isMember = false
+ if (!isOwner) {
+ try {
+ const aksesRes = await axios.get(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${AKSES_PATH}`, { headers, timeout: 15000 })
+ const aksesDb = JSON.parse(Buffer.from(aksesRes.data.content, 'base64').toString())
+ if (aksesDb.akses?.includes(sender)) isMember = true
+ } catch (e) {}
+ }
+ if (!isOwner &&!isMember) return payreply('Lu ga punya akses GH 🩸')
+
+ if (!m.quoted) return payreply(`Reply video nya dulu 🩸`)
+ if (!m.quoted.mimetype?.startsWith('video')) return payreply(`Itu bukan video 🩸`)
+
+ let input = text.replace(prefix + 'adddonghua', '').trim()
+ if (!input) return payreply(`Format salah 🩸\nContoh: ${prefix}adddonghua BTTH Eps 5`)
+
+ let split = input.split(' ')
+ let ep = split.pop()
+ let judul = split.join(' ')
+
+ payreply(`📥 Download video...`)
+
+ try {
+ // === DOWNLOAD ===
+ const quotedMsg = m.quoted.message || m.quoted.fakeObj?.message || m.message?.extendedTextMessage?.contextInfo?.quotedMessage
+ if (!quotedMsg) return payreply(`❌ Gagal baca message. Kirim ulang video nya.`)
+
+ const messageType = Object.keys(quotedMsg).find(k => k.includes('video'))
+ if (!messageType) return payreply(`❌ Bukan video message.`)
+
+ const stream = await downloadContentFromMessage(quotedMsg[messageType], 'video')
+ let buffer = Buffer.from([])
+ for await (const chunk of stream) {
+ buffer = Buffer.concat([buffer, chunk])
+ }
+
+ if (buffer.length === 0) return payreply(`❌ File kosong.`)
+
+ const fileSizeMB = buffer.length / 1024 / 1024
+ const fileName = `${judul.replace(/\s+/g, '_')}_${ep.replace(/\s+/g, '_')}_${Date.now()}.mp4`
+ const mediaPath = `./tmp/${fileName}`
+
+ if (!fs.existsSync('./tmp')) fs.mkdirSync('./tmp', { recursive: true })
+ fs.writeFileSync(mediaPath, buffer)
+
+ console.log(`[adddonghua] Size: ${fileSizeMB.toFixed(2)}MB`)
+
+ // === UPLOAD KE GITHUB RELEASES - PERMANEN ===
+ payreply(`⚡ ${fileSizeMB.toFixed(1)}MB\nUpload ke GitHub Releases...`)
+
+ // 1. Bikin release kalau belum ada
+ const releaseTag = `donghua_${Date.now()}`
+ const releaseRes = await axios.post(
+ `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/releases`,
+ { tag_name: releaseTag, name: `Donghua ${judul}`, body: `${judul} ${ep}`, draft: false, prerelease: false },
+ { headers }
+ )
+ const uploadUrl = releaseRes.data.upload_url.replace('{?name,label}', `?name=${encodeURIComponent(fileName)}`)
+
+ // 2. Upload asset ke release
+ const assetRes = await axios.post(uploadUrl, fs.createReadStream(mediaPath), {
+ headers: {
+ ...headers,
+ 'Content-Type': 'application/octet-stream',
+ 'Content-Length': fs.statSync(mediaPath).size
+ },
+ timeout: 600000,
+ maxBodyLength: Infinity,
+ maxContentLength: Infinity
+ })
+
+ const finalUrl = assetRes.data.browser_download_url
+ const uploadMethod = 'GitHub Releases'
+
+ // === UPDATE DB ANTI 412 ===
+ payreply(`📝 Update database...`)
+
+ let latestCommitSha = null
+ let baseTreeSha = null
+
+ try {
+ const refRes = await axios.get(
+ `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/ref/heads/main`,
+ { headers, timeout: 20000 }
+ )
+ latestCommitSha = refRes.data.object.sha
+
+ const commitRes = await axios.get(
+ `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/commits/${latestCommitSha}`,
+ { headers, timeout: 20000 }
+ )
+ baseTreeSha = commitRes.data.tree.sha
+
+ } catch (e) {
+ const initBlob = await axios.post(
+ `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/blobs`,
+ { content: JSON.stringify({ Donghua: [] }, null, 2), encoding: 'utf-8' },
+ { headers }
+ )
+
+ const initTree = await axios.post(
+ `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/trees`,
+ { tree: [{ path: DB_PATH, mode: '100644', type: 'blob', sha: initBlob.data.sha }] },
+ { headers }
+ )
+
+ const initCommit = await axios.post(
+ `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/commits`,
+ { message: 'init donghua db', tree: initTree.data.sha },
+ { headers }
+ )
+
+ await axios.post(
+ `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/refs`,
+ { ref: 'refs/heads/main', sha: initCommit.data.sha },
+ { headers }
+ )
+
+ latestCommitSha = initCommit.data.sha
+ baseTreeSha = initTree.data.sha
+ }
+
+ const dbRes = await axios.get(
+ `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${DB_PATH}`,
+ { headers, timeout: 20000 }
+ )
+
+ let db
+ try {
+ db = JSON.parse(Buffer.from(dbRes.data.content, 'base64').toString('utf8'))
+ } catch {
+ db = { Donghua: [] }
+ }
+
+ if (!Array.isArray(db.Donghua)) db.Donghua = []
+
+ db.Donghua.push({
+ judul,
+ ep,
+ url: finalUrl,
+ method: uploadMethod,
+ size: `${fileSizeMB.toFixed(1)}MB`,
+ date: new Date().toISOString()
+ })
+
+ const blobRes = await axios.post(
+ `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/blobs`,
+ { content: JSON.stringify(db, null, 2), encoding: 'utf-8' },
+ { headers }
+ )
+
+ const treeRes = await axios.post(
+ `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/trees`,
+ { base_tree: baseTreeSha, tree: [{ path: DB_PATH, mode: '100644', type: 'blob', sha: blobRes.data.sha }] },
+ { headers }
+ )
+
+ const commitRes = await axios.post(
+ `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/commits`,
+ { message: `adddonghua ${judul} ${ep}`, tree: treeRes.data.sha, parents: [latestCommitSha] },
+ { headers }
+ )
+
+ await axios.patch(
+ `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/refs/heads/main`,
+ { sha: commitRes.data.sha, force: false },
+ { headers }
+ )
+
+ fs.unlinkSync(mediaPath)
+ payreply(`✅ Sukses tambah ${judul} ${ep}\n📊 Size: ${fileSizeMB.toFixed(1)}MB\n📦 Via: ${uploadMethod}\n🔗 ${finalUrl}`)
+
+ } catch (e) {
+ console.log('ERROR FULL:', e)
+ console.log('STATUS :', e.response?.status)
+ console.log('URL :', e.config?.url)
+ console.log('DATA :', JSON.stringify(e.response?.data, null, 2))
+ payreply(`❌ Error ${e.response?.status || ''} di ${e.config?.url}\n${e.response?.data?.message || e.message}`)
+ }
+}
+break
+break
+
+
+
+
+
+
+
+
+
  
 //END TOD
         Asepp.ev.on("messages.upsert", async ({ messages }) => {
