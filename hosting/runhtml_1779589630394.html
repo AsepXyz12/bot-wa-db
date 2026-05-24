@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Sub Nime Station · Anime Hub</title>
+    <!-- Font Awesome 6 (gratis) untuk ikon modern -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Font: Poppins & Inter untuk gaya bersih -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0b0b0f;
+            font-family: 'Inter', sans-serif;
+            color: #f0f3fa;
+            line-height: 1.4;
+            padding: 20px 16px 32px 16px;
+        }
+
+        /* Container mobile-first, max-width 500px terpusat */
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #0f0f14;
+            border-radius: 36px 36px 28px 28px;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            backdrop-filter: blur(0px);
+        }
+
+        /* konten dalam */
+        .main-content {
+            padding: 24px 20px 20px 20px;
+        }
+
+        /* HEADER dengan logo khas */
+        .station-header {
+            margin-bottom: 24px;
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 1.85rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #FFE6B0 0%, #FFA85C 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 3px rgba(0,0,0,0.2);
+        }
+        .logo span {
+            font-weight: 500;
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+            color: #ffb347;
+            font-size: 1.3rem;
+        }
+        .badge-local {
+            background: rgba(255, 165, 80, 0.15);
+            border-radius: 30px;
+            padding: 6px 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #ffb36b;
+            border: 0.5px solid rgba(255, 165, 80, 0.3);
+            backdrop-filter: blur(4px);
+        }
+        .badge-local i {
+            font-size: 0.7rem;
+            margin-right: 4px;
+        }
+
+        /* Search bar */
+        .search-wrapper {
+            margin-bottom: 32px;
+        }
+        .search-box {
+            background: #1e1e28;
+            border-radius: 44px;
+            padding: 6px 6px 6px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #2d2d3a;
+            transition: all 0.2s ease;
+            box-shadow: 0 6px 12px -6px rgba(0,0,0,0.4);
+        }
+        .search-box:focus-within {
+            border-color: #ffaa55;
+            box-shadow: 0 0 0 2px rgba(255, 170, 85, 0.3);
+            background: #23232f;
+        }
+        .search-box input {
+            background: transparent;
+            border: none;
+            padding: 12px 0;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #f0f0f5;
+            width: 100%;
+            outline: none;
+            font-family: 'Inter', monospace;
+        }
+        .search-box input::placeholder {
+            color: #6c6c80;
+            font-weight: 400;
+            letter-spacing: -0.2px;
+        }
+        .search-box button {
+            background: #ff9f4a;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 40px;
+            cursor: pointer;
+            color: #0f0f14;
+            font-size: 1.2rem;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .search-box button:hover {
+            background: #ffb86c;
+            transform: scale(0.97);
+        }
+
+        /* section title */
+        .section-title {
+            font-size: 1.55rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title i {
+            font-size: 1.35rem;
+            color: #ffa459;
+        }
+
+        /* HIGHLIGHT CARD : 2025 + EP 1120 (seperti dalam foto) */
+        .update-highlight {
+            background: linear-gradient(125deg, #21212e 0%, #181822 100%);
+            border-radius: 28px;
+            padding: 20px 18px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 180, 100, 0.25);
+            box-shadow: 0 15px 25px -12px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
+        }
+        .highlight-badge-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .year-badge {
+            background: #ff9f4a20;
+            backdrop-filter: blur(4px);
+            padding: 8px 20px;
+            border-radius: 60px;
+            border-left: 3px solid #ffaa55;
+        }
+        .year-badge .year {
+            font-size: 2rem;
+            font-weight: 800;
+            font-family: 'Poppins', monospace;
+            background: linear-gradient(145deg, #FFCF9A, #FF9F4A);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1;
+        }
+        .ep-highlight {
+            background: #2a2a38;
+            padding: 8px 20px;
+            border-radius: 60px;
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+        .ep-highlight .ep-label {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #bfbfdd;
+        }
+        .ep-highlight .ep-number {
+            font-size: 1.9rem;
+            font-weight: 800;
+            font-family: monospace;
+            letter-spacing: 1px;
+            color: #ffcf8a;
+        }
+        .update-caption {
+            margin-top: 14px;
+            font-size: 0.8rem;
+            color: #aaaacb;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-top: 1px dashed #2f2f3e;
+            padding-top: 12px;
+        }
+        .update-caption i {
+            font-size: 0.8rem;
+            color: #ffaa66;
+        }
+
+        /* Daftar anime cards */
+        .anime-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 36px;
+        }
+        .anime-card {
+            background: #14141e;
+            border-radius: 24px;
+            display: flex;
+            gap: 16px;
+            padding: 12px;
+            transition: all 0.25s;
+            border: 1px solid #262633;
+            backdrop-filter: blur(2px);
+        }
+        .anime-card:hover {
+            background: #1b1b28;
+            border-color: #ffa75340;
+            transform: translateY(-2px);
+        }
+        .card-cover {
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(145deg, #2c2c3a, #1b1b24);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: inset 0 0 2px rgba(255,255,200,0.1), 0 4px 10px rgba(0,0,0,0.3);
+            flex-shrink: 0;
+        }
+        /* cover unik untuk masing-masing */
+        .anime-card:nth-child(1) .card-cover {
+            background: linear-gradient(135deg, #3c2a2a, #231d1d);
+            color: #ffb585;
+        }
+        .anime-card:nth-child(2) .card-cover {
+            background: linear-gradient(135deg, #1e3a3a, #0e2424);
+            color: #ffcf8a;
+        }
+        .card-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .anime-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 8px;
+            letter-spacing: -0.2px;
+            color: #f3ede5;
+        }
+        .anime-meta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .badge-ep {
+            background: #2e2e3e;
+            padding: 4px 12px;
+            border-radius: 30px;
+            color: #ffcc99;
+            font-weight: 600;
+        }
+        .badge-tv {
+            background: #272737;
+            padding: 4px 12px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #bdbde2;
+        }
+        .ongoing-badge {
+            background: #2f3a2c;
+            color: #b8f0a0;
+        }
+        .badge-tv i {
+            font-size: 0.7rem;
+        }
+
+        /* Bottom navigation (NEW, HOME, WHATSAPP, ANIME) */
+        .bottom-nav {
+            background: #0c0c12d9;
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 170, 85, 0.2);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 12px 16px 18px;
+            margin-top: 16px;
+            border-radius: 32px 32px 0 0;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #8f8fab;
+            transition: 0.2s;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 40px;
+        }
+        .nav-item i {
+            font-size: 1.5rem;
+            margin-bottom: 2px;
+        }
+        .nav-item.active {
+            color: #ffae5a;
+            background: #ffa74518;
+        }
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+        .nav-item span {
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+
+        /* tambahan efek hover dan spacing */
+        hr {
+            margin: 8px 0;
+            border-color: #252533;
+        }
+        .extra-meta {
+            font-size: 0.7rem;
+            color: #7f7f99;
+            margin-top: 6px;
+        }
+
+        /* smooth scroll & custom */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #14141e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ffa859;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="main-content">
+        <!-- Header dengan gaya SUB NIME STATION -->
+        <div class="station-header">
+            <div class="logo">
+                SUB NIME <span>STATION</span>
+            </div>
+            <div class="badge-local">
+                <i class="fas fa-globe"></i> anime-db
+            </div>
+        </div>
+
+        <!-- Search bar persis seperti deskripsi -->
+        <div class="search-wrapper">
+            <div class="search-box">
+                <input type="text" placeholder="Search Anime Database..." aria-label="Cari anime">
+                <button aria-label="Cari"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+
+        <!-- LATEST UPDATES section -->
+        <div class="section-title">
+            <i class="fas fa-fire-flame-curved"></i> 
+            LATEST UPDATES
+        </div>
+
+        <!-- ELEMEN 2025 + EP 1120 (highlight persis seperti di foto) -->
+        <div class="update-highlight">
+            <div class="highlight-badge-row">
+                <div class="year-badge">
+                    <div class="year">2025</div>
+                </div>
+                <div class="ep-highlight">
+                    <span class="ep-label"><i class="fas fa-video"></i> EP</span>
+                    <span class="ep-number">1120</span>
+                </div>
+            </div>
+            <div class="update-caption">
+                <i class="fas fa-calendar-week"></i> <span>Seasonal special · Rilis besar tahun 2025</span>
+                <i class="fas fa-arrow-trend-up" style="margin-left:auto;"></i>
+            </div>
+        </div>
+
+        <!-- Daftar anime: Toujima... dan One Piece -->
+        <div class="anime-list">
+            <!-- Card 1: Toujima Tanzaburou wa Kamen Rider Ni Narita! -->
+            <div class="anime-card">
+                <div class="card-cover">
+                    <i class="fas fa-mask"></i>
+                </div>
+                <div class="card-info">
+                    <div class="anime-title">Toujima Tanzaburou wa Kamen Rider Ni Narita!</div>
+                    <div class="anime-meta">
+                        <span class="badge-ep"><i class="fas fa-ticket-alt"></i> 1 EP</span>
+                        <span class="badge-tv"><i class="fas fa-tv"></i> TV</span>
+                    </div>
+                    <div class="extra-meta">
+                        <i class="fas fa-star-of-life"></i> New series • sub indo
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: One Piece -->
+            <div class="anime-card">
+                <div class="card-cover">
+                    <i class="fas fa-ship"></i>
+                </div>
+                <div class="card-info">
+                    <div class="anime-title">One Piece</div>
+                    <div class="anime-meta">
+                        <span class="badge-ep ongoing-badge"><i class="fas fa-infinity"></i> Ongoing</span>
+                        <span class="badge-tv"><i class="fas fa-tv"></i> TV</span>
+                    </div>
+                    <div class="extra-meta">
+                        <i class="fas fa-clock"></i> Episode terbaru: 1122 • Legendaris
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom navigation: NEW, HOME, WHATSAPP, ANIME (sesuai permintaan) -->
+    <div class="bottom-nav">
+        <div class="nav-item">
+            <i class="fas fa-bolt"></i>
+            <span>NEW</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>HOME</span>
+        </div>
+        <div class="nav-item">
+            <i class="fab fa-whatsapp"></i>
+            <span>WHATSAPP</span>
+        </div>
+        <div class="nav-item active">
+            <i class="fas fa-film"></i>
+            <span>ANIME</span>
+        </div>
+    </div>
+    <!-- sedikit sentuhan dekoratif (merek internal) -->
+    <div style="text-align: center; padding: 12px 0 14px; font-size: 10px; color: #4f4f6b; border-top: 0.5px solid #20202a;">
+        <i class="fas fa-database"></i> Sub Nime Station • database episode terbaru
+    </div>
+</div>
+
+<!-- efek interaktif sederhana untuk bottom nav (simulasi active state, fungsional demo) -->
+<script>
+    // navigasi interaktif gaya classic (hanya UI feedback, sesuai foto)
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            navItems.forEach(nav => nav.classList.remove('active'));
+            this.classList.add('active');
+            // optional: memberikan notifikasi ringan di console / non-intrusif
+            const text = this.querySelector('span')?.innerText || 'menu';
+            console.log(`[Sub Nime] navigasi ke: ${text}`);
+        });
+    });
+
+    // tombol search hanya memberikan efek notifikasi ringan (tampilan sesuai)
+    const searchBtn = document.querySelector('.search-box button');
+    const searchInput = document.querySelector('.search-box input');
+    if(searchBtn) {
+        searchBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            let query = searchInput.value.trim();
+            if(query === "") {
+                alert("🔍 Masukkan judul anime di database!");
+            } else {
+                alert(`Mencari: "${query}" di arsip Sub Nime Station ✨`);
+            }
+        });
+    }
+    // tekan enter pada input search juga memicu pencarian
+    if(searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') {
+                e.preventDefault();
+                searchBtn.click();
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
