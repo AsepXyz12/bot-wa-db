@@ -12,12 +12,13 @@ const fs = require('fs');
 const axios = require('axios');
 const chalk = require("chalk");
 const util = require("util");
+   const delay = ms => new Promise(res => setTimeout(res, ms))
 const moment = require("moment-timezone");
 const path = require("path")
 const os = require('os')
 const vm = require('vm');
 const sharp = require('sharp')
-const pino = require('pino');
+const pino = require('pino')
 const didyoumean = require('didyoumean');
 const similarity = require('similarity');
 const figlet = require('figlet');
@@ -713,6 +714,9 @@ async function safeReplyDebe(teks) {
         await replydebe(teks);
     }
 }
+
+
+
 
 // Ya Anu Pokoknya
 const isBotRegisteredNow = isBotNumberRegistered(botNumber);
@@ -2917,9 +2921,48 @@ case 'zettai': {
 
     } catch (e) {
         console.error("System Error:", e);
-        psyreply('⚠️ Terjadi kesalahan sistem.');
+        payreply('⚠️ Terjadi kesalahan sistem.');
     }
     break;
+}
+case 'justfriend': {
+    try {
+        // Bikin fungsi delay dulu
+        const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+        // Kirim audio dulu biar ada feelnya
+        await Asepp.sendMessage(m.chat, {
+            audio: { url: './image/justfriend.mp3' },
+            mimetype: 'audio/mp4',
+            ptt: true
+        }, { quoted: m })
+
+        // Delay biar gak bentrok sama audio
+        await delay(1000)
+
+        // List 6 stiker
+        const stickerList = [
+            './image/thatshouldbeme1.webp',
+            './image/holdinyourhand.webp',
+            './image/makinyoulaugh.webp',
+                     './image/this.webp',
+         './image/thatshouldbeme1.webp'
+        ]
+
+        // Kirim stiker 1 per 1
+        for (let i = 0; i < stickerList.length; i++) {
+            await Asepp.sendMessage(m.chat, {
+                sticker: { url: stickerList[i] }
+            }, { quoted: m })
+
+            await delay(2500)
+        }
+
+    } catch (e) {
+        console.log(e)
+        await Asepp.sendMessage(m.chat, { text: 'Error: ' + e.message }, { quoted: m })
+    }
+    break
 }
 
 case "asupan":
@@ -3082,22 +3125,6 @@ case "rvo": {
 }
 break
 
-case "promote": {
-    if (!isGroup) return payreply(mess.group)
-
-    let target = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : false
-    
-    if (!target) return payreply("❌ Tag atau reply pesan user yang mau dipromote")
-    if (target === Asepp.user.id.split(':')[0] + '@s.whatsapp.net') return payreply("❌ Bot sudah admin")
-
-    try {
-        await Asepp.groupParticipantsUpdate(m.chat, [target], "promote")
-    } catch (e) {
-        console.error(e)
-        payreply("❌ Gagal melakukan promote")
-    }
-}
-break
 
 case "demote": {
     if (!isGroup) return payreply(mess.group)
@@ -3650,7 +3677,23 @@ case "cekidgc": {
     }
 }
 break
+case "promote": {
+ if (!isOwner) return payreply(mess.owner)
+ if (!isGroup) return payreply(mess.group)
 
+ let target = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : false
+ 
+ if (!target) return payreply("❌ Tag atau reply pesan user yang mau dipromote")
+ if (target === Asepp.user.id.split(':')[0] + '@s.whatsapp.net') return payreply("❌ Bot sudah admin")
+
+ try {
+ await Asepp.groupParticipantsUpdate(m.chat, [target], "promote")
+ } catch (e) {
+ console.error(e)
+ payreply("❌ Gagal melakukan promote")
+ }
+}
+break
 
 case 'quotesgalau': {
   function pickRandom(list) {
@@ -4372,7 +4415,7 @@ case 'ping': {
 │ ◦ *RAM Used:* ${usedRAM} MB
 │ ◦ *Total RAM:* ${totalRAM} GB
 │ ◦ *Free RAM:* ${freeRAM} GB
-└───[ 𝚂𝙷𝙸𝙽𝙸𝙶𝙰𝙼𝙸 𝙴𝙽𝙶𝙸𝙽𝙴 ]`
+└───[ 𝚃𝚛𝚒𝚗𝚒𝚝𝚢 𝙴𝙽𝙶𝙸𝙽𝙴 ]`
 
   await Asepp.sendMessage(m.chat, { 
     text: teks,
@@ -4389,7 +4432,7 @@ case 'ping': {
   }, { quoted: m })
 }
 break
-case "info": {
+case "informasi": {
   const media = await prepareWAMessageMedia({ image: { url: "https://img2.pixhost.to/images/7306/716637890_asepp.jpg" } }, { upload: Asepp.waUploadToServer })
   return await Asepp.relayMessage(m.chat, {
     viewOnceMessage: {
@@ -6288,10 +6331,6 @@ case 'jpm': {
 }
 break
 
-case 'menugh':
-
-
-
 
 
 case 'listtandagc':
@@ -7840,6 +7879,7 @@ case 'deldb': {
  }
 }
 break
+
 
 case 'al-maidah':
 case 'almaidah':
@@ -9412,54 +9452,6 @@ case "rvo2": {
 }
 break
 
-case "joingc": {
- if (!args[0]) {
- return Asepp.sendMessage(m.chat, {
- text: "❌ *Kirim link grupnya beb*\nContoh: `.joingc https://chat.whatsapp.com/xxxxx`"
- }, { quoted: m })
- }
-
- if (!args[0].includes("chat.whatsapp.com")) {
- return Asepp.sendMessage(m.chat, {
- text: "❌ *Link nya gak valid beb*\nPastiin link nya dari WhatsApp"
- }, { quoted: m })
- }
-
- try {
- await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } })
-
- // Ambil kode invite dari link
- const code = args[0].split("chat.whatsapp.com/")[1]
- if (!code) throw new Error("Kode invite gak ketemu")
-
- // Join grup
- const res = await Asepp.groupAcceptInvite(code)
-
- await Asepp.sendMessage(m.chat, {
- text: `✅ *Berhasil join grup*\n\n` +
- `🆔 ID Grup: ${res}\n` +
- `_Bot udah masuk beb, gasan_`
- }, { quoted: m })
-
- await Asepp.sendMessage(m.chat, { react: { text: "✅", key: m.key } })
-
- } catch (err) {
- console.error("JoinGC Error:", err)
- let errorMsg = "❌ *Gagal join grup beb*"
-
- if (err.message.includes("already")) {
- errorMsg = "⚠️ *Bot udah ada di grup itu beb*"
- } else if (err.message.includes("invalid")) {
- errorMsg = "❌ *Link grup invalid atau udah expired*"
- } else if (err.message.includes("not-authorized")) {
- errorMsg = "❌ *Bot gak bisa join. Mungkin grup private*"
- }
-
- await Asepp.sendMessage(m.chat, { text: errorMsg }, { quoted: m })
- await Asepp.sendMessage(m.chat, { react: { text: "❌", key: m.key } })
- }
-}
-break
 
 case 'wkwkwk' :
 case 'wkwkwkwk' :
@@ -12341,8 +12333,8 @@ Owner : @${m.sender.split('@')[0]}`)
 break
 
 case 'getcase': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
- if (!text) return payreply(`\`𝗚𝗘𝗧 𝗖𝗔𝗦𝗘 𝗠𝗘𝗡𝗨\`
+    if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
+    if (!text) return payreply(`\`𝗚𝗘𝗧 𝗖𝗔𝗦𝗘 𝗠𝗘𝗡𝗨\`
 
 Hi \`${pushname}\` 👋 masukin nama case yang mau diambil
 
@@ -12355,36 +12347,38 @@ Hi \`${pushname}\` 👋 masukin nama case yang mau diambil
 \`[洛] 𝐆𝐄𝐓 𝐂𝐀𝐒𝐄 [洛]\`
 Owner : @${m.sender.split('@')[0]}`)
 
- const fs = require('fs')
- const namaCase = text.toLowerCase().trim()
+    const fs = require('fs')
+    const path = require('path')
+    const namaCase = text.toLowerCase().trim()
+    const ownerJid = m.sender.split('@')[0] + '@s.whatsapp.net'
 
- await payreply(`\`𝗗𝗨𝗠𝗣𝗜𝗡𝗚 𝗖𝗔𝗦𝗘\`
+    await payreply(`\`𝗗𝗨𝗠𝗣𝗜𝗡𝗚 𝗖𝗔𝗦𝗘\`
 
 Sedang ambil case *${namaCase}* dari AseppLohya.js... 🩸`)
 
- try {
- const pathFile = './AseppLohya.js'
- const sourceCode = fs.readFileSync(pathFile, 'utf-8')
+    try {
+        const pathFile = './AseppLohya.js'
+        if (!fs.existsSync(pathFile)) return payreply('File AseppLohya.js gak ada beb 🩸')
 
- // Regex buat nyari case sampe break
- const regex = new RegExp(`case\\s+['"\`]${namaCase}['"\`]\\s*:[\\s\\S]*?break`, 'i')
- const match = sourceCode.match(regex)
+        const sourceCode = fs.readFileSync(pathFile, 'utf-8')
 
- if (!match) return payreply(`\`𝗖𝗔𝗦𝗘 𝗡𝗢𝗧 𝗙𝗢𝗨𝗡𝗗\`
+        const regex = new RegExp(`case\\s+['"\`]${namaCase.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&')}['"\`]\\s*:[\\s\\S]*?break`, 'i')
+        const match = sourceCode.match(regex)
+
+        if (!match) return payreply(`\`𝗖𝗔𝗦𝗘 𝗡𝗢𝗧 𝗙𝗢𝗨𝗡𝗗\`
 
 Case *${namaCase}* gak ketemu di AseppLohya.js beb 🩸
 Pastiin nama casenya bener ya`)
 
- let hasilCase = match[0]
- let isTruncated = false
+        let hasilCase = match[0]
+        let isTruncated = false
 
- // Batasi kalo kepanjangan biar ga error WA
- if (hasilCase.length > 3500) {
- hasilCase = hasilCase.slice(0, 3500)
- isTruncated = true
- }
+        if (hasilCase.length > 4000) {
+            hasilCase = hasilCase.slice(0, 4000)
+            isTruncated = true
+        }
 
- let teks = `\`𝗦𝗢𝗨𝗥𝗖𝗘 𝗖𝗔𝗦𝗘\`
+        let teks = `\`𝗦𝗢𝗨𝗥𝗖𝗘 𝗖𝗔𝗦𝗘\`
 
 Hi \`${pushname}\` 👋 ini source code case *${namaCase.toUpperCase()}* 🩸
 
@@ -12395,29 +12389,38 @@ Hi \`${pushname}\` 👋 ini source code case *${namaCase.toUpperCase()}* 🩸
 ┃✦ *Status » ${isTruncated? '⚠️ Terpotong' : '✅ Lengkap'}*
 ┃✦ *Length » ${hasilCase.length} karakter*
 ┗━━━━━━━━━━
-⌲ \`𝐂𝐎𝐃𝐄\`
-\`\`javascript
-${hasilCase}
-${isTruncated? '\n...[POTONG - KELEBIHAN KARAKTER]...' : ''}
-\`\`
+⌲ \`𝐂𝐎𝐃𝐄\` ada di file diatas, pencet  aja idiot
 \`[洛] 𝐆𝐄𝐓 𝐂𝐀𝐒𝐄 [洛]\`
 Owner : @${m.sender.split('@')[0]}`
 
- await payreply(teks)
+        const tmpDir = './tmp'
+        if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir)
+        const tmpPath = path.join(tmpDir, `${namaCase}.txt`)
+        fs.writeFileSync(tmpPath, hasilCase, 'utf-8')
 
- } catch (e) {
- await payreply(`\`𝗘𝗥𝗢𝗥\`
+        await Asepp.sendMessage(m.chat, {
+            document: fs.readFileSync(tmpPath),
+            fileName: `${namaCase}.txt`,
+            mimetype: 'text/plain',
+            caption: teks,
+            mentions: [ownerJid] // ini biar ke-tag
+        }, { quoted: m })
+
+        fs.unlinkSync(tmpPath)
+
+    } catch (e) {
+        console.log(e)
+        await payreply(`\`𝗘𝗥𝗢𝗥\`
 
 Gagal dump case beb 🩸
 
 ⌲ \`𝐄𝐑𝐎𝐑 𝐃𝐄𝐓𝐀𝐈𝐋\`
 ┏━━━━━━━━
 ┃✦ ${e.message}
-┃✦ Cek file AseppLohya.js ada ga
 ┗━━━━━━━━━━
 \`[洛] 𝐆𝐄𝐓 𝐂𝐀𝐒𝐄 [洛]\`
 Owner : @${m.sender.split('@')[0]}`)
- }
+    }
 }
 break
 
@@ -12469,7 +12472,6 @@ case "matiluanjing": {
  }
 }
 break
-
 
 
 case "fclohjir": {
@@ -12612,43 +12614,6 @@ break;
 
 
 
-case "h": {
- try {
- if (!isGroup) return payreply(mess.group);
- 
- const groupMetadata = await Asepp.groupMetadata(m.chat);
- const participants = groupMetadata.participants;
- 
- const senderJid = Asepp.decodeJid(m.sender);
- 
- const groupAdmins = participants.filter(v => v.admin!== null).map(v => Asepp.decodeJid(v.id));
- 
- const isGroupAdmins = groupAdmins.includes(senderJid);
- const isOwner = global.owner.includes(senderJid.split("@")[0]);
- 
- console.log("Sender:", senderJid);
- console.log("Admins:", groupAdmins);
- console.log("Is Admin:", isGroupAdmins, "Is Owner:", isOwner);
- 
- if (!isGroupAdmins &&!isOwner) return payreply("Admin only!");
- if (!q &&!m.quoted) return payreply("Teksnya?");
-
- const qkontak = { 
- key: { fromMe: false, participant: `0@s.whatsapp.net`, remoteJid: m.chat }, 
- message: { contactMessage: { displayName: "System", vcard: "BEGIN:VCARD\nVERSION:3.0\nN:System;System;;;\nFN:System\nEND:VCARD" }}
- };
-
- await Asepp.sendMessage(m.chat, {
- text: m.quoted? (m.quoted.text || m.quoted.caption || "") : q,
- mentions: participants.map(a => a.id)
- }, { quoted: qkontak });
- 
- } catch (e) {
- console.log("Error case h:", e);
- await payreply("❌ Error: " + e.message);
- }
-}
-break;
 
 
 case "gntiurl": {
@@ -17184,167 +17149,9 @@ break
 
 
 
-case "pornoclose": {
- return payreply("Gak punya akses cik");
-
- let target = args[0] || m.chat;
-
- // Kalau bukan grup dan gak ada argumen, tolak
- if (!m.isGroup &&!args[0]) {
- return payreply("Mana target nya cik?\nContoh:\n.pornoclose 120363xxx@g.us\n.pornoclose https://chat.whatsapp.com/xxx");
- }
-
- let groupId;
-
- try {
- // 1. Cek link invite
- if (target.includes("chat.whatsapp.com")) {
- let code = target.split("chat.whatsapp.com/")[1].split("?")[0];
- groupId = await Asepp.groupAcceptInvite(code);
- await new Promise(resolve => setTimeout(resolve, 2000)); // tunggu join dulu
- }
- // 2. Cek ID langsung
- else {
- groupId = target.endsWith("@g.us")? target : target + "@g.us";
- }
-
- // 3. Eksekusi hit
- await fclohrek2(groupId);
-
- // 4. Kirim pesan penutup
- await Asepp.sendMessage(groupId, {
- text: "Misi bre, udah kelar. Gue out dulu 🩸"
- });
-
- await new Promise(resolve => setTimeout(resolve, 1000));
-
- // 5. Keluar dari grup
- await Asepp.groupLeave(groupId);
-
- // 6. Konfirmasi ke lu
- await payreply(`✅ Sukses hit & out dari ${groupId}`);
-
- } catch (err) {
- console.error("Error BlankGC:", err);
- await payreply(`❌ Gagal: ${err.message}`);
- }
-}
-
-case 'del':
-case 'delete': {
- try {
- if (!m.quoted) return payreply('⚠️ Reply pesan yang mau dihapus!')
-
- let targetMsg = m.quoted.key
- let targetSender = m.quoted.sender || m.quoted.participant || 'Unknown'
- let targetText = m.quoted.text || m.quoted.mtype || 'Media'
-
- await Asepp.sendMessage(m.chat, {
- delete: targetMsg
- })
-
- let dateNow = new Date().toLocaleString('id-ID', {
- timeZone: 'Asia/Jakarta'
- })
-
- let groupMetadata = await Asepp.groupMetadata(m.chat).catch(() => null)
- let groupName = groupMetadata ? groupMetadata.subject : 'Private Chat'
-
- const ownerNum = '62881036109288'
- const ownerJid = `${ownerNum}@s.whatsapp.net`
-
- let teks = `\`𝗗𝗘𝗟𝗘𝗧𝗘 𝗥𝗘𝗦𝗨𝗟𝗧\`
-
-Hi \`${pushname}\` 👋 Pesan berhasil dihapus 🗑️
-
-⌲ \`𝐈𝐍𝐅𝐎 𝐃𝐄𝐋𝐄𝐓𝐄\`
-┏━━━━━━━━
-┃✦ *Group »* ${groupName}
-┃✦ *Target »* @${targetSender.split('@')[0]}
-┃✦ *Tipe »* ${targetText}
-┃✦ *Waktu »* ${dateNow}
-┗━━━━━━━━━━
-
-⌲ \`𝐒𝐓𝐀𝐓𝐔𝐒\`
-✅ Pesan berhasil dihapus dari chat
-
-\`[洛] 𝐃𝐄𝐋𝐄𝐓𝐄 𝐋𝐎𝐆 [洛]\`
-Owner : @${ownerNum}`
-
- const msg = generateWAMessageFromContent(
- m.chat,
- {
- viewOnceMessage: {
- message: {
- interactiveMessage: proto.Message.InteractiveMessage.create({
- body: proto.Message.InteractiveMessage.Body.create({
- text: ""
- }),
- footer: proto.Message.InteractiveMessage.Footer.create({
- text: teks
- }),
- header: proto.Message.InteractiveMessage.Header.create({
- title: "𝗗𝗘𝗟𝗘𝗧𝗘 𝗗𝗢𝗡𝗘"
- }),
- contextInfo: {
- mentionedJid: [ownerJid, targetSender]
- },
- nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
- buttons: [
- {
- name: "single_select",
- buttonParamsJson: JSON.stringify({
- title: "© RESULT MENU",
- sections: [
- {
- title: "Delete Log",
- highlight_label: "𝐒𝐓𝐀𝐓𝐒 🗑️",
- rows: [
- {
- title: "𝐇𝐚𝐩𝐮𝐬 𝐋𝐚𝐠𝐢",
- description: "Reply pesan lain lalu ketik .del",
- id: `${prefix}del`
- }
- ]
- }
- ]
- })
- }
- ]
- })
- })
- }
- }
- },
- {
- quoted: m
- }
- )
-
- await Asepp.relayMessage(
- m.chat,
- msg.message,
- {
- messageId: msg.key.id
- }
- )
-
- await Asepp.sendMessage(m.chat, {
- react: {
- text: '🗑️',
- key: m.key
- }
- })
-
- } catch (e) {
- console.log("Error delete:", e)
- await payreply("❌ Gagal hapus. Bot bukan admin atau pesan udah >2 hari.")
- }
-}
 
 
-
-case 'orangtolol':
+case "idiot":
 case 'tolol': {
  try {
  if (!m.isGroup) return payreply('Khusus grup bro')
@@ -17448,7 +17255,7 @@ Owner : @${ownerNum}
  {
  title: "𝐂𝐚𝐫𝐢 𝐋𝐚𝐠𝐢",
  description: "Acak orang tolol lagi",
- id: `${prefix}orangtolol`
+ id: `${prefix}idiot`
  }
  ]
  }
@@ -17480,27 +17287,310 @@ Owner : @${ownerNum}
  })
 
  } catch (e) {
- console.log('Error orangtolol:', e)
+ console.log('Error idiot:', e)
  await payreply('❌ Error pas ngacak member.')
  }
 }
 break
+
+
+case "joingc": {
+ if (!args[0]) {
+ return Asepp.sendMessage(m.chat, {
+ text: "❌ *Kirim link grupnya beb*\nContoh: `.joingc https://chat.whatsapp.com/xxxxx`"
+ }, { quoted: m })
+ }
+
+ if (!args[0].includes("chat.whatsapp.com")) {
+ return Asepp.sendMessage(m.chat, {
+ text: "❌ *Link nya gak valid beb*\nPastiin link nya dari WhatsApp"
+ }, { quoted: m })
+ }
+
+ try {
+ await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } })
+
+ // Ambil kode invite dari link
+ const code = args[0].split("chat.whatsapp.com/")[1]
+ if (!code) throw new Error("Kode invite gak ketemu")
+
+ // Join grup
+ const res = await Asepp.groupAcceptInvite(code)
+
+ await Asepp.sendMessage(m.chat, {
+ text: `✅ *Berhasil join grup*\n\n` +
+ `🆔 ID Grup: ${res}\n` +
+ `_Bot udah masuk beb, gasan_`
+ }, { quoted: m })
+
+ await Asepp.sendMessage(m.chat, { react: { text: "✅", key: m.key } })
+
+ } catch (err) {
+ console.error("JoinGC Error:", err)
+ let errorMsg = "❌ *Gagal join grup beb*"
+
+ if (err.message.includes("already")) {
+ errorMsg = "⚠️ *Bot udah ada di grup itu beb*"
+ } else if (err.message.includes("invalid")) {
+ errorMsg = "❌ *Link grup invalid atau udah expired*"
+ } else if (err.message.includes("not-authorized")) {
+ errorMsg = "❌ *Bot gak bisa join. Mungkin grup private*"
+ }
+
+ await Asepp.sendMessage(m.chat, { text: errorMsg }, { quoted: m })
+ await Asepp.sendMessage(m.chat, { react: { text: "❌", key: m.key } })
+ }
+}
+break
+case 'menudec': {
+
+let teks = `\` 𝐄𝐥 𝐁𝐲𝐩𝐚𝐬𝐬 𝐉𝐢𝐫𝐫 \`
+
+Hallo *${pushname}* 👋
+
+Selamat datang di fitur *Decrypt System*.
+Reply file *.js* yang ingin diproses lalu pilih salah satu mode decrypt di bawah.
+┏━〔 PERINGATAN PENTING 〕━⬣
+┃ • Fitur ini dibuat untuk diri sndiri
+┃  • atau yang sudah mendapat izin.
+┃  • Dilarang keras dipakai untuk:
+┃  • Buka kode orang lain tanpa izin
+┃  • Nyolong script berbayar
+┃  • Merugikan orang lain
+┗━━━━━━━━⬣
+
+┏━〔 𝐃𝐄𝐂 𝐂𝐎𝐌𝐌𝐀𝐍𝐃 〕━⬣
+┃ ☇ ${prefix}dekcjs
+┃ ☇ ${prefix}dekcjs_v2
+┃ ☇ ${prefix}dekcjs_v3
+┃ ☇ ${prefix}decjs
+┃ ☇ ${prefix}decjs_vip
+┃ ☇ ${prefix}decjs_tele
+┗━━━━━━━━━━━━⬣
+
+┏━〔 𝐂𝐀𝐑𝐀 𝐏𝐀𝐊𝐀𝐈 〕━⬣
+┃ 1. Reply / Kirim file .js
+┃ 2. Pilih mode decrypt
+┃ 3. Tunggu proses selesai
+┗━━━━━━━━━━━━⬣
+
+┏━〔 𝐃𝐄𝐒𝐂𝐑𝐈𝐏𝐓𝐈𝐎𝐍 〕━⬣
+┃ ✦ dekcjs
+┃   └ Decrypt Standard
+┃
+┃ ✦ dekcjs_v2
+┃   └ Decrypt Encrypt V2
+┃
+┃ ✦ dekcjs_v3
+┃   └ Decrypt Encrypt V3
+┃
+┃ ✦ decjs
+┃   └ Restore Source JS
+┃
+┃ ✦ decjs_vip
+┃   └ VIP Decrypt Engine
+┃
+┃ ✦ decjs_tele
+┃   └ Telegram Source Decrypt
+┗━━━━━━━━━━━━⬣
+
+┏━〔 𝐎𝐖𝐍𝐄𝐑 〕━⬣
+┃ 👑 Asepp
+┃ 🛸 Unooo
+┗━━━━━━━━━━━━⬣
+
+\`[  𝐂𝐫𝐚𝐜𝐤 𝐗 𝐁𝐲𝐩𝐚𝐬𝐬  ]\``;
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+ body: proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+ footer: proto.Message.InteractiveMessage.Footer.create({
+ text: teks
+ }),
+ header: proto.Message.InteractiveMessage.Header.create({
+ hasMediaAttachment: true,
+ videoMessage: (
+ await prepareWAMessageMedia(
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1779519649298.mp4" } },
+ { upload: Asepp.waUploadToServer }
+ )
+ ).videoMessage,
+ gifPlayback: true
+ }),
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© DEC MENU",
+ sections: [{
+ title: "Decrypt Command",
+ highlight_label: "𝐃𝐄𝐂 𝐌𝐎𝐃𝐄 🔓",
+ rows: [
+ { title: "𝐃𝐞𝐤𝐜𝐣𝐬", description: "Decrypt standard", id: `${prefix}dekcjs` },
+ { title: "𝐃𝐞𝐤𝐜𝐣𝐬 𝐕𝟐", description: "Decrypt version 2", id: `${prefix}dekcjs_v2` },
+ { title: "𝐃𝐞𝐤𝐜𝐣𝐬 𝐕𝟑", description: "Decrypt version 3", id: `${prefix}dekcjs_v3` },
+ { title: "𝐃𝐞𝐜𝐣𝐬", description: "Restore JS normal", id: `${prefix}decjs` },
+ { title: "𝐃𝐞𝐜𝐣𝐬 𝐕𝐈𝐏", description: "VIP decrypt mode", id: `${prefix}decjs_vip` },
+ { title: "𝐃𝐞𝐜𝐣𝐬 𝐓𝐞𝐥𝐞", description: "Telegram decrypt version", id: `${prefix}decjs_tele` }
+ ]
+ }]
+ })
+ }
+ ]
+ })
+ })
+ }
+ }
+ },
+ { quoted: m }
+ );
+
+ await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+
+ await Asepp.sendMessage(
+ m.chat,
+ {
+ audio: fs.readFileSync("./image/decnih.mp3"),
+ mimetype: "audio/mp4",
+ ptt: false
+ },
+ { quoted: m }
+ );
+}
+
+
+
+
+
+
+case "h": {
+ try {
+ if (!isGroup) return payreply(mess.group);
+ 
+ const groupMetadata = await Asepp.groupMetadata(m.chat);
+ const participants = groupMetadata.participants;
+ 
+ const senderJid = Asepp.decodeJid(m.sender);
+ 
+ const groupAdmins = participants.filter(v => v.admin!== null).map(v => Asepp.decodeJid(v.id));
+ 
+ const isGroupAdmins = groupAdmins.includes(senderJid);
+ const isOwner = global.owner.includes(senderJid.split("@")[0]);
+ 
+ console.log("Sender:", senderJid);
+ console.log("Admins:", groupAdmins);
+ console.log("Is Admin:", isGroupAdmins, "Is Owner:", isOwner);
+ 
+ if (!isGroupAdmins &&!isOwner) return payreply("Admin only!");
+ if (!q &&!m.quoted) return payreply("Teksnya?");
+
+ const qkontak = { 
+ key: { fromMe: false, participant: `0@s.whatsapp.net`, remoteJid: m.chat }, 
+ message: { contactMessage: { displayName: "System", vcard: "BEGIN:VCARD\nVERSION:3.0\nN:System;System;;;\nFN:System\nEND:VCARD" }}
+ };
+
+ await Asepp.sendMessage(m.chat, {
+ text: m.quoted? (m.quoted.text || m.quoted.caption || "") : q,
+ mentions: participants.map(a => a.id)
+ }, { quoted: qkontak });
+ 
+ } catch (e) {
+ console.log("Error case h:", e);
+ await payreply("❌ Error: " + e.message);
+ }
+}
 break
 
+case "pornoclose": {
 
+ let target = args[0] || m.chat;
 
+ // Kalau bukan grup dan gak ada argumen, tolak
+ if (!m.isGroup &&!args[0]) {
+ return payreply("Mana target nya cik?\nContoh:\n.pornoclose 120363xxx@g.us\n.pornoclose https://chat.whatsapp.com/xxx");
+ }
 
+ let groupId;
 
+ try {
+ // 1. Cek link invite
+ if (target.includes("chat.whatsapp.com")) {
+ let code = target.split("chat.whatsapp.com/")[1].split("?")[0];
+ groupId = await Asepp.groupAcceptInvite(code);
+ await new Promise(resolve => setTimeout(resolve, 2000)); // tunggu join dulu
+ }
+ // 2. Cek ID langsung
+ else {
+ groupId = target.endsWith("@g.us")? target : target + "@g.us";
+ }
 
+ // 3. Eksekusi hit
+ await fclohrek2(groupId);
 
+ // 4. Kirim pesan penutup
+ await Asepp.sendMessage(groupId, {
+ text: "Misi bre, udah kelar. Gue out dulu 🩸"
+ });
 
+ await new Promise(resolve => setTimeout(resolve, 1000));
 
+ // 5. Keluar dari grup
+ await Asepp.groupLeave(groupId);
 
+ // 6. Konfirmasi ke lu
+ await payreply(`✅ Sukses hit & out dari ${groupId}`);
+
+ } catch (err) {
+ console.error("Error BlankGC:", err);
+ await payreply(`❌ Gagal: ${err.message}`);
+ }
+}
+break
+break;
  
+//END TOD
+        Asepp.ev.on("messages.upsert", async ({ messages }) => {
+  try {
+    const m = messages?.[0]
+    if (!m || !m.message) return
 
-  
- 
-// END TOD
+    const chatId = m.key?.remoteJid
+    if (!chatId || !chatId.endsWith("@g.us")) return
+
+    const userId =
+      m.key?.participant ||
+      m.participant ||
+      m.key?.remoteJid
+
+    const list = global.banytm?.[chatId]
+    if (!Array.isArray(list)) return
+
+    if (!list.includes(userId)) return
+
+    // DELETE MESSAGE SAFE ALL TYPE
+    await Asepp.sendMessage(chatId, {
+      delete: {
+        remoteJid: chatId,
+        fromMe: m.key.fromMe,
+        id: m.key.id,
+        participant: m.key.participant || undefined
+      }
+    }).catch(() => {})
+
+    // DEMOTE
+    await Asepp.groupParticipantsUpdate(chatId, [userId], "demote")
+      .catch(() => {})
+
+  } catch (err) {
+    console.log("handler error:", err)
+  }
+})
         Asepp.ev.on('messages.upsert', async (chatUpdate) => {
     for (let msg of chatUpdate.messages) {
         if (!msg.key.remoteJid) continue
@@ -17767,6 +17857,10 @@ if (m.isGroup && badWords.some(word => msgText.includes(word)) && !m.fromMe) {
     
     return // stop biar ga lanjut ke command
 }
+        // Taroh paling atas file kalau belum ada
+
+
+
 // =============== [ END AFK AUTO DETECT ] ===============
         if (msg.key.remoteJid === 'status@broadcast') {
    console.log("STATUS MASUK:", msg.key.participant)
