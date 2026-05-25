@@ -200,6 +200,66 @@ if (m.message) {
     }
     console.log();
 }
+        // === HANDLER LIST SELECTION - TAROH PALING ATAS ===
+let selectedId = null
+
+// Tipe 1: List Message
+if (m.message?.listResponseMessage?.singleSelectReplyMessage?.selectedRowId) {
+  selectedId = m.message.listResponseMessage.singleSelectReplyMessage.selectedRowId
+}
+
+// Tipe 2: Interactive Message / single_select button
+if (m.message?.interactiveResponseMessage?.nativeFlowResponseMessage?.paramsJson) {
+  try {
+    const params = JSON.parse(m.message.interactiveResponseMessage.nativeFlowResponseMessage.paramsJson)
+    selectedId = params.id
+  } catch (e) {}
+}
+
+// Kalau ada yang pilih episode
+if (selectedId && selectedId.startsWith('sendvid_')) {
+  const match = selectedId.match(/sendvid_(btth|renegade|perfect)_(\d+)/)
+  if (!match) return
+
+  console.log('DEBUG SELECTED:', selectedId)
+
+  const [, cmd, rawEps] = match
+  const eps = rawEps.replace(/\D/g, '') // bersihin jadi angka aja
+  const key = `${m.chat}_${cmd}`
+  const list = global.donghuaList?.[key]
+
+  if (!list) {
+    await Asepp.sendMessage(m.chat, { text: 'Data expired. Ketik ulang.btth 👑' }, { quoted: m })
+    return
+  }
+
+  console.log('CARI EPS:', eps, 'DARI LIST:', list.map(x => x.ep))
+
+  const data = list.find(x => String(x.ep).replace(/\D/g, '') === eps)
+  if (!data) {
+    await Asepp.sendMessage(m.chat, { text: 'Episode gak ketemu 👑' }, { quoted: m })
+    return
+  }
+
+  await Asepp.sendMessage(m.chat, { react: { text: '⏳', key: m.key } })
+
+  try {
+    await Asepp.sendMessage(m.chat, {
+      video: { url: data.url },
+      caption: `🎬 ${data.judul} - Episode ${data.ep}`,
+      jpegThumbnail: data.thumbnail? await (await fetch(data.thumbnail)).arrayBuffer() : undefined
+    }, { quoted: m })
+
+    await Asepp.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
+  } catch (e) {
+    console.log('ERROR SEND VIDEO:', e)
+    await Asepp.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
+    await Asepp.sendMessage(m.chat, { text: 'Gagal kirim video. File >64MB atau link mati.' }, { quoted: m })
+  }
+  return // stop biar gak masuk switch
+}
+// === END HANDLER ===
+
 async function tiktokDownloader(url) {
     try {
         const { data } = await axios.post(
@@ -232,7 +292,7 @@ async function tiktokDownloader(url) {
 function getGreeting(hour) {
   if (hour >= 0 && hour < 5) return "Late Night 🌌";
   else if (hour >= 5 && hour < 10) return "Good Morning 🌅";
-  else if (hour >= 10 && hour < 15) return "Good Noon 🩸️";
+  else if (hour >= 10 && hour < 15) return "Good Noon 👑️";
   else if (hour >= 15 && hour < 18) return "Good Afternoon 🌇";
   else if (hour >= 18 && hour < 19) return "Good Evening 🌆";
   else if (hour >= 19 && hour < 23) return "Good Night 🌃";
@@ -748,7 +808,7 @@ switch (command) {
 case "V1":
 case "menu": {
     const nowJakarta = moment().tz('Asia/Jakarta');
-    await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
+    await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } });
 
     let teks = `\`𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
     
@@ -873,7 +933,7 @@ break;
 
 case "bugmenu": {
     const nowJakarta = moment().tz('Asia/Jakarta');
-    await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
+    await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } });
 
     let teks = `\`𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
     
@@ -1022,7 +1082,7 @@ break;
 
 case "ownermenu": {
     const nowJakarta = moment().tz('Asia/Jakarta');
-    await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
+    await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } });
 
     let teks = `\`𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
     
@@ -1145,7 +1205,7 @@ break;
     
 case "funmenu": {
     const nowJakarta = moment().tz('Asia/Jakarta');
-    await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
+    await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } });
 
     let teks = `\`𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
     
@@ -1840,7 +1900,7 @@ case 'dekcjs_v2': {
 }
 case "cpanelmenu": {
     const nowJakarta = moment().tz('Asia/Jakarta');
-    await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
+    await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } });
 
     let teks = `\`𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
     
@@ -1990,7 +2050,7 @@ case 'zenc': {
 }
 case "nsfwmenu": {
     const nowJakarta = moment().tz('Asia/Jakarta');
-    await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
+    await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } });
 
     let teks = `\`𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
     
@@ -2118,7 +2178,7 @@ break;
 
 
 case "tqto": {
-await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
+await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } });
 let teks = `〘 Thanks To Support 〙
 𝐀𝐥𝐥𝐚𝐡 𝐒𝐰𝐭 𝐒𝐚𝐧𝐠 𝐏𝐞𝐧𝐜𝐢𝐩𝐭𝐚 𝐀𝐥𝐚𝐦 👑
 Wahyu ϟ Owner
@@ -2222,7 +2282,7 @@ Raza  ϟ [ Freind ]
 }
 break;
 case "owner": {
-await Asepp.sendMessage(m.chat, { react: { text: "🩸",key: m.key,}}); 
+await Asepp.sendMessage(m.chat, { react: { text: "👑",key: m.key,}}); 
 let imgsc = await prepareWAMessageMedia({ image: fs.readFileSync("./image/AsepIkiCok.jpg") }, { upload: Asepp.waUploadToServer })
 const msgii = await generateWAMessageFromContent(m.chat, {
 ephemeralMessage: {
@@ -2278,7 +2338,7 @@ break
 
 case 'script':
 case 'sc': {
-await Asepp.sendMessage(m.chat, { react: { text: "🩸",key: m.key,}}); 
+await Asepp.sendMessage(m.chat, { react: { text: "👑",key: m.key,}}); 
 let teks = ` Hai Kak ${pushname} Tertarik Dengan Script trinity? 
 Kalo ingin membeli bisa langsung chat owner bot ya
 
@@ -5550,7 +5610,7 @@ url: qrisUrl
 name: "cta_url",
 buttonParamsJson: JSON.stringify({
 display_text: "📞 Konfirmasi Owner",
-url: `https://wa.me/${ownerWa}?text=*KONFIRMASI%20PEMBAYARAN*%0A%0AHalo%20bang,%20aku%20udah%20TF%20nih%0A%0A*Detail:*%0A➥ Dari: @${m.sender.split('@')[0]}%0A➥ Tujuan: DANA%20${nomorDana}%0A%0AMohon%20dicek%20ya%20🩸`
+url: `https://wa.me/${ownerWa}?text=*KONFIRMASI%20PEMBAYARAN*%0A%0AHalo%20bang,%20aku%20udah%20TF%20nih%0A%0A*Detail:*%0A➥ Dari: @${m.sender.split('@')[0]}%0A➥ Tujuan: DANA%20${nomorDana}%0A%0AMohon%20dicek%20ya%20👑`
 })
 }
 ]
@@ -5570,7 +5630,7 @@ break
 case 'listtrinity': {
  const { prepareWAMessageMedia, generateWAMessageFromContent, proto } = require("@whiskeysockets/baileys")
 
- await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } })
+ await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } })
 
  // --- KONFIGURASI ---
  const qrisUrl = "https://litter.catbox.moe/0qdy1e.jpeg"
@@ -5590,7 +5650,7 @@ case 'listtrinity': {
  name: "cta_url",
  buttonParamsJson: JSON.stringify({
  display_text: "💬 Order " + title,
- url: `https://wa.me/${ownerWa}?text=${encodeURIComponent(`*ORDER SHINIGAMI*\n\nHalo bang, mau order:\n➥ Title: ${title}\n➥ Dari: @${m.sender.split('@')[0]}\n\nMohon info payment🩸`)}`,
+ url: `https://wa.me/${ownerWa}?text=${encodeURIComponent(`*ORDER SHINIGAMI*\n\nHalo bang, mau order:\n➥ Title: ${title}\n➥ Dari: @${m.sender.split('@')[0]}\n\nMohon info payment👑`)}`,
  merchant_url: "https://google.com"
  })
  },
@@ -5625,7 +5685,7 @@ case 'listtrinity': {
  name: "cta_url",
  buttonParamsJson: JSON.stringify({
  display_text: "✅ Konfirmasi Bayar",
- url: `https://wa.me/${ownerWa}?text=${encodeURIComponent(`*KONFIRMASI BAYAR SHINIGAMI*\n\nBang udah TF nih\n➥ Dari: @${m.sender.split('@')[0]}\n➥ Tujuan: DANA ${nomorDana}\n➥ Title: Isi title yang di order\n\nCek ya🩸\n\n_Note: Kirim bukti TF setelah ini_`)}`,
+ url: `https://wa.me/${ownerWa}?text=${encodeURIComponent(`*KONFIRMASI BAYAR SHINIGAMI*\n\nBang udah TF nih\n➥ Dari: @${m.sender.split('@')[0]}\n➥ Tujuan: DANA ${nomorDana}\n➥ Title: Isi title yang di order\n\nCek ya👑\n\n_Note: Kirim bukti TF setelah ini_`)}`,
  merchant_url: "https://google.com"
  })
  }
@@ -5647,7 +5707,7 @@ case 'listtrinity': {
  // --- SLIDE 2: PAYMENT ---
  {
  header: proto.Message.InteractiveMessage.Header.fromObject({
- title: `𝙋𝙖𝙮𝙢𝙚𝙣𝙩 𝙎𝙝𝙞𝙣𝙞𝙜𝙖𝙢𝙞\n━━━━━━━━━━━━━━\n📱 *DANA*\n➤ Nomor : ${nomorDana}\n➤ A/N : ${namaDana}\n\n🧾 *QRIS*\n➤ Scan QR di atas\n➤ All Bank & E-Wallet\n➤ Proses 1-5 Menit\n\n⚠️ *CARA BAYAR:*\n1. TF sesuai nominal\n2. Screenshot bukti\n3. Klik "Konfirmasi Bayar"\n4. Kirim bukti ke owner\n\n❗*FORMAT KONFIRMASI:*\n*KONFIRMASI BAYAR SHINIGAMI*\n\nBang udah TF nih\n➥ Dari: @${m.sender.split('@')[0]}\n➥ Tujuan: DANA ${nomorDana}\n➥ Title: Isi title yang di order\n\nCek ya🩸\n\n_Note: Otomatis keisi pas klik tombol_\n━━━━━━━━━━━━━━`,
+ title: `𝙋𝙖𝙮𝙢𝙚𝙣𝙩 𝙎𝙝𝙞𝙣𝙞𝙜𝙖𝙢𝙞\n━━━━━━━━━━━━━━\n📱 *DANA*\n➤ Nomor : ${nomorDana}\n➤ A/N : ${namaDana}\n\n🧾 *QRIS*\n➤ Scan QR di atas\n➤ All Bank & E-Wallet\n➤ Proses 1-5 Menit\n\n⚠️ *CARA BAYAR:*\n1. TF sesuai nominal\n2. Screenshot bukti\n3. Klik "Konfirmasi Bayar"\n4. Kirim bukti ke owner\n\n❗*FORMAT KONFIRMASI:*\n*KONFIRMASI BAYAR SHINIGAMI*\n\nBang udah TF nih\n➥ Dari: @${m.sender.split('@')[0]}\n➥ Tujuan: DANA ${nomorDana}\n➥ Title: Isi title yang di order\n\nCek ya👑\n\n_Note: Otomatis keisi pas klik tombol_\n━━━━━━━━━━━━━━`,
  hasMediaAttachment: true,
  ...mediaCard
  }),
@@ -5660,7 +5720,7 @@ case 'listtrinity': {
  const msg = generateWAMessageFromContent(m.chat, {
  interactiveMessage: proto.Message.InteractiveMessage.fromObject({
  body: proto.Message.InteractiveMessage.Body.fromObject({
- text: `Hi \`${m.pushName}\` 👋\nGeser kartu untuk list harga & payment 🩸`
+ text: `Hi \`${m.pushName}\` 👋\nGeser kartu untuk list harga & payment 👑`
  }),
  footer: proto.Message.InteractiveMessage.Footer.fromObject({
  text: "© Shinigami System"
@@ -5709,7 +5769,7 @@ case "upnika": case 'listnika': {
  name: "cta_url",
  buttonParamsJson: JSON.stringify({
  display_text: "💬 Order " + title,
- url: `https://wa.me/${ownerWa}?text=${encodeURIComponent(`*ORDER NIKA*\n\nHalo bang, mau order:\n➥ Title: ${title}\n➥ Dari: @${m.sender.split('@')[0]}\n\nMohon info payment🩸`)}`,
+ url: `https://wa.me/${ownerWa}?text=${encodeURIComponent(`*ORDER NIKA*\n\nHalo bang, mau order:\n➥ Title: ${title}\n➥ Dari: @${m.sender.split('@')[0]}\n\nMohon info payment👑`)}`,
  merchant_url: "https://google.com"
  })
  },
@@ -5744,7 +5804,7 @@ case "upnika": case 'listnika': {
  name: "cta_url",
  buttonParamsJson: JSON.stringify({
  display_text: "✅ Konfirmasi Bayar",
- url: `https://wa.me/${ownerWa}?text=${encodeURIComponent(`*KONFIRMASI BAYAR NIKA*\n\nBang udah TF nih\n➥ Dari: @${m.sender.split('@')[0]}\n➥ Tujuan: DANA ${nomorDana}\n➥ Title: Isi title yang di order\n\nCek ya🩸\n\n_Note: Kirim bukti TF setelah ini_`)}`,
+ url: `https://wa.me/${ownerWa}?text=${encodeURIComponent(`*KONFIRMASI BAYAR NIKA*\n\nBang udah TF nih\n➥ Dari: @${m.sender.split('@')[0]}\n➥ Tujuan: DANA ${nomorDana}\n➥ Title: Isi title yang di order\n\nCek ya👑\n\n_Note: Kirim bukti TF setelah ini_`)}`,
  merchant_url: "https://google.com"
  })
  }
@@ -5766,7 +5826,7 @@ case "upnika": case 'listnika': {
  // --- SLIDE 2: PAYMENT ---
  {
  header: proto.Message.InteractiveMessage.Header.fromObject({
- title: `𝐏𝐀𝐘𝐌𝐄𝐍𝐓 𝐍𝐈𝐊𝐀\n━━━━━━━━━━━━━━\n📱 *DANA*\n➤ Nomor : ${nomorDana}\n➤ A/N : ${namaDana}\n\n🧾 *QRIS*\n➤ Scan QR di atas\n➤ All Bank & E-Wallet\n➤ Proses 1-5 Menit\n\n⚠️ *CARA BAYAR:*\n1. TF sesuai nominal\n2. Screenshot bukti\n3. Klik "Konfirmasi Bayar"\n4. Kirim bukti ke owner\n\n❗*FORMAT OTOMATIS:*\n*KONFIRMASI BAYAR NIKA*\n\nBang udah TF nih\n➥ Dari: @${m.sender.split('@')[0]}\n➥ Tujuan: DANA ${nomorDana}\n➥ Title: Isi title yang di order\n\nCek ya🩸\n━━━━━━━━━━━━━━`,
+ title: `𝐏𝐀𝐘𝐌𝐄𝐍𝐓 𝐍𝐈𝐊𝐀\n━━━━━━━━━━━━━━\n📱 *DANA*\n➤ Nomor : ${nomorDana}\n➤ A/N : ${namaDana}\n\n🧾 *QRIS*\n➤ Scan QR di atas\n➤ All Bank & E-Wallet\n➤ Proses 1-5 Menit\n\n⚠️ *CARA BAYAR:*\n1. TF sesuai nominal\n2. Screenshot bukti\n3. Klik "Konfirmasi Bayar"\n4. Kirim bukti ke owner\n\n❗*FORMAT OTOMATIS:*\n*KONFIRMASI BAYAR NIKA*\n\nBang udah TF nih\n➥ Dari: @${m.sender.split('@')[0]}\n➥ Tujuan: DANA ${nomorDana}\n➥ Title: Isi title yang di order\n\nCek ya👑\n━━━━━━━━━━━━━━`,
  hasMediaAttachment: true,
  ...mediaCard
  }),
@@ -5779,7 +5839,7 @@ case "upnika": case 'listnika': {
  const msg = generateWAMessageFromContent(m.chat, {
  interactiveMessage: proto.Message.InteractiveMessage.fromObject({
  body: proto.Message.InteractiveMessage.Body.fromObject({
- text: `Hi \`${m.pushName}\` 👋\nGeser kartu untuk list title & bayar 🩸`
+ text: `Hi \`${m.pushName}\` 👋\nGeser kartu untuk list title & bayar 👑`
  }),
  footer: proto.Message.InteractiveMessage.Footer.fromObject({
  text: "© NIKA System"
@@ -6095,7 +6155,7 @@ break;
  if (aksesDb.akses?.includes(sender)) punyaAkses = true
  } catch (e) {}
  }
- if (!punyaAkses) return payreply('Lu ga punya akses buat liat database 🩸')
+ if (!punyaAkses) return payreply('Lu ga punya akses buat liat database 👑')
 
  payreply('Lagi ambil database dari GitHub...')
 
@@ -6105,9 +6165,9 @@ break;
  })
 
  const db = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
- if (!db.Numbers || db.Numbers.length === 0) return payreply('Database kosong 🩸')
+ if (!db.Numbers || db.Numbers.length === 0) return payreply('Database kosong 👑')
 
- let teks = `*LIST DATABASE GITHUB* 🩸\n\n`
+ let teks = `*LIST DATABASE GITHUB* 👑\n\n`
  let mentions = []
  db.Numbers.forEach((nomor, i) => {
  teks += `${i + 1}. @${nomor}\n`
@@ -6116,7 +6176,7 @@ break;
  teks += `\nTotal: ${db.Numbers.length} nomor`
  payreply(teks, mentions)
  } catch (e) {
- if (e.response?.status === 404) return payreply('File database.json belum ada 🩸')
+ if (e.response?.status === 404) return payreply('File database.json belum ada 👑')
  payreply(`Gagal ambil database: ${e.response?.data?.message || 'Error'}`)
  }
 }
@@ -6139,7 +6199,7 @@ case 'listakses': {
  if (aksesDb.akses?.includes(sender)) punyaAkses = true
  } catch (e) {}
  }
- if (!punyaAkses) return payreply('Lu ga punya akses buat liat list 🩸')
+ if (!punyaAkses) return payreply('Lu ga punya akses buat liat list 👑')
 
  payreply('Lagi cek list akses...')
 
@@ -6149,9 +6209,9 @@ case 'listakses': {
  })
 
  const db = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
- if (!db.akses || db.akses.length === 0) return payreply('Belum ada yang punya akses selain super admin 🩸')
+ if (!db.akses || db.akses.length === 0) return payreply('Belum ada yang punya akses selain super admin 👑')
 
- let teks = `*LIST YANG PUNYA AKSES* 🩸\n\n`
+ let teks = `*LIST YANG PUNYA AKSES* 👑\n\n`
  teks += `*Super Admin:*\n@62881036109288\n\n`
  teks += `*Member Akses:*\n`
  let mentions = ['62881036109288@s.whatsapp.net']
@@ -6163,7 +6223,7 @@ case 'listakses': {
  teks += `\nTotal: ${db.akses.length} orang`
  payreply(teks, mentions)
  } catch (e) {
- if (e.response?.status === 404) return payreply('File akses.json belum ada 🩸')
+ if (e.response?.status === 404) return payreply('File akses.json belum ada 👑')
  payreply(`Gagal ambil list: ${e.response?.data?.message || 'Error'}`)
  }
 }
@@ -6186,7 +6246,7 @@ case 'listakses': {
  if (aksesDb.akses?.includes(sender)) punyaAkses = true
  } catch (e) {}
  }
- if (!punyaAkses) return payreply('Lu ga punya akses buat liat list 🩸')
+ if (!punyaAkses) return payreply('Lu ga punya akses buat liat list 👑')
 
  payreply('Lagi cek list akses...')
 
@@ -6196,9 +6256,9 @@ case 'listakses': {
  })
 
  const db = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
- if (!db.akses || db.akses.length === 0) return payreply('Belum ada yang punya akses selain super admin 🩸')
+ if (!db.akses || db.akses.length === 0) return payreply('Belum ada yang punya akses selain super admin 👑')
 
- let teks = `*LIST YANG PUNYA AKSES* 🩸\n\n`
+ let teks = `*LIST YANG PUNYA AKSES* 👑\n\n`
  teks += `*Super Admin:*\n@62881036109288\n\n`
  teks += `*Member Akses:*\n`
  let mentions = ['62881036109288@s.whatsapp.net']
@@ -6210,7 +6270,7 @@ case 'listakses': {
  teks += `\nTotal: ${db.akses.length} orang`
  payreply(teks, mentions)
  } catch (e) {
- if (e.response?.status === 404) return payreply('File akses.json belum ada 🩸')
+ if (e.response?.status === 404) return payreply('File akses.json belum ada 👑')
  payreply(`Gagal ambil list: ${e.response?.data?.message || 'Error'}`)
  }
 }
@@ -6233,7 +6293,7 @@ case 'delakses': {
  if (aksesDb.akses?.includes(sender)) punyaAkses = true
  } catch (e) {}
  }
- if (!punyaAkses) return payreply('Lu ga punya akses buat delakses 🩸')
+ if (!punyaAkses) return payreply('Lu ga punya akses buat delakses 👑')
 
  let nomor = ''
  if (m.quoted) nomor = m.quoted.sender.split('@')[0]
@@ -6241,8 +6301,8 @@ case 'delakses': {
  else if (text) nomor = text.replace(/[^0-9]/g, '')
 
  if (!nomor) return payreply(`Reply chat / tag orang / ketik nomor\nContoh: ${prefix}delakses 6281234567890`)
- if (nomor === '62881036109288') return payreply('Gabisa cabut akses super admin 🩸')
- if (nomor === sender) return payreply('Gabisa cabut akses diri sendiri 🩸')
+ if (nomor === '62881036109288') return payreply('Gabisa cabut akses super admin 👑')
+ if (nomor === sender) return payreply('Gabisa cabut akses diri sendiri 👑')
 
  payreply('Proses cabut akses...')
 
@@ -6253,7 +6313,7 @@ case 'delakses': {
  let db = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
 
  const index = db.akses.indexOf(nomor)
- if (index === -1) return payreply(`@${nomor} ga ada di list akses 🩸`, [nomor + '@s.whatsapp.net'])
+ if (index === -1) return payreply(`@${nomor} ga ada di list akses 👑`, [nomor + '@s.whatsapp.net'])
 
  db.akses.splice(index, 1)
  const newContent = Buffer.from(JSON.stringify(db, null, 2)).toString('base64')
@@ -6265,7 +6325,7 @@ case 'delakses': {
  }, {
  })
 
- payreply(`Akses @${nomor} dicabut sama @${sender} 🩸\nSisa akses: ${db.akses.length}`, [nomor + '@s.whatsapp.net', sender + '@s.whatsapp.net'])
+ payreply(`Akses @${nomor} dicabut sama @${sender} 👑\nSisa akses: ${db.akses.length}`, [nomor + '@s.whatsapp.net', sender + '@s.whatsapp.net'])
  } catch (e) {
  payreply('Gagal cabut akses')
  }
@@ -6276,7 +6336,7 @@ case 'menugh':
 
 
 case 'jpm': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
 
  const groups = await Asepp.groupFetchAllParticipating()
  const groupList = Object.values(groups)
@@ -6286,10 +6346,10 @@ case 'jpm': {
  let caption = text || q.text || ''
 
  if (!/image|video|text/.test(mime) &&!caption) {
- return payreply(`Kirim/reply text/image/video buat JPM 🩸\nContoh:.jpm Halo semua`)
+ return payreply(`Kirim/reply text/image/video buat JPM 👑\nContoh:.jpm Halo semua`)
  }
 
- payreply(`Proses JPM ke ${groupList.length} group + tag all member... 🩸`)
+ payreply(`Proses JPM ke ${groupList.length} group + tag all member... 👑`)
 
  let sukses = 0
  let gagal = 0
@@ -6327,7 +6387,7 @@ case 'jpm': {
  }
  }
 
- payreply(`*JPM SELESAI* 🩸\n\nSukses: ${sukses} group\nGagal: ${gagal} group\nTotal: ${groupList.length} group`)
+ payreply(`*JPM SELESAI* 👑\n\nSukses: ${sukses} group\nGagal: ${gagal} group\nTotal: ${groupList.length} group`)
 }
 break
 
@@ -6335,14 +6395,14 @@ break
 
 case 'listtandagc':
 case 'listtaggc': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
 
  const GITHUB_OWNER = `AsepXyz12`
  const GITHUB_REPO = `bot-wa-db`
  const TANDA_PATH = `database/tandagc.json`
  const axios = require('axios')
 
- await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } })
+ await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } })
 
  try {
  const getUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${TANDA_PATH}`
@@ -6350,11 +6410,11 @@ case 'listtaggc': {
  })
 
  const db = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
- if (!db.list || db.list.length === 0) return payreply('Belum ada group yang ditandai 🩸')
+ if (!db.list || db.list.length === 0) return payreply('Belum ada group yang ditandai 👑')
 
  let teks = `\`𝗟𝗜𝗦𝗧 𝗚𝗥𝗢𝗨𝗣 𝗚𝗜𝗧𝗛𝗨𝗕 𝗗𝗕\`
 
-Hi \`${pushname}\` 👋 Ini semua group yang udah lu tandain buat akses GH DB 🩸
+Hi \`${pushname}\` 👋 Ini semua group yang udah lu tandain buat akses GH DB 👑
 
 ⌲ \`𝐓𝐎𝐓𝐀𝐋 𝐆𝐑𝐎𝐔𝐏\`
 ┏━━━━━━━━━━━━━━━━
@@ -6452,24 +6512,24 @@ Hi \`${pushname}\` 👋 Ini semua group yang udah lu tandain buat akses GH DB �
  )
 
  } catch (e) {
- if (e.response?.status === 404) return payreply('File tandagc.json belum ada 🩸')
+ if (e.response?.status === 404) return payreply('File tandagc.json belum ada 👑')
  payreply(`Gagal ambil list: ${e.response?.data?.message || 'Error'}`)
  }
 }
 break
 
 case 'giveakses': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
 
  // FIX: Ambil nomor dari tag, reply, atau ketik manual
  let nomor = m.mentionedJid[0]? m.mentionedJid[0].split('@')[0] :
  m.quoted? m.quoted.sender.split('@')[0] :
  text.replace(/[^0-9]/g, '')
 
- if (!nomor) return payreply(`Tag/reply nomor yang mau dikasih akses 🩸\nContoh: ${prefix}giveakses @user\nAtau: ${prefix}giveakses 1xxx`)
+ if (!nomor) return payreply(`Tag/reply nomor yang mau dikasih akses 👑\nContoh: ${prefix}giveakses @user\nAtau: ${prefix}giveakses 1xxx`)
 
  // FIX: Validasi nomor internasional, bukan cuma 62
- if (!/^\d{8,15}$/.test(nomor)) return payreply('Nomor ga valid 🩸\nMinimal 8 digit, maksimal 15 digit')
+ if (!/^\d{8,15}$/.test(nomor)) return payreply('Nomor ga valid 👑\nMinimal 8 digit, maksimal 15 digit')
 
  const GITHUB_OWNER = `AsepXyz12`
  const GITHUB_REPO = `bot-wa-db`
@@ -6493,7 +6553,7 @@ case 'giveakses': {
  }
 
  if (!db.akses) db.akses = []
- if (db.akses.includes(nomor)) return payreply(`Nomor ${nomor} udah punya akses 🩸`)
+ if (db.akses.includes(nomor)) return payreply(`Nomor ${nomor} udah punya akses 👑`)
 
  db.akses.push(nomor)
  const newContent = Buffer.from(JSON.stringify(db, null, 2)).toString('base64')
@@ -6505,7 +6565,7 @@ case 'giveakses': {
  }, {
  })
 
- payreply(`Sukses kasih akses ke @${nomor} 🩸\nTotal akses: ${db.akses.length} orang`, [nomor + '@s.whatsapp.net'])
+ payreply(`Sukses kasih akses ke @${nomor} 👑\nTotal akses: ${db.akses.length} orang`, [nomor + '@s.whatsapp.net'])
 
  } catch (e) {
  payreply(`Gagal kasih akses: ${e.response?.data?.message || 'Error'}`)
@@ -6537,14 +6597,14 @@ case 'adddb': {
  } catch (e) {}
  }
 
- if (!isOwner &&!isMember) return payreply('Lu ga punya akses GH 🩸')
+ if (!isOwner &&!isMember) return payreply('Lu ga punya akses GH 👑')
 
  let nomor = m.mentionedJid[0]? m.mentionedJid[0].split('@')[0] :
  m.quoted? m.quoted.sender.split('@')[0] :
  text.replace(/[^0-9]/g, '')
 
- if (!nomor) return payreply(`Masukin nomor yang mau ditambah 🩸\nContoh: ${prefix}adddb @user\nAtau: ${prefix}adddb 6399xxx`)
- if (!/^\d{8,15}$/.test(nomor)) return payreply('Nomor ga valid 🩸\nMinimal 8 digit, maksimal 15 digit')
+ if (!nomor) return payreply(`Masukin nomor yang mau ditambah 👑\nContoh: ${prefix}adddb @user\nAtau: ${prefix}adddb 6399xxx`)
+ if (!/^\d{8,15}$/.test(nomor)) return payreply('Nomor ga valid 👑\nMinimal 8 digit, maksimal 15 digit')
 
  payreply('Proses nambah database...')
 
@@ -6563,7 +6623,7 @@ case 'adddb': {
  }
 
  if (!db.Numbers) db.Numbers = [] // <-- FIX: Numbers
- if (db.Numbers.includes(nomor)) return payreply(`Nomor ${nomor} udah ada di database 🩸`)
+ if (db.Numbers.includes(nomor)) return payreply(`Nomor ${nomor} udah ada di database 👑`)
 
  db.Numbers.push(nomor) // <-- FIX: Numbers
  const newContent = Buffer.from(JSON.stringify(db, null, 2)).toString('base64')
@@ -6575,7 +6635,7 @@ case 'adddb': {
  }, {
  })
 
- payreply(`Sukses tambah ${nomor} ke database 🩸\nTotal: ${db.Numbers.length} nomor`)
+ payreply(`Sukses tambah ${nomor} ke database 👑\nTotal: ${db.Numbers.length} nomor`)
 
  } catch (e) {
  payreply(`Gagal nambah: ${e.response?.data?.message || 'Error'}`)
@@ -6624,8 +6684,8 @@ break
 case 'addanggota':
 
 case 'addbl': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
- if (!m.isGroup) return payreply('Harus dipake di dalam group yang mau di blacklist 🩸')
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
+ if (!m.isGroup) return payreply('Harus dipake di dalam group yang mau di blacklist 👑')
 
  const GITHUB_OWNER = `AsepXyz12`
  const GITHUB_REPO = `bot-wa-db`
@@ -6647,7 +6707,7 @@ case 'addbl': {
  }
 
  if (!dbBl.groups) dbBl.groups = []
- if (dbBl.groups.includes(m.chat)) return payreply(`Group ini udah di blacklist JPM 🩸`)
+ if (dbBl.groups.includes(m.chat)) return payreply(`Group ini udah di blacklist JPM 👑`)
 
  dbBl.groups.push(m.chat)
  const newContent = Buffer.from(JSON.stringify(dbBl, null, 2)).toString('base64')
@@ -6659,16 +6719,16 @@ case 'addbl': {
  }, {
  })
 
- payreply(`Sukses blacklist group ini dari JPM 🩸\nTotal group BL: ${dbBl.groups.length}`)
+ payreply(`Sukses blacklist group ini dari JPM 👑\nTotal group BL: ${dbBl.groups.length}`)
  } catch (e) {
- payreply(`Gagal: ${e.response?.data?.message || e.message} 🩸`)
+ payreply(`Gagal: ${e.response?.data?.message || e.message} 👑`)
  }
 }
 break
 
 case 'delbl': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
- if (!m.isGroup) return payreply('Harus dipake di dalam group 🩸')
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
+ if (!m.isGroup) return payreply('Harus dipake di dalam group 👑')
 
  const GITHUB_OWNER = `AsepXyz12`
  const GITHUB_REPO = `bot-wa-db`
@@ -6683,7 +6743,7 @@ case 'delbl': {
  let dbBl = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
  const sha = getRes.data.sha
 
- if (!dbBl.groups ||!dbBl.groups.includes(m.chat)) return payreply('Group ini ga ada di blacklist 🩸')
+ if (!dbBl.groups ||!dbBl.groups.includes(m.chat)) return payreply('Group ini ga ada di blacklist 👑')
 
  dbBl.groups = dbBl.groups.filter(id => id!== m.chat)
  const newContent = Buffer.from(JSON.stringify(dbBl, null, 2)).toString('base64')
@@ -6695,15 +6755,15 @@ case 'delbl': {
  }, {
  })
 
- payreply(`Sukses hapus group ini dari blacklist JPM 🩸`)
+ payreply(`Sukses hapus group ini dari blacklist JPM 👑`)
  } catch (e) {
- payreply(`Gagal: ${e.response?.data?.message || e.message} 🩸`)
+ payreply(`Gagal: ${e.response?.data?.message || e.message} 👑`)
  }
 }
 break
 
 case 'listbl': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
 
  const GITHUB_OWNER = `AsepXyz12`
  const GITHUB_REPO = `bot-wa-db`
@@ -6718,9 +6778,9 @@ case 'listbl': {
  const dbBl = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
  const list = dbBl.groups || []
 
- if (list.length === 0) return payreply('Belum ada group yang di blacklist JPM 🩸')
+ if (list.length === 0) return payreply('Belum ada group yang di blacklist JPM 👑')
 
- let teks = `*LIST GROUP BLACKLIST JPM* 🩸\n\n`
+ let teks = `*LIST GROUP BLACKLIST JPM* 👑\n\n`
  for (let i = 0; i < list.length; i++) {
  try {
  let nama = await Asepp.groupMetadata(list[i]).then(res => res.subject)
@@ -6733,14 +6793,14 @@ case 'listbl': {
 
  payreply(teks)
  } catch (e) {
- if (e.response?.status === 404) return payreply('Database blacklist masih kosong 🩸')
- payreply(`Gagal: ${e.response?.data?.message || e.message} 🩸`)
+ if (e.response?.status === 404) return payreply('Database blacklist masih kosong 👑')
+ payreply(`Gagal: ${e.response?.data?.message || e.message} 👑`)
  }
 }
 break
 case 'jpm': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
- if (!text &&!m.quoted) return payreply(`Masukin teks atau reply pesan 🩸`)
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
+ if (!text &&!m.quoted) return payreply(`Masukin teks atau reply pesan 👑`)
 
  const GITHUB_OWNER = `AsepXyz12`
  const GITHUB_REPO = `bot-wa-db`
@@ -6767,7 +6827,7 @@ case 'jpm': {
  // FILTER GROUP YANG GA DI BLACKLIST
  groupIds = groupIds.filter(id =>!blackList.includes(id))
 
- payreply(`Mengirim JPM ke ${groupIds.length} group...\n${blackList.length} group di-skip karena blacklist 🩸`)
+ payreply(`Mengirim JPM ke ${groupIds.length} group...\n${blackList.length} group di-skip karena blacklist 👑`)
 
  let sukses = 0
  let gagal = 0
@@ -6782,7 +6842,7 @@ case 'jpm': {
  }
  }
 
- payreply(`JPM Selesai 🩸\n\nSukses: ${sukses} group\nGagal: ${gagal} group\nSkip BL: ${blackList.length} group`)
+ payreply(`JPM Selesai 👑\n\nSukses: ${sukses} group\nGagal: ${gagal} group\nSkip BL: ${blackList.length} group`)
 }
 
 
@@ -6838,7 +6898,7 @@ case 'translate':
 case 'tr':
 case 'deteksi': {
  if (!m.quoted) {
- return payreply(`╭─「 *AUTO TRANSLATE* 」🩸
+ return payreply(`╭─「 *AUTO TRANSLATE* 」👑
 │
 │ *Cara Pakai:*
 │ Reply pesan yg mau di translate
@@ -6846,22 +6906,22 @@ case 'deteksi': {
 │
 │ *Contoh:*
 │ Reply teks English → ${prefix + command}
-│ Langsung jadi Indonesia 🩸
+│ Langsung jadi Indonesia 👑
 │
 │ *Default:* Auto ke Indonesia
 │ *Custom:* ${prefix + command} en
 │ *Custom:* ${prefix + command} jp
 │ *Custom:* ${prefix + command} ar
 │
-╰─ Support 100+ bahasa 🩸`)
+╰─ Support 100+ bahasa 👑`)
  }
 
  let teks = m.quoted.text || m.quoted.caption || m.quoted.description
- if (!teks) return payreply(`╭─「 *ERROR* 」🩸
+ if (!teks) return payreply(`╭─「 *ERROR* 」👑
 │
-│ Yg di reply ga ada teksnya 🩸
+│ Yg di reply ga ada teksnya 👑
 │
-╰─ Reply teks/gambar ada caption 🩸`)
+╰─ Reply teks/gambar ada caption 👑`)
 
  let tujuan = text? text.toLowerCase() : 'id'
 
@@ -6911,7 +6971,7 @@ case 'deteksi': {
  let teksAsli = teks.length > 500? teks.slice(0, 500) + '...' : teks
  let teksHasil = hasil.length > 500? hasil.slice(0, 500) + '...' : hasil
 
- let menu = `╭─「 *AUTO TRANSLATE* 」🩸
+ let menu = `╭─「 *AUTO TRANSLATE* 」👑
 │
 ├─ *Language Info:*
 │ • From: ${namaAsal}
@@ -6930,18 +6990,18 @@ case 'deteksi': {
 │ • ${prefix + command} ar → Arabic
 │ • ${prefix + command} ko → Korean
 │
-╰─ Powered by Google Translate 🩸`
+╰─ Powered by Google Translate 👑`
 
  payreply(menu)
 
  } catch (e) {
  console.log(e)
- payreply(`╭─「 *ERROR* 」🩸
+ payreply(`╭─「 *ERROR* 」👑
 │
-│ Gagal detect bahasa 🩸
+│ Gagal detect bahasa 👑
 │ Error: ${e.message}
 │
-╰─ Coba lagi nanti 🩸`)
+╰─ Coba lagi nanti 👑`)
  }
 }
 break
@@ -7106,7 +7166,7 @@ case 'sendmsg': {
  const SENDMSG_PATH = `database/sendmsg.json`
  const axios = require('axios')
 
- await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } })
+ await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } })
 
  const groups = await Asepp.groupFetchAllParticipating()
  const groupList = Object.values(groups)
@@ -7155,7 +7215,7 @@ case 'sendmsg': {
  id: `.sendmsgconfirm ${id}_${v.id}`
  }))
 
- let teks = `\`𝗦𝗘𝗡𝗗𝗠𝗦𝗚 𝗚𝗜𝗧𝗛𝗨𝗕\`\n\nHi \`${pushname}\` 👋 Pilih grup tujuan. Data disimpan di GitHub. 🩸\n\n⌲ \`𝐈𝐍𝐅𝐎\`\n┏━━━━━━━━━━━━━━━━\n┃✦ *Total Grup » ${groupList.length}*\n┃✦ *Type » ${/image/.test(mime)? 'Image' : /video/.test(mime)? 'Video' : /sticker/.test(mime)? 'Sticker' : /audio/.test(mime)? 'Audio' : 'Text'}*\n┃✦ *Storage » GitHub DB*\n┗━━━━━━━━━━━━━━━━━━`
+ let teks = `\`𝗦𝗘𝗡𝗗𝗠𝗦𝗚 𝗚𝗜𝗧𝗛𝗨𝗕\`\n\nHi \`${pushname}\` 👋 Pilih grup tujuan. Data disimpan di GitHub. 👑\n\n⌲ \`𝐈𝐍𝐅𝐎\`\n┏━━━━━━━━━━━━━━━━\n┃✦ *Total Grup » ${groupList.length}*\n┃✦ *Type » ${/image/.test(mime)? 'Image' : /video/.test(mime)? 'Video' : /sticker/.test(mime)? 'Sticker' : /audio/.test(mime)? 'Audio' : 'Text'}*\n┃✦ *Storage » GitHub DB*\n┗━━━━━━━━━━━━━━━━━━`
 
  const msg = generateWAMessageFromContent(m.chat, {
  viewOnceMessage: {
@@ -7211,7 +7271,7 @@ case 'sendmsgconfirm': {
  const SENDMSG_PATH = `database/sendmsg.json`
  const axios = require('axios')
 
- await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } })
+ await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } })
 
  let sendmsgDb = { list: [] }
  let sha = null
@@ -7261,7 +7321,7 @@ case 'sendmsgconfirm': {
  }, {
  })
 
- payreply(`*SUKSES* 🩸\n\nKirim ke *${metadata.subject}*\nTag ${participants.length} member`)
+ payreply(`*SUKSES* 👑\n\nKirim ke *${metadata.subject}*\nTag ${participants.length} member`)
  } catch (e) {
  payreply(`Gagal kirim: ${e.message}`)
  }
@@ -7282,7 +7342,7 @@ case 'addblacklist': {
  const BL_PATH = `database/blacklist.json`
  const axios = require('axios')
 
- await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } })
+ await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } })
 
  let blDb = {}
  let sha = null
@@ -7312,9 +7372,9 @@ case 'addblacklist': {
  // Langsung kick + pasang auto kick
  try {
  await Asepp.groupParticipantsUpdate(m.chat, [who], 'remove')
- payreply(`*SUKSES* 🩸\n\n@${who.split('@')[0]} masuk blacklist & di kick\nBakalan auto kick terus kalo join lagi`, [who])
+ payreply(`*SUKSES* 👑\n\n@${who.split('@')[0]} masuk blacklist & di kick\nBakalan auto kick terus kalo join lagi`, [who])
  } catch {
- payreply(`*SUKSES* 🩸\n\n@${who.split('@')[0]} masuk blacklist\nBot bukan admin jadi ga bisa kick sekarang, tapi bakal auto kick kalo bot jadi admin`, [who])
+ payreply(`*SUKSES* 👑\n\n@${who.split('@')[0]} masuk blacklist\nBot bukan admin jadi ga bisa kick sekarang, tapi bakal auto kick kalo bot jadi admin`, [who])
  }
 }
 break
@@ -7331,7 +7391,7 @@ break
  const BL_PATH = `database/blacklist.json`
  const axios = require('axios')
 
- await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } })
+ await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } })
 
  let blDb = {}
  let sha = null
@@ -7357,21 +7417,21 @@ break
  }, {
  })
 
- payreply(`*SUKSES* 🩸\n\n@${who.split('@')[0]} dihapus dari blacklist`, [who])
+ payreply(`*SUKSES* 👑\n\n@${who.split('@')[0]} dihapus dari blacklist`, [who])
 }
 break
 
 case 'deltandatogc':
 case 'untaggc': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
- if (!m.isGroup) return payreply('Command ini khusus group 🩸')
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
+ if (!m.isGroup) return payreply('Command ini khusus group 👑')
 
  const GITHUB_OWNER = `AsepXyz12`
  const GITHUB_REPO = `bot-wa-db`
  const TANDA_PATH = `database/tandagc.json`
  const axios = require('axios')
 
- await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } })
+ await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } })
  payreply('Proses hapus tanda group...')
 
  try {
@@ -7385,14 +7445,14 @@ case 'untaggc': {
  db = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
  sha = getRes.data.sha
  } catch (e) {
- if (e.response?.status === 404) return payreply('Belum ada group yg ditandai 🩸')
+ if (e.response?.status === 404) return payreply('Belum ada group yg ditandai 👑')
  throw e
  }
 
  if (!db.list) db.list = []
  const index = db.list.findIndex(v => v.id === m.chat)
 
- if (index === -1) return payreply(`Group *${m.subject}* belum ditandai 🩸\nPake.tandatogc buat nandain`)
+ if (index === -1) return payreply(`Group *${m.subject}* belum ditandai 👑\nPake.tandatogc buat nandain`)
 
  // HAPUS DARI LIST
  db.list.splice(index, 1)
@@ -7406,7 +7466,7 @@ case 'untaggc': {
  }, {
  })
 
- let teks = `Sukses hapus tanda group 🩸\n*${m.subject}* udah dihapus dari list GH`
+ let teks = `Sukses hapus tanda group 👑\n*${m.subject}* udah dihapus dari list GH`
  teks += `\n\nSisa group ditandai: ${db.list.length}`
  payreply(teks)
 
@@ -7422,7 +7482,7 @@ case 'getfunc': {
  const fs = require('fs')
  const path = require('path')
 
- await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } })
+ await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } })
 
  try {
  const filePath = path.join(__dirname, 'AseppLohya.js') // ganti nama file lu
@@ -7435,7 +7495,7 @@ case 'getfunc': {
  // 1. Ambil blok case
  const caseRegex = new RegExp(`case\\s+['"]${caseName}['"]\\s*:[\\s\\S]*?break`, 'i')
  const caseMatch = source.match(caseRegex)
- if (!caseMatch) return payreply(`Case *${caseName}* ga ketemu 🩸`)
+ if (!caseMatch) return payreply(`Case *${caseName}* ga ketemu 👑`)
 
  const caseBlock = caseMatch[0]
 
@@ -7448,11 +7508,11 @@ case 'getfunc': {
  funcNames = funcNames.filter(v =>!skipFunc.includes(v))
  funcNames = [...new Set(funcNames)]
 
- if (funcNames.length === 0) return payreply(`Di case *${caseName}* ga ada function bug 🩸\nCuma ada function helper`)
+ if (funcNames.length === 0) return payreply(`Di case *${caseName}* ga ada function bug 👑\nCuma ada function helper`)
 
  // Kalo user request function spesifik
  if (targetFunc) {
- if (!funcNames.includes(targetFunc)) return payreply(`Function *${targetFunc}* ga ada di case *${caseName}* 🩸`)
+ if (!funcNames.includes(targetFunc)) return payreply(`Function *${targetFunc}* ga ada di case *${caseName}* 👑`)
  funcNames = [targetFunc]
  }
 
@@ -7468,11 +7528,11 @@ case 'getfunc': {
  if (funcMatch) {
  hasil.push(`*Function: ${funcName}*\n\`\`\`javascript\n${funcMatch[0]}\n\`\`\``)
  } else {
- hasil.push(`*Function: ${funcName}*\nDeklarasi ga ketemu, mungkin di file lain 🩸`)
+ hasil.push(`*Function: ${funcName}*\nDeklarasi ga ketemu, mungkin di file lain 👑`)
  }
  }
 
- let teks = `*SOURCE FUNCTION DI CASE: ${caseName.toUpperCase()}* 🩸\n\n`
+ let teks = `*SOURCE FUNCTION DI CASE: ${caseName.toUpperCase()}* 👑\n\n`
  teks += hasil.join('\n\n')
 
  if (teks.length > 4000) {
@@ -7546,7 +7606,7 @@ break
 
 
 case 'gh' : {
- if (!m.isGroup) return payreply('Menu GH khusus group 🩸')
+ if (!m.isGroup) return payreply('Menu GH khusus group 👑')
 
  const sender = m.sender.split('@')[0]
  const GITHUB_OWNER = `AsepXyz12`
@@ -7556,7 +7616,7 @@ case 'gh' : {
  const USER_PATH = `database/user.json` // buat ghme list
  const axios = require('axios')
 
- await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } })
+ await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } })
 
  // CEK APAKAH GROUP UDAH DITANDAI
  let isTagged = false
@@ -7568,7 +7628,7 @@ case 'gh' : {
  if (tandaDb.list?.some(v => v.id === m.chat)) isTagged = true
  } catch (e) {}
 
- if (!isTagged) return payreply('Group ini belum ditandai buat akses GH 🩸\nSuruh owner ketik.tandatogc dulu')
+ if (!isTagged) return payreply('Group ini belum ditandai buat akses GH 👑\nSuruh owner ketik.tandatogc dulu')
 
  // CEK STATUS AKSES
  let isOwner = sender === '62881036109288'
@@ -7622,7 +7682,7 @@ case 'gh' : {
 
  let teks = `\`𝗚𝗜𝗧𝗛𝗨𝗕 𝗗𝗔𝗧𝗔𝗕𝗔𝗦𝗘 𝗖𝗢𝗡𝗧𝗥𝗢𝗟\`
 
-Hi \`${pushname}\` 👋 Group *${m.subject}* udah ditandai. Akses GitHub database lu pake command di bawah. Semua data langsung nyambung ke repo private. 🩸
+Hi \`${pushname}\` 👋 Group *${m.subject}* udah ditandai. Akses GitHub database lu pake command di bawah. Semua data langsung nyambung ke repo private. 👑
 
 ⌲ \`𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍\`
 ┏━━━━━━━━
@@ -7773,7 +7833,7 @@ case 'ghme': {
 
  let total = myNumbers.length
 
- let teks = `🩸 *GHME DATA*\n\n`
+ let teks = `👑 *GHME DATA*\n\n`
  teks += `┏━━━━━━━━━━\n`
  teks += `┃ 👤 User : ${senderNum}\n`
  teks += `┃ ➕ Total Add : *${total}*\n`
@@ -7829,15 +7889,15 @@ case 'deldb': {
  } catch (e) {}
  }
 
- if (!isOwner &&!isMember) return payreply('Lu ga punya akses GH 🩸')
+ if (!isOwner &&!isMember) return payreply('Lu ga punya akses GH 👑')
 
  // Ambil nomor dari tag, reply, atau ketik manual
  let nomor = m.mentionedJid[0]? m.mentionedJid[0].split('@')[0] :
  m.quoted? m.quoted.sender.split('@')[0] :
  text.replace(/[^0-9]/g, '')
 
- if (!nomor) return payreply(`Masukin nomor yang mau dihapus 🩸\nContoh: ${prefix}deldb @user\nAtau: ${prefix}deldb 6399xxx`)
- if (!/^\d{8,15}$/.test(nomor)) return payreply('Nomor ga valid 🩸\nMinimal 8 digit, maksimal 15 digit')
+ if (!nomor) return payreply(`Masukin nomor yang mau dihapus 👑\nContoh: ${prefix}deldb @user\nAtau: ${prefix}deldb 6399xxx`)
+ if (!/^\d{8,15}$/.test(nomor)) return payreply('Nomor ga valid 👑\nMinimal 8 digit, maksimal 15 digit')
 
  payreply('Proses hapus database...')
 
@@ -7858,7 +7918,7 @@ case 'deldb': {
  return false
  })
 
- if (index === -1) return payreply(`Nomor ${nomor} ga ada di database 🩸`)
+ if (index === -1) return payreply(`Nomor ${nomor} ga ada di database 👑`)
 
  // Hapus
  db.Numbers.splice(index, 1)
@@ -7872,7 +7932,7 @@ case 'deldb': {
  }, {
  })
 
- payreply(`🩸 Sukses hapus ${nomor} dari database\nTotal tersisa: *${db.Numbers.length}* nomor`)
+ payreply(`👑 Sukses hapus ${nomor} dari database\nTotal tersisa: *${db.Numbers.length}* nomor`)
 
  } catch (e) {
  payreply(`Gagal hapus: ${e.response?.data?.message || e.message}`)
@@ -8068,7 +8128,7 @@ Surat ke-5 | 120 ayat | Madaniyah | Hidangan
  title: "© AL-MA'IDAH",
  sections: [{
  title: "Menu Surat",
- highlight_label: "𝐁𝐀𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
+ highlight_label: "𝐁𝐀𝐂𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
  rows: [
  { title: "𝐓𝐞𝐤𝐬 𝐀𝐫𝐚𝐛", description: "𝐀𝐲𝐚𝐭 54-120", id: `${prefix}al-maidah` }
  ]
@@ -8330,7 +8390,7 @@ Surat ke-6 | 165 ayat | Makkiyah | Hewan Ternak
  title: "© AL-AN'AM",
  sections: [{
  title: "Menu Surat",
- highlight_label: "𝐁𝐀𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
+ highlight_label: "𝐁𝐀𝐂𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
  rows: [
  { title: "𝐓𝐞𝐤𝐬 𝐀𝐫𝐚𝐛", description: "𝐀𝐲𝐚𝐭 157-165", id: `${prefix}al-anam` }
  ]
@@ -8633,7 +8693,7 @@ Surat ke-7 | 206 ayat | Makkiyah | Tempat Tertinggi
  title: "© AL-A'RAF",
  sections: [{
  title: "Menu Surat",
- highlight_label: "𝐁𝐀𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
+ highlight_label: "𝐁𝐀𝐂𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
  rows: [
  { title: "𝐓𝐞𝐤𝐬 𝐀𝐫𝐚𝐛", description: "𝐀𝐲𝐚𝐭 188-206", id: `${prefix}al-araf` }
  ]
@@ -8805,7 +8865,7 @@ Surat ke-8 | 75 ayat | Madaniyah | Harta Rampasan Perang
  title: "© AL-ANFAL",
  sections: [{
  title: "Menu Surat",
- highlight_label: "𝐁𝐀𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
+ highlight_label: "𝐁𝐀𝐂𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
  rows: [
  { title: "𝐓𝐞𝐤𝐬 𝐀𝐫𝐚𝐛", description: "𝐀𝐲𝐚𝐭 1-75", id: `${prefix}al-anfal` }
  ]
@@ -9030,7 +9090,7 @@ Surat ke-9 | 129 ayat | Madaniyah | Pengampunan
  title: "© AT-TAUBAH",
  sections: [{
  title: "Menu Surat",
- highlight_label: "𝐁𝐀𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
+ highlight_label: "𝐁𝐀𝐂𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
  rows: [
  { title: "𝐓𝐞𝐤𝐬 𝐀𝐫𝐚𝐛", description: "𝐀𝐲𝐚𝐭 1-129", id: `${prefix}at-taubah` }
  ]
@@ -9234,7 +9294,7 @@ Surat ke-10 | 109 ayat | Makkiyah | Nabi Yunus
  title: "© YUNUS",
  sections: [{
  title: "Menu Surat",
- highlight_label: "𝐁𝐀𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
+ highlight_label: "𝐁𝐀𝐂𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
  rows: [
  { title: "𝐓𝐞𝐤𝐬 𝐀𝐫𝐚𝐛", description: "𝐀𝐲𝐚𝐭 1-109", id: `${prefix}yunus` }
  ]
@@ -9412,7 +9472,7 @@ case "rvo2": {
  return payreply("❌ *Itu Bukan Pesan Sekali Lihat Beb*")
 
  try {
- await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } })
+ await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } })
 
  const media = await q.download()
  const type = q.mtype === "viewOnceMessageV2"
@@ -9422,12 +9482,12 @@ case "rvo2": {
  : q.mtype.replace("Message", "")
 
  const prettyCaption = q.text
- ? `🩸 *RVO EXTRACTED*\n\n` +
+ ? `👑 *RVO EXTRACTED*\n\n` +
  `┌ ◦ Tipe : ${type.toUpperCase()}\n` +
  `├ ◦ Status : Berhasil\n` +
  `└ ◦ Caption :\n${q.text}\n\n` +
  `_~ Media bebas view once, gas simpen_`
- : `🩸 *RVO EXTRACTED*\n\n` +
+ : `👑 *RVO EXTRACTED*\n\n` +
  `┌ ◦ Tipe : ${type.toUpperCase()}\n` +
  `├ ◦ Status : Berhasil\n` +
  `└ ◦ Caption : -\n\n` +
@@ -9488,7 +9548,7 @@ case "outgc": {
  }
 
  try {
- await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } })
+ await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } })
 
  await Asepp.groupLeave(groupId)
 
@@ -10860,7 +10920,7 @@ Contoh: .alquran al-baqarah
 ┃4. Orang yang mahir baca Al-Quran bersama malaikat yang mulia
 ┃5. Rumah yang dibacakan Al-Quran jadi terang dan dijauhi setan
 ┗━━━━━━━━━━
-⌲ \`𝐀𝐃𝐀𝐁 𝐌𝐄𝐌𝐁𝐀𝐂𝐀 𝐀𝐋-𝐐𝐔𝐑𝐀𝐍\`
+⌲ \`𝐀𝐃𝐀𝐁 𝐌𝐄𝐌𝐁𝐀𝐂𝐂𝐀 𝐀𝐋-𝐐𝐔𝐑𝐀𝐍\`
 ┏━━━━━━━━
 ┃1. Suci dari hadas kecil dan besar
 ┃2. Menghadap kiblat, tenang, khusyuk
@@ -10925,7 +10985,7 @@ Contoh: .alquran al-baqarah
  title: "© AL-QURAN",
  sections: [{
  title: "Menu Al-Quran",
- highlight_label: "𝐁𝐀𝐂𝐀 𝐐𝐔𝐑𝐀𝐍 🚀",
+ highlight_label: "𝐁𝐀𝐂𝐂𝐀 𝐐𝐔𝐑𝐀𝐍 🚀",
  rows: [
  { title: "𝐃𝐚𝐟𝐭𝐚𝐫 𝐒𝐮𝐫𝐚𝐭", description: "𝐋𝐢𝐡𝐚𝐭 114 𝐬𝐮𝐫𝐚𝐭 + 𝐣𝐮𝐦𝐥𝐚𝐡 𝐚𝐲𝐚𝐭", id: `${prefix}alquran` },
  { title: "𝐀𝐥-𝐅𝐚𝐭𝐢𝐡𝐚𝐡", description: "𝐒𝐮𝐫𝐚𝐭 𝐩𝐞𝐦𝐛𝐮𝐤𝐚𝐧", id: `${prefix}alquran al-fatihah` },
@@ -11010,7 +11070,7 @@ Shirathal-ladzina an'amta 'alaihim ghairil maghdubi 'alaihim wa ladhdhallin
 ┃Ayat 5: Ikrar ibadah dan istianah hanya kepada Allah
 ┃Ayat 6-7: Permohonan agar diberi hidayah ke jalan orang sholeh, bukan jalan orang yang dimurkai dan sesat
 ┗━━━━━━━━━━
-\`[📖] 𝐁𝐀𝐂𝐀𝐋𝐋𝐀𝐇 𝐒𝐄𝐓𝐈𝐀𝐏 𝐒𝐇𝐎𝐋𝐀𝐓 [📖]\`
+\`[📖] 𝐁𝐀𝐂𝐂𝐀𝐋𝐋𝐀𝐇 𝐒𝐄𝐓𝐈𝐀𝐏 𝐒𝐇𝐎𝐋𝐀𝐓 [📖]\`
 `
 
  const msg = generateWAMessageFromContent(
@@ -11066,7 +11126,7 @@ Shirathal-ladzina an'amta 'alaihim ghairil maghdubi 'alaihim wa ladhdhallin
  title: "© AL-FATIHAH",
  sections: [{
  title: "Menu Surat",
- highlight_label: "𝐁𝐀𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
+ highlight_label: "𝐁𝐀𝐂𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
  rows: [
  { title: "𝐀𝐫𝐚𝐛 & 𝐀𝐫𝐭𝐢", description: "𝐓𝐞𝐤𝐬 𝐀𝐫𝐚𝐛 𝐝𝐚𝐧 𝐭𝐞𝐫𝐣𝐞𝐦𝐚𝐡𝐚𝐧", id: `${prefix}al-fatihah` },
  { title: "𝐓𝐚𝐟𝐬𝐢𝐫 𝐒𝐢𝐧𝐠𝐤𝐚𝐭", description: "𝐌𝐚𝐤𝐧𝐚 𝐩𝐞𝐫-𝐚𝐲𝐚𝐭", id: `${prefix}al-fatihah` },
@@ -11451,7 +11511,7 @@ Surat ke-2 | 286 ayat | Madaniyah
  title: "© AL-BAQARAH",
  sections: [{
  title: "Menu Surat",
- highlight_label: "𝐁𝐀𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
+ highlight_label: "𝐁𝐀𝐂𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
  rows: [
  { title: "𝐓𝐞𝐤𝐬 𝐀𝐫𝐚𝐛", description: "𝐀𝐲𝐚𝐭 272-286", id: `${prefix}al-baqarah` }
  ]
@@ -11905,7 +11965,7 @@ Surat ke-3 | 200 ayat | Madaniyah | Keluarga Imran
  title: "© ALI 'IMRAN",
  sections: [{
  title: "Menu Surat",
- highlight_label: "𝐁𝐀𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
+ highlight_label: "𝐁𝐀𝐂𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
  rows: [
  { title: "𝐓𝐞𝐤𝐬 𝐀𝐫𝐚𝐛", description: "𝐀𝐲𝐚𝐭 1-200", id: `${prefix}ali-imran` }
  ]
@@ -12152,7 +12212,7 @@ Surat ke-4 | 176 ayat | Madaniyah | Perempuan
  title: "© AN-NISA",
  sections: [{
  title: "Menu Surat",
- highlight_label: "𝐁𝐀𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
+ highlight_label: "𝐁𝐀𝐂𝐂𝐀 𝐋𝐄𝐍𝐆𝐊𝐀𝐏 🚀",
  rows: [
  { title: "𝐓𝐞𝐤𝐬 𝐀𝐫𝐚𝐛", description: "𝐀𝐲𝐚𝐭 128-176", id: `${prefix}an-nisa` }
  ]
@@ -12199,7 +12259,7 @@ case 'totalline': {
  
  let teks = `\`𝗙𝗜𝗟𝗘 𝗦𝗧𝗔𝗧𝗦 𝗖𝗢𝗡𝗧𝗥𝗢𝗟\`
 
-Hi \`${pushname}\` 👋 ini hasil scan file *AseppLohya.js*. Semua data real time langsung dari source file 🩸
+Hi \`${pushname}\` 👋 ini hasil scan file *AseppLohya.js*. Semua data real time langsung dari source file 👑
 
 ⌲ \`𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍\`
 ┏━━━━━━━━
@@ -12268,7 +12328,7 @@ Owner : @${m.sender.split('@')[0]}`)
 
  await payreply(`\`𝗖𝗔𝗦𝗘 𝗗𝗘𝗧𝗘𝗖𝗧𝗘𝗗\`
 
-Hi \`${pushname}\` 👋 case ketemu nih 🩸
+Hi \`${pushname}\` 👋 case ketemu nih 👑
 
 ⌲ \`𝐃𝐄𝐓𝐀𝐈𝐋\`
 ┏━━━━━━━━
@@ -12277,7 +12337,7 @@ Hi \`${pushname}\` 👋 case ketemu nih 🩸
 ┃✦ *Lokasi » Baris ke-${lineNum}*
 ┃✦ *File » AseppLohya.js*
 ┗━━━━━━━━━━
-⌲ \`𝐀𝐂𝐓𝐈𝐎𝐍\`
+⌲ \`𝐀𝐂𝐂𝐓𝐈𝐎𝐍\`
 ┏━━━━━━━━
 ┃☇ Ketik ${prefix}sendcase buat ambil kodenya
 ┗━━━━━━━━━━
@@ -12294,7 +12354,7 @@ Owner : @${m.sender.split('@')[0]}`)
 
  let teks = `\`𝗖𝗔𝗦𝗘 𝗡𝗢𝗧 𝗙𝗢𝗨𝗡𝗗\`
 
-Hi \`${pushname}\` 👋 case *${text}* gak ketemu beb 🩸
+Hi \`${pushname}\` 👋 case *${text}* gak ketemu beb 👑
 
 ⌲ \`𝐒𝐓𝐀𝐓𝐔𝐒\`
 ┏━━━━━━━━
@@ -12319,7 +12379,7 @@ Owner : @${m.sender.split('@')[0]}`
  } catch (e) {
  await payreply(`\`𝗘𝗥𝗢𝗥\`
 
-Gagal baca file beb 🩸
+Gagal baca file beb 👑
 
 ⌲ \`𝐄𝐑𝐎𝐑 𝐃𝐄𝐓𝐀𝐈𝐋\`
 ┏━━━━━━━━
@@ -12333,7 +12393,7 @@ Owner : @${m.sender.split('@')[0]}`)
 break
 
 case 'getcase': {
-    if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
+    if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
     if (!text) return payreply(`\`𝗚𝗘𝗧 𝗖𝗔𝗦𝗘 𝗠𝗘𝗡𝗨\`
 
 Hi \`${pushname}\` 👋 masukin nama case yang mau diambil
@@ -12354,11 +12414,11 @@ Owner : @${m.sender.split('@')[0]}`)
 
     await payreply(`\`𝗗𝗨𝗠𝗣𝗜𝗡𝗚 𝗖𝗔𝗦𝗘\`
 
-Sedang ambil case *${namaCase}* dari AseppLohya.js... 🩸`)
+Sedang ambil case *${namaCase}* dari AseppLohya.js... 👑`)
 
     try {
         const pathFile = './AseppLohya.js'
-        if (!fs.existsSync(pathFile)) return payreply('File AseppLohya.js gak ada beb 🩸')
+        if (!fs.existsSync(pathFile)) return payreply('File AseppLohya.js gak ada beb 👑')
 
         const sourceCode = fs.readFileSync(pathFile, 'utf-8')
 
@@ -12367,7 +12427,7 @@ Sedang ambil case *${namaCase}* dari AseppLohya.js... 🩸`)
 
         if (!match) return payreply(`\`𝗖𝗔𝗦𝗘 𝗡𝗢𝗧 𝗙𝗢𝗨𝗡𝗗\`
 
-Case *${namaCase}* gak ketemu di AseppLohya.js beb 🩸
+Case *${namaCase}* gak ketemu di AseppLohya.js beb 👑
 Pastiin nama casenya bener ya`)
 
         let hasilCase = match[0]
@@ -12380,7 +12440,7 @@ Pastiin nama casenya bener ya`)
 
         let teks = `\`𝗦𝗢𝗨𝗥𝗖𝗘 𝗖𝗔𝗦𝗘\`
 
-Hi \`${pushname}\` 👋 ini source code case *${namaCase.toUpperCase()}* 🩸
+Hi \`${pushname}\` 👋 ini source code case *${namaCase.toUpperCase()}* 👑
 
 ⌲ \`𝐈𝐍𝐅𝐎\`
 ┏━━━━━━━━
@@ -12412,7 +12472,7 @@ Owner : @${m.sender.split('@')[0]}`
         console.log(e)
         await payreply(`\`𝗘𝗥𝗢𝗥\`
 
-Gagal dump case beb 🩸
+Gagal dump case beb 👑
 
 ⌲ \`𝐄𝐑𝐎𝐑 𝐃𝐄𝐓𝐀𝐈𝐋\`
 ┏━━━━━━━━
@@ -12455,7 +12515,7 @@ case "matiluanjing": {
 
    // 4. Kirim pesan penutup
    await Asepp.sendMessage(groupId, {
-     text: "Misi bre, udah kelar. Gue out dulu 🩸"
+     text: "Misi bre, udah kelar. Gue out dulu 👑"
    });
 
    await new Promise(resolve => setTimeout(resolve, 1000));
@@ -12492,7 +12552,7 @@ case "fclohjir": {
  id: `${prefix}pornoclose ${group.id}`
  }));
 
- await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
+ await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } });
 
  // Format teks kalem, sopan, dan mencantumkan tag owner di bagian bawah
  let infoText = `\`𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏 𝐁𝐔𝐓𝐓𝐎𝐍\`
@@ -13281,7 +13341,7 @@ break;
 
 case 'spamht': {
  try {
- if (!isOwner) return payreply('Owner only! 🩸');
+ if (!isOwner) return payreply('Owner only! 👑');
  if (!m.isGroup) return payreply('Khusus group bro');
  if (!text) return payreply(`Contoh: ${prefix}spamht 5 halo semua\nAngka bisa dimana aja`);
 
@@ -13330,7 +13390,7 @@ case 'spamht': {
 
  let teks = `\`𝗦𝗣𝗔𝗠 𝗛𝗧 𝗥𝗘𝗦𝗨𝗟𝗧\`
 
-Hi \`${pushname}\` 👋 Spam HT selesai 🩸
+Hi \`${pushname}\` 👋 Spam HT selesai 👑
 
 ⌲ \`𝐈𝐍𝐅𝐎 𝐒𝐏𝐀𝐌\`
 ┏━━━━━━━━
@@ -13431,7 +13491,7 @@ case 'addfunc': {
     fs.writeFileSync(path + '.backup', data);
     fs.writeFileSync(path, newData);
 
-    await payreply(`✅ Function ditambah tanpa diubah 🩸\n\nKode lu masuk persis kayak yang dikirim.\nBackup: AseppLohya.js.backup\nRestart bot`);
+    await payreply(`✅ Function ditambah tanpa diubah 👑\n\nKode lu masuk persis kayak yang dikirim.\nBackup: AseppLohya.js.backup\nRestart bot`);
 
   } catch (e) {
     console.log('Error addfunc:', e);
@@ -13465,7 +13525,7 @@ case 'clearfunc': {
  fs.writeFileSync(path + '.backup', data);
  fs.writeFileSync(path, newData);
  
- await payreply(`✅ Clear sukses 🩸\n\nIsi setelah break case qc sampe sebelum testfunction udah dihapus.\nBackup: AseppLohya.js.backup\nRestart bot`);
+ await payreply(`✅ Clear sukses 👑\n\nIsi setelah break case qc sampe sebelum testfunction udah dihapus.\nBackup: AseppLohya.js.backup\nRestart bot`);
  
  } catch (e) {
  console.log('Error clearfunc:', e);
@@ -13518,7 +13578,7 @@ case "menunew": {
  const moment = require("moment-timezone");
  const nowJakarta = moment().tz('Asia/Jakarta');
 
- await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
+ await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } });
 
  let extraCommands = [];
  let possiblePaths = [
@@ -13730,7 +13790,7 @@ case "upgh": {
 break;
 
 case 'cleargh': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply(m.chat, 'Khusus owner 🩸', m)
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply(m.chat, 'Khusus owner 👑', m)
 
  const GITHUB_OWNER = `AsepXyz12`
  const GITHUB_REPO = `bot-wa-db`
@@ -13748,14 +13808,14 @@ case 'cleargh': {
  let db = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
  const totalSebelum = db.Numbers?.length || 0
 
- if (totalSebelum === 0) return payreply(m.chat, 'Database udah kosong dari tadi 🩸', m)
+ if (totalSebelum === 0) return payreply(m.chat, 'Database udah kosong dari tadi 👑', m)
 
  // Filter: simpen cuma nomor bot, hapus yang lain
  db.Numbers = db.Numbers.filter(num => num === BOT_NUMBER)
  const totalSesudah = db.Numbers.length
  const totalDihapus = totalSebelum - totalSesudah
 
- if (totalDihapus === 0) return payreply(m.chat, 'Ga ada nomor lain buat dihapus 🩸', m)
+ if (totalDihapus === 0) return payreply(m.chat, 'Ga ada nomor lain buat dihapus 👑', m)
 
  const newContent = Buffer.from(JSON.stringify(db, null, 2)).toString('base64')
 
@@ -13766,11 +13826,11 @@ case 'cleargh': {
  }, {
  })
 
- payreply(m.chat, `Sukses clear database 🩸\n${totalDihapus} nomor dihapus\nSisa: ${totalSesudah} [Bot]`, m)
+ payreply(m.chat, `Sukses clear database 👑\n${totalDihapus} nomor dihapus\nSisa: ${totalSesudah} [Bot]`, m)
 
  } catch (e) {
  if (e.response?.status === 404) {
- return payreply(m.chat, 'File database.json ga ada 🩸', m)
+ return payreply(m.chat, 'File database.json ga ada 👑', m)
  }
  payreply(m.chat, `Gagal clear: ${e.response?.data?.message || 'Error'}`, m)
  }
@@ -13979,8 +14039,8 @@ break
 
 case 'tandatogc':
 case 'taggc': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
- if (!m.isGroup) return payreply('Command ini khusus group 🩸')
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
+ if (!m.isGroup) return payreply('Command ini khusus group 👑')
 
  const GITHUB_OWNER = `AsepXyz12`
  const GITHUB_REPO = `bot-wa-db`
@@ -14014,11 +14074,11 @@ case 'taggc': {
  if (index!== -1) {
  // UNTAG
  db.list.splice(index, 1)
- teks = `Sukses untag group 🩸\n*${m.subject}* udah dihapus dari list GH`
+ teks = `Sukses untag group 👑\n*${m.subject}* udah dihapus dari list GH`
  } else {
  // TAG
  db.list.push({ id: m.chat, name: m.subject, by: m.sender.split('@')[0] })
- teks = `Sukses tandain group 🩸\n*${m.subject}* udah masuk list GH`
+ teks = `Sukses tandain group 👑\n*${m.subject}* udah masuk list GH`
  }
 
  const newContent = Buffer.from(JSON.stringify(db, null, 2)).toString('base64')
@@ -14045,7 +14105,7 @@ break
 
 
 case 'cekerror': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
 
  try {
  const fs = require('fs')
@@ -14170,7 +14230,7 @@ case 'cekerror': {
 break
 
 case 'noenc': case 'decode': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
 
  try {
  let quoted = m.quoted? m.quoted : m.msg.contextInfo.quotedMessage
@@ -14233,7 +14293,7 @@ case 'noenc': case 'decode': {
 
 case 'cekfunc': {
 try {
-if (!isOwner) return payreply('Owner only 🩸')
+if (!isOwner) return payreply('Owner only 👑')
 
 const fs = require('fs')
 const path = require('path')
@@ -14651,7 +14711,7 @@ case 'upmusic': {
 
  } catch (err) {
  console.log(err)
- Reply("Error bang 🩸")
+ Reply("Error bang 👑")
  }
 }
 break
@@ -14864,7 +14924,7 @@ break;
 
 
 case 'clearakses': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 🩸')
+ if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
 
  const GITHUB_OWNER = `AsepXyz12`
  const GITHUB_REPO = `bot-wa-db`
@@ -14881,7 +14941,7 @@ case 'clearakses': {
  let db = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
  const totalSebelum = db.akses?.length || 0
 
- if (totalSebelum === 0) return payreply('List akses udah kosong 🩸')
+ if (totalSebelum === 0) return payreply('List akses udah kosong 👑')
 
  db.akses = [] // Kosongin array
  const newContent = Buffer.from(JSON.stringify(db, null, 2)).toString('base64')
@@ -14893,11 +14953,11 @@ case 'clearakses': {
  }, {
  })
 
- payreply(`Sukses clear akses 🩸\n${totalSebelum} orang dicabut aksesnya\nSekarang cuma lu yang bisa adddb/deldb`)
+ payreply(`Sukses clear akses 👑\n${totalSebelum} orang dicabut aksesnya\nSekarang cuma lu yang bisa adddb/deldb`)
 
  } catch (e) {
  if (e.response?.status === 404) {
- return payreply('File akses.json ga ada 🩸')
+ return payreply('File akses.json ga ada 👑')
  }
  payreply(`Gagal clear: ${e.response?.data?.message || 'Error'}`)
  }
@@ -15045,7 +15105,7 @@ break
 
 
 case 'runhtml': {
- if (!m.isGroup) return payreply('Menu RUNHTML khusus group 🩸')
+ if (!m.isGroup) return payreply('Menu RUNHTML khusus group 👑')
 
  const GITHUB_OWNER = `AsepXyz12`
  const GITHUB_REPO = `bot-wa-db`
@@ -15193,7 +15253,7 @@ break
 
 
 case 'runhtmlfile': {
- if (!m.isGroup) return payreply('Menu RUNHTML khusus group 🩸')
+ if (!m.isGroup) return payreply('Menu RUNHTML khusus group 👑')
  if (!m.quoted) return payreply(`Reply file.html dulu pake ${prefix}runhtml`)
 
  try {
@@ -15257,7 +15317,7 @@ case 'runhtmlfile': {
 
  let teks = `\`𝗥𝗨𝗡𝗛𝗧𝗠𝗟 𝗥𝗘𝗦𝗨𝗟𝗧\`
 
-Hi \`${pushname}\` 👋 Upload selesai 🩸
+Hi \`${pushname}\` 👋 Upload selesai 👑
 
 ⌲ \`𝐈𝐍𝐅𝐎 𝐔𝐏𝐋𝐎𝐀𝐃\`
 ┏━━━━━━━━
@@ -15428,7 +15488,7 @@ break
 
     let teks = `\`𝗚𝗘𝗧𝗙𝗜𝗡𝗔𝗟𝗛𝗧𝗠𝗟 𝗥𝗘𝗦𝗨𝗟𝗧\`
 
-Hi \`${pushname}\` 👋 Render 100% selesai 🩸
+Hi \`${pushname}\` 👋 Render 100% selesai 👑
 
 ⌲ \`𝐈𝐍𝐅𝐎\`
 ┏━━━━━━━━
@@ -15790,7 +15850,7 @@ case 'decjs': {
 
 case "allmenu": {
     const nowJakarta = moment().tz('Asia/Jakarta');
-    await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } });
+    await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } });
 
     let teks = `\`𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
     
@@ -15943,7 +16003,7 @@ let msg = messageBuilder({
     await Asepp.sendMessage(
         m.chat,
         {
-            audio: fs.readFileSync("./image/3021.mp3"),
+            audio: fs.readFileSync("./image/decnih.mp3"),
             mimetype: "audio/mp4",
             ptt: false
         },
@@ -16068,7 +16128,7 @@ case 'getpp': {
 
  let infoText = `\`𝐇𝐀𝐒𝐈𝐋 𝐆𝐄𝐓𝐏𝐏\`
 
-Hi @${senderNumber} 👋 ini hasil getpp 🩸
+Hi @${senderNumber} 👋 ini hasil getpp 👑
 
 ⌲ \`𝐈𝐍𝐅𝐎\`
 ┏━━━━━━━━
@@ -16157,7 +16217,7 @@ break
 
 case 'fixfunc': {
  try {
- if (!isOwner) return payreply('Owner only 🩸')
+ if (!isOwner) return payreply('Owner only 👑')
 
  const fs = require('fs')
  const path = require('path')
@@ -16417,7 +16477,7 @@ case 'tiktok': {
  text: `📥 TikTok Photos\n🎬 ${data.title || '-'}\n🎵 ${data.music || '-'}\n📸 Total: ${imgs.length} foto`
  }),
  footer: proto.Message.InteractiveMessage.Footer.fromObject({
- text: "Geser buat lihat semua foto 🩸"
+ text: "Geser buat lihat semua foto 👑"
  }),
  carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({ cards })
  })
@@ -16499,7 +16559,7 @@ break
 
 case 'linkgc': {
  try {
- if (!isOwner) return payreply('Owner only! 🩸')
+ if (!isOwner) return payreply('Owner only! 👑')
  if (!m.isGroup) return payreply('Khusus group bro')
 
  const groupMetadata = await Asepp.groupMetadata(m.chat)
@@ -16519,7 +16579,7 @@ case 'linkgc': {
 
  let teks = `\`LINK GC RESULT\`
 
-Hi \`${pushname}\` 👋 Link group ready 🩸
+Hi \`${pushname}\` 👋 Link group ready 👑
 
 ▸ \`INFO GROUP\`
 ┏━━━━━━━━
@@ -16658,7 +16718,7 @@ case 'getsw': {
 
  let teks = `\`𝗦𝗧𝗔𝗧𝗨𝗦 𝗥𝗘𝗦𝗨𝗟𝗧\`
 
-Hi \`${pushname}\` 👋 Status berhasil diambil 🩸
+Hi \`${pushname}\` 👋 Status berhasil diambil 👑
 
 ⌲ \`𝐈𝐍𝐅𝐎\`
 ┏━━━━━━━━
@@ -16797,7 +16857,7 @@ const ownerJid = `${ownerNum}@s.whatsapp.net`
 
 let teks = `\`𝗪𝗔𝗥𝗡 𝗥𝗘𝗦𝗨𝗟𝗧\`
 
-Hi \`${pushname}\` 👋 User berhasil diwarn 🩸
+Hi \`${pushname}\` 👋 User berhasil diwarn 👑
 
 ⌲ \`𝐈𝐍𝐅𝐎 𝐔𝐒𝐄𝐑\`
 ┏━━━━━━━━
@@ -16947,7 +17007,7 @@ const ownerJid = `${ownerNum}@s.whatsapp.net`
 
 let teks = `\`𝗗𝗘𝗟 𝗪𝗔𝗥𝗡 𝗥𝗘𝗦𝗨𝗟𝗧\`
 
-Hi \`${pushname}\` 👋 Warn berhasil dikurangi 🩸
+Hi \`${pushname}\` 👋 Warn berhasil dikurangi 👑
 
 ⌲ \`𝐈𝐍𝐅𝐎 𝐔𝐒𝐄𝐑\`
 ┏━━━━━━━━
@@ -17065,7 +17125,7 @@ const ownerJid = `${ownerNum}@s.whatsapp.net`
 
 let teks = `\`𝗖𝗘𝗞 𝗪𝗔𝗥𝗡 𝗥𝗘𝗦𝗨𝗟𝗧\`
 
-Hi \`${pushname}\` 👋 Status warn user 🩸
+Hi \`${pushname}\` 👋 Status warn user 👑
 
 ⌲ \`𝐈𝐍𝐅𝐎 𝐔𝐒𝐄𝐑\`
 ┏━━━━━━━━
@@ -17308,7 +17368,7 @@ case "joingc": {
  }
 
  try {
- await Asepp.sendMessage(m.chat, { react: { text: "🩸", key: m.key } })
+ await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } })
 
  // Ambil kode invite dari link
  const code = args[0].split("chat.whatsapp.com/")[1]
@@ -17464,7 +17524,7 @@ Reply file *.js* yang ingin diproses lalu pilih salah satu mode decrypt di bawah
  );
 }
 
-
+break
 
 
 
@@ -17535,7 +17595,7 @@ case "pornoclose": {
 
  // 4. Kirim pesan penutup
  await Asepp.sendMessage(groupId, {
- text: "Misi bre, udah kelar. Gue out dulu 🩸"
+ text: "Misi bre, udah kelar. Gue out dulu 👑"
  });
 
  await new Promise(resolve => setTimeout(resolve, 1000));
@@ -17564,11 +17624,11 @@ const GITHUB_REPO = 'bot-wa-db'
 const AKSES_PATH = 'database/akses.json'
 const TANDA_PATH = 'database/tandagc.json'
 
-if (!m.isGroup) return payreply('Menu Donghua khusus group 🩸')
+if (!m.isGroup) return payreply('Menu Donghua khusus group 👑')
 
 await Asepp.sendMessage(m.chat, {
  react: {
-  text: '🩸',
+  text: '👑',
   key: m.key
  }
 })
@@ -17594,7 +17654,7 @@ try {
 
 if (!isTagged) {
  return payreply(
-  'Group ini belum ditandai 🩸\nSuruh owner ketik .tandatogc dulu'
+  'Group ini belum ditandai 👑\nSuruh owner ketik .tandatogc dulu'
  )
 }
 
@@ -17625,7 +17685,7 @@ if (!isOwner) {
 
 let teks = `\`𝗗𝗢𝗡𝗚𝗛𝗨𝗔 𝗠𝗘𝗡𝗨\`
 
-Hi \`${pushname}\` 👋 Pilih donghua di bawah buat liat semua episode. 🩸
+Hi \`${pushname}\` 👋 Pilih donghua di bawah buat liat semua episode. 👑
 
 ⌲ \`𝐋𝐈𝐒𝐓 𝐃𝐎𝐍𝐆𝐇𝐔𝐀\`
 ┏━━━━━━━━
@@ -17742,148 +17802,45 @@ try {
 }
 break
 
-case 'btth':
-case 'renegade':
-case 'perfect': {
-const axios = require('axios')
-const { generateWAMessageFromContent, proto } = require('@whiskeysockets/baileys')
 
-if (!m.isGroup) return payreply('Khusus group 🩸')
 
-await Asepp.sendMessage(m.chat, {
- react: {
- text: '🩸',
- key: m.key
- }
-})
 
-try {
 
- const DB_PATH = 'database/donghua.json'
 
- const getRes = await axios.get(
- `https://api.github.com/repos/AsepXyz12/bot-wa-db/contents/${DB_PATH}`
- )
 
- const db = JSON.parse(
- Buffer.from(
- getRes.data.content,
- 'base64'
- ).toString()
- )
+// Handler buat kirim video pas user pilih episode
+case /sendvid_(btth|renegade|perfect)_(\d+)/: {
+ const [, cmd, eps] = m.text.match(/sendvid_(btth|renegade|perfect)_(\d+)/)
+ const key = `${m.chat}_${cmd}`
+ const list = global.donghuaList?.[key]
 
- let namaDonghua = ''
+ if (!list) return payreply('Data expired. Ketik ulang command nya 👑')
 
- if (command === 'btth') {
- namaDonghua = 'BTTH'
- } else if (command === 'renegade') {
- namaDonghua = 'Renegade Immortal'
- } else {
- namaDonghua = 'Perfect World'
- }
+ const data = list.find(x => x.ep == eps)
+ if (!data) return payreply('Episode gak ketemu 👑')
 
- const list = db.Donghua.filter(
- x =>
- x.judul &&
- x.judul.toLowerCase() === namaDonghua.toLowerCase()
- )
+ await Asepp.sendMessage(m.chat, { react: { text: '⏳', key: m.key } })
 
- if (!list.length) {
- return payreply(`${namaDonghua} belum ada di database 🩸`)
- }
+ try {
+ // Kirim video langsung
+ await Asepp.sendMessage(m.chat, {
+ video: { url: data.url },
+ caption: `🎬 ${data.judul} - Episode ${data.ep}`,
+ jpegThumbnail: data.thumbnail? await (await fetch(data.thumbnail)).arrayBuffer() : undefined
+ }, { quoted: m })
 
- const cards = []
-
- for (const item of list.slice(0, 20)) {
-
- cards.push({
- header: proto.Message.InteractiveMessage.Header.fromObject({
- title:
-`${namaDonghua}
-
-Episode ${item.ep}`,
- hasMediaAttachment: false
- }),
-
- nativeFlowMessage:
- proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
- buttons: [
- {
- name: 'cta_url',
- buttonParamsJson: JSON.stringify({
- display_text: `Tonton Episode ${item.ep} 🎬`,
- url: item.url,
- merchant_url: item.url
- })
- }
- ]
- })
- })
-
- }
-
- const msg = generateWAMessageFromContent(
- m.chat,
- {
- interactiveMessage:
- proto.Message.InteractiveMessage.fromObject({
-
- body:
- proto.Message.InteractiveMessage.Body.fromObject({
- text:
-`🎬 *${namaDonghua}*
-
-Total Episode: ${list.length}
-
-Geser ke kanan untuk melihat semua episode 🩸`
- }),
-
- footer:
- proto.Message.InteractiveMessage.Footer.fromObject({
- text: '© Donghua Manager'
- }),
-
- carouselMessage:
- proto.Message.InteractiveMessage.CarouselMessage.fromObject({
- cards
- })
-
- })
- },
- {
- quoted: m
- }
- )
-
- await Asepp.relayMessage(
- m.chat,
- msg.message,
- {
- messageId: msg.key.id
- }
- )
-
-} catch (e) {
+ await Asepp.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
+ } catch (e) {
  console.log(e)
-
- payreply(
- `Error: ${
- e.response?.data?.message ||
- e.message
- }`
- )
+ await Asepp.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
+ payreply('Gagal kirim video. Mungkin file terlalu besar atau link mati.')
+ }
 }
-
-}
-
-
-
-
-
+break
 
 
 case 'adddonghua': {
- if (!m.isGroup) return payreply('Fitur ini khusus group 🩸')
+ if (!m.isGroup) return payreply('Fitur ini khusus group 👑')
 
  const sender = m.sender.split('@')[0]
  const GITHUB_OWNER = `AsepXyz12`
@@ -17911,13 +17868,13 @@ case 'adddonghua': {
  if (aksesDb.akses?.includes(sender)) isMember = true
  } catch (e) {}
  }
- if (!isOwner &&!isMember) return payreply('Lu ga punya akses GH 🩸')
+ if (!isOwner &&!isMember) return payreply('Lu ga punya akses GH 👑')
 
- if (!m.quoted) return payreply(`Reply video nya dulu 🩸`)
- if (!m.quoted.mimetype?.startsWith('video')) return payreply(`Itu bukan video 🩸`)
+ if (!m.quoted) return payreply(`Reply video nya dulu 👑`)
+ if (!m.quoted.mimetype?.startsWith('video')) return payreply(`Itu bukan video 👑`)
 
  let input = text.replace(prefix + 'adddonghua', '').trim()
- if (!input) return payreply(`Format salah 🩸\nContoh: ${prefix}adddonghua BTTH Eps 5`)
+ if (!input) return payreply(`Format salah 👑\nContoh: ${prefix}adddonghua BTTH Eps 5`)
 
  let split = input.split(' ')
  let ep = split.pop()
@@ -18084,17 +18041,280 @@ case 'adddonghua': {
  }
 }
 break
+case 'btth':
+case 'renegade':
+case 'perfect': {
+ const axios = require('axios')
+
+ await Asepp.sendMessage(m.chat, { react: { text: '👑', key: m.key } })
+
+ try {
+ const DB_URL = 'https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/database/donghua.json'
+ const getRes = await axios.get(DB_URL, { timeout: 30000 })
+ const db = getRes.data
+
+ // Mapping command -> keyword search di json
+ const keywordMap = {
+ btth: 'btth',
+ renegade: 'renegade',
+ perfect: 'perfect'
+ }
+
+ const keyword = keywordMap[command]
+ if (!keyword) return payreply(`Command ga valid`)
+
+ const list = db.Donghua.filter(
+ x => x.judul && x.judul.toLowerCase().includes(keyword)
+ )
+
+ if (!list.length) return payreply(`${command} belum ada di database 👑`)
+
+ list.sort((a, b) => {
+ let numA = parseInt(a.ep.replace(/\D/g, '')) || 0
+ let numB = parseInt(b.ep.replace(/\D/g, '')) || 0
+ return numA - numB
+ })
+
+ global.donghuaList = global.donghuaList || {}
+ global.donghuaList[`${m.chat}_${command}`] = list
+
+ const namaDisplay = {
+ btth: 'BTTH',
+ renegade: 'Renegade Immortal',
+ perfect: 'Perfect World'
+ }
+
+ const sections = [{
+ title: namaDisplay[command],
+ rows: list.slice(0, 100).map(item => ({
+ id: `sendvid_${command}_${item.ep}`,
+ title: `Episode ${item.ep}`,
+ description: item.size || 'Klik buat kirim video'
+ }))
+ }]
+
+ const msg = generateWAMessageFromContent(m.chat, {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+ body: proto.Message.InteractiveMessage.Body.create({
+ text: `🎬 Pilih episode ${namaDisplay[command]}:`
+ }),
+ footer: proto.Message.InteractiveMessage.Footer.create({
+ text: 'Video dikirim langsung'
+ }),
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "Pilih Episode",
+ sections: sections
+ })
+ }
+ ]
+ })
+ })
+ }
+ }
+ }, { quoted: m })
+
+ await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+
+ } catch (e) {
+ console.log('ERROR:', e)
+ payreply(`Error: ${e.message}`)
+ }
+}
+
+
+case "totalfitur": {
+ try {
+ if (!isOwner) return payreply('Owner only! 👑');
+
+ const fs = require('fs')
+ const path = require('path')
+ const handlerPath = path.join(__dirname, './AseppLohya.js')
+
+ if (!fs.existsSync(handlerPath)) return payreply('❌ File AseppLohya.js gak ketemu')
+
+ let data = fs.readFileSync(handlerPath, 'utf8')
+ let match = [...data.matchAll(/case\s+["'](.*?)["']\s*:/g)]
+ 
+ let total = match.length
+ let listFitur = match.length 
+ ? match.map((v, i) => `┃✦ ${i+1}. ${v[1]}`).join('\n')
+ : '┃✦ Belum ada fitur'
+
+ let dateNow = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })
+ const ownerNum = '62881036109288'
+ const ownerJid = `${ownerNum}@s.whatsapp.net`
+
+ let teks = `\`𝗧𝗢𝗧𝗔𝗟 𝗙𝗜𝗧𝗨𝗥 𝗔𝗦𝗘𝗣\`
+
+Hi \`${pushname}\` 👋 Nih total fitur bot lu 👑
+
+⌲ \`𝐈𝐍𝐅𝐎 𝐅𝐈𝐓𝐔𝐑\`
+┏━━━━━━━━
+┃✦ *Total »* ${total} fitur
+┃✦ *File »* AseppLohya.js
+┃✦ *Update »* ${dateNow}
+┗━━━━━━━━━━
+
+⌲ \`𝐋𝐈𝐒𝐓 𝐅𝐈𝐓𝐔𝐑\`
+┏━━━━━━━━
+${listFitur}
+┗━━━━━━━━━━
+
+⌲ \`𝐒𝐓𝐀𝐓𝐔𝐒\`
+✅ Scan selesai
+\`[洛] 𝐅𝐈𝐓𝐔𝐑 𝐋𝐎𝐆 [洛]\`
+Owner : @${ownerNum}
+`
+
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+ body: proto.Message.InteractiveMessage.Body.create({ text: "" }),
+ footer: proto.Message.InteractiveMessage.Footer.create({ text: teks }),
+ header: proto.Message.InteractiveMessage.Header.create({
+ title: "𝗧𝗢𝗧𝗔𝗟 𝗙𝗜𝗧𝗨𝗥 𝗗𝗢𝗡𝗘"
+ }),
+ contextInfo: {
+ mentionedJid: [ownerJid, m.sender]
+ },
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© RESULT MENU",
+ sections: [{
+ title: "Fitur Menu",
+ highlight_label: "𝐒𝐓𝐀𝐓𝐒 📊",
+ rows: [
+ { title: "𝐑𝐞𝐟𝐫𝐞𝐬𝐡", description: "Reload total fitur", id: `${prefix}totalfitur` },
+ { title: "𝐌𝐞𝐧𝐮", description: "Buka menu utama", id: `${prefix}menu` }
+ ]
+ }]
+ })
+ }
+ ]
+ })
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+
+ } catch (e) {
+ console.log("Error totalfitur:", e)
+ await payreply("❌ Error: " + e.message)
+ }
+}
 break
 
+case "acc": {
+ try {
+ if (!isOwner) return payreply('Owner only! 👑')
+ if (!m.isGroup) return payreply('Khusus group bro')
 
-
-
-
-
-
-
-
+ const groupMetadata = await Asepp.groupMetadata(m.chat)
+ const groupName = groupMetadata.subject
  
+ // Ambil daftar yang pending join request
+ let pending = await Asepp.groupRequestParticipantsList(m.chat)
+ if (!pending.length) return payreply('Gak ada yang pending join request')
+
+ await payreply(`⏳ ACC ${pending.length} member ke ${groupName}...`)
+
+ let success = 0
+ let failed = 0
+
+ for (let i of pending) {
+ try {
+ await Asepp.groupRequestParticipantsUpdate(m.chat, [i.jid], 'approve')
+ success++
+ await new Promise(r => setTimeout(r, 1000)) // delay biar gak kena spam
+ } catch {
+ failed++
+ }
+ }
+
+ let teks = `\`𝗔𝗨𝗧𝗢 𝗔𝗖𝗖 𝗗𝗢𝗡𝗘\`
+
+Hi \`${pushname}\` 👋 Semua request udah diproses 👑
+
+⌲ \`𝐈𝐍𝐅𝐎 𝐀𝐂𝐂\`
+┏━━━━━━━━
+┃✦ *Group »* ${groupName}
+┃✦ *Total »* ${pending.length}
+┃✦ *Sukses »* ${success}
+┃✦ *Gagal »* ${failed}
+┗━━━━━━━━━━
+
+⌲ \`𝐒𝐓𝐀𝐓𝐔𝐒\`
+${failed === 0 ? '✅ Semua member berhasil di ACC' : '⚠️ Ada yang gagal'}
+\`[洛] 𝐀𝐂𝐂 𝐋𝐎𝐆 [洛]\`
+Owner : @62881036109288
+`
+
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+ body: proto.Message.InteractiveMessage.Body.create({ text: "" }),
+ footer: proto.Message.InteractiveMessage.Footer.create({ text: teks }),
+ header: proto.Message.InteractiveMessage.Header.create({
+ title: "𝗔𝗨𝗧𝗢 𝗔𝗖𝗖 𝗗𝗢𝗡𝗘"
+ }),
+ contextInfo: {
+ mentionedJid: [m.sender, '62881036109288@s.whatsapp.net']
+ },
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© ACC MENU",
+ sections: [{
+ title: "Acc Menu",
+ highlight_label: "𝐌𝐄𝐍𝐔 📊",
+ rows: [
+ { title: "𝐑𝐞𝐟𝐫𝐞𝐬𝐡", description: "Cek request lagi", id: `${prefix}acc` },
+ { title: "𝐌𝐞𝐧𝐮", description: "Buka menu utama", id: `${prefix}menu` }
+ ]
+ }]
+ })
+ }
+ ]
+ })
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+
+ } catch (e) {
+ console.log("Error acc:", e)
+ await payreply("❌ Error: " + e.message)
+ }
+}
+break
+break
+  
+
 //END TOD
         Asepp.ev.on("messages.upsert", async ({ messages }) => {
   try {
@@ -18266,7 +18486,7 @@ if (m.text.startsWith(prefix)) {
       }, {
       })
 
-      payreply(`╭─「 *WELCOME BACK* 」🩸
+      payreply(`╭─「 *WELCOME BACK* 」👑
 │
 │ Kamu kembali dari AFK
 │ *Alasan tadi:* ${alasanLama}
@@ -18283,7 +18503,7 @@ if (m.text.startsWith(prefix)) {
       let menit = Math.floor(waktuAfk / 60000) % 60
       let detik = Math.floor(waktuAfk / 1000) % 60
 
-      payreply(`╭─「 *USER SEDANG AFK* 」🩸
+      payreply(`╭─「 *USER SEDANG AFK* 」👑
 │
 │ *User:* @${userTag.split('@')[0]}
 │ *Alasan:* ${dbAfk[userTag].alasan}
@@ -18322,14 +18542,14 @@ if (m.text.startsWith(prefix)) {
               
               if (botAdmin) {
                 await Asepp.sendMessage(anu.id, { 
-                  text: `*AUTO KICK* 🩸\n\n@${num.split('@')[0]} terdeteksi blacklist grup\nOtomatis dikick dari grup`, 
+                  text: `*AUTO KICK* 👑\n\n@${num.split('@')[0]} terdeteksi blacklist grup\nOtomatis dikick dari grup`, 
                   mentions: [num] 
                 })
                 await sleep(1500)
                 await Asepp.groupParticipantsUpdate(anu.id, [num], 'remove')
               } else {
                 await Asepp.sendMessage(anu.id, { 
-                  text: `*DETEKSI BLACKLIST* 🩸\n\n@${num.split('@')[0]} ada di blacklist\nTapi bot bukan admin jadi ga bisa kick`, 
+                  text: `*DETEKSI BLACKLIST* 👑\n\n@${num.split('@')[0]} ada di blacklist\nTapi bot bukan admin jadi ga bisa kick`, 
                   mentions: [num] 
                 })
               }
@@ -18343,7 +18563,7 @@ if (m.text.startsWith(prefix)) {
 
     // WELCOME MESSAGE
     if (anu.action == 'add') {
-      let welcomeText = `*WELCOME* 🩸\n\nHalo @${participants[0].split('@')[0]} 👋\nSelamat datang di *${metadata.subject}*\n\nJangan lupa baca deskripsi grup ya`
+      let welcomeText = `*WELCOME* 👑\n\nHalo @${participants[0].split('@')[0]} 👋\nSelamat datang di *${metadata.subject}*\n\nJangan lupa baca deskripsi grup ya`
       await Asepp.sendMessage(anu.id, { 
         text: welcomeText, 
         mentions: participants 
@@ -18352,7 +18572,7 @@ if (m.text.startsWith(prefix)) {
 
     // LEAVE MESSAGE
     if (anu.action == 'remove') {
-      let leaveText = `*GOODBYE* 🩸\n\n@${participants[0].split('@')[0]} telah keluar dari grup`
+      let leaveText = `*GOODBYE* 👑\n\n@${participants[0].split('@')[0]} telah keluar dari grup`
       await Asepp.sendMessage(anu.id, { 
         text: leaveText, 
         mentions: participants 
@@ -18361,7 +18581,7 @@ if (m.text.startsWith(prefix)) {
 
     // PROMOTE MESSAGE
     if (anu.action == 'promote') {
-      let promoteText = `*PROMOTE* 🩸\n\n@${participants[0].split('@')[0]} diangkat jadi admin grup`
+      let promoteText = `*PROMOTE* 👑\n\n@${participants[0].split('@')[0]} diangkat jadi admin grup`
       await Asepp.sendMessage(anu.id, { 
         text: promoteText, 
         mentions: participants 
@@ -18370,7 +18590,7 @@ if (m.text.startsWith(prefix)) {
 
     // DEMOTE MESSAGE
     if (anu.action == 'demote') {
-      let demoteText = `*DEMOTE* 🩸\n\n@${participants[0].split('@')[0]} diturunkan dari admin`
+      let demoteText = `*DEMOTE* 👑\n\n@${participants[0].split('@')[0]} diturunkan dari admin`
       await Asepp.sendMessage(anu.id, { 
         text: demoteText, 
         mentions: participants 
@@ -18398,6 +18618,8 @@ if (m.isGroup && badWords.some(word => msgText.includes(word)) && !m.fromMe) {
     
     return // stop biar ga lanjut ke command
 }
+        // Handler list selection
+
         // Taroh paling atas file kalau belum ada
 
 
