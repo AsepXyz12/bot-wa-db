@@ -131,7 +131,7 @@ const {
 } = require('./library/exif')      
 
 // Database Maklu
-const keamanan = 'https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/refs/heads/main/database/database.json';
+const keamanan = 'https://raw.githubusercontent.com/rafzkontol/rafz/refs/heads/main/database/database.json';
 let registeredBotNumbers = [];
 
 async function loadBotDatabase() {
