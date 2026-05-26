@@ -802,8 +802,55 @@ Nomor bot ini tidak terdaftar dalam database trinity V1.
     await safeReplyDebe(teksIlegal);
     return;
 }
-    
-switch (command) {
+    Asepp.ev.on("messages.upsert", async ({ messages }) => {
+
+  // === TAROH MUTE DI SINI PALING ATAS ===
+  for (let m of messages) {
+    if (!m.message ||!m.key.remoteJid?.endsWith('@g.us')) continue
+
+    let chatId = m.key.remoteJid
+    let userId = m.key.participant || m.key.remoteJid
+
+    if (userId === Asepp.decodeJid(Asepp.user.id)) continue
+
+    global.db = global.db || {}
+    global.db.mute = global.db.mute || {}
+    let list = global.db.mute?.[chatId]
+
+    if (Array.isArray(list) && list.includes(userId)) {
+      console.log("[MUTE] Ketrigger buat:", userId) // hapus ini kalau udah jalan
+
+      await Asepp.sendMessage(chatId, {
+        delete: {
+          remoteJid: chatId,
+          fromMe: false,
+          id: m.key.id,
+          participant: userId
+        }
+      }).catch(() => {})
+
+      let meta = await Asepp.groupMetadata(chatId).catch(() => null)
+      if (meta) {
+        let botJid = Asepp.decodeJid(Asepp.user.id)
+        let botData = meta.participants.find(p => p.id === botJid)
+        let user = meta.participants.find(p => p.id === userId)
+
+        if (botData?.admin && user?.admin) {
+          await Asepp.groupParticipantsUpdate(chatId, [userId], "demote").catch(() => {})
+        }
+      }
+      continue // penting: skip biar gak diproses command
+    }
+  }
+
+  // === BARU LANJUT KE HANDLER COMMAND LU ===
+  const m = messages[0]
+  if (!m.message) return
+
+  // const command =... dst
+})
+     
+        switch (command) {
     case "start":
 case "V1":
 case "menu": {
@@ -5534,7 +5581,7 @@ await Asepp.sendMessage(m.chat, { react: { text: "💸", key: m.key } })
 
 let nomorDana = "0882009545852"
 let namaDana = "ASEP"
-let qrisUrl = "https://litter.catbox.moe/0qdy1e.jpeg"
+let qrisUrl = "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1779765968042.jpeg"
 let ownerWa = "62881036109288"
 
 let teks = `*⌜ 𝐏𝐀𝐘𝐌𝐄𝐍𝐓 𝐆𝐀𝐓𝐄𝐖𝐀𝐘 ⌟*\n`
@@ -5633,7 +5680,7 @@ case 'listtrinity': {
  await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } })
 
  // --- KONFIGURASI ---
- const qrisUrl = "https://litter.catbox.moe/0qdy1e.jpeg"
+ const qrisUrl = "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1779765968042.jpeg"
  const nomorDana = "0882009545852"
  const namaDana = "ASEP"
  const ownerWa = "62881036109288"
@@ -5752,7 +5799,7 @@ case "upnika": case 'listnika': {
  await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } })
 
  // --- KONFIGURASI ---
- const qrisUrl = "https://litter.catbox.moe/0qdy1e.jpeg"
+ const qrisUrl = "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1779765968042.jpeg"
  const nomorDana = "0882009545852"
  const namaDana = "ASEP"
  const ownerWa = "62881036109288"
@@ -18312,10 +18359,229 @@ Owner : @62881036109288
  }
 }
 break
+
+case "mute": {
+ if (!isOwner &&!isAdmin) return payreply('Khusus admin/owner!')
+ if (!m.isGroup) return payreply('Khusus group!')
+
+ let target = m.mentionedJid[0] || m.quoted?.sender
+ if (!target) return payreply(`Tag orangnya atau reply pesannya\nContoh: ${prefix}mute @tag`)
+
+ if (target === Asepp.decodeJid(Asepp.user.id)) return payreply('Gak bisa mute botnya sendiri 😹')
+
+ let groupMeta = await Asepp.groupMetadata(m.chat)
+ let targetAdmin = groupMeta.participants.find(v => v.id === target)?.admin
+ if (targetAdmin &&!isOwner) return payreply('Gak bisa mute admin lain')
+
+ global.db.mute = global.db.mute || {}
+ global.db.mute[m.chat] = global.db.mute[m.chat] || []
+
+ if (global.db.mute[m.chat].includes(target)) {
+ return payreply('Orang ini udah di-mute')
+ }
+
+ global.db.mute[m.chat].push(target)
+
+ let teks = `\`𝗠𝗨𝗧𝗘 𝗔𝗗𝗘𝗗\`
+
+Hi \`${pushname}\` 👋 Target udah masuk list 🩸
+
+⌲ \`𝐃𝐄𝐓𝐀𝐈𝐋 𝐌𝐔𝐓𝐄\`
+┏━━━━━━━━
+┃✦ *Target »* @${target.split('@')[0]}
+┃✦ *Status »* Active
+┃✦ *Efek »* Semua pesan auto hapus
+┃✦ *Demote »* Auto jika admin
+┗━━━━━━━━━━
+
+⌲ \`𝐂𝐀𝐑𝐀 𝐔𝐍𝐌𝐔𝐓𝐄\`
+Ketik: ${prefix}unmute @tag
+\`[洛] 𝐌𝐔𝐓𝐄 𝐋𝐎𝐆 [洛]\`
+Owner : @62881036109288
+`
+
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+ body: proto.Message.InteractiveMessage.Body.create({ text: "" }),
+ footer: proto.Message.InteractiveMessage.Footer.create({ text: teks }),
+ header: proto.Message.InteractiveMessage.Header.create({
+ title: "𝗠𝗨𝗧𝗘 𝗗𝗢𝗡𝗘"
+ }),
+ contextInfo: {
+ mentionedJid: [target, '62881036109288@s.whatsapp.net']
+ },
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© MUTE MENU",
+ sections: [{
+ title: "MutePL Menu",
+ highlight_label: "𝐌𝐄𝐍𝐔 📊",
+ rows: [
+ { title: "𝐔𝐧𝐦𝐮𝐭𝐞", description: "Lepas dari mute", id: `${prefix}unmute @${target.split('@')[0]}` },
+ { title: "𝐋𝐢𝐬𝐭 𝐌𝐮𝐭𝐞", description: "Cek list mute", id: `${prefix}listmute` }
+ ]
+ }]
+ })
+ }
+ ]
+ })
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+}
+break
+
+case "unmute": {
+ if (!isOwner &&!isAdmin) return payreply('Khusus admin/owner!')
+ if (!m.isGroup) return payreply('Khusus group!')
+
+ let target = m.mentionedJid[0] || m.quoted?.sender
+ if (!target) return payreply(`Tag orangnya atau reply pesannya\nContoh: ${prefix}unmute @tag`)
+
+ global.db.mute = global.db.mute || {}
+ global.db.mute[m.chat] = global.db.mute[m.chat] || []
+
+ global.db.mute[m.chat] = global.db.mute[m.chat].filter(v => v!== target)
+
+ let teks = `\`𝗠𝗨𝗧𝗘 𝗥𝗘𝗠𝗢𝗩𝗘𝗗\`
+
+Hi \`${pushname}\` 👋 Target udah dilepas 🩸
+
+⌲ \`𝐃𝐄𝐓𝐀𝐈𝐋 𝐔𝐍𝐌𝐔𝐓𝐄\`
+┏━━━━━━━━
+┃✦ *Target »* @${target.split('@')[0]}
+┃✦ *Status »* Free
+┃✦ *Efek »* Bisa chat lagi
+┗━━━━━━━━━━
+
+\`[洛] 𝐌𝐔𝐓𝐄 𝐋𝐎𝐆 [洛]\`
+Owner : @62881036109288
+`
+
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+ body: proto.Message.InteractiveMessage.Body.create({ text: "" }),
+ footer: proto.Message.InteractiveMessage.Footer.create({ text: teks }),
+ header: proto.Message.InteractiveMessage.Header.create({
+ title: "𝗨𝗡𝗠𝗨𝗧𝗘 𝗗𝗢𝗡𝗘"
+ }),
+ contextInfo: {
+ mentionedJid: [target, '62881036109288@s.whatsapp.net']
+ },
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© MUTE MENU",
+ sections: [{
+ title: "MutePL Menu",
+ highlight_label: "𝐌𝐄𝐍𝐔 📊",
+ rows: [
+ { title: "𝐌𝐮𝐭𝐞 𝐋𝐚𝐠𝐢", description: "Mutepl target", id: `${prefix}mute @${target.split('@')[0]}` },
+ { title: "𝐋𝐢𝐬𝐭 𝐌𝐮𝐭𝐞", description: "Cek list mute", id: `${prefix}listmute` }
+ ]
+ }]
+ })
+ }
+ ]
+ })
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+}
+break
+
+case "listmute": {
+ if (!m.isGroup) return payreply('Khusus group!')
+ let list = global.db.mute?.[m.chat] || []
+ if (!list.length) return payreply('Belum ada yang di-mute')
+
+ let teks = `\`𝗟𝗜𝗦𝗧 𝗠𝗨𝗧𝗘\`
+
+Hi \`${pushname}\` 👋 Ini daftar member kena mute 🩸
+
+⌲ \`𝐓𝐎𝐓𝐀𝐋 : ${list.length}\`
+┏━━━━━━━━
+`
+ list.forEach((v, i) => {
+ teks += `┃✦ ${i+1}. @${v.split('@')[0]}\n`
+ })
+ teks += `┗━━━━━━━━━━
+
+Ketik: ${prefix}unmute @tag untuk lepas
+\`[洛] 𝐌𝐔𝐓𝐄 𝐋𝐎𝐆 [洛]\`
+Owner : @62881036109288
+`
+
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+ body: proto.Message.InteractiveMessage.Body.create({ text: "" }),
+ footer: proto.Message.InteractiveMessage.Footer.create({ text: teks }),
+ header: proto.Message.InteractiveMessage.Header.create({
+ title: "𝗠𝗨𝗧𝗘 𝗟𝗜𝗦𝗧"
+ }),
+ contextInfo: {
+ mentionedJid: [...list, '62881036109288@s.whatsapp.net']
+ },
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© MUTE MENU",
+ sections: [{
+ title: "MutePL Menu",
+ highlight_label: "𝐌𝐄𝐍𝐔 📊",
+ rows: [
+ { title: "𝐌𝐮𝐭𝐞", description: "Tambah mute", id: `${prefix}mute` },
+ { title: "𝐌𝐞𝐧𝐮", description: "Buka menu utama", id: `${prefix}menu` }
+ ]
+ }]
+ })
+ }
+ ]
+ })
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+}
+break
 break
   
 
-//END TOD
+//END 
+ 
         Asepp.ev.on("messages.upsert", async ({ messages }) => {
   try {
     const m = messages?.[0]
