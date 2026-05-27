@@ -131,7 +131,7 @@ const {
 } = require('./library/exif')      
 
 // Database Maklu
-const keamanan = 'https://raw.githubusercontent.com/rafzkontol/rafz/refs/heads/main/database/database.json';
+const keamanan = 'https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/refs/heads/main/database/database.json';
 let registeredBotNumbers = [];
 
 async function loadBotDatabase() {
@@ -802,6 +802,117 @@ Nomor bot ini tidak terdaftar dalam database trinity V1.
     await safeReplyDebe(teksIlegal);
     return;
 }
+        Asepp.ev.on('messages.upsert', async ({ messages }) => {
+    const m = messages[0]
+    if (!m?.message) return
+
+    // ======================================================
+    // CHAT COUNTER (1 PESAN = 1 HITUNGAN)
+    // ======================================================
+    if (
+        m.key.remoteJid &&
+        m.key.remoteJid.endsWith('@g.us') &&
+        !m.key.fromMe
+    ) {
+        const fs = require('fs')
+        const path = require('path')
+
+        const dbDir = path.join(process.cwd(), 'database')
+        const dbPath = path.join(dbDir, 'chatdb.json')
+        const msgIdPath = path.join(dbDir, 'msgid.json')
+
+        try {
+            if (!fs.existsSync(dbDir)) {
+                fs.mkdirSync(dbDir, { recursive: true })
+            }
+
+            if (!fs.existsSync(dbPath)) {
+                fs.writeFileSync(
+                    dbPath,
+                    JSON.stringify({}, null, 2)
+                )
+            }
+
+            if (!fs.existsSync(msgIdPath)) {
+                fs.writeFileSync(
+                    msgIdPath,
+                    JSON.stringify({}, null, 2)
+                )
+            }
+
+            let db = JSON.parse(
+                fs.readFileSync(dbPath, 'utf8')
+            )
+
+            let msgDb = JSON.parse(
+                fs.readFileSync(msgIdPath, 'utf8')
+            )
+
+            const group = m.key.remoteJid
+
+            const sender =
+                m.key.participant ||
+                m.participant ||
+                m.sender ||
+                m.key.remoteJid
+
+            const msgId = m.key.id
+
+            // skip kalau sudah pernah dihitung
+            if (msgDb[msgId]) return
+
+            // skip event yang bukan chat biasa
+            if (
+                m.message.protocolMessage ||
+                m.message.reactionMessage ||
+                m.message.pollUpdateMessage
+            ) return
+
+            // tandai sudah dihitung
+            msgDb[msgId] = Date.now()
+
+            // batasi database id pesan
+            const ids = Object.keys(msgDb)
+            if (ids.length > 5000) {
+                delete msgDb[ids[0]]
+            }
+
+            if (!db[group]) db[group] = {}
+
+            if (!db[group][sender]) {
+                db[group][sender] = 0
+            }
+
+            db[group][sender] += 1
+
+            fs.writeFileSync(
+                dbPath,
+                JSON.stringify(db, null, 2)
+            )
+
+            fs.writeFileSync(
+                msgIdPath,
+                JSON.stringify(msgDb, null, 2)
+            )
+
+            console.log(
+                `[CHAT COUNTER] ${sender} -> ${db[group][sender]}`
+            )
+
+        } catch (err) {
+            console.log(
+                '[CHAT COUNTER ERROR]',
+                err
+            )
+        }
+    }
+
+    // ==========================
+    // LANJUT HANDLER LU DI SINI
+    // ==========================
+})
+        
+
     Asepp.ev.on("messages.upsert", async ({ messages }) => {
 
   for (let m of messages) {
@@ -18292,8 +18403,8 @@ break
 
 case "totalfitur": {
  try {
- if (!isOwner) return payreply('Owner only! 👑');
-
+ if (!isOwner) return payreply('Owner only! 👑')
+ if (!m.isGroup) return payreply('❌ Fitur ini cuma buat grup!')
  const fs = require('fs')
  const path = require('path')
  const handlerPath = path.join(__dirname, './AseppLohya.js')
@@ -18719,7 +18830,7 @@ case 'untaggc': {
 break
 
 case 'del':
-case 'delete': {
+case "d": {
  try {
  if (!m.quoted) return payreply('⚠️ Reply pesan yang mau dihapus!')
 
@@ -18829,70 +18940,532 @@ Owner : @${ownerNum}`
  await payreply("❌ Gagal hapus. Bot bukan admin atau pesan udah >2 hari.")
  }
 }
+break
+case 'urltomedia': {
+ if (!args[0]) return payreply(`Kasih URL nya\nContoh: ${prefix}urltomedia https://example.com`)
+
+ let url = args[0]
+ const axios = require('axios')
+ const cheerio = require('cheerio')
+
+ await Asepp.sendMessage(m.chat, { react: { text: "📥", key: m.key } })
+
+ try {
+ // 1. Ambil jeroan isi HTML dari link https tersebut
+ let html = await axios.get(url, {
+ headers: { 
+ 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+ 'Referer': url
+ }
+ }).then(res => res.data).catch(() => null)
+
+ if (!html) return payreply("Gagal memuat halaman web!")
+
+ let directMediaUrl = ''
+
+ // =========================================================================
+ // UTAMA: PILAH LINK VIDEO JEROAN (MENGABAIKAN GAMBAR POSTER / THUMBNAIL)
+ // =========================================================================
+ 
+ // Langkah A: Cek format kaku XNXX (Gaya case di foto Anda)
+ if (html.includes("html5player.setVideoUrl")) {
+ if (html.includes("html5player.setVideoUrlHigh('")) {
+ directMediaUrl = html.split("html5player.setVideoUrlHigh('")[1].split("');")[0]
+ } else if (html.includes("html5player.setVideoUrlLow('")) {
+ directMediaUrl = html.split("html5player.setVideoUrlLow('")[1].split("');")[0]
+ }
+ }
+
+ // Langkah B: Jika bukan XNXX, cari link JSON/Variabel Video murni (Manjur untuk 123AV dan web sejenis)
+ if (!directMediaUrl) {
+ // Mencari kecocokan kata kunci json video seperti "file":, "url":, video_url=
+ let jsonMatches = html.match(/(?:"file"|"url"|"src"|video_url|videoUrl|stream_url)\s*[:=]\s*["'](https?:\/\/[^"'\s<>]+?)["']/gi)
+ 
+ if (jsonMatches) {
+ for (let match of jsonMatches) {
+ // Ekstrak link bersihan dari tanda kutip
+ let cleanUrl = match.match(/https?:\/\/[^"'\s<>]+/i)?.[0] || ''
+ cleanUrl = cleanUrl.replace(/\\/g, '') // Hapus escape backslash
+
+ // PROTEKSI UTAMA: Skip jika link ini ternyata cuma gambar poster/thumbnail pratinjau
+ if (cleanUrl.match(/\.(jpg|jpeg|png|webp|webp)/i) || cleanUrl.includes('preview') || cleanUrl.includes('poster') || cleanUrl.includes('thumbs')) {
+ continue 
+ }
+ 
+ directMediaUrl = cleanUrl
+ break // Keluar dari loop jika sudah menemukan link video murni
+ }
+ }
+ }
+
+ // Langkah C: Bruteforce Regex Aliran Content Stream Video (Bukan gambar)
+ if (!directMediaUrl) {
+ let streamMatches = html.match(/https?:\/\/[^"'\s<>]+?(?:get_file|stream|videoplayback|download|content|cdn)[^"'\s<>]*/gi)
+ if (streamMatches) {
+ for (let link of streamMatches) {
+ let cleanUrl = link.replace(/\\/g, '')
+ if (cleanUrl.match(/\.(jpg|jpeg|png|webp)/i) || cleanUrl.includes('preview') || cleanUrl.includes('poster') || cleanUrl.includes('thumbs')) {
+ continue
+ }
+ directMediaUrl = cleanUrl
+ break
+ }
+ }
+ }
+
+ // Langkah D: Jalur alternatif terakhir menggunakan Tag Player HTML5 Native
+ if (!directMediaUrl) {
+ let $ = cheerio.load(html)
+ directMediaUrl = $('video source').attr('src') || $('video').attr('src') || $('iframe').attr('src')
+ }
+
+ // =========================================================================
+
+ if (!directMediaUrl) return payreply("❌ Tidak ditemukan jalur video di dalam URL tersebut!")
+
+ // Normalisasi jika link berupa protokol relatif
+ if (directMediaUrl.startsWith('//')) directMediaUrl = 'https:' + directMediaUrl
+
+ console.log(`[TARGET VIDEO FOUND] -> ${directMediaUrl}`)
+
+ // 2. Download jeroan videonya menjadi arraybuffer (Gaya andalan Anda)
+ let { data: buffer, headers } = await axios.get(directMediaUrl, {
+ responseType: 'arraybuffer',
+ headers: { 
+ 'User-Agent': 'Mozilla/5.0', 
+ 'Referer': url // Wajib dikirim agar tidak terkena error 403 Forbidden dari server CDN video
+ }
+ })
+
+ let contentType = headers['content-type'] || ''
+
+ // 3. Kirim hasil video jeroan ke chat WhatsApp
+ if (contentType.startsWith('image/') && !directMediaUrl.includes('video')) {
+ // Kirim foto hanya jika link aslinya murni gambar mentah (.jpg/.png) sejak awal
+ await Asepp.sendMessage(m.chat, {
+ image: buffer,
+ caption: `Done bro\nSource: ${url}`
+ }, { quoted: m })
+ } else {
+ // Paksa kirim sebagai video jika bersumber dari ekstraksi halaman web nonton (.com dll)
+ await Asepp.sendMessage(m.chat, {
+ video: buffer,
+ mimetype: 'video/mp4',
+ caption: `Done bro\nSource: ${url}`
+ }, { quoted: m })
+ }
+
+ } catch (e) {
+ payreply(`Gagal ambil media.\nAlasan: ${e.message}`)
+ }
+}
+break
+
+case 'tofoto':
+case 'tovideo': {
+ if (!args[0]) return payreply(`Kasih URL nya\nContoh: ${prefix}tofoto https://example.com/file.jpg`)
+
+ let url = args[0]
+ const axios = require('axios')
+
+ await Asepp.sendMessage(m.chat, { react: { text: "📥", key: m.key } })
+
+ try {
+ // Head request dulu buat cek tipe file nya
+ let head = await axios.head(url, {
+ headers: { 'User-Agent': 'Mozilla/5.0' }
+ }).catch(() => null)
+
+ let contentType = head?.headers['content-type'] || ''
+
+ // Download file
+ let { data: buffer } = await axios.get(url, {
+ responseType: 'arraybuffer',
+ headers: { 'User-Agent': 'Mozilla/5.0' }
+ })
+
+ // Kirim sesuai tipe
+ if (contentType.startsWith('video/')) {
+ await Asepp.sendMessage(m.chat, {
+ video: buffer,
+ mimetype: contentType,
+ caption: `Done bro\nSource: ${url}`
+ }, { quoted: m })
+
+ } else if (contentType.startsWith('image/')) {
+ await Asepp.sendMessage(m.chat, {
+ image: buffer,
+ mimetype: 'image/jpeg', // paksa jadi jpeg biar ringan
+ caption: `Done bro\nSource: ${url}`
+ }, { quoted: m })
+
+ } else {
+ // Fallback: coba kirim sebagai video, kalau gagal kirim sebagai dokumen
+ await Asepp.sendMessage(m.chat, {
+ document: buffer,
+ mimetype: contentType || 'application/octet-stream',
+ fileName: url.split('/').pop().split('?')[0] || 'file',
+ caption: `Done bro\nSource: ${url}`
+ }, { quoted: m })
+ }
+
+ } catch (e) {
+ payreply(`Gagal ambil media.\nAlasan: ${e.message}`)
+ }
+}
+break
+
+ 
+case "totalchat": {
+ try {
+ const fs = require('fs')
+ const path = require('path')
+ const dbPath = path.join(process.cwd(), 'database/chatdb.json')
+
+ if (!m.isGroup) return payreply('❌ Fitur ini cuma buat grup!')
+
+ if (!fs.existsSync(dbPath)) return payreply('📭 Belum ada data chat tersimpan.')
+
+ let db = JSON.parse(fs.readFileSync(dbPath))
+ let groupData = db[m.chat]
+
+ if (!groupData || Object.keys(groupData).length === 0) {
+ return payreply('📭 Belum ada data chat di grup ini.')
+ }
+
+ let sorted = Object.entries(groupData)
+.sort((a, b) => b[1] - a[1])
+.slice(0, 15)
+
+ let totalMember = Object.keys(groupData).length
+ let totalChat = Object.values(groupData).reduce((a, b) => a + b, 0)
+
+ let listChat = sorted.map((v, i) => {
+ const medal = i === 0? '🥇' : i === 1? '🥈' : i === 2? '🥉' : `┃✦ ${i+1}.`
+ return `${medal} @${v[0].split('@')[0]} » ${v[1]} chat`
+ }).join('\n')
+
+ let dateNow = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })
+
+ let teks = `\`𝗧𝗢𝗧𝗔𝗟 𝗖𝗛𝗔𝗧 𝗚𝗥𝗨𝗣\`
+
+Hi \`${pushname}\` 👋 Nih statistik chat grup lu 📊
+
+⌲ \`𝐈𝐍𝐅𝐎 𝐆𝐑𝐔𝐏\`
+┏━━━━━━━━
+┃✦ *Member Aktif »* ${totalMember}
+┃✦ *Total Chat »* ${totalChat}
+┃✦ *Update »* ${dateNow}
+┗━━━━━━━━━━
+
+⌲ \`𝐋𝐄𝐀𝐃𝐄𝐑𝐁𝐎𝐀𝐑𝐃\`
+┏━━━━━━━━
+${listChat}
+┗━━━━━━━━━━
+
+⌲ \`𝐒𝐓𝐀𝐓𝐔𝐒\`
+✅ Scan selesai
+\`[洛] 𝐂𝐇𝐀𝐓 𝐋𝐎𝐆 [洛]\`
+`
+
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+ body: proto.Message.InteractiveMessage.Body.create({ text: "" }),
+ footer: proto.Message.InteractiveMessage.Footer.create({ text: teks }),
+ header: proto.Message.InteractiveMessage.Header.create({
+ title: "𝗧𝗢𝗧𝗔𝗟 𝗖𝗛𝗔𝗧 𝗗𝗢𝗡𝗘"
+ }),
+ contextInfo: {
+ mentionedJid: sorted.map(v => v[0]) // biar @ nya ke tag
+ },
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© CHAT MENU",
+ sections: [{
+ title: "Chat Log",
+ highlight_label: "𝐒𝐓𝐀𝐓𝐒 📊",
+ rows: [
+ { title: "𝐑𝐞𝐟𝐫𝐞𝐬𝐡", description: `Refresh data chat`, id: `${prefix}totalchat` },
+ { title: "𝐑𝐞𝐬𝐞𝐭", description: `Reset data chat grup ini`, id: `${prefix}resetchat` }
+ ]
+ }]
+ })
+ }
+ ]
+ })
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+
+ } catch (e) {
+ console.log("Error totalchat:", e)
+ await payreply("❌ Error: " + e.message)
+ }
+}
+break
+case "resetchat": {
+ try {
+ const fs = require('fs')
+ const path = require('path')
+ const dbPath = path.join(process.cwd(), 'database/chatdb.json')
+
+ if (!m.isGroup) return payreply('❌ Fitur ini cuma buat grup!')
+ if (!isOwner) return payreply('Owner only!')
+
+ if (!fs.existsSync(dbPath)) {
+ return payreply('📭 Data chat emang udah kosong.')
+ }
+
+ let db = JSON.parse(fs.readFileSync(dbPath))
+
+ if (!db[m.chat] || Object.keys(db[m.chat]).length === 0) {
+ return payreply('📭 Data chat grup ini emang udah kosong.')
+ }
+
+ delete db[m.chat]
+
+ fs.writeFileSync(
+ dbPath,
+ JSON.stringify(db, null, 2)
+ )
+
+ let dateNow = new Date().toLocaleString('id-ID', {
+ timeZone: 'Asia/Jakarta'
+ })
+
+ const teks = `\`𝗥𝗘𝗦𝗘𝗧 𝗖𝗛𝗔𝗧 𝗦𝗨𝗞𝗦𝗘𝗦\`
+
+Hi \`${pushname}\` 👋 Data chat grup ini berhasil direset 🗑️
+
+⌲ \`𝐈𝐍𝐅𝐎 𝐑𝐄𝐒𝐄𝐓\`
+┏━━━━━━━━
+┃✦ Status » Berhasil
+┃✦ Eksekutor » @${m.sender.split('@')[0]}
+┃✦ Waktu » ${dateNow}
+┗━━━━━━━━━━
+
+⌲ \`𝐒𝐓𝐀𝐓𝐔𝐒\`
+✅ Semua data member dihapus
+✅ Semua jumlah chat dihapus
+✅ Counter kembali ke 0
+
+\`[洛] 𝐑𝐄𝐒𝐄𝐓 𝐋𝐎𝐆 [洛]\`
+`
+
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+ body: proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+ footer: proto.Message.InteractiveMessage.Footer.create({
+ text: teks
+ }),
+ header: proto.Message.InteractiveMessage.Header.create({
+ title: "𝗥𝗘𝗦𝗘𝗧 𝗖𝗛𝗔𝗧 𝗗𝗢𝗡𝗘"
+ }),
+ contextInfo: {
+ mentionedJid: [m.sender]
+ },
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© CHAT MENU",
+ sections: [
+ {
+ title: "Chat Log",
+ highlight_label: "𝐑𝐄𝐒𝐄𝐓 🗑️",
+ rows: [
+ {
+ title: "𝐓𝐨𝐭𝐚𝐥 𝐂𝐡𝐚𝐭",
+ description: "Lihat statistik chat terbaru",
+ id: `${prefix}totalchat`
+ },
+ {
+ title: "𝐑𝐞𝐬𝐞𝐭 𝐋𝐚𝐠𝐢",
+ description: "Reset ulang data chat grup",
+ id: `${prefix}resetchat`
+ }
+ ]
+ }
+ ]
+ })
+ }
+ ]
+ })
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ { messageId: msg.key.id }
+ )
+
+ } catch (e) {
+ console.log("Error resetchat:", e)
+ await payreply("❌ Error: " + e.message)
+ }
+}
 
 
 
-
-
-case 'invite': {
+case "jpmch": {
 try {
-if (!m.isGroup) return payreply('Khusus grup!')
-if (!isOwner && !isAdmin) return payreply('Khusus admin/owner!')
+if (!isOwner) return payreply('Owner only! 👑')
 
-if (!text) {
-return payreply(`Contoh:\n${prefix}invite 6281234567890`)
+if (!m.quoted) {
+return payreply(`Reply pesan yang mau dikirim ke semua channel`)
 }
 
-let nomor = text.replace(/\D/g, '')
+// ======================================================
+// LIST CHANNEL
+// ======================================================
+const channels = [
+"120363418538598013@newsletter",
+"120363xxxxxxxxxxx@newsletter",
+"120363xxxxxxxxxxx@newsletter"
+]
 
-if (nomor.startsWith('0')) {
-nomor = '62' + nomor.slice(1)
-}
+let sukses = 0
+let gagal = 0
 
-const cek = await Asepp.onWhatsApp(nomor)
+await payreply(`⏳ Mulai broadcast ke ${channels.length} channel...`)
 
-if (!cek || cek.length < 1) {
-return payreply('Nomor tidak terdaftar di WhatsApp')
-}
+// ======================================================
+// AMBIL ISI PESAN
+// ======================================================
+let msg = m.quoted
 
-const target = cek[0].jid
+for (const id of channels) {
+try {
 
-const metadata = await Asepp.groupMetadata(m.chat)
-const inviteCode = await Asepp.groupInviteCode(m.chat)
-const groupLink = `https://chat.whatsapp.com/${inviteCode}`
+// ==============================
+// TEXT
+// ==============================
+if (msg.text || msg.caption) {
 
-await Asepp.sendMessage(target, {
-text:
-`*📨 UNDANGAN GRUP*
-
-Halo 👋
-
-Kamu diundang untuk bergabung ke grup:
-
-*${metadata.subject}*
-
-🔗 Link Grup:
-${groupLink}
-
-Silakan klik link di atas untuk bergabung.`
+await Asepp.sendMessage(id, {
+text: msg.text || msg.caption
 })
 
-await payreply(`✅ Invite berhasil dikirim ke ${nomor}`)
+}
 
-} catch (err) {
-console.log('INVITE ERROR:', err)
+// ==============================
+// IMAGE
+// ==============================
+else if (msg.mtype === 'imageMessage') {
 
-payreply(
-`❌ Gagal mengirim invite
+let media = await msg.download()
 
-${err?.message || err}`
+await Asepp.sendMessage(id, {
+image: media,
+caption: msg.caption || ''
+})
+
+}
+
+// ==============================
+// VIDEO
+// ==============================
+else if (msg.mtype === 'videoMessage') {
+
+let media = await msg.download()
+
+await Asepp.sendMessage(id, {
+video: media,
+caption: msg.caption || ''
+})
+
+}
+
+// ==============================
+// STICKER
+// ==============================
+else if (msg.mtype === 'stickerMessage') {
+
+let media = await msg.download()
+
+await Asepp.sendMessage(id, {
+sticker: media
+})
+
+}
+
+// ==============================
+// DOCUMENT
+// ==============================
+else if (msg.mtype === 'documentMessage') {
+
+let media = await msg.download()
+
+await Asepp.sendMessage(id, {
+document: media,
+mimetype: msg.mimetype,
+fileName: msg.fileName || 'file'
+})
+
+}
+
+sukses++
+
+await new Promise(r => setTimeout(r, 3000))
+
+} catch (e) {
+
+gagal++
+
+console.log(`Gagal ke ${id}:`)
+console.log(e)
+
+}
+}
+
+// ======================================================
+// RESULT
+// ======================================================
+await payreply(
+`\`𝗝𝗣𝗠𝗖𝗛 𝗥𝗘𝗦𝗨𝗟𝗧\`
+
+✅ Broadcast selesai
+
+┃✦ Total : ${channels.length}
+┃✦ Sukses : ${sukses}
+┃✦ Gagal : ${gagal}`
 )
+
+} catch (e) {
+
+console.log(e)
+
+await payreply("❌ Error:\n" + e.message)
+
 }
 }
 break
+
 break
-
-
 
 
 
