@@ -36,7 +36,7 @@ const {
     spawn, 
     exec,
     execSync 
-   } = require('child_process');
+      } = require('child_process');
 const { makeWASocket, makeCacheableSignalKeyStore, downloadContentFromMessage, emitGroupParticipantsUpdate, emitGroupUpdate, generateWAMessageContent, generateWAMessage, makeInMemoryStore, prepareWAMessageMedia, generateWAMessageFromContent, MediaType, areJidsSameUser, WAMessageStatus, downloadAndSaveMediaMessage, AuthenticationState, GroupMetadata, initInMemoryKeyStore, getContentType, MiscMessageGenerationOptions, useSingleFileAuthState, BufferJSON, WAMessageProto, MessageOptions, WAFlag, WANode, WAMetric, ChatModification, MessageTypeProto, WALocationMessage, ReconnectMode, WAContextInfo, proto, WAGroupMetadata, ProxyAgent, waChatKey, MimetypeMap, MediaPathMap, WAContactMessage, WAContactsArrayMessage, WAGroupInviteMessage, WATextMessage, WAMessageContent, WAMessage, BaileysError, WA_MESSAGE_STATUS_TYPE, MediaConnInfo, URL_REGEX, WAUrlInfo, WA_DEFAULT_EPHEMERAL, WAMediaUpload, mentionedJid, processTime, Browser, MessageType, Presence, WA_MESSAGE_STUB_TYPES, Mimetype, relayWAMessage, Browsers, GroupSettingChange, DisconnectReason, WASocket, getStream, WAProto, isBaileys, PHONENUMBER_MCC, AnyMessageContent, useMultiFileAuthState, fetchLatestBaileysVersion, templateMessage, InteractiveMessage, Header } = require('@whiskeysockets/baileys')
 
 module.exports = Asepp = async (Asepp, m, chatUpdate, store) => {
@@ -363,7 +363,34 @@ const {message, key} = generateWAMessageFromContent(m.chat, {
 }, {quoted: { key: { participant: '0@s.whatsapp.net', remoteJid: "0@s.whatsapp.net" }, message: { conversation: `trinity - AI`}}})
  Asepp.relayMessage(m.chat, {viewOnceMessage:{message}}, {messageId:key.id})
 }
+ // TAROH INI DI ATAS switch(command)
+try {
+  const fs = require('fs')
+  const path = require('path')
 
+  const dbPath = path.join(process.cwd(), 'database/antitag.json')
+  if (!fs.existsSync(dbPath)) return
+
+  let db = JSON.parse(fs.readFileSync(dbPath))
+
+  if (m.isGroup && db[m.chat] === true && m.text) {
+    if (isOwner || m.key.fromMe) return
+
+    let text = m.text.toLowerCase()
+    
+    if (/\b(semua|all)\b/i.test(text)) {
+        await Asepp.deleteMessage(m.chat, {
+            id: m.key.id,
+            remoteJid: m.chat,
+            fromMe: false,
+            participant: m.key.participant || m.participant || m.sender
+        })
+        return // penting biar gak lanjut ke command
+    }
+  }
+} catch (e) {
+  console.log("ANTITAG ERROR:", e)
+}
 // Fansen Nsfw
 async function randomNsFw() {
 			return new Promise((resolve, reject) => {
@@ -3312,6 +3339,15 @@ case "swgrup": {
             break
 
 case "rvo": {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('❌ Owner only!')
+ }
+
+
   if (!m.quoted) return payreply("Reply Foto/Videonya")
 
   const q = m.quoted
@@ -3344,6 +3380,14 @@ break
 
 
 case "demote": {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('❌ Owner only!')
+ }
+
     if (!isGroup) return payreply(mess.group)
 
     let target = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : false
@@ -4591,64 +4635,6 @@ break
             }
             break
 
-case 'ping': {
-  const os = require('os')
-  const { performance } = require('perf_hooks')
-
-  // Hitung Speed Bot
-  const start = performance.now()
-  const end = performance.now()
-  const latensi = (end - start).toFixed(4)
-
-  // Ambil Data VPS
-  const usedRAM = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)
-  const totalRAM = (os.totalmem() / 1024 / 1024 / 1024).toFixed(2)
-  const freeRAM = (os.freemem() / 1024 / 1024 / 1024).toFixed(2)
-  const cpuModel = os.cpus()[0].model
-  const cpuSpeed = os.cpus()[0].speed
-  const cpuCore = os.cpus().length
-  const platform = os.platform()
-  const uptime = process.uptime()
-
-  // Format Waktu Uptime
-  const formatUptime = (seconds) => {
-    const d = Math.floor(seconds / (3600 * 24))
-    const h = Math.floor((seconds % (3600 * 24)) / 3600)
-    const m = Math.floor((seconds % 3600) / 60)
-    const s = Math.floor(seconds % 60)
-    return `${d}d ${h}h ${m}m ${s}s`
-  }
-
-  const teks = 
-`⌲ \`[ 𝚂𝚈𝚂𝚃𝙴𝙼 𝚂𝚃𝙰𝚃𝚄𝚂 ]\`
-
-◦ *Speed:* ${latensi} ms
-◦ *Uptime:* ${formatUptime(uptime)}
-◦ *Platform:* ${platform}
-
-┌───[ 𝚅𝙿𝚂 𝙸𝙽𝙵𝙾𝚁𝙼𝙰𝚃𝙸𝙾𝙽 ]
-│ ◦ *CPU:* ${cpuModel}
-│ ◦ *Cores:* ${cpuCore} Core (${cpuSpeed} MHz)
-│ ◦ *RAM Used:* ${usedRAM} MB
-│ ◦ *Total RAM:* ${totalRAM} GB
-│ ◦ *Free RAM:* ${freeRAM} GB
-└───[ 𝚃𝚛𝚒𝚗𝚒𝚝𝚢 𝙴𝙽𝙶𝙸𝙽𝙴 ]`
-
-  await Asepp.sendMessage(m.chat, { 
-    text: teks,
-    contextInfo: {
-      externalAdReply: {
-        title: "SYSTEM PERFORMANCE",
-        body: "Checking VPS Resources...",
-        thumbnailUrl: "https://img2.pixhost.to/images/7306/716638001_asepp.jpg",
-        sourceUrl: "https://wa.me/62881036109288",
-        mediaType: 1,
-        renderLargerThumbnail: false
-      }
-    }
-  }, { quoted: m })
-}
-break
 case "informasi": {
   const media = await prepareWAMessageMedia({ image: { url: "https://img2.pixhost.to/images/7306/716637890_asepp.jpg" } }, { upload: Asepp.waUploadToServer })
   return await Asepp.relayMessage(m.chat, {
@@ -6492,61 +6478,6 @@ break
 case 'menugh':
 
 
-case 'jpm': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
-
- const groups = await Asepp.groupFetchAllParticipating()
- const groupList = Object.values(groups)
-
- let q = m.quoted? m.quoted : m
- let mime = (q.msg || q).mimetype || ''
- let caption = text || q.text || ''
-
- if (!/image|video|text/.test(mime) &&!caption) {
- return payreply(`Kirim/reply text/image/video buat JPM 👑\nContoh:.jpm Halo semua`)
- }
-
- payreply(`Proses JPM ke ${groupList.length} group + tag all member... 👑`)
-
- let sukses = 0
- let gagal = 0
-
- for (let gc of groupList) {
- await sleep(3500) // Naikin delay biar aman
- try {
- let participants = gc.participants.map(v => v.id)
-
- if (/image/.test(mime)) {
- let media = await q.download()
- await Asepp.sendMessage(gc.id, {
- image: media,
- caption: caption,
- mentions: participants
- })
- } else if (/video/.test(mime)) {
- let media = await q.download()
- await Asepp.sendMessage(gc.id, {
- video: media,
- caption: caption,
- gifPlayback: /gif/.test(mime),
- mentions: participants
- })
- } else {
- await Asepp.sendMessage(gc.id, {
- text: caption,
- mentions: participants
- })
- }
- sukses++
- } catch (e) {
- gagal++
- console.log(`JPM gagal ke ${gc.subject}:`, e.message)
- }
- }
-
- payreply(`*JPM SELESAI* 👑\n\nSukses: ${sukses} group\nGagal: ${gagal} group\nTotal: ${groupList.length} group`)
-}
-break
 
 
 
@@ -6840,84 +6771,7 @@ break
 
 case 'addanggota':
 
-case 'addbl': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
- if (!m.isGroup) return payreply('Harus dipake di dalam group yang mau di blacklist 👑')
 
- const GITHUB_OWNER = `AsepXyz12`
- const GITHUB_REPO = `bot-wa-db`
- const BL_PATH = `database/bljpm.json`
- const axios = require('axios')
-
- try {
- const getUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${BL_PATH}`
- let dbBl = { groups: [] }
- let sha = null
-
- try {
- const getRes = await axios.get(getUrl, {
- })
- dbBl = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
- sha = getRes.data.sha
- } catch (e) {
- if (e.response?.status!== 404) throw e
- }
-
- if (!dbBl.groups) dbBl.groups = []
- if (dbBl.groups.includes(m.chat)) return payreply(`Group ini udah di blacklist JPM 👑`)
-
- dbBl.groups.push(m.chat)
- const newContent = Buffer.from(JSON.stringify(dbBl, null, 2)).toString('base64')
-
- await axios.put(getUrl, {
- message: `addbl jpm: ${m.chat}`,
- content: newContent,
- sha: sha
- }, {
- })
-
- payreply(`Sukses blacklist group ini dari JPM 👑\nTotal group BL: ${dbBl.groups.length}`)
- } catch (e) {
- payreply(`Gagal: ${e.response?.data?.message || e.message} 👑`)
- }
-}
-break
-
-case 'delbl': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
- if (!m.isGroup) return payreply('Harus dipake di dalam group 👑')
-
- const GITHUB_OWNER = `AsepXyz12`
- const GITHUB_REPO = `bot-wa-db`
- const BL_PATH = `database/bljpm.json`
- const axios = require('axios')
-
- try {
- const getUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${BL_PATH}`
- const getRes = await axios.get(getUrl, {
- })
-
- let dbBl = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
- const sha = getRes.data.sha
-
- if (!dbBl.groups ||!dbBl.groups.includes(m.chat)) return payreply('Group ini ga ada di blacklist 👑')
-
- dbBl.groups = dbBl.groups.filter(id => id!== m.chat)
- const newContent = Buffer.from(JSON.stringify(dbBl, null, 2)).toString('base64')
-
- await axios.put(getUrl, {
- message: `delbl jpm: ${m.chat}`,
- content: newContent,
- sha: sha
- }, {
- })
-
- payreply(`Sukses hapus group ini dari blacklist JPM 👑`)
- } catch (e) {
- payreply(`Gagal: ${e.response?.data?.message || e.message} 👑`)
- }
-}
-break
 
 case 'listbl': {
  if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
@@ -6955,100 +6809,7 @@ case 'listbl': {
  }
 }
 break
-case 'jpm': {
- if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
- if (!text &&!m.quoted) return payreply(`Masukin teks atau reply pesan 👑`)
-
- const GITHUB_OWNER = `AsepXyz12`
- const GITHUB_REPO = `bot-wa-db`
- const BL_PATH = `database/bljpm.json`
- const axios = require('axios')
-
- let pesan = m.quoted? m.quoted : { text: text }
- let allGroup = await Asepp.groupFetchAllParticipating()
- let groupIds = Object.keys(allGroup)
-
- // AMBIL LIST BLACKLIST DARI GH
- let blackList = []
- try {
- const getUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${BL_PATH}`
- const getRes = await axios.get(getUrl, {
- })
- const dbBl = JSON.parse(Buffer.from(getRes.data.content, 'base64').toString())
- blackList = dbBl.groups || []
- } catch (e) {
- // Kalo file ga ada, berarti ga ada blacklist
- if (e.response?.status!== 404) console.log('Error ambil bljpm:', e.message)
- }
-
- // FILTER GROUP YANG GA DI BLACKLIST
- groupIds = groupIds.filter(id =>!blackList.includes(id))
-
- payreply(`Mengirim JPM ke ${groupIds.length} group...\n${blackList.length} group di-skip karena blacklist 👑`)
-
- let sukses = 0
- let gagal = 0
-
- for (let id of groupIds) {
- try {
- await Asepp.sendMessage(id, { forward: pesan })
- sukses++
- await sleep(2000) // Delay 2 detik biar ga spam
- } catch {
- gagal++
- }
- }
-
- payreply(`JPM Selesai 👑\n\nSukses: ${sukses} group\nGagal: ${gagal} group\nSkip BL: ${blackList.length} group`)
-}
-
-
-case 'sendcase': {
- if (!isOwner) return
- if (!global.tmpCase || !global.tmpCase[m.sender]) return // diem kalo gaada
-
- let cari = global.tmpCase[m.sender]
- const fs = require('fs')
- let filePath = './AseppLohya.js' // SAMAIN SAMA DI ATAS
-
- try {
- let isiFile = fs.readFileSync(filePath, 'utf8')
- let baris = isiFile.split('\n')
-
- let regex = new RegExp(`case\\s+['"\`]${cari}['"\`]|case\\s+${cari}:`, 'i')
- let startLine = baris.findIndex(v => regex.test(v))
- if (startLine === -1) return delete global.tmpCase[m.sender]
-
- let endLine = startLine, bukaKurung = 0
- for (let i = startLine; i < baris.length; i++) {
- let line = baris[i]
- bukaKurung += (line.match(/{/g) || []).length
- bukaKurung -= (line.match(/}/g) || []).length
- if (/^\s*break\s*;?\s*$/.test(line) && bukaKurung <= 0) {
- endLine = i
- break
- }
- }
-
- let kodeCase = baris.slice(startLine, endLine + 1).join('\n')
- delete global.tmpCase[m.sender] // hapus setelah dikirim
-
- if (kodeCase.length > 4000) {
- Asepp.sendMessage(m.chat, {
- document: Buffer.from(kodeCase),
- mimetype: 'text/plain',
- fileName: `${cari}.js`
- }, { quoted: m })
- } else {
- payreply(kodeCase)
- }
- } catch (e) {
- delete global.tmpCase[m.sender]
- }
-}
-break
-
-
+ 
 
 
 case 'translate':
@@ -12517,50 +12278,6 @@ break
 
 
 
-case 'totalline': {
- const fs = require('fs');
- const path = require('path');
- 
- try {
- let filePath = path.join(__dirname, 'AseppLohya.js');
- let data = fs.readFileSync(filePath, 'utf-8');
- 
- let allLines = data.split('\n');
- let totalLine = allLines.length;
- let codeLines = allLines.filter(line => line.trim() !== '').length;
- let sizeKB = (Buffer.byteLength(data, 'utf-8') / 1024).toFixed(2);
- 
- let teks = `\`𝗙𝗜𝗟𝗘 𝗦𝗧𝗔𝗧𝗦 𝗖𝗢𝗡𝗧𝗥𝗢𝗟\`
-
-Hi \`${pushname}\` 👋 ini hasil scan file *AseppLohya.js*. Semua data real time langsung dari source file 👑
-
-⌲ \`𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍\`
-┏━━━━━━━━
-┃✦ *File Name » AseppLohya.js*
-┃✦ *Total Line » ${totalLine} baris*
-┃✦ *Code Line » ${codeLines} baris*
-┃✦ *Empty Line » ${totalLine - codeLines} baris*
-┃✦ *File Size » ${sizeKB} KB*
-┃✦ *Developer » Asepp*
-┃✦ *RunTime » ${runtime(process.uptime())}*
-┗━━━━━━━━━━
-⌲ \`𝐒𝐓𝐀𝐓𝐔𝐒\`
-┏━━━━━━━━
-┃☇ Status File » ✅ Loaded
-┃☇ Path » ./AseppLohya.js
-┗━━━━━━━━━━
-\`[洛] 𝐅𝐈𝐋𝐄 𝐌𝐀𝐍𝐀𝐆𝐄𝐑 [洛]\`
-Owner : @${m.sender.split('@')[0]}
-`;
-
- // Pakai payreply biar support Business + Messenger
- await payreply(teks);
- 
- } catch (e) {
- await payreply(`Error: ${e.message}`);
- }
-}
-break;
 
 case 'cekcase': {
  if (!global.tmpCase) global.tmpCase = {}
@@ -14992,202 +14709,6 @@ break
 
 
 
-case 'backupenc': {
-try {
-if (!isCreator) return Asepp.sendMessage(m.chat, { text: mess.owner }, { quoted: m });
-
-const fs = require("fs");
-const path = require("path");
-const crypto = require("crypto");
-const axios = require("axios");
-const { exec } = require("child_process");
-
-// ================= CONFIG =================
-const GITHUB_OWNER = "AsepXyz12";
-const GITHUB_REPO = "bot-wa-db";
-
-}
-
-const rootDir = "./";
-const tmpDir = path.join(__dirname, "tmp", "backupenc");
-const zipName = "BackupEncTrinity.zip";
-const zipPath = path.join(tmpDir, zipName);
-
-// ================= CLEAN =================
-if (fs.existsSync(tmpDir)) fs.rmSync(tmpDir, { recursive: true, force: true });
-fs.mkdirSync(tmpDir, { recursive: true });
-if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
-
-await Asepp.sendMessage(m.chat, { text: "🪖 Running To Script ENC..." }, { quoted: m });
-
-// ================= FILTER =================
-const filterSecret = (t) => {
-return t.split("\n").filter(l =>
-).join("\n");
-};
-
-// ================= BASE64 (START & CONFIG) =================
-const encBase64 = (filePath) => {
-let c = fs.readFileSync(filePath, "utf8");
-c = filterSecret(c);
-
-const b64 = Buffer.from(c).toString("base64");
-
-return `(function(){
-const d="${b64}";
-eval(Buffer.from(d,"base64").toString("utf8"));
-})();`;
-};
-
-// ================= 10-STAGE MILITARY ENC =================
-const enc10 = (filePath) => {
-let c = fs.readFileSync(filePath, "utf8");
-c = filterSecret(c);
-
-// ===== STAGE 1 XOR =====
-const key = 33;
-let s1 = Buffer.from(c).map(b => b ^ key);
-
-// ===== STAGE 2 BASE64 =====
-let s2 = Buffer.from(s1).toString("base64");
-
-// ===== STAGE 3 BASE64 WRAP =====
-let s3 = Buffer.from(s2).toString("base64");
-
-// ===== STAGE 4 HEX =====
-let s4 = Buffer.from(s3).toString("hex");
-
-// ===== STAGE 5 SPLIT =====
-let s5 = s4.match(/.{1,65}/g);
-
-// ===== STAGE 6 JOIN WRAP =====
-let join = s5.map(x => `"${x}"`).join(",");
-
-// ===== FINAL SAFE WRAPPER (1 EXEC ONLY) =====
-return `
-// ===== MILITARY 10 LAYER CORE =====
-// JP-CN-KR-EN HYBRID PIPELINE
-
-(() => {
-
-const a = [${join}].join("");
-
-const b = Buffer.from(a,"hex").toString("utf8"); // stage 1
-const c = Buffer.from(b,"base64").toString("utf8"); // stage 2
-const d = Buffer.from(c,"base64"); // stage 3
-
-const e = Buffer.from(d).map(x => x ^ ${key}); // stage 4
-
-const f = Buffer.from(e).toString("utf8"); // stage 5
-
-(Function("return " + f))(); // execute
-
-})();
-`;
-};
-
-// ================= COPY PROJECT =================
-const exclude = ['node_modules', 'session', '.npm', '.cache', 'tmp'];
-
-const copy = (src, dest) => {
-const stat = fs.statSync(src);
-
-if (stat.isDirectory()) {
-fs.mkdirSync(dest, { recursive: true });
-for (let f of fs.readdirSync(src)) {
-if (exclude.includes(f)) continue;
-copy(path.join(src, f), path.join(dest, f));
-}
-} else {
-fs.copyFileSync(src, dest);
-}
-};
-
-copy(rootDir, tmpDir);
-
-// ================= ENCRYPT FILES =================
-
-// AseppLohya.js → 10 layer
-const asepp = path.join(tmpDir, "AseppLohya.js");
-if (fs.existsSync(asepp)) {
-fs.writeFileSync(asepp, enc10(asepp));
-}
-
-// start.js → base64
-const start = path.join(tmpDir, "start.js");
-if (fs.existsSync(start)) {
-fs.writeFileSync(start, encBase64(start));
-}
-
-// config.js → base64
-const config = path.join(tmpDir, "config.js");
-if (fs.existsSync(config)) {
-fs.writeFileSync(config, encBase64(config));
-}
-
-// ================= GITHUB PUSH =================
-async function pushGit() {
-const file = fs.readFileSync(asepp, "utf8");
-
-const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/AseppLohya.js`;
-
-let sha = null;
-
-try {
-const res = await axios.get(url, {
-});
-sha = res.data.sha;
-} catch {}
-
-await axios.put(url, {
-message: "Trinity backup",
-content: Buffer.from(file).toString("base64"),
-sha
-}, {
-});
-}
-
-await pushGit();
-
-// ================= ZIP =================
-const cmd = `cd "${tmpDir}" && zip -r "${zipPath}" .`;
-
-exec(cmd, async (err) => {
-if (err) {
-return Asepp.sendMessage(m.chat, { text: "❌ Zip error: " + err.message }, { quoted: m });
-}
-
-const size = (fs.statSync(zipPath).size / 1024 / 1024).toFixed(2);
-
-await Asepp.sendMessage(m.chat, {
-text:
-`🪖 Enc To Script Trinity DONE\n` +
-`📦 ${zipName}\n` +
-`📊 ${size} MB\n` +
-`🔐 AseppLohya.js = 10 STAGE PIPELINE`
-}, { quoted: m });
-
-await Asepp.sendMessage(m.chat, {
-document: fs.readFileSync(zipPath),
-fileName: zipName,
-mimetype: "application/zip"
-}, { quoted: m });
-
-fs.rmSync(tmpDir, { recursive: true, force: true });
-fs.unlinkSync(zipPath);
-});
-
-} catch (e) {
-return Asepp.sendMessage(m.chat, { text: "❌ Error: " + e.message }, { quoted: m });
-}
-}
-break;
-
-
-
-
-
-
 
 
 
@@ -16285,18 +15806,6 @@ let msg = messageBuilder({
 }
 break
 
-case 'antitag':
-case 'antitagall': {
- if (!m.isGroup) return payreply('Khusus grup bang')
- if (!isOwner) return payreply('Lu bukan admin')
- if (!isBotAdmin) return payreply('Bot harus jadi admin dulu')
-
- // Aktifin antitagall
- global.db.groups[m.chat].antitagall = true
- 
- payreply('✅ Anti-tagall udah aktif di grup ini')
-}
-break
 
 case 'offantitag':
 case 'offantitagall': {
@@ -16326,6 +15835,14 @@ break
 
 
 case 'getpp': {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('❌ Owner only!')
+ }
+
  try {
 
  const fs = require("fs")
@@ -16691,106 +16208,6 @@ break
 
 
 
-case 'tt':
-case 'tiktok': {
- try {
- let args = body.trim().split(' ')
- if (!args[1]) return payreply('⚠️ Kirim link TikTok!\nContoh:.tiktok <link>')
-
- let urlTikTok = args[1]
-
- // Emoji loading buat semua user
- await Asepp.sendMessage(m.chat, { react: { text: '⏳', key: m.key } })
-
- let res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(urlTikTok)}`)
- let json = await res.json()
-
- if (json.code!== 0 ||!json.data) {
- await Asepp.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
- return payreply('❌ Gagal ambil data TikTok.')
- }
-
- let data = json.data
- let imgs = data.images || []
-
- // Kalau photomode
- if (imgs.length > 0) {
- let cards = []
- for (let i = 0; i < imgs.length; i++) {
- let mediaCard = await prepareWAMessageMedia(
- { image: { url: imgs[i] } },
- { upload: Asepp.waUploadToServer }
- ).catch(() => null)
-
- if (!mediaCard) continue
-
- cards.push({
- header: proto.Message.InteractiveMessage.Header.fromObject({
- hasMediaAttachment: true,
- ...mediaCard
- }),
- body: proto.Message.InteractiveMessage.Body.fromObject({
- text: `Foto ${i + 1}/${imgs.length}`
- }),
- nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
- buttons: [{
- name: "cta_copy",
- buttonParamsJson: JSON.stringify({
- display_text: "Copy Link Foto",
- copy_code: imgs[i]
- })
- }]
- })
- })
- }
-
- let msg = generateWAMessageFromContent(m.chat, {
- interactiveMessage: proto.Message.InteractiveMessage.fromObject({
- body: proto.Message.InteractiveMessage.Body.fromObject({
- text: `📥 TikTok Photos\n🎬 ${data.title || '-'}\n🎵 ${data.music || '-'}\n📸 Total: ${imgs.length} foto`
- }),
- footer: proto.Message.InteractiveMessage.Footer.fromObject({
- text: "Geser buat lihat semua foto 👑"
- }),
- carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({ cards })
- })
- }, { quoted: m })
-
- await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
-
- // Selesai
- await Asepp.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
- return
- }
-
- // Video HD no watermark
- let vid = data.hdplay || data.play
- if (!vid) {
- await Asepp.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
- return payreply('❌ Gagal ambil video TikTok.')
- }
-
- let caption = `📥 TikTok Downloader
-🎬 Title: ${data.title || '-'}
-🎵 Music: ${data.music || '-'}
-📹 Quality: ${data.hdplay? 'HD 1080p' : 'SD 720p'}`
-
- await Asepp.sendMessage(m.chat, {
- video: { url: vid },
- caption: caption,
- jpegThumbnail: data.cover? await (await fetch(data.cover)).arrayBuffer() : undefined
- }, { quoted: m })
-
- // Selesai
- await Asepp.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
-
- } catch (error) {
- console.log(error)
- await Asepp.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
- payreply('❌ Terjadi kesalahan saat memproses TikTok.')
- }
-}
-break
 
 
 
@@ -18831,6 +18248,14 @@ break
 
 case 'del':
 case "d": {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('❌ Owner only!')
+ }
+
  try {
  if (!m.quoted) return payreply('⚠️ Reply pesan yang mau dihapus!')
 
@@ -19328,7 +18753,184 @@ Hi \`${pushname}\` 👋 Data chat grup ini berhasil direset 🗑️
  await payreply("❌ Error: " + e.message)
  }
 }
+break
+case "clearch": {
+    try {
+        if (!isOwner) return payreply('Owner only! 👑')
 
+        // =========================================
+        // CEK SUPPORT CHANNEL API
+        // =========================================
+        if (!Asepp.newsSubscription) {
+            return payreply('❌ Baileys lu belum support fitur WhatsApp Channel / Newsletter')
+        }
+
+        await payreply('⏳ Mengecek semua channel yang diikuti bot...')
+
+        // =========================================
+        // AMBIL CHANNEL YANG DIFOLLOW
+        // =========================================
+        const channels = await Asepp.newsSubscription.fetchSubscription()
+
+        if (!channels || channels.length === 0) {
+            return payreply('❌ Bot belum follow channel manapun.')
+        }
+
+        let adminCount = 0
+        let unfollowCount = 0
+        let gagalCount = 0
+
+        let listAdmin = []
+        let listUnfollow = []
+
+        // =========================================
+        // LOOP SEMUA CHANNEL
+        // =========================================
+        for (let ch of channels) {
+            try {
+                const meta = await Asepp.newsSubscription.fetchChannelMetadata(ch.id)
+                const role = meta.role || 'subscriber'
+                const nama = meta.name || ch.name || 'Unknown Channel'
+
+                // =========================================
+                // JIKA BOT ADMIN / OWNER
+                // =========================================
+                if (role === 'admin' || role === 'owner' || role === 'superadmin') {
+                    adminCount++
+                    listAdmin.push(`┃✦ ${nama}`)
+                    continue
+                }
+
+                // =========================================
+                // UNFOLLOW CHANNEL
+                // =========================================
+                await Asepp.newsSubscription.unsubscribe(ch.id)
+                unfollowCount++
+                listUnfollow.push(`┃✦ ${nama}`)
+
+                // delay anti ratelimit
+                await new Promise(r => setTimeout(r, 1800))
+
+            } catch (e) {
+                gagalCount++
+                console.log(`Error channel ${ch.id}:`, e.message)
+            }
+        }
+
+        // =========================================
+        // FORMAT LIST
+        // =========================================
+        const adminText = listAdmin.length > 0 ? listAdmin.join('\n') : '┃✦ Tidak ada'
+        const unfollowText = listUnfollow.length > 0 ? listUnfollow.join('\n') : '┃✦ Tidak ada'
+
+        // =========================================
+        // FORMAT WAKTU
+        // =========================================
+        let dateNow = new Date().toLocaleString('id-ID', {
+            timeZone: 'Asia/Jakarta'
+        })
+
+        const ownerNum = global.owner[0].replace(/[^0-9]/g, '')
+        const ownerJid = `${ownerNum}@s.whatsapp.net`
+
+        // =========================================
+        // TEXT RESULT
+        // =========================================
+        let teks = `\`𝗖𝗟𝗘𝗔𝗥𝗖𝗛 𝗥𝗘𝗦𝗨𝗟𝗧\`
+
+Hi \`${pushname}\` 👋 Pembersihan channel selesai 👑
+
+⌲ \`𝐇𝐀𝐒𝐈𝐋 𝐒𝐘𝐒𝐓𝐄𝐌\`
+┏━━━━━━━━
+┃✦ *Total Channel »* ${channels.length}
+┃✦ *Tetap Follow »* ${adminCount}
+┃✦ *Di-Unfollow »* ${unfollowCount}
+┃✦ *Gagal »* ${gagalCount}
+┃✦ *Waktu »* ${dateNow}
+┗━━━━━━━━━━
+
+⌲ \`𝐂𝐇𝐀𝐍𝐄𝐋 𝐀𝐃𝐌𝐈𝐍\`
+┏━━━━━━━━
+${adminText}
+┗━━━━━━━━━━
+
+⌲ \`𝐂𝐇𝐀𝐍𝐄𝐋 𝐃𝐈-𝐔𝐍𝐅𝐎𝐋𝐋𝐎𝐖\`
+┏━━━━━━━━
+${unfollowText}
+┗━━━━━━━━━━
+
+\`[洛] 𝐂𝐋𝐄𝐀𝐑𝐂𝐇 𝐋𝐎𝐆 [洛]\`
+Owner : @${ownerNum}
+`
+
+        // =========================================
+        // INTERACTIVE MESSAGE
+        // =========================================
+        const msg = generateWAMessageFromContent(
+            m.chat,
+            {
+                viewOnceMessage: {
+                    message: {
+                        interactiveMessage: proto.Message.InteractiveMessage.create({
+                            body: proto.Message.InteractiveMessage.Body.create({
+                                text: ""
+                            }),
+                            footer: proto.Message.InteractiveMessage.Footer.create({
+                                text: teks
+                            }),
+                            header: proto.Message.InteractiveMessage.Header.create({
+                                title: "𝗖𝗟𝗘𝗔𝗥𝗖𝗛 𝗦𝗬𝗦𝗧𝗘𝗠"
+                            }),
+                            contextInfo: {
+                                mentionedJid: [ownerJid]
+                            },
+                            nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                                buttons: [
+                                    {
+                                        name: "single_select",
+                                        buttonParamsJson: JSON.stringify({
+                                            title: "© CHANNEL MENU",
+                                            sections: [{
+                                                title: "Channel Cleaner System",
+                                                highlight_label: "𝐂𝐋𝐄𝐀𝐑 ⚠️",
+                                                rows: [
+                                                    {
+                                                        title: "📡 Total Channel",
+                                                        description: `${channels.length} total subscription`,
+                                                        id: `.listch`
+                                                    },
+                                                    {
+                                                        title: "🧹 Clear Channel Lagi",
+                                                        description: "Ulangi pembersihan channel",
+                                                        id: `.clearch`
+                                                    }
+                                                ]
+                                            }]
+                                        })
+                                    }
+                                ]
+                            })
+                        })
+                    }
+                }
+            },
+            { quoted: m }
+        )
+
+        await Asepp.relayMessage(
+            m.chat,
+            msg.message,
+            {
+                messageId: msg.key.id
+            }
+        )
+
+    } catch (e) {
+        console.log("Error clearch:", e)
+        await payreply("❌ Error: " + e.message)
+    }
+}
+break;
 
 
 case "jpmch": {
@@ -19465,10 +19067,4499 @@ await payreply("❌ Error:\n" + e.message)
 }
 break
 
+
+case 'jpm': {
+ if (m.sender.split('@')[0] !== '62881036109288') return payreply('Khusus owner 👑')
+
+ const axios = require('axios')
+
+ const GITHUB_OWNER = `AsepXyz12`
+ const GITHUB_REPO = `bot-wa-db`
+ const BL_PATH = `database/bljpm.json`
+
+ // =========================
+ // AMBIL SEMUA GROUP
+ // =========================
+ const groups = await Asepp.groupFetchAllParticipating()
+ let groupList = Object.values(groups)
+
+ // =========================
+ // AMBIL DATABASE BLACKLIST
+ // =========================
+ let blacklist = []
+
+ try {
+ const getUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${BL_PATH}`
+
+ const getRes = await axios.get(getUrl)
+
+ const dbBl = JSON.parse(
+ Buffer.from(getRes.data.content, 'base64').toString()
+ )
+
+ blacklist = dbBl.groups || []
+
+ } catch (e) {
+ console.log('Gagal ambil BL JPM:', e.message)
+ }
+
+ // =========================
+ // FILTER GROUP BLACKLIST
+ // =========================
+ groupList = groupList.filter(gc => !blacklist.includes(gc.id))
+
+ let q = m.quoted ? m.quoted : m
+ let mime = (q.msg || q).mimetype || ''
+ let caption = text || q.text || ''
+
+ if (!/image|video|text/.test(mime) && !caption) {
+ return payreply(`Kirim/reply text/image/video buat JPM 👑\nContoh:.jpm Halo semua`)
+ }
+
+ payreply(`Proses JPM ke ${groupList.length} group (skip ${blacklist.length} BL) 👑`)
+
+ let sukses = 0
+ let gagal = 0
+
+ for (let gc of groupList) {
+ await sleep(3500)
+
+ try {
+ let participants = gc.participants.map(v => v.id)
+
+ if (/image/.test(mime)) {
+ let media = await q.download()
+
+ await Asepp.sendMessage(gc.id, {
+ image: media,
+ caption: caption,
+ mentions: participants
+ })
+
+ } else if (/video/.test(mime)) {
+ let media = await q.download()
+
+ await Asepp.sendMessage(gc.id, {
+ video: media,
+ caption: caption,
+ gifPlayback: /gif/.test(mime),
+ mentions: participants
+ })
+
+ } else {
+ await Asepp.sendMessage(gc.id, {
+ text: caption,
+ mentions: participants
+ })
+ }
+
+ sukses++
+
+ } catch (e) {
+ gagal++
+ console.log(`JPM gagal ke ${gc.subject}:`, e.message)
+ }
+ }
+
+ payreply(`*JPM SELESAI* 👑
+
+Sukses: ${sukses} group
+Gagal: ${gagal} group
+Blacklist: ${blacklist.length}
+Total terkirim: ${groupList.length} group`)
+}
+break
+
+
+case 'addbl': {
+try {
+
+if (m.sender.split('@')[0] !== '62881036109288')
+return payreply('Khusus owner 👑')
+
+if (!m.isGroup)
+return payreply('Harus dipake di dalam group yang mau di blacklist 👑')
+
+const axios = require('axios')
+
+const GITHUB_OWNER = 'AsepXyz12'
+const GITHUB_REPO = 'bot-wa-db'
+const BL_PATH = 'database/bljpm.json'
+
+// isi token github lu
+
+const getUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${BL_PATH}`
+
+let dbBl = { groups: [] }
+let sha = null
+
+// =========================================
+// AMBIL FILE DATABASE
+// =========================================
+try {
+
+const getRes = await axios.get(getUrl, {
+headers: {
+Accept: 'application/vnd.github+json'
+}
+})
+
+dbBl = JSON.parse(
+Buffer.from(getRes.data.content, 'base64').toString()
+)
+
+sha = getRes.data.sha
+
+} catch (e) {
+
+if (e.response?.status !== 404)
+throw e
+
+}
+
+// =========================================
+// VALIDASI DATABASE
+// =========================================
+if (!Array.isArray(dbBl.groups))
+dbBl.groups = []
+
+// =========================================
+// CEK SUDAH BLACKLIST?
+// =========================================
+if (dbBl.groups.includes(m.chat)) {
+
+const teks = `\`𝗕𝗟𝗔𝗖𝗞𝗟𝗜𝗦𝗧 𝗝𝗣𝗠\`
+
+Hi \`${pushname}\` 👋
+
+⌲ \`𝐒𝐓𝐀𝐓𝐔𝐒 𝐆𝐑𝐎𝐔𝐏\`
+┏━━━━━━━━
+┃✦ *Group »* ${await groupMetadata.subject}
+┃✦ *Status »* Sudah blacklist
+┃✦ *ID »* ${m.chat}
+┗━━━━━━━━━━
+
+\`[洛] 𝐉𝐏𝐌 𝐁𝐋 𝐒𝐘𝐒𝐓𝐄𝐌 [洛]\`
+`
+
+const msg = generateWAMessageFromContent(
+m.chat,
+{
+viewOnceMessage: {
+message: {
+interactiveMessage: proto.Message.InteractiveMessage.create({
+body: proto.Message.InteractiveMessage.Body.create({
+text: ""
+}),
+footer: proto.Message.InteractiveMessage.Footer.create({
+text: teks
+}),
+header: proto.Message.InteractiveMessage.Header.create({
+title: "𝗝𝗣𝗠 𝗕𝗟𝗔𝗖𝗞𝗟𝗜𝗦𝗧"
+}),
+nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+buttons: [
+{
+name: "single_select",
+buttonParamsJson: JSON.stringify({
+title: "© BLACKLIST MENU",
+sections: [{
+title: "Blacklist System",
+highlight_label: "𝐁𝐋 🚫",
+rows: [
+{
+title: "📄 Cek Database",
+description: "Lihat status blacklist",
+id: `.cekbl`
+}
+]
+}]
+})
+}
+]
+})
+})
+}
+}
+},
+{ quoted: m }
+)
+
+return await Asepp.relayMessage(m.chat, msg.message, {
+messageId: msg.key.id
+})
+}
+
+// =========================================
+// TAMBAH BLACKLIST
+// =========================================
+dbBl.groups.push(m.chat)
+
+const newContent = Buffer.from(
+JSON.stringify(dbBl, null, 2)
+).toString('base64')
+
+// =========================================
+// UPLOAD KE GITHUB
+// =========================================
+await axios.put(getUrl, {
+message: `addbl jpm: ${m.chat}`,
+content: newContent,
+sha: sha
+}, {
+headers: {
+Accept: 'application/vnd.github+json'
+}
+})
+
+// =========================================
+// TAMPILAN SUKSES
+// =========================================
+let dateNow = new Date().toLocaleString('id-ID', {
+timeZone: 'Asia/Jakarta'
+})
+
+const ownerNum = global.owner[0].replace(/[^0-9]/g,'')
+const ownerJid = `${ownerNum}@s.whatsapp.net`
+
+const teks = `\`𝗕𝗟𝗔𝗖𝗞𝗟𝗜𝗦𝗧 𝗝𝗣𝗠\`
+
+Hi \`${pushname}\` 👋 Group berhasil masuk blacklist JPM 👑
+
+⌲ \`𝐈𝐍𝐅𝐎 𝐆𝐑𝐎𝐔𝐏\`
+┏━━━━━━━━
+┃✦ *Group »* ${(await Asepp.groupMetadata(m.chat)).subject}
+┃✦ *Status »* Blacklist aktif
+┃✦ *Waktu »* ${dateNow}
+┃✦ *ID »* ${m.chat}
+┗━━━━━━━━━━
+
+⌲ \`𝐃𝐀𝐓𝐀𝐁𝐀𝐒𝐄\`
+┏━━━━━━━━
+┃✦ *Total BL »* ${dbBl.groups.length}
+┃✦ *Mode »* Skip JPM
+┗━━━━━━━━━━
+
+\`[洛] 𝐉𝐏𝐌 𝐁𝐋 𝐒𝐘𝐒𝐓𝐄𝐌 [洛]\`
+Owner : @${ownerNum}
+`
+
+const msg = generateWAMessageFromContent(
+m.chat,
+{
+viewOnceMessage: {
+message: {
+interactiveMessage: proto.Message.InteractiveMessage.create({
+body: proto.Message.InteractiveMessage.Body.create({
+text: ""
+}),
+footer: proto.Message.InteractiveMessage.Footer.create({
+text: teks
+}),
+header: proto.Message.InteractiveMessage.Header.create({
+title: "𝗝𝗣𝗠 𝗕𝗟𝗔𝗖𝗞𝗟𝗜𝗦𝗧"
+}),
+contextInfo: {
+mentionedJid: [ownerJid]
+},
+nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+buttons: [
+{
+name: "single_select",
+buttonParamsJson: JSON.stringify({
+title: "© BLACKLIST MENU",
+sections: [{
+title: "Blacklist JPM System",
+highlight_label: "𝐁𝐋 🚫",
+rows: [
+{
+title: "📄 Cek Blacklist",
+description: "Lihat database blacklist",
+id: `.cekbl`
+},
+{
+title: "✅ Hapus Blacklist",
+description: "Remove group dari blacklist",
+id: `.delbl`
+}
+]
+}]
+})
+}
+]
+})
+})
+}
+}
+},
+{ quoted: m }
+)
+
+await Asepp.relayMessage(m.chat, msg.message, {
+messageId: msg.key.id
+})
+
+} catch (e) {
+
+console.log('Error addbl:', e)
+
+await payreply(
+`❌ Error: ${e.response?.data?.message || e.message}`
+)
+
+}
+}
+break
+
+case 'delbl': {
+try {
+
+if (m.sender.split('@')[0] !== '62881036109288')
+return payreply('Khusus owner 👑')
+
+if (!m.isGroup)
+return payreply('Harus dipake di dalam group 👑')
+
+const axios = require('axios')
+
+const GITHUB_OWNER = 'AsepXyz12'
+const GITHUB_REPO = 'bot-wa-db'
+const BL_PATH = 'database/bljpm.json'
+
+// isi token github lu
+
+const getUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${BL_PATH}`
+
+// =========================================
+// AMBIL DATABASE
+// =========================================
+const getRes = await axios.get(getUrl, {
+headers: {
+Accept: 'application/vnd.github+json'
+}
+})
+
+let dbBl = JSON.parse(
+Buffer.from(getRes.data.content, 'base64').toString()
+)
+
+const sha = getRes.data.sha
+
+// =========================================
+// VALIDASI DATABASE
+// =========================================
+if (!Array.isArray(dbBl.groups))
+dbBl.groups = []
+
+// =========================================
+// CEK ADA DI BLACKLIST?
+// =========================================
+if (!dbBl.groups.includes(m.chat)) {
+
+const teks = `\`𝗝𝗣𝗠 𝗕𝗟𝗔𝗖𝗞𝗟𝗜𝗦𝗧\`
+
+Hi \`${pushname}\` 👋
+
+⌲ \`𝐒𝐓𝐀𝐓𝐔𝐒 𝐆𝐑𝐎𝐔𝐏\`
+┏━━━━━━━━
+┃✦ *Group »* ${(await Asepp.groupMetadata(m.chat)).subject}
+┃✦ *Status »* Tidak blacklist
+┃✦ *ID »* ${m.chat}
+┗━━━━━━━━━━
+
+\`[洛] 𝐉𝐏𝐌 𝐁𝐋 𝐒𝐘𝐒𝐓𝐄𝐌 [洛]\`
+`
+
+const msg = generateWAMessageFromContent(
+m.chat,
+{
+viewOnceMessage: {
+message: {
+interactiveMessage: proto.Message.InteractiveMessage.create({
+body: proto.Message.InteractiveMessage.Body.create({
+text: ""
+}),
+footer: proto.Message.InteractiveMessage.Footer.create({
+text: teks
+}),
+header: proto.Message.InteractiveMessage.Header.create({
+title: "𝗝𝗣𝗠 𝗕𝗟𝗔𝗖𝗞𝗟𝗜𝗦𝗧"
+}),
+nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+buttons: [
+{
+name: "single_select",
+buttonParamsJson: JSON.stringify({
+title: "© BLACKLIST MENU",
+sections: [{
+title: "Blacklist System",
+highlight_label: "𝐁𝐋 🚫",
+rows: [
+{
+title: "📄 Cek Blacklist",
+description: "Lihat database blacklist",
+id: `.cekbl`
+}
+]
+}]
+})
+}
+]
+})
+})
+}
+}
+},
+{ quoted: m }
+)
+
+return await Asepp.relayMessage(m.chat, msg.message, {
+messageId: msg.key.id
+})
+}
+
+// =========================================
+// HAPUS DARI BLACKLIST
+// =========================================
+dbBl.groups = dbBl.groups.filter(id => id !== m.chat)
+
+const newContent = Buffer.from(
+JSON.stringify(dbBl, null, 2)
+).toString('base64')
+
+// =========================================
+// UPLOAD KE GITHUB
+// =========================================
+await axios.put(getUrl, {
+message: `delbl jpm: ${m.chat}`,
+content: newContent,
+sha: sha
+}, {
+headers: {
+Accept: 'application/vnd.github+json'
+}
+})
+
+// =========================================
+// TAMPILAN SUKSES
+// =========================================
+let dateNow = new Date().toLocaleString('id-ID', {
+timeZone: 'Asia/Jakarta'
+})
+
+const ownerNum = global.owner[0].replace(/[^0-9]/g,'')
+const ownerJid = `${ownerNum}@s.whatsapp.net`
+
+const teks = `\`𝗝𝗣𝗠 𝗕𝗟𝗔𝗖𝗞𝗟𝗜𝗦𝗧\`
+
+Hi \`${pushname}\` 👋 Group berhasil dihapus dari blacklist JPM 👑
+
+⌲ \`𝐈𝐍𝐅𝐎 𝐆𝐑𝐎𝐔𝐏\`
+┏━━━━━━━━
+┃✦ *Group »* ${(await Asepp.groupMetadata(m.chat)).subject}
+┃✦ *Status »* Blacklist dihapus
+┃✦ *Waktu »* ${dateNow}
+┃✦ *ID »* ${m.chat}
+┗━━━━━━━━━━
+
+⌲ \`𝐃𝐀𝐓𝐀𝐁𝐀𝐒𝐄\`
+┏━━━━━━━━
+┃✦ *Sisa BL »* ${dbBl.groups.length}
+┃✦ *Mode »* JPM aktif kembali
+┗━━━━━━━━━━
+
+\`[洛] 𝐉𝐏𝐌 𝐁𝐋 𝐒𝐘𝐒𝐓𝐄𝐌 [洛]\`
+Owner : @${ownerNum}
+`
+
+const msg = generateWAMessageFromContent(
+m.chat,
+{
+viewOnceMessage: {
+message: {
+interactiveMessage: proto.Message.InteractiveMessage.create({
+body: proto.Message.InteractiveMessage.Body.create({
+text: ""
+}),
+footer: proto.Message.InteractiveMessage.Footer.create({
+text: teks
+}),
+header: proto.Message.InteractiveMessage.Header.create({
+title: "𝗝𝗣𝗠 𝗕𝗟𝗔𝗖𝗞𝗟𝗜𝗦𝗧"
+}),
+contextInfo: {
+mentionedJid: [ownerJid]
+},
+nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+buttons: [
+{
+name: "single_select",
+buttonParamsJson: JSON.stringify({
+title: "© BLACKLIST MENU",
+sections: [{
+title: "Blacklist JPM System",
+highlight_label: "𝐁𝐋 🚫",
+rows: [
+{
+title: "📄 Cek Blacklist",
+description: "Lihat database blacklist",
+id: `.cekbl`
+},
+{
+title: "🚫 Add Blacklist",
+description: "Blacklist group ini lagi",
+id: `.addbl`
+}
+]
+}]
+})
+}
+]
+})
+})
+}
+}
+},
+{ quoted: m }
+)
+
+await Asepp.relayMessage(m.chat, msg.message, {
+messageId: msg.key.id
+})
+
+} catch (e) {
+
+console.log('Error delbl:', e)
+
+await payreply(
+`❌ Error: ${e.response?.data?.message || e.message}`
+)
+
+}
+}
+break
+
+case 'cekbl': {
+try {
+
+if (m.sender.split('@')[0] !== '62881036109288')
+return payreply('Khusus owner 👑')
+
+const axios = require('axios')
+
+const GITHUB_OWNER = 'AsepXyz12'
+const GITHUB_REPO = 'bot-wa-db'
+const BL_PATH = 'database/bljpm.json'
+
+// isi token github lu
+
+const getUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${BL_PATH}`
+
+// =========================================
+// AMBIL DATABASE
+// =========================================
+const getRes = await axios.get(getUrl, {
+headers: {
+Accept: 'application/vnd.github+json'
+}
+})
+
+let dbBl = JSON.parse(
+Buffer.from(getRes.data.content, 'base64').toString()
+)
+
+// =========================================
+// VALIDASI DATABASE
+// =========================================
+if (!Array.isArray(dbBl.groups))
+dbBl.groups = []
+
+// =========================================
+// FORMAT LIST BLACKLIST
+// =========================================
+let listBl = ''
+
+if (dbBl.groups.length < 1) {
+
+listBl = 'Tidak ada group blacklist'
+
+} else {
+
+for (let i = 0; i < dbBl.groups.length; i++) {
+
+let idGc = dbBl.groups[i]
+let namaGc = 'Unknown Group'
+
+try {
+let meta = await Asepp.groupMetadata(idGc)
+namaGc = meta.subject
+} catch {}
+
+listBl += `┃✦ ${i + 1}. ${namaGc}\n`
+listBl += `┃ ${idGc}\n`
+}
+
+}
+
+// =========================================
+// WAKTU
+// =========================================
+let dateNow = new Date().toLocaleString('id-ID', {
+timeZone: 'Asia/Jakarta'
+})
+
+const ownerNum = global.owner[0].replace(/[^0-9]/g,'')
+const ownerJid = `${ownerNum}@s.whatsapp.net`
+
+// =========================================
+// TEKS TAMPILAN
+// =========================================
+const teks = `\`𝗝𝗣𝗠 𝗕𝗟𝗔𝗖𝗞𝗟𝗜𝗦𝗧\`
+
+Hi \`${pushname}\` 👋 Berikut database blacklist JPM 👑
+
+⌲ \`𝐃𝐀𝐓𝐀𝐁𝐀𝐒𝐄 𝐁𝐋\`
+┏━━━━━━━━
+${listBl}
+┗━━━━━━━━━━
+
+⌲ \`𝐈𝐍𝐅𝐎 𝐒𝐘𝐒𝐓𝐄𝐌\`
+┏━━━━━━━━
+┃✦ *Total BL »* ${dbBl.groups.length}
+┃✦ *Mode »* Skip JPM
+┃✦ *Waktu »* ${dateNow}
+┗━━━━━━━━━━
+
+\`[洛] 𝐉𝐏𝐌 𝐁𝐋 𝐒𝐘𝐒𝐓𝐄𝐌 [洛]\`
+Owner : @${ownerNum}
+`
+
+// =========================================
+// INTERACTIVE MESSAGE
+// =========================================
+const msg = generateWAMessageFromContent(
+m.chat,
+{
+viewOnceMessage: {
+message: {
+interactiveMessage: proto.Message.InteractiveMessage.create({
+body: proto.Message.InteractiveMessage.Body.create({
+text: ""
+}),
+footer: proto.Message.InteractiveMessage.Footer.create({
+text: teks
+}),
+header: proto.Message.InteractiveMessage.Header.create({
+title: "𝗝𝗣𝗠 𝗕𝗟𝗔𝗖𝗞𝗟𝗜𝗦𝗧"
+}),
+contextInfo: {
+mentionedJid: [ownerJid]
+},
+nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+buttons: [
+{
+name: "single_select",
+buttonParamsJson: JSON.stringify({
+title: "© BLACKLIST MENU",
+sections: [{
+title: "Blacklist JPM System",
+highlight_label: "𝐁𝐋 🚫",
+rows: [
+{
+title: "🚫 Add Blacklist",
+description: "Tambah group ke blacklist",
+id: `.addbl`
+},
+{
+title: "✅ Delete Blacklist",
+description: "Hapus group dari blacklist",
+id: `.delbl`
+}
+]
+}]
+})
+}
+]
+})
+})
+}
+}
+},
+{ quoted: m }
+)
+
+await Asepp.relayMessage(m.chat, msg.message, {
+messageId: msg.key.id
+})
+
+} catch (e) {
+
+console.log('Error cekbl:', e)
+
+await payreply(
+`❌ Error: ${e.response?.data?.message || e.message}`
+)
+
+}
+}
+break
+
+case 'clearbl': {
+try {
+
+if (m.sender.split('@')[0] !== '62881036109288')
+return payreply('Khusus owner 👑')
+
+const axios = require('axios')
+
+const GITHUB_OWNER = 'AsepXyz12'
+const GITHUB_REPO = 'bot-wa-db'
+const BL_PATH = 'database/bljpm.json'
+
+// isi token github lu
+
+const getUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${BL_PATH}`
+
+// =========================================
+// AMBIL DATABASE LAMA
+// =========================================
+const getRes = await axios.get(getUrl, {
+headers: {
+Accept: 'application/vnd.github+json'
+}
+})
+
+const sha = getRes.data.sha
+
+let dbBl = JSON.parse(
+Buffer.from(getRes.data.content, 'base64').toString()
+)
+
+if (!Array.isArray(dbBl.groups))
+dbBl.groups = []
+
+const totalSebelum = dbBl.groups.length
+
+// =========================================
+// CLEAR SEMUA BLACKLIST
+// =========================================
+dbBl.groups = []
+
+const newContent = Buffer.from(
+JSON.stringify(dbBl, null, 2)
+).toString('base64')
+
+// =========================================
+// UPLOAD KE GITHUB
+// =========================================
+await axios.put(getUrl, {
+message: `clearbl jpm all`,
+content: newContent,
+sha: sha
+}, {
+headers: {
+Accept: 'application/vnd.github+json'
+}
+})
+
+// =========================================
+// FORMAT WAKTU
+// =========================================
+let dateNow = new Date().toLocaleString('id-ID', {
+timeZone: 'Asia/Jakarta'
+})
+
+const ownerNum = global.owner[0].replace(/[^0-9]/g,'')
+const ownerJid = `${ownerNum}@s.whatsapp.net`
+
+// =========================================
+// TEKS
+// =========================================
+const teks = `\`𝗖𝗟𝗘𝗔𝗥 𝗕𝗟𝗔𝗖𝗞𝗟𝗜𝗦𝗧\`
+
+Hi \`${pushname}\` 👋 Semua blacklist JPM berhasil dihapus 👑
+
+⌲ \`𝐃𝐀𝐓𝐀𝐁𝐀𝐒𝐄\`
+┏━━━━━━━━
+┃✦ *Total Sebelum »* ${totalSebelum}
+┃✦ *Sisa BL »* 0
+┃✦ *Status »* Cleared
+┃✦ *Waktu »* ${dateNow}
+┗━━━━━━━━━━
+
+⌲ \`𝐉𝐏𝐌 𝐒𝐘𝐒𝐓𝐄𝐌\`
+Semua group sekarang bisa menerima JPM kembali ✅
+
+\`[洛] 𝐉𝐏𝐌 𝐁𝐋 𝐒𝐘𝐒𝐓𝐄𝐌 [洛]\`
+Owner : @${ownerNum}
+`
+
+// =========================================
+// INTERACTIVE MESSAGE
+// =========================================
+const msg = generateWAMessageFromContent(
+m.chat,
+{
+viewOnceMessage: {
+message: {
+interactiveMessage: proto.Message.InteractiveMessage.create({
+body: proto.Message.InteractiveMessage.Body.create({
+text: ""
+}),
+footer: proto.Message.InteractiveMessage.Footer.create({
+text: teks
+}),
+header: proto.Message.InteractiveMessage.Header.create({
+title: "𝗝𝗣𝗠 𝗕𝗟𝗔𝗖𝗞𝗟𝗜𝗦𝗧"
+}),
+contextInfo: {
+mentionedJid: [ownerJid]
+},
+nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+buttons: [
+{
+name: "single_select",
+buttonParamsJson: JSON.stringify({
+title: "© BLACKLIST MENU",
+sections: [{
+title: "Blacklist JPM System",
+highlight_label: "𝐁𝐋 🚫",
+rows: [
+{
+title: "🚫 Add Blacklist",
+description: "Tambah group ke blacklist",
+id: `.addbl`
+},
+{
+title: "✅ Delete Blacklist",
+description: "Hapus group dari blacklist",
+id: `.delbl`
+},
+{
+title: "📄 Check Blacklist",
+description: "Lihat database blacklist",
+id: `.cekbl`
+}
+]
+}]
+})
+}
+]
+})
+})
+}
+}
+},
+{ quoted: m }
+)
+
+await Asepp.relayMessage(m.chat, msg.message, {
+messageId: msg.key.id
+})
+
+} catch (e) {
+
+console.log('Error clearbl:', e)
+
+await payreply(
+`❌ Error: ${e.response?.data?.message || e.message}`
+)
+
+}
+}
+
+
+
+
+case "sendall": {
+ try {
+ if (!isOwner) return payreply('Owner only! 👑')
+
+ const axios = require('axios')
+ const fs = require('fs')
+ const path = require('path')
+
+ // =====================================
+ // CONFIG GITHUB
+ // =====================================
+ const GITHUB_OWNER = "AsepXyz12"
+ const GITHUB_REPO = "bot-wa-db"
+
+ // =====================================
+ // VALIDASI
+ // =====================================
+ if (!text) {
+ return payreply(`Contoh:\n${prefix}sendall 1`)
+ }
+
+ const folderName = text.trim()
+
+ // =====================================
+ // DATABASE
+ // =====================================
+ const dbPath = path.join(
+ process.cwd(),
+ 'database/svall.json'
+ )
+
+ if (!fs.existsSync(dbPath)) {
+ return payreply('❌ Database svall tidak ditemukan!')
+ }
+
+ let db = JSON.parse(
+ fs.readFileSync(dbPath)
+ )
+
+ if (!db[folderName]) {
+ return payreply('❌ Folder tidak ditemukan!')
+ }
+
+ if (db[folderName].length === 0) {
+ return payreply('❌ Folder kosong!')
+ }
+
+ const mediaList = db[folderName]
+
+ await payreply(
+ `⏳ Mengirim ${mediaList.length} media dari folder *${folderName}* ...`
+ )
+
+ // =====================================
+ // LOOP MEDIA
+ // =====================================
+ let success = 0
+ let failed = 0
+
+ for (const media of mediaList) {
+ try {
+
+ const rawUrl =
+ `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/main/svall/${folderName}/${media.file}`
+
+ // =====================================
+ // IMAGE
+ // =====================================
+ if (media.type === 'image') {
+
+ await Asepp.sendMessage(
+ m.chat,
+ {
+ image: { url: rawUrl },
+ caption: `📦 ${media.file}`
+ },
+ { quoted: m }
+ )
+
+ // =====================================
+ // VIDEO
+ // =====================================
+ } else if (media.type === 'video') {
+
+ await Asepp.sendMessage(
+ m.chat,
+ {
+ video: { url: rawUrl },
+ caption: `📦 ${media.file}`
+ },
+ { quoted: m }
+ )
+
+ // =====================================
+ // AUDIO
+ // =====================================
+ } else if (media.type === 'audio') {
+
+ await Asepp.sendMessage(
+ m.chat,
+ {
+ audio: { url: rawUrl },
+ mimetype: media.mime,
+ ptt: false
+ },
+ { quoted: m }
+ )
+
+ // =====================================
+ // DOCUMENT
+ // =====================================
+ } else {
+
+ await Asepp.sendMessage(
+ m.chat,
+ {
+ document: { url: rawUrl },
+ mimetype: media.mime,
+ fileName: media.file
+ },
+ { quoted: m }
+ )
+
+ }
+
+ success++
+
+ // delay biar aman
+ await new Promise(resolve =>
+ setTimeout(resolve, 1500)
+ )
+
+ } catch (err) {
+ console.log("SEND MEDIA ERROR:", err)
+ failed++
+ }
+ }
+
+ // =====================================
+ // RESULT TEXT
+ // =====================================
+ let teks = `\`𝗦𝗘𝗡𝗗𝗔𝗟𝗟 𝗥𝗘𝗦𝗨𝗟𝗧\`
+
+Hi \`${pushname}\` 👋 Broadcast media selesai 📦
+
+⌲ \`𝐈𝐍𝐅𝐎 𝐅𝐎𝐋𝐃𝐄𝐑\`
+┏━━━━━━━━
+┃✦ Folder » ${folderName}
+┃✦ Total Media » ${mediaList.length}
+┃✦ Success » ${success}
+┃✦ Failed » ${failed}
+┗━━━━━━━━━━
+
+⌲ \`𝐒𝐓𝐀𝐓𝐔𝐒\`
+✅ Semua media berhasil diproses
+✅ Support image/video/audio/document
+
+\`[洛] 𝐌𝐄𝐃𝐈𝐀 𝐒𝐄𝐍𝐃 [洛]\`
+`
+
+ // =====================================
+ // INTERACTIVE MESSAGE
+ // =====================================
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage:
+ proto.Message.InteractiveMessage.create({
+
+ body:
+ proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+
+ footer:
+ proto.Message.InteractiveMessage.Footer.create({
+ text: teks
+ }),
+
+ header:
+ proto.Message.InteractiveMessage.Header.create({
+ title: "𝗦𝗘𝗡𝗗𝗔𝗟𝗟 𝗗𝗢𝗡𝗘"
+ }),
+
+ contextInfo: {
+ mentionedJid: [m.sender]
+ },
+
+ nativeFlowMessage:
+ proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© MEDIA MENU",
+ sections: [
+ {
+ title: "Media Sender",
+ highlight_label: "𝐒𝐄𝐍𝐃 📦",
+ rows: [
+ {
+ title: "𝐒𝐞𝐧𝐝 𝐋𝐚𝐠𝐢",
+ description: `Kirim ulang folder ${folderName}`,
+ id: `${prefix}sendall ${folderName}`
+ },
+ {
+ title: "𝐒𝐚𝐯𝐞 𝐌𝐞𝐝𝐢𝐚",
+ description: `Tambah media ke folder ${folderName}`,
+ id: `${prefix}svall ${folderName}`
+ }
+ ]
+ }
+ ]
+ })
+ }
+ ]
+ })
+
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ {
+ messageId: msg.key.id
+ }
+ )
+
+ } catch (e) {
+ console.log("SENDALL ERROR:", e)
+
+ await payreply(
+ '❌ Error:\n' + e.message
+ )
+ }
+}
+break
+
+case "svall": {
+ try {
+ if (!isOwner) return payreply('Owner only! 👑')
+
+ const axios = require('axios')
+ const fs = require('fs')
+ const path = require('path')
+
+ const {
+ downloadContentFromMessage
+ } = require('@whiskeysockets/baileys')
+
+ // =====================================
+ // CONFIG GITHUB
+ // =====================================
+ const GITHUB_OWNER = "AsepXyz12"
+ const GITHUB_REPO = "bot-wa-db"
+
+ // =====================================
+ // VALIDASI
+ // =====================================
+ if (!text) {
+ return payreply(`Contoh:\n${prefix}svall 1`)
+ }
+
+ if (!m.quoted) {
+ return payreply('❌ Reply media!')
+ }
+
+ const folderName = text.trim()
+
+ let qmsg = m.quoted
+ let mime = (qmsg.msg || qmsg).mimetype || ''
+
+ if (!mime) {
+ return payreply('❌ Reply image/video/audio/document!')
+ }
+
+ // =====================================
+ // DETEKSI TYPE
+ // =====================================
+ let type = ''
+
+ if (mime.startsWith('image/')) {
+ type = 'image'
+ } else if (mime.startsWith('video/')) {
+ type = 'video'
+ } else if (mime.startsWith('audio/')) {
+ type = 'audio'
+ } else {
+ type = 'document'
+ }
+
+ // =====================================
+ // EXTENSION
+ // =====================================
+ let ext = mime.split('/')[1] || 'bin'
+
+ if (ext.includes(';')) {
+ ext = ext.split(';')[0]
+ }
+
+ // =====================================
+ // DATABASE
+ // =====================================
+ const dbPath = path.join(
+ process.cwd(),
+ 'database/svall.json'
+ )
+
+ let db = {}
+
+ if (fs.existsSync(dbPath)) {
+ db = JSON.parse(fs.readFileSync(dbPath))
+ }
+
+ if (!db[folderName]) {
+ db[folderName] = []
+ }
+
+ await payreply(
+ `⏳ Upload ${type} ke folder *${folderName}* ...`
+ )
+
+ // =====================================
+ // DOWNLOAD MEDIA
+ // =====================================
+ const stream = await downloadContentFromMessage(
+ qmsg.msg || qmsg,
+ type
+ )
+
+ let buffer = Buffer.from([])
+
+ for await (const chunk of stream) {
+ buffer = Buffer.concat([buffer, chunk])
+ }
+
+ if (!buffer || buffer.length === 0) {
+ return payreply('❌ Gagal download media!')
+ }
+
+ // =====================================
+ // AUTO FILE
+ // =====================================
+ const fileName = `${Date.now()}.${ext}`
+
+ const githubPath = `svall/${folderName}/${fileName}`
+
+ // =====================================
+ // UPLOAD GITHUB
+ // =====================================
+ const uploadUrl =
+ `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${githubPath}`
+
+ await axios.put(
+ uploadUrl,
+ {
+ message: `Upload ${fileName}`,
+ content: buffer.toString('base64')
+ },
+ {
+ headers: {
+ 'Content-Type': 'application/json'
+ }
+ }
+ )
+
+ // =====================================
+ // SAVE DATABASE
+ // =====================================
+ db[folderName].push({
+ file: fileName,
+ type: type,
+ mime: mime
+ })
+
+ fs.writeFileSync(
+ dbPath,
+ JSON.stringify(db, null, 2)
+ )
+
+ // =====================================
+ // TOTAL
+ // =====================================
+ const totalMedia = db[folderName].length
+
+ // =====================================
+ // TEXT
+ // =====================================
+ let teks = `\`𝗦𝗩𝗔𝗟𝗟 𝗦𝗨𝗖𝗖𝗘𝗦\`
+
+Hi \`${pushname}\` 👋 Media berhasil disimpan 📦
+
+⌲ \`𝐈𝐍𝐅𝐎 𝐅𝐎𝐋𝐃𝐄𝐑\`
+┏━━━━━━━━
+┃✦ Folder » ${folderName}
+┃✦ Type » ${type}
+┃✦ Total Media » ${totalMedia}
+┃✦ File Baru » ${fileName}
+┗━━━━━━━━━━
+
+⌲ \`𝐒𝐓𝐀𝐓𝐔𝐒\`
+✅ Media berhasil masuk database
+✅ Support image/video/audio/document
+✅ Folder otomatis dibuat
+✅ Tersimpan di GitHub
+
+⌲ \`𝐍𝐄𝐗𝐓\`
+Gunakan:
+${prefix}sendall ${folderName}
+
+\`[洛] 𝐌𝐄𝐃𝐈𝐀 𝐒𝐀𝐕𝐄 [洛]\`
+`
+
+ // =====================================
+ // INTERACTIVE MESSAGE
+ // =====================================
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage:
+ proto.Message.InteractiveMessage.create({
+ body:
+ proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+
+ footer:
+ proto.Message.InteractiveMessage.Footer.create({
+ text: teks
+ }),
+
+ header:
+ proto.Message.InteractiveMessage.Header.create({
+ title: "𝗦𝗩𝗔𝗟𝗟 𝗗𝗢𝗡𝗘"
+ }),
+
+ contextInfo: {
+ mentionedJid: [m.sender]
+ },
+
+ nativeFlowMessage:
+ proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© MEDIA MENU",
+ sections: [
+ {
+ title: "Media Save",
+ highlight_label: "𝐒𝐕𝐀𝐋𝐋 📦",
+ rows: [
+ {
+ title: "𝐒𝐞𝐧𝐝 𝐌𝐞𝐝𝐢𝐚",
+ description: `Kirim semua media folder ${folderName}`,
+ id: `${prefix}sendall ${folderName}`
+ },
+ {
+ title: "𝐒𝐚𝐯𝐞 𝐋𝐚𝐠𝐢",
+ description: `Tambah media ke folder ${folderName}`,
+ id: `${prefix}svall ${folderName}`
+ }
+ ]
+ }
+ ]
+ })
+ }
+ ]
+ })
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ {
+ messageId: msg.key.id
+ }
+ )
+
+ } catch (e) {
+ console.log("SVALL ERROR:", e)
+
+ await payreply(
+ '❌ Error:\n' + e.message
+ )
+ }
+}
+break
+
+case "antitag": {
+ try {
+ if (!m.isGroup) return payreply('❌ Fitur ini cuma buat grup!')
+ if (!isAdmins && !isOwner) return payreply('❌ Admin only!')
+
+ const fs = require('fs')
+ const path = require('path')
+
+ // =====================================
+ // AUTO BUAT FOLDER DATABASE
+ // =====================================
+ const dbFolder = path.join(
+ process.cwd(),
+ 'database'
+ )
+
+ if (!fs.existsSync(dbFolder)) {
+ fs.mkdirSync(dbFolder, {
+ recursive: true
+ })
+ }
+
+ // =====================================
+ // FILE DATABASE
+ // =====================================
+ const dbPath = path.join(
+ dbFolder,
+ 'antitag.json'
+ )
+
+ // =====================================
+ // AUTO BUAT FILE JSON
+ // =====================================
+ if (!fs.existsSync(dbPath)) {
+ fs.writeFileSync(
+ dbPath,
+ JSON.stringify({}, null, 2)
+ )
+ }
+
+ // =====================================
+ // READ DATABASE
+ // =====================================
+ let db = JSON.parse(
+ fs.readFileSync(dbPath)
+ )
+
+ // =====================================
+ // AUTO REGISTER GROUP
+ // =====================================
+ if (!db[m.chat]) {
+ db[m.chat] = false
+ }
+
+ // =====================================
+ // VALIDASI INPUT
+ // =====================================
+ if (!args[0]) {
+ return payreply(
+ `Contoh penggunaan:\n\n` +
+ `${prefix}antitag on\n` +
+ `${prefix}antitag off`
+ )
+ }
+
+ // =====================================
+ // ON / OFF
+ // =====================================
+ if (args[0].toLowerCase() === "on") {
+
+ db[m.chat] = true
+
+ } else if (args[0].toLowerCase() === "off") {
+
+ db[m.chat] = false
+
+ } else {
+
+ return payreply('❌ Pilih on/off')
+
+ }
+
+ // =====================================
+ // SAVE DATABASE
+ // =====================================
+ fs.writeFileSync(
+ dbPath,
+ JSON.stringify(db, null, 2)
+ )
+
+ // =====================================
+ // STATUS
+ // =====================================
+ let status =
+ db[m.chat] === true
+ ? "AKTIF ✅"
+ : "NONAKTIF ❌"
+
+ // =====================================
+ // TEXT
+ // =====================================
+ let teks = `\`𝗔𝗡𝗧𝗜𝗧𝗘𝗖 𝗦𝗬𝗦𝗧𝗘𝗠\`
+
+Hi \`${pushname}\` 👋 Pengaturan berhasil diupdate ⚡
+
+⌲ \`𝐈𝐍𝐅𝐎 𝐆𝐑𝐔𝐏\`
+┏━━━━━━━━
+┃✦ Status » ${status}
+┃✦ Grup » ${groupName}
+┗━━━━━━━━━━
+
+⌲ \`𝐅𝐔𝐍𝐂𝐓𝐈𝐎𝐍\`
+✅ Auto delete kata "semua"
+✅ Deteksi otomatis
+✅ Auto hapus pesan
+✅ Khusus grup
+
+⌲ \`𝐂𝐎𝐌𝐌𝐀𝐍𝐃\`
+• ${prefix}antitag on
+• ${prefix}antitag off
+
+\`[洛] 𝐀𝐍𝐓𝐈𝐓𝐄𝐂 𝐋𝐎𝐆 [洛]\`
+`
+
+ // =====================================
+ // INTERACTIVE MESSAGE
+ // =====================================
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage:
+ proto.Message.InteractiveMessage.create({
+
+ body:
+ proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+
+ footer:
+ proto.Message.InteractiveMessage.Footer.create({
+ text: teks
+ }),
+
+ header:
+ proto.Message.InteractiveMessage.Header.create({
+ title: "𝗔𝗡𝗧𝗜𝗧𝗘𝗖 𝗗𝗢𝗡𝗘"
+ }),
+
+ contextInfo: {
+ mentionedJid: [m.sender]
+ },
+
+ nativeFlowMessage:
+ proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© ANTITAG MENU",
+ sections: [
+ {
+ title: "Antitag Control",
+ highlight_label: "𝐀𝐍𝐓𝐈𝐓𝐀𝐆 ⚡",
+ rows: [
+ {
+ title: "𝐀𝐜𝐭𝐢𝐯𝐞",
+ description: "Aktifkan fitur AntiTag",
+ id: `${prefix}antitag on`
+ },
+ {
+ title: "𝐃𝐢𝐬𝐚𝐛𝐥𝐞",
+ description: "Matikan fitur AntiTag",
+ id: `${prefix}antitag off`
+ }
+ ]
+ }
+ ]
+ })
+ }
+ ]
+ })
+
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ // =====================================
+ // SEND MESSAGE
+ // =====================================
+ await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ {
+ messageId: msg.key.id
+ }
+ )
+
+ } catch (e) {
+
+ console.log("ANTITAG ERROR:", e)
+
+ await payreply(
+ '❌ Error:\n' + e.message
+ )
+
+ }
+}
+break
+
+
+case "setppgc": {
+ try {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('Owner only! 👑')
+ }
+
+ // =====================================
+ // GROUP ONLY
+ // =====================================
+ if (!m.isGroup) {
+ return payreply('❌ Fitur ini cuma buat grup!')
+ }
+
+ const {
+ downloadContentFromMessage
+ } = require('@whiskeysockets/baileys')
+
+ // =====================================
+ // SUPPORT REPLY & NON REPLY
+ // =====================================
+ let qmsg = m.quoted
+ ? m.quoted
+ : m
+
+ let mime = (
+ qmsg.msg ||
+ qmsg
+ ).mimetype || ''
+
+ // =====================================
+ // VALIDASI IMAGE
+ // =====================================
+ if (!mime.startsWith('image/')) {
+ return payreply(
+ `Kirim/reply foto dengan caption:\n${prefix}setppgc`
+ )
+ }
+
+ await payreply(
+ '⏳ Mengganti foto profil grup...'
+ )
+
+ // =====================================
+ // DETECT IMAGE MESSAGE
+ // =====================================
+ let imageMsg =
+ qmsg.msg?.imageMessage ||
+ qmsg.message?.imageMessage ||
+ qmsg
+
+ // =====================================
+ // DOWNLOAD IMAGE
+ // =====================================
+ const stream =
+ await downloadContentFromMessage(
+ imageMsg,
+ 'image'
+ )
+
+ let buffer = Buffer.from([])
+
+ for await (const chunk of stream) {
+ buffer = Buffer.concat([
+ buffer,
+ chunk
+ ])
+ }
+
+ if (!buffer || buffer.length === 0) {
+ return payreply(
+ '❌ Gagal download foto!'
+ )
+ }
+
+ // =====================================
+ // UPDATE PP GROUP
+ // =====================================
+ await Asepp.updateProfilePicture(
+ m.chat,
+ buffer
+ )
+
+ // =====================================
+ // TEXT RESULT
+ // =====================================
+ let teks = `\`𝗦𝗘𝗧 𝗣𝗣 𝗚𝗥𝗢𝗨𝗣\`
+
+Hi \`${pushname}\` 👋 Foto profil grup berhasil diganti 🖼️
+
+⌲ \`𝐈𝐍𝐅𝐎\`
+┏━━━━━━━━
+┃✦ Status » Success ✅
+┃✦ Group » ${groupName}
+┃✦ Executor » @${m.sender.split('@')[0]}
+┗━━━━━━━━━━
+
+⌲ \`𝐅𝐔𝐍𝐂𝐓𝐈𝐎𝐍\`
+✅ Support reply image
+✅ Support kirim langsung
+✅ Auto update profile grup
+
+\`[洛] 𝐆𝐑𝐎𝐔𝐏 𝐋𝐎𝐆 [洛]\`
+`
+
+ // =====================================
+ // INTERACTIVE MESSAGE
+ // =====================================
+ const msg =
+ generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage:
+ proto.Message.InteractiveMessage.create({
+
+ body:
+ proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+
+ footer:
+ proto.Message.InteractiveMessage.Footer.create({
+ text: teks
+ }),
+
+ header:
+ proto.Message.InteractiveMessage.Header.create({
+ title: "𝗦𝗘𝗧𝗣𝗣𝗚𝗖 𝗗𝗢𝗡𝗘"
+ }),
+
+ contextInfo: {
+ mentionedJid: [
+ m.sender
+ ]
+ },
+
+ nativeFlowMessage:
+ proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© GROUP MENU",
+ sections: [
+ {
+ title: "Group Settings",
+ highlight_label: "𝐒𝐄𝐓𝐏𝐏 🖼️",
+ rows: [
+ {
+ title: "𝐒𝐞𝐭 𝐏𝐏 𝐋𝐚𝐠𝐢",
+ description: "Ganti foto profil lagi",
+ id: `${prefix}setppgc`
+ }
+ ]
+ }
+ ]
+ })
+ }
+ ]
+ })
+
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ // =====================================
+ // SEND RESULT
+ // =====================================
+ await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ {
+ messageId: msg.key.id
+ }
+ )
+
+ } catch (e) {
+
+ console.log(
+ "SETPPGC ERROR:",
+ e
+ )
+
+ await payreply(
+ '❌ Error:\n' + e.message
+ )
+
+ }
+}
+break
+
+case "delppgc": {
+ try {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('Owner only! 👑')
+ }
+
+ // =====================================
+ // GROUP ONLY
+ // =====================================
+ if (!m.isGroup) {
+ return payreply('❌ Fitur ini cuma buat grup!')
+ }
+
+ await payreply(
+ '⏳ Menghapus foto profil grup...'
+ )
+
+ // =====================================
+ // HAPUS PP GROUP
+ // =====================================
+ await Asepp.removeProfilePicture(
+ m.chat
+ )
+
+ // =====================================
+ // TEXT RESULT
+ // =====================================
+ let teks = `\`𝗗𝗘𝗟 𝗣𝗣 𝗚𝗥𝗢𝗨𝗣\`
+
+Hi \`${pushname}\` 👋 Foto profil grup berhasil dihapus 🗑️
+
+⌲ \`𝐈𝐍𝐅𝐎\`
+┏━━━━━━━━
+┃✦ Status » Success ✅
+┃✦ Group » ${groupName}
+┃✦ Executor » @${m.sender.split('@')[0]}
+┗━━━━━━━━━━
+
+⌲ \`𝐅𝐔𝐍𝐂𝐓𝐈𝐎𝐍\`
+✅ Hapus foto profil grup
+✅ Owner access
+✅ Auto reset profile picture
+
+\`[洛] 𝐆𝐑𝐎𝐔𝐏 𝐋𝐎𝐆 [洛]\`
+`
+
+ // =====================================
+ // INTERACTIVE MESSAGE
+ // =====================================
+ const msg =
+ generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage:
+ proto.Message.InteractiveMessage.create({
+
+ body:
+ proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+
+ footer:
+ proto.Message.InteractiveMessage.Footer.create({
+ text: teks
+ }),
+
+ header:
+ proto.Message.InteractiveMessage.Header.create({
+ title: "𝗗𝗘𝗟𝗣𝗣𝗚𝗖 𝗗𝗢𝗡𝗘"
+ }),
+
+ contextInfo: {
+ mentionedJid: [
+ m.sender
+ ]
+ },
+
+ nativeFlowMessage:
+ proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© GROUP MENU",
+ sections: [
+ {
+ title: "Group Settings",
+ highlight_label: "𝐃𝐄𝐋𝐏𝐏 🗑️",
+ rows: [
+ {
+ title: "𝐒𝐞𝐭 𝐏𝐏 𝐆𝐫𝐨𝐮𝐩",
+ description: "Pasang foto profil baru",
+ id: `${prefix}setppgc`
+ }
+ ]
+ }
+ ]
+ })
+ }
+ ]
+ })
+
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ // =====================================
+ // SEND RESULT
+ // =====================================
+ await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ {
+ messageId: msg.key.id
+ }
+ )
+
+ } catch (e) {
+
+ console.log(
+ "DELPPGC ERROR:",
+ e
+ )
+
+ await payreply(
+ '❌ Error:\n' + e.message
+ )
+
+ }
+}
+break
+
+
+case "getppgc": {
+ try {
+
+ // =====================================
+ // GROUP ONLY
+ // =====================================
+ if (!m.isGroup) {
+ return payreply('❌ Fitur ini cuma buat grup!')
+ }
+
+ // =====================================
+ // AMBIL PP GROUP
+ // =====================================
+ let ppgc
+
+ try {
+
+ ppgc = await Asepp.profilePictureUrl(
+ m.chat,
+ 'image'
+ )
+
+ } catch {
+
+ ppgc = 'https://telegra.ph/file/24fa902ead26340f3df2c.png'
+
+ }
+
+ // =====================================
+ // TEXT RESULT
+ // =====================================
+ let teks = `\`𝗚𝗘𝗧 𝗣𝗣 𝗚𝗥𝗢𝗨𝗣\`
+
+Hi \`${pushname}\` 👋 Foto profil grup berhasil diambil 🖼️
+
+⌲ \`𝐈𝐍𝐅𝐎\`
+┏━━━━━━━━
+┃✦ Status » Success ✅
+┃✦ Group » ${groupName}
+┃✦ Request By » @${m.sender.split('@')[0]}
+┗━━━━━━━━━━
+
+⌲ \`𝐅𝐔𝐍𝐂𝐓𝐈𝐎𝐍\`
+✅ Ambil foto profil grup
+✅ Support download image
+✅ High quality profile
+
+\`[洛] 𝐆𝐑𝐎𝐔𝐏 𝐋𝐎𝐆 [洛]\`
+`
+
+ // =====================================
+ // INTERACTIVE IMAGE MESSAGE
+ // =====================================
+ const msg =
+ generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage:
+ proto.Message.InteractiveMessage.create({
+
+ header:
+ proto.Message.InteractiveMessage.Header.create({
+ title: "𝗚𝗘𝗧𝗣𝗣𝗚𝗖 𝗗𝗢𝗡𝗘",
+ hasMediaAttachment: true,
+ imageMessage: (
+ await generateWAMessageContent(
+ {
+ image: {
+ url: ppgc
+ }
+ },
+ {
+ upload: Asepp.waUploadToServer
+ }
+ )
+ ).imageMessage
+ }),
+
+ body:
+ proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+
+ footer:
+ proto.Message.InteractiveMessage.Footer.create({
+ text: teks
+ }),
+
+ contextInfo: {
+ mentionedJid: [
+ m.sender
+ ]
+ },
+
+ nativeFlowMessage:
+ proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© GROUP MENU",
+ sections: [
+ {
+ title: "Group Settings",
+ highlight_label: "𝐆𝐄𝐓𝐏𝐏 🖼️",
+ rows: [
+ {
+ title: "𝐒𝐞𝐭 𝐏𝐏 𝐆𝐫𝐨𝐮𝐩",
+ description: "Ganti foto profil grup",
+ id: `${prefix}setppgc`
+ },
+ {
+ title: "𝐃𝐞𝐥𝐞𝐭𝐞 𝐏𝐏",
+ description: "Hapus foto profil grup",
+ id: `${prefix}delppgc`
+ }
+ ]
+ }
+ ]
+ })
+ }
+ ]
+ })
+
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ // =====================================
+ // SEND RESULT
+ // =====================================
+ await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ {
+ messageId: msg.key.id
+ }
+ )
+
+ } catch (e) {
+
+ console.log(
+ "GETPPGC ERROR:",
+ e
+ )
+
+ await payreply(
+ '❌ Error:\n' + e.message
+ )
+
+ }
+}
+break
+
+case "setnmgc": {
+ try {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('Owner only! 👑')
+ }
+
+ // =====================================
+ // GROUP ONLY
+ // =====================================
+ if (!m.isGroup) {
+ return payreply('❌ Fitur ini cuma buat grup!')
+ }
+
+ // =====================================
+ // VALIDASI NAMA
+ // =====================================
+ if (!text) {
+ return payreply(
+ `Contoh:\n${prefix}setnmgc My Group`
+ )
+ }
+
+ const oldName = groupName
+ const newName = text.trim()
+
+ await payreply(
+ '⏳ Mengganti nama grup...'
+ )
+
+ // =====================================
+ // UPDATE SUBJECT
+ // =====================================
+ await Asepp.groupUpdateSubject(
+ m.chat,
+ newName
+ )
+
+ // =====================================
+ // TEXT RESULT
+ // =====================================
+ let teks = `\`𝗦𝗘𝗧 𝗡𝗔𝗠𝗘 𝗚𝗥𝗢𝗨𝗣\`
+
+Hi \`${pushname}\` 👋 Nama grup berhasil diganti ✨
+
+⌲ \`𝐈𝐍𝐅𝐎\`
+┏━━━━━━━━
+┃✦ Status » Success ✅
+┃✦ Old Name » ${oldName}
+┃✦ New Name » ${newName}
+┃✦ Executor » @${m.sender.split('@')[0]}
+┗━━━━━━━━━━
+
+⌲ \`𝐅𝐔𝐍𝐂𝐓𝐈𝐎𝐍\`
+✅ Ubah nama grup
+✅ Support custom name
+✅ Owner access
+
+\`[洛] 𝐆𝐑𝐎𝐔𝐏 𝐋𝐎𝐆 [洛]\`
+`
+
+ // =====================================
+ // INTERACTIVE MESSAGE
+ // =====================================
+ const msg =
+ generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage:
+ proto.Message.InteractiveMessage.create({
+
+ body:
+ proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+
+ footer:
+ proto.Message.InteractiveMessage.Footer.create({
+ text: teks
+ }),
+
+ header:
+ proto.Message.InteractiveMessage.Header.create({
+ title: "𝗦𝗘𝗧𝗡𝗠𝗚𝗖 𝗗𝗢𝗡𝗘"
+ }),
+
+ contextInfo: {
+ mentionedJid: [
+ m.sender
+ ]
+ },
+
+ nativeFlowMessage:
+ proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© GROUP MENU",
+ sections: [
+ {
+ title: "Group Settings",
+ highlight_label: "𝐒𝐄𝐓𝐍𝐀𝐌𝐄 ✨",
+ rows: [
+ {
+ title: "𝐆𝐞𝐭 𝐏𝐏 𝐆𝐫𝐨𝐮𝐩",
+ description: "Lihat foto profil grup",
+ id: `${prefix}getppgc`
+ },
+ {
+ title: "𝐒𝐞𝐭 𝐏𝐏 𝐆𝐫𝐨𝐮𝐩",
+ description: "Ganti foto profil grup",
+ id: `${prefix}setppgc`
+ }
+ ]
+ }
+ ]
+ })
+ }
+ ]
+ })
+
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ // =====================================
+ // SEND RESULT
+ // =====================================
+ await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ {
+ messageId: msg.key.id
+ }
+ )
+
+ } catch (e) {
+
+ console.log(
+ "SETNMGC ERROR:",
+ e
+ )
+
+ await payreply(
+ '❌ Error:\n' + e.message
+ )
+
+ }
+}
 break
 
 
 
+
+
+
+case "rch": {
+ try {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('Owner only! 👑')
+ }
+
+ // =====================================
+ // VALIDASI LINK
+ // =====================================
+ if (!text) {
+ return payreply(
+ `Contoh:\n${prefix}rch https://whatsapp.com/channel/0029VaXXXX/123`
+ )
+ }
+
+ // =====================================
+ // PARSE LINK CHANNEL
+ // =====================================
+ const regex = /https:\/\/whatsapp\.com\/channel\/([0-9A-Za-z]+)\/(\d+)/i
+
+ const match = text.match(regex)
+
+ if (!match) {
+ return payreply(
+ '❌ Link channel tidak valid!'
+ )
+ }
+
+ const channelId = match[1]
+ const messageId = match[2]
+
+ // =====================================
+ // LIST REACTION
+ // =====================================
+ const reactions = [
+ '🔥',
+ '⚡',
+ '😍',
+ '💥',
+ '🚀'
+ ]
+
+ await payreply(
+ '⏳ Mengirim reaction ke post channel...'
+ )
+
+ let sukses = 0
+ let gagal = 0
+
+ // =====================================
+ // SEND REACTION
+ // =====================================
+ for (let react of reactions) {
+ try {
+
+ await Asepp.newsletterReactMessage(
+ channelId,
+ messageId,
+ react
+ )
+
+ sukses++
+
+ await delay(1000)
+
+ } catch (e) {
+ gagal++
+ }
+ }
+
+ // =====================================
+ // RESULT TEXT
+ // =====================================
+ let teks = `\`𝗥𝗘𝗔𝗖𝗧 𝗖𝗛𝗔𝗡𝗡𝗘𝗟\`
+
+Hi \`${pushname}\` 👋 Reaction berhasil dikirim ✨
+
+⌲ \`𝐈𝐍𝐅𝐎\`
+┏━━━━━━━━
+┃✦ Status » Success ✅
+┃✦ Channel ID » ${channelId}
+┃✦ Message ID » ${messageId}
+┃✦ Total React » ${reactions.length}
+┃✦ Success » ${sukses}
+┃✦ Failed » ${gagal}
+┃✦ Executor » @${m.sender.split('@')[0]}
+┗━━━━━━━━━━
+
+⌲ \`𝐑𝐄𝐀𝐂𝐓𝐈𝐎𝐍𝐒\`
+🔥 ⚡ 😍 💥 🚀
+
+⌲ \`𝐅𝐔𝐍𝐂𝐓𝐈𝐎𝐍\`
+✅ Auto react channel
+✅ Multi reaction
+✅ Support link channel
+✅ Owner access
+
+\`[洛] 𝐂𝐇𝐀𝐍𝐍𝐄𝐋 𝐋𝐎𝐆 [洛]\`
+`
+
+ // =====================================
+ // INTERACTIVE MESSAGE
+ // =====================================
+ const msg =
+ generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage:
+ proto.Message.InteractiveMessage.create({
+
+ body:
+ proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+
+ footer:
+ proto.Message.InteractiveMessage.Footer.create({
+ text: teks
+ }),
+
+ header:
+ proto.Message.InteractiveMessage.Header.create({
+ title: "𝗥𝗖𝗛 𝗗𝗢𝗡𝗘"
+ }),
+
+ contextInfo: {
+ mentionedJid: [
+ m.sender
+ ]
+ },
+
+ nativeFlowMessage:
+ proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© CHANNEL MENU",
+ sections: [
+ {
+ title: "Channel Features",
+ highlight_label: "𝐑𝐂𝐇 ⚡",
+ rows: [
+ {
+ title: "𝐉𝐏𝐌 𝐂𝐇",
+ description: "Broadcast ke channel",
+ id: `${prefix}jpmch`
+ },
+ {
+ title: "𝐂𝐥𝐞𝐚𝐫 𝐂𝐇",
+ description: "Keluar dari semua channel",
+ id: `${prefix}clearch`
+ }
+ ]
+ }
+ ]
+ })
+ }
+ ]
+ })
+
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ // =====================================
+ // SEND RESULT
+ // =====================================
+ await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ {
+ messageId: msg.key.id
+ }
+ )
+
+ } catch (e) {
+
+ console.log(
+ "RCH ERROR:",
+ e
+ )
+
+ await payreply(
+ '❌ Error:\n' + e.message
+ )
+
+ }
+}
+break
+
+
+
+case "upowner": {
+ try {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('❌ Owner only!')
+ }
+
+ const fs = require('fs')
+ const path = require('path')
+
+ // =====================================
+ // VALIDASI INPUT
+ // =====================================
+ if (!text) {
+ return payreply(
+ `Contoh:\n${prefix}upowner rvo`
+ )
+ }
+
+ const caseName = text
+ .toLowerCase()
+ .trim()
+
+ // =====================================
+ // TARGET FILE
+ // =====================================
+ const filePath = path.join(
+ process.cwd(),
+ 'AseppLohya.js'
+ )
+
+ if (!fs.existsSync(filePath)) {
+ return payreply(
+ '❌ File AseppLohya.js tidak ditemukan!'
+ )
+ }
+
+ let content = fs.readFileSync(
+ filePath,
+ 'utf8'
+ )
+
+ // =====================================
+ // CARI CASE
+ // =====================================
+ const regex = new RegExp(
+ `case\\s+["'\`]${caseName}["'\`]\\s*:\\s*\\{`,
+ 'i'
+ )
+
+ const match = content.match(regex)
+
+ if (!match) {
+ return payreply(
+ `❌ Case "${caseName}" tidak ditemukan!`
+ )
+ }
+
+ // =====================================
+ // CEK SUDAH OWNER ONLY
+ // =====================================
+ const startIndex = match.index
+
+ const sliceContent = content.slice(
+ startIndex,
+ startIndex + 500
+ )
+
+ if (
+ sliceContent.includes(
+ `if (!isOwner)`
+ )
+ ) {
+ return payreply(
+ `❌ Case "${caseName}" sudah owner only!`
+ )
+ }
+
+ // =====================================
+ // INJECT OWNER
+ // =====================================
+ const inject =
+`\n\n // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('❌ Owner only!')
+ }\n`
+
+ const replaced =
+ match[0] + inject
+
+ content = content.replace(
+ regex,
+ replaced
+ )
+
+ // =====================================
+ // SAVE FILE
+ // =====================================
+ fs.writeFileSync(
+ filePath,
+ content
+ )
+
+ // =====================================
+ // RESULT TEXT
+ // =====================================
+ let teks = `\`𝗨𝗣 𝗢𝗪𝗡𝗘𝗥 𝗖𝗔𝗦𝗘\`
+
+Hi \`${pushname}\` 👋 Case berhasil diubah 👑
+
+⌲ \`𝐈𝐍𝐅𝐎\`
+┏━━━━━━━━
+┃✦ Case » ${caseName}
+┃✦ Status » Owner Only ✅
+┃✦ File » AseppLohya.js
+┗━━━━━━━━━━
+
+⌲ \`𝐅𝐔𝐍𝐂𝐓𝐈𝐎𝐍\`
+✅ Auto inject owner access
+✅ Edit case otomatis
+✅ Protect command access
+
+\`[洛] 𝐎𝐖𝐍𝐄𝐑 𝐋𝐎𝐆 [洛]\`
+`
+
+ // =====================================
+ // INTERACTIVE MESSAGE
+ // =====================================
+ const msg =
+ generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage:
+ proto.Message.InteractiveMessage.create({
+
+ body:
+ proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+
+ footer:
+ proto.Message.InteractiveMessage.Footer.create({
+ text: teks
+ }),
+
+ header:
+ proto.Message.InteractiveMessage.Header.create({
+ title: "𝗨𝗣𝗢𝗪𝗡𝗘𝗥 𝗗𝗢𝗡𝗘"
+ }),
+
+ contextInfo: {
+ mentionedJid: [
+ m.sender
+ ]
+ },
+
+ nativeFlowMessage:
+ proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© OWNER MENU",
+ sections: [
+ {
+ title: "Owner Access",
+ highlight_label: "𝐔𝐏𝐎𝐖𝐍𝐄𝐑 👑",
+ rows: [
+ {
+ title: "𝐃𝐞𝐥 𝐎𝐰𝐧𝐞𝐫 𝐂𝐚𝐬𝐞",
+ description: `Hapus owner access ${caseName}`,
+ id: `${prefix}delupowner ${caseName}`
+ }
+ ]
+ }
+ ]
+ })
+ }
+ ]
+ })
+
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ // =====================================
+ // SEND RESULT
+ // =====================================
+ await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ {
+ messageId: msg.key.id
+ }
+ )
+
+ } catch (e) {
+
+ console.log(
+ "UPOWNER ERROR:",
+ e
+ )
+
+ await payreply(
+ '❌ Error:\n' + e.message
+ )
+
+ }
+}
+break
+
+case "delupowner": {
+ try {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('❌ Owner only!')
+ }
+
+ const fs = require('fs')
+ const path = require('path')
+
+ // =====================================
+ // VALIDASI INPUT
+ // =====================================
+ if (!text) {
+ return payreply(
+ `Contoh:\n${prefix}delupowner rvo`
+ )
+ }
+
+ const caseName = text
+ .toLowerCase()
+ .trim()
+
+ // =====================================
+ // TARGET FILE
+ // =====================================
+ const filePath = path.join(
+ process.cwd(),
+ 'AseppLohya.js'
+ )
+
+ if (!fs.existsSync(filePath)) {
+ return payreply(
+ '❌ File AseppLohya.js tidak ditemukan!'
+ )
+ }
+
+ let content = fs.readFileSync(
+ filePath,
+ 'utf8'
+ )
+
+ // =====================================
+ // CARI & HAPUS OWNER
+ // =====================================
+ const regex = new RegExp(
+`(case\\s+["'\`]${caseName}["'\`]\\s*:\\s*\\{)\\s*\\/\\/ =====================================\\s*\\/\\/ OWNER ONLY\\s*\\/\\/ =====================================\\s*if \\(!isOwner\\) \\{\\s*return payreply\\(['"\`]❌ Owner only!['"\`]\\)\\s*\\}`,
+ 'i'
+ )
+
+ if (!regex.test(content)) {
+ return payreply(
+ `❌ Case "${caseName}" bukan owner only!`
+ )
+ }
+
+ // =====================================
+ // REMOVE INJECT
+ // =====================================
+ content = content.replace(
+ regex,
+ `$1`
+ )
+
+ // =====================================
+ // SAVE FILE
+ // =====================================
+ fs.writeFileSync(
+ filePath,
+ content
+ )
+
+ // =====================================
+ // RESULT TEXT
+ // =====================================
+ let teks = `\`𝗗𝗘𝗟 𝗢𝗪𝗡𝗘𝗥 𝗖𝗔𝗦𝗘\`
+
+Hi \`${pushname}\` 👋 Access owner berhasil dihapus ❌
+
+⌲ \`𝐈𝐍𝐅𝐎\`
+┏━━━━━━━━
+┃✦ Case » ${caseName}
+┃✦ Status » Public ✅
+┃✦ File » AseppLohya.js
+┗━━━━━━━━━━
+
+⌲ \`𝐅𝐔𝐍𝐂𝐓𝐈𝐎𝐍\`
+✅ Remove owner access
+✅ Case kembali public
+✅ Auto edit file
+
+\`[洛] 𝐎𝐖𝐍𝐄𝐑 𝐋𝐎𝐆 [洛]\`
+`
+
+ // =====================================
+ // INTERACTIVE MESSAGE
+ // =====================================
+ const msg =
+ generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage:
+ proto.Message.InteractiveMessage.create({
+
+ body:
+ proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+
+ footer:
+ proto.Message.InteractiveMessage.Footer.create({
+ text: teks
+ }),
+
+ header:
+ proto.Message.InteractiveMessage.Header.create({
+ title: "𝗗𝗘𝗟𝗨𝗣𝗢𝗪𝗡𝗘𝗥 𝗗𝗢𝗡𝗘"
+ }),
+
+ contextInfo: {
+ mentionedJid: [
+ m.sender
+ ]
+ },
+
+ nativeFlowMessage:
+ proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© OWNER MENU",
+ sections: [
+ {
+ title: "Owner Access",
+ highlight_label: "𝐃𝐄𝐋𝐔𝐏 👑",
+ rows: [
+ {
+ title: "𝐔𝐩 𝐎𝐰𝐧𝐞𝐫 𝐋𝐚𝐠𝐢",
+ description: `Jadikan ${caseName} owner only`,
+ id: `${prefix}upowner ${caseName}`
+ }
+ ]
+ }
+ ]
+ })
+ }
+ ]
+ })
+
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ // =====================================
+ // SEND RESULT
+ // =====================================
+ await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ {
+ messageId: msg.key.id
+ }
+ )
+
+ } catch (e) {
+
+ console.log(
+ "DELUPOWNER ERROR:",
+ e
+ )
+
+ await payreply(
+ '❌ Error:\n' + e.message
+ )
+
+ }
+}
+
+case 'ping': {
+ try {
+ const os = require('os')
+ const { performance } = require('perf_hooks')
+
+ // =====================================
+ // SPEED TEST
+ // =====================================
+ const start = performance.now()
+ const end = performance.now()
+ const latensi = (end - start).toFixed(4)
+
+ // =====================================
+ // VPS INFO
+ // =====================================
+ const usedRAM = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)
+ const totalRAM = (os.totalmem() / 1024 / 1024 / 1024).toFixed(2)
+ const freeRAM = (os.freemem() / 1024 / 1024 / 1024).toFixed(2)
+ const cpuModel = os.cpus()[0].model
+ const cpuSpeed = os.cpus()[0].speed
+ const cpuCore = os.cpus().length
+ const platform = os.platform()
+ const uptime = process.uptime()
+
+ // =====================================
+ // FORMAT UPTIME
+ // =====================================
+ const formatUptime = (seconds) => {
+ const d = Math.floor(seconds / (3600 * 24))
+ const h = Math.floor((seconds % (3600 * 24)) / 3600)
+ const m = Math.floor((seconds % 3600) / 60)
+ const s = Math.floor(seconds % 60)
+ return `${d}d ${h}h ${m}m ${s}s`
+ }
+
+ // =====================================
+ // RESULT TEXT
+ // =====================================
+ let teks = `\`𝗦𝗬𝗦𝗧𝗘𝗠 𝗦𝗧𝗔𝗧𝗨𝗦\`
+
+Hi \`${pushname}\` 👋 Bot berhasil merespon ⚡
+
+⌲ \`𝐁𝐎𝐓 𝐒𝐓𝐀𝐓𝐔𝐒\`
+┏━━━━━━━━
+┃✦ Speed » ${latensi} ms
+┃✦ Uptime » ${formatUptime(uptime)}
+┃✦ Platform » ${platform}
+┗━━━━━━━━━━
+
+⌲ \`𝐕𝐏𝐒 𝐈𝐍𝐅𝐎\`
+┏━━━━━━━━
+┃✦ CPU » ${cpuModel}
+┃✦ Core » ${cpuCore} Core
+┃✦ CPU Speed » ${cpuSpeed} MHz
+┃✦ RAM Used » ${usedRAM} MB
+┃✦ Total RAM » ${totalRAM} GB
+┃✦ Free RAM » ${freeRAM} GB
+┗━━━━━━━━━━
+
+⌲ \`𝐒𝐓𝐀𝐓𝐔𝐒\`
+✅ Bot online normal
+✅ VPS running stable
+✅ No lag detected
+
+\`[洛] 𝐒𝐘𝐒𝐓𝐄𝐌 𝐋𝐎𝐆 [洛]\`
+`
+
+ // =====================================
+ // INTERACTIVE MESSAGE
+ // =====================================
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage:
+ proto.Message.InteractiveMessage.create({
+ header:
+ proto.Message.InteractiveMessage.Header.create({
+ title: "𝐒𝐩𝐞𝐞𝐝 𝐉𝐚𝐰𝐚",
+ subtitle: "System Performance",
+ hasMediaAttachment: true,
+ imageMessage: (
+ await prepareWAMessageMedia(
+ {
+ image: {
+ url: "https://img2.pixhost.to/images/7306/716638001_asepp.jpg"
+ }
+ },
+ {
+ upload: Asepp.waUploadToServer
+ }
+ )
+ ).imageMessage
+ }),
+ body:
+ proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+ footer:
+ proto.Message.InteractiveMessage.Footer.create({
+ text: teks
+ }),
+ contextInfo: {
+ mentionedJid: [m.sender],
+ isForwarded: true,
+ forwardingScore: 999,
+ forwardedNewsletterMessageInfo: {
+ newsletterJid: "120363418538598013@newsletter",
+ newsletterName: "𝐒𝐘𝐒𝐓𝐄𝐌 𝐂𝐇𝐀𝐍𝐄𝐋",
+ serverMessageId: 145
+ }
+ },
+ nativeFlowMessage:
+ proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "cta_url",
+ buttonParamsJson: JSON.stringify({
+ display_text: "SYSTEM REPORT",
+ url: "https://wa.me/62881036109288",
+ merchant_url: "https://wa.me/62881036109288"
+ })
+ },
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "© SYSTEM MENU",
+ sections: [
+ {
+ title: "System Status",
+ highlight_label: "𝐏𝐈𝐍𝐆 ⚡",
+ rows: [
+ {
+ title: "𝐑𝐞𝐟𝐫𝐞𝐬𝐡 𝐏𝐢𝐧𝐠",
+ description: "Cek status bot lagi",
+ id: `${prefix}ping`
+ }
+ ]
+ }
+ ]
+ })
+ }
+ ]
+ })
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ // =====================================
+ // SEND MESSAGE
+ // =====================================
+ await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ { messageId: msg.key.id }
+ )
+
+ } catch (e) {
+ console.log("PING ERROR:", e)
+ await payreply('❌ Error:\n' + e.message)
+ }
+}
+break
+
+
+
+
+case "getbail": {
+ try {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply(
+ 'Owner only! 👑'
+ )
+ }
+
+ const fs = require('fs')
+ const path = require('path')
+
+ // =====================================
+ // PACKAGE PATH
+ // =====================================
+ const packagePath =
+ path.join(
+ process.cwd(),
+ 'package.json'
+ )
+
+ // =====================================
+ // CEK FILE
+ // =====================================
+ if (
+ !fs.existsSync(
+ packagePath
+ )
+ ) {
+ return payreply(
+ '❌ package.json tidak ditemukan!'
+ )
+ }
+
+ // =====================================
+ // READ PACKAGE
+ // =====================================
+ const pkg =
+ JSON.parse(
+ fs.readFileSync(
+ packagePath,
+ 'utf8'
+ )
+ )
+
+ // =====================================
+ // GET BAILEYS RAW
+ // =====================================
+ const baileysVersion =
+
+ pkg.dependencies?.[
+ '@whiskeysockets/baileys'
+ ]
+
+ ? `"@whiskeysockets/baileys": "${pkg.dependencies['@whiskeysockets/baileys']}"`
+
+ :
+
+ pkg.dependencies?.[
+ 'baileys'
+ ]
+
+ ? `"baileys": "${pkg.dependencies['baileys']}"`
+
+ :
+
+ pkg.devDependencies?.[
+ '@whiskeysockets/baileys'
+ ]
+
+ ? `"@whiskeysockets/baileys": "${pkg.devDependencies['@whiskeysockets/baileys']}"`
+
+ :
+
+ pkg.devDependencies?.[
+ 'baileys'
+ ]
+
+ ? `"baileys": "${pkg.devDependencies['baileys']}"`
+
+ :
+
+ null
+
+ // =====================================
+ // CEK VERSION
+ // =====================================
+ if (!baileysVersion) {
+ return payreply(
+ '❌ Baileys tidak ditemukan di package.json'
+ )
+ }
+
+ // =====================================
+ // RESULT TEXT
+ // =====================================
+ let teks = `\`𝗚𝗘𝗧 𝗕𝗔𝗜𝗟𝗘𝗬𝗦\`
+
+Hi \`${pushname}\` 👋 Berhasil mengambil data baileys ⚡
+
+⌲ \`𝐈𝐍𝐅𝐎\`
+┏━━━━━━━━
+┃✦ Package Found ✅
+┃✦ Status » Active
+┗━━━━━━━━━━
+
+⌲ \`𝐑𝐀𝐖 𝐃𝐀𝐓𝐀\`
+\`\`\`json
+${baileysVersion}
+\`\`\`
+
+⌲ \`𝐅𝐔𝐍𝐂𝐓𝐈𝐎𝐍\`
+✅ Read package.json
+✅ Detect baileys raw package
+✅ Copy button support
+
+\`[洛] 𝐒𝐘𝐒𝐓𝐄𝐌 𝐋𝐎𝐆 [洛]\`
+`
+
+ // =====================================
+ // INTERACTIVE MESSAGE
+ // =====================================
+ const msg =
+ generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+
+ interactiveMessage:
+ proto.Message.InteractiveMessage.create({
+
+ // =========================
+ // HEADER
+ // =========================
+ header:
+ proto.Message.InteractiveMessage.Header.create({
+
+ title:
+ "𝗚𝗘𝗧𝗕𝗔𝗜𝗟 𝗗𝗢𝗡𝗘",
+
+ subtitle:
+ "Baileys Detector",
+
+ hasMediaAttachment: true,
+
+ imageMessage: (
+ await prepareWAMessageMedia(
+ {
+ image: {
+ url:
+ "https://img2.pixhost.to/images/7306/716638001_asepp.jpg"
+ }
+ },
+ {
+ upload:
+ Asepp.waUploadToServer
+ }
+ )
+ ).imageMessage
+
+ }),
+
+ // =========================
+ // BODY
+ // =========================
+ body:
+ proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+
+ // =========================
+ // FOOTER
+ // =========================
+ footer:
+ proto.Message.InteractiveMessage.Footer.create({
+ text: teks
+ }),
+
+ // =========================
+ // CONTEXT
+ // =========================
+ contextInfo: {
+
+ mentionedJid: [
+ m.sender
+ ]
+
+ },
+
+ // =========================
+ // COPY BUTTON
+ // =========================
+ nativeFlowMessage:
+ proto.Message.InteractiveMessage.NativeFlowMessage.create({
+
+ buttons: [
+
+ {
+ name:
+ "cta_copy",
+
+ buttonParamsJson:
+ JSON.stringify({
+
+ display_text:
+ "📋 COPY BAILEYS",
+
+ id:
+ `${prefix}getbail`,
+
+ copy_code:
+ `${baileysVersion}`
+
+ })
+ }
+
+ ]
+
+ })
+
+ })
+ }
+ }
+ },
+ {
+ quoted: m
+ }
+ )
+
+ // =====================================
+ // SEND MESSAGE
+ // =====================================
+ await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ {
+ messageId:
+ msg.key.id
+ }
+ )
+
+ } catch (e) {
+
+ console.log(
+ "GETBAIL ERROR:",
+ e
+ )
+
+ await payreply(
+ '❌ Error:\n' +
+ e.message
+ )
+
+ }
+}
+break
+
+
+
+case "sendfile": {
+ try {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('Owner only! 👑')
+ }
+
+ const fs = require('fs')
+ const path = require('path')
+
+ // =====================================
+ // INPUT
+ // =====================================
+ if (!text) {
+ return payreply(
+ `Contoh:\n${prefix}sendfile start.js\n${prefix}sendfile package.json\n${prefix}sendfile image`
+ )
+ }
+
+ // =====================================
+ // SAFE PATH
+ // =====================================
+ const targetPath = path.resolve(process.cwd(), text)
+
+ if (!targetPath.startsWith(process.cwd())) {
+ return payreply('❌ Akses path ditolak!')
+ }
+
+ if (!fs.existsSync(targetPath)) {
+ return payreply('❌ File / folder tidak ditemukan!')
+ }
+
+ const stat = fs.statSync(targetPath)
+
+ // =====================================
+ // HANDLE FILE
+ // =====================================
+ if (stat.isFile()) {
+
+ const buffer = fs.readFileSync(targetPath)
+ const fileName = path.basename(targetPath)
+
+ // =================================================
+ // 1. SEND FILE DULU (WAJIB URUTAN PERTAMA)
+ // =================================================
+ await Asepp.sendMessage(m.chat, {
+ document: buffer,
+ fileName,
+ mimetype: 'application/octet-stream'
+ }, { quoted: m })
+
+ // =================================================
+ // 2. BARU INTERACTIVE INFO
+ // =================================================
+ const infoText = `\`𝗦𝗘𝗡𝗗𝗙𝗜𝗟𝗘 𝗗𝗢𝗡𝗘\`
+
+Hi \`${pushname}\` 👋
+
+⌲ \`𝐈𝐍𝐅𝐎 𝐅𝐈𝐋𝐄\`
+┏━━━━━━━━
+┃✦ Name : ${fileName}
+┃✦ Type : FILE
+┃✦ Status : Sent ✅
+┗━━━━━━━━━━
+
+⌲ \`𝐏𝐀𝐓𝐇\`
+\`\`\`
+${targetPath}
+\`\`\`
+`
+
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+
+ header: proto.Message.InteractiveMessage.Header.create({
+ title: "𝗦𝗘𝗡𝗗𝗙𝗜𝗟𝗘 𝗗𝗢𝗡𝗘",
+ subtitle: "File successfully sent",
+ hasMediaAttachment: false
+ }),
+
+/* BODY */
+ body: proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+
+/* FOOTER */
+ footer: proto.Message.InteractiveMessage.Footer.create({
+ text: infoText
+ }),
+
+/* BUTTON */
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "cta_copy",
+ buttonParamsJson: JSON.stringify({
+ display_text: "📋 COPY PATH",
+ id: `${prefix}sendfile`,
+ copy_code: targetPath
+ })
+ },
+ {
+ name: "cta_copy",
+ buttonParamsJson: JSON.stringify({
+ display_text: "📋 COPY FILE NAME",
+ id: `${prefix}sendfile`,
+ copy_code: fileName
+ })
+ }
+ ]
+ })
+
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ { messageId: msg.key.id }
+ )
+
+ return
+ }
+
+ // =====================================
+ // HANDLE FOLDER
+ // =====================================
+ if (stat.isDirectory()) {
+
+ const files = fs.readdirSync(targetPath)
+
+ if (!files.length) {
+ return payreply('📂 Folder kosong!')
+ }
+
+ await payreply(`📦 Mengirim ${files.length} file...`)
+
+ for (let file of files) {
+ const fp = path.join(targetPath, file)
+
+ if (fs.statSync(fp).isFile()) {
+
+ await Asepp.sendMessage(m.chat, {
+ document: fs.readFileSync(fp),
+ fileName: file,
+ mimetype: 'application/octet-stream'
+ }, { quoted: m })
+
+ }
+ }
+
+ return
+ }
+
+ } catch (e) {
+ console.log("SENDFILE ERROR:", e)
+ return payreply('❌ Error:\n' + e.message)
+ }
+}
+break
+
+
+
+
+
+
+
+
+
+
+
+case "sendfileenc": {
+ try {
+
+ if (!isOwner) return payreply('Owner only! 👑')
+
+ const fs = require('fs')
+ const path = require('path')
+ const crypto = require('crypto')
+
+ if (!text) {
+ return payreply(`Contoh:\n${prefix}sendfileenc start.js`)
+ }
+
+ const targetPath = path.resolve(process.cwd(), text)
+
+ if (!targetPath.startsWith(process.cwd())) {
+ return payreply('❌ Akses ditolak!')
+ }
+
+ if (!fs.existsSync(targetPath)) {
+ return payreply('❌ File tidak ditemukan!')
+ }
+
+ const stat = fs.statSync(targetPath)
+ if (!stat.isFile()) return payreply('❌ Hanya file yang bisa di-enc!')
+
+ // =====================================
+ // READ FILE
+ // =====================================
+ const fileBuffer = fs.readFileSync(targetPath)
+
+ // =====================================
+ // AES ENCRYPT (REAL ENC)
+ // =====================================
+ const key = crypto.createHash('sha256')
+ .update('AseppSecureKey2026')
+ .digest()
+
+ const iv = crypto.randomBytes(16)
+
+ const cipher = crypto.createCipheriv('aes-256-cbc', key, iv)
+
+ let encrypted = Buffer.concat([
+ cipher.update(fileBuffer),
+ cipher.final()
+ ])
+
+ // gabungkan iv + encrypted
+ const finalBuffer = Buffer.concat([iv, encrypted])
+
+ const encName =
+ "AseppEnc_" +
+ Math.random().toString(36).substring(2, 8) +
+ ".js"
+
+ // =====================================
+ // SEND ENCRYPTED FILE
+ // =====================================
+ await Asepp.sendMessage(m.chat, {
+ document: finalBuffer,
+ fileName: encName,
+ mimetype: 'application/octet-stream'
+ }, { quoted: m })
+
+ // =====================================
+ // INTERACTIVE INFO
+ // =====================================
+ const info = `\`𝗘𝗡𝗖𝗥𝗬𝗣𝗧𝗘𝗗 𝗦𝗘𝗡𝗗𝗙𝗜𝗟𝗘\`
+
+⌲ File berhasil di-ENCRYPT 🔐
+
+┃✦ File : ${path.basename(targetPath)}
+┃✦ Mode : AES-256-CBC
+┃✦ Status : ENC SENT
+
+⚠️ File ini sudah terenkripsi
+Butuh decrypt untuk dibuka`
+
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+
+ header: proto.Message.InteractiveMessage.Header.create({
+ title: "𝗥𝗘𝗔𝗟 𝗘𝗡𝗖 𝗦𝗬𝗦𝗧𝗘𝗠",
+ subtitle: "AES Encrypted File",
+ hasMediaAttachment: false
+ }),
+
+/* BODY */
+ body: proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+
+/* FOOTER */
+ footer: proto.Message.InteractiveMessage.Footer.create({
+ text: info
+ }),
+
+/* BUTTON */
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "cta_copy",
+ buttonParamsJson: JSON.stringify({
+ display_text: "📋 COPY KEY",
+ id: `${prefix}sendfileenc`,
+ copy_code: "AseppSecureKey2026"
+ })
+ }
+ ]
+ })
+
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ await Asepp.relayMessage(
+ m.chat,
+ msg.message,
+ { messageId: msg.key.id }
+ )
+
+ } catch (e) {
+ console.log(e)
+ payreply('❌ Error: ' + e.message)
+ }
+}
+break
+
+
+
+
+
+
+
+
+
+
+case 'tofile': {
+
+ const payreply = (txt) => Asepp.sendMessage(m.chat, { text: txt }, { quoted: m })
+
+ try {
+
+ await Asepp.sendMessage(m.chat, { react: { text: "📄", key: m.key } })
+
+ if (!m.quoted) return payreply('❌ Reply pesan teksnya dulu bang')
+ if (m.quoted.mtype !== 'conversation' && m.quoted.mtype !== 'extendedTextMessage')
+ return payreply('❌ Yang di-reply harus teks bang')
+
+ let text = m.quoted.text
+ if (!text) return payreply('❌ Teksnya kosong')
+
+ let fileName = args[0]
+ ? (args[0].endsWith('.js') ? args[0] : args[0] + '.js')
+ : 'script.js'
+
+ const fs = require('fs')
+ const path = `./${fileName}`
+
+ fs.writeFileSync(path, text)
+
+ let userNumber = m.sender.split("@")[0]
+ let dateNow = new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })
+ let fileSize = (fs.statSync(path).size / 1024).toFixed(2)
+
+ // =====================================
+ // SEND FILE DULU
+ // =====================================
+ await Asepp.sendMessage(m.chat, {
+ document: fs.readFileSync(path),
+ fileName: fileName,
+ mimetype: 'text/javascript',
+ caption: `✅ ${fileName}`
+ }, { quoted: m })
+
+ await new Promise(r => setTimeout(r, 800))
+
+ // =====================================
+ // OWNER INFO
+ // =====================================
+ const ownerNumber = "62881036109288@s.whatsapp.net"
+
+ let infoText = `\`𝐇𝐀𝐒𝐈𝐋 𝐓𝐎𝐅𝐈𝐋𝐄\`
+
+Hi @${userNumber} 👋 file udah jadi 👑
+
+⌲ \`𝐈𝐍𝐅𝐎\`
+┏━━━━━━━━
+┃✦ Case » tofile
+┃✦ File » ${fileName}
+┃✦ Size » ${fileSize} KB
+┃✦ Status » ✅ Berhasil
+┃✦ Waktu » ${dateNow}
+┗━━━━━━━━━━
+
+\`[洛] 𝗞𝗘𝗡𝗔 𝗕𝗨𝗔𝗧 𝗠𝗜𝗡 [洛]\`
+Owner : @${ownerNumber.split("@")[0]}
+`
+
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+
+ // ❌ NO THUMBNAIL
+
+ body: proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+
+ footer: proto.Message.InteractiveMessage.Footer.create({
+ text: infoText
+ }),
+
+/* TAG USER + OWNER */
+ contextInfo: {
+ mentionedJid: [
+ m.sender,
+ ownerNumber
+ ]
+ },
+
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "𝐓𝐎𝐅𝐈𝐋𝐄 𝐌𝐄𝐍𝐔",
+ sections: [
+ {
+ title: "File Options",
+ rows: [
+ {
+ title: "🔄 Kirim Ulang File",
+ description: "Kirim file.js lagi",
+ id: `${prefix}tofile`
+ },
+ {
+ title: "🗑️ Hapus Cache",
+ description: "Hapus file temp",
+ id: `${prefix}clearcache`
+ }
+ ]
+ }
+ ]
+ })
+ },
+
+ {
+ name: "cta_url",
+ buttonParamsJson: JSON.stringify({
+ display_text: "CHANNEL",
+ url: "https://whatsapp.com/channel/0029VbAyjNu9mrGh7Djui02R"
+ })
+ },
+
+ {
+ name: "cta_url",
+ buttonParamsJson: JSON.stringify({
+ display_text: "CHAT OWNER",
+ url: "https://wa.me/62881036109288?text=Bang%20mau%20tanya%20tofile"
+ })
+ }
+
+ ]
+ })
+
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ await Asepp.relayMessage(m.chat, msg.message, {
+ messageId: msg.key.id
+ })
+
+ await new Promise(r => setTimeout(r, 800))
+
+ await Asepp.sendMessage(m.chat, {
+ audio: fs.readFileSync("./image/decnih.mp3"),
+ mimetype: "audio/mp4",
+ ptt: true
+ }, { quoted: m })
+
+ fs.unlinkSync(path)
+
+ } catch (err) {
+ console.log("TOFILE ERROR:", err)
+ await payreply("❌ Error: " + err.message)
+ }
+}
+
+case 'cekowner': {
+
+ const payreply = (txt) => Asepp.sendMessage(m.chat, { text: txt }, { quoted: m })
+
+ try {
+ if (!isOwner) return payreply('Owner only! 👑')
+ if (!text) return payreply(`Contoh:\n${prefix}cekowner getpp`)
+
+ const fs = require('fs')
+ const path = require('path')
+
+ let filePath = path.resolve(process.cwd(), 'AseppLohya.js')
+
+ if (!fs.existsSync(filePath)) {
+ return payreply('❌ File AseppLohya.js tidak ditemukan!')
+ }
+
+ const content = fs.readFileSync(filePath, 'utf8')
+
+ // Regex buat ambil block case spesifik
+ let caseRegex = new RegExp(`case\\s+['"\`]${text}['"\`]\\s*:\\s*\\{([\\s\\S]*?)\\}\\s*break`, 'i')
+ let match = content.match(caseRegex)
+
+ if (!match) {
+ return payreply(`❌ Case '${text}' tidak ditemukan di AseppLohya.js`)
+ }
+
+ let caseCode = match[1]
+ let hasOwner = /isOwner/.test(caseCode)
+ let status = hasOwner ? "✅ DITEMUKAN" : "❌ TIDAK ADA"
+ let result = hasOwner ? "PROTECTED OWNER SYSTEM" : "NO PROTECTION"
+
+ let infoText = `\`𝐂𝐄𝐊 𝐎𝐖𝐍𝐄𝐑 𝐑𝐄𝐒𝐔𝐋𝐓\`
+
+Hi ${pushname} 👋 scan case selesai 👑
+
+╭━━━〔 𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍 𝐒𝐂𝐀𝐍 〕
+│
+├─❖ 𝐅𝐢𝐥𝐞 : AseppLohya.js
+├─❖ 𝐂𝐚𝐬𝐞 : ${text}
+├─❖ 𝐒𝐭𝐚𝐭𝐮𝐬 : ${status}
+├─❖ 𝐃𝐞𝐭𝐞𝐜𝐭 : isOwner
+├─❖ 𝐑𝐞𝐬𝐮𝐥𝐭 : ${result}
+│
+╰━━━━━━━━━━━╯
+
+\`[ SYSTEM CHECK COMPLETED ]\`
+`
+
+ const msg = generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+ header: proto.Message.InteractiveMessage.Header.create({
+ title: "𝗖𝗘𝗞 𝗢𝗪𝗡𝗘𝗥 𝗦𝗖𝗔𝗡𝗘𝗥",
+ subtitle: "Security Analyzer System",
+ hasMediaAttachment: false
+ }),
+ body: proto.Message.InteractiveMessage.Body.create({
+ text: ""
+ }),
+ footer: proto.Message.InteractiveMessage.Footer.create({
+ text: infoText
+ }),
+ contextInfo: {
+ mentionedJid: [m.sender]
+ },
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [
+ {
+ name: "single_select",
+ buttonParamsJson: JSON.stringify({
+ title: "𝐒𝐂𝐀𝐍 𝐑𝐄𝐒𝐔𝐋𝐓",
+ sections: [
+ {
+ title: "❏ ACTIONS",
+ rows: [
+ {
+ title: "Scan Lagi",
+ description: "Scan ulang case ini",
+ id: `${prefix}cekowner ${text}`
+ },
+ {
+ title: "Text To File",
+ description: "Hasil Text To File By Maklo",
+ id: `${prefix}tofile AseppLohya.js`
+ }
+ ]
+ }
+ ]
+ })
+ },
+ {
+ name: "cta_url",
+ buttonParamsJson: JSON.stringify({
+ display_text: "CHANNEL",
+ url: "https://whatsapp.com/channel/0029VbCL5lh8fewsNf9eTD1g"
+ })
+ },
+ {
+ name: "cta_url",
+ buttonParamsJson: JSON.stringify({
+ display_text: "CHAT OWNER",
+ url: "https://wa.me/62881036109288"
+ })
+ }
+ ]
+ })
+ })
+ }
+ }
+ },
+ { quoted: m }
+ )
+
+ await Asepp.relayMessage(m.chat, msg.message, {
+ messageId: msg.key.id
+ })
+
+ } catch (err) {
+ console.log("CEKOWNER ERROR:", err)
+ payreply("❌ Error: " + err.message)
+ }
+}
+break
+case 'tt':
+case 'tiktok': {
+    try {
+        let args = body.trim().split(' ');
+        let urlTikTok = '';
+
+        // 1. Cek apakah ada link di argumen perintah (misal: .tiktok <link>)
+        if (args[1]) {
+            urlTikTok = args[1];
+        } 
+        // 2. Cek apakah user mereply pesan yang berisi link TikTok
+        else if (m.quoted && m.quoted.text) {
+            let quotedMatch = m.quoted.text.match(/(https?:\/\/)?(www\.)?(vt|vm)?\.?tiktok\.com\/[^\s]+/gi);
+            if (quotedMatch) urlTikTok = quotedMatch[0];
+        } 
+        // 3. Cek apakah pesan utama langsung berupa link TikTok tanpa prefix command (jika case ini dipanggil via regex handler)
+        else {
+            let bodyMatch = body.match(/(https?:\/\/)?(www\.)?(vt|vm)?\.?tiktok\.com\/[^\s]+/gi);
+            if (bodyMatch) urlTikTok = bodyMatch[0];
+        }
+
+        // Jika tidak ditemukan link TikTok sama sekali
+        if (!urlTikTok) {
+            return payreply('⚠️ Kirim link TikTok atau reply pesan yang berisi link TikTok!\nContoh: .tiktok <link>');
+        }
+
+        // Emoji loading buat semua user
+        await Asepp.sendMessage(m.chat, { react: { text: '⏳', key: m.key } });
+
+        let res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(urlTikTok)}`);
+        let json = await res.json();
+
+        if (json.code !== 0 || !json.data) {
+            await Asepp.sendMessage(m.chat, { react: { text: '❌', key: m.key } });
+            return payreply('❌ Gagal ambil data TikTok.');
+        }
+
+        let data = json.data;
+        let imgs = data.images || [];
+
+        // Kalau photomode
+        if (imgs.length > 0) {
+            let cards = [];
+            for (let i = 0; i < imgs.length; i++) {
+                let mediaCard = await prepareWAMessageMedia(
+                    { image: { url: imgs[i] } },
+                    { upload: Asepp.waUploadToServer }
+                ).catch(() => null);
+
+                if (!mediaCard) continue;
+
+                cards.push({
+                    header: proto.Message.InteractiveMessage.Header.fromObject({
+                        hasMediaAttachment: true,
+                        ...mediaCard
+                    }),
+                    body: proto.Message.InteractiveMessage.Body.fromObject({
+                        text: `Foto ${i + 1}/${imgs.length}`
+                    }),
+                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+                        buttons: [{
+                            name: "cta_copy",
+                            buttonParamsJson: JSON.stringify({
+                                display_text: "Copy Link Foto",
+                                copy_code: imgs[i]
+                            })
+                        }]
+                    })
+                });
+            }
+
+            let msg = generateWAMessageFromContent(m.chat, {
+                interactiveMessage: proto.Message.InteractiveMessage.fromObject({
+                    body: proto.Message.InteractiveMessage.Body.fromObject({
+                        text: `📥 TikTok Photos\n🎬 ${data.title || '-'}\n🎵 ${data.music || '-'}\n📸 Total: ${imgs.length} foto`
+                    }),
+                    footer: proto.Message.InteractiveMessage.Footer.fromObject({
+                        text: "Geser buat lihat semua foto 👑"
+                    }),
+                    carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({ cards })
+                })
+            }, { quoted: m });
+
+            await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+
+            // Selesai
+            await Asepp.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
+            return;
+        }
+
+        // Video HD no watermark
+        let vid = data.hdplay || data.play;
+        if (!vid) {
+            await Asepp.sendMessage(m.chat, { react: { text: '❌', key: m.key } });
+            return payreply('❌ Gagal ambil video TikTok.');
+        }
+
+        let caption = `📥 TikTok Downloader\n🎬 Title: ${data.title || '-'}\n🎵 Music: ${data.music || '-'}\n📹 Quality: ${data.hdplay ? 'HD 1080p' : 'SD 720p'}`;
+
+        await Asepp.sendMessage(m.chat, {
+            video: { url: vid },
+            caption: caption,
+            jpegThumbnail: data.cover ? await (await fetch(data.cover)).arrayBuffer() : undefined
+        }, { quoted: m });
+
+        // Selesai
+        await Asepp.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
+
+    } catch (error) {
+        console.log(error);
+        await Asepp.sendMessage(m.chat, { react: { text: '❌', key: m.key } });
+        payreply('❌ Terjadi kesalahan saat memproses TikTok.');
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+case 'backupenc': {
+try {
+if (!isCreator) return Asepp.sendMessage(m.chat, { text: mess.owner }, { quoted: m });
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const axios = require("axios");
+const { exec } = require("child_process");
+
+// ================= CONFIG =================
+const GITHUB_OWNER = "AsepXyz12";
+const GITHUB_REPO = "bot-wa-db";
+
+}
+
+const rootDir = "./";
+const tmpDir = path.join(__dirname, "tmp", "backupenc");
+const zipName = "BackupEncTrinity.zip";
+const zipPath = path.join(tmpDir, zipName);
+
+// ================= CLEAN =================
+if (fs.existsSync(tmpDir)) fs.rmSync(tmpDir, { recursive: true, force: true });
+fs.mkdirSync(tmpDir, { recursive: true });
+if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
+
+await Asepp.sendMessage(m.chat, { text: "🪖 Running To Script ENC..." }, { quoted: m });
+
+// ================= FILTER =================
+const filterSecret = (t) => {
+return t.split("\n").filter(l =>
+).join("\n");
+};
+
+// ================= BASE64 (START & CONFIG) =================
+const encBase64 = (filePath) => {
+let c = fs.readFileSync(filePath, "utf8");
+c = filterSecret(c);
+
+const b64 = Buffer.from(c).toString("base64");
+
+return `(function(){
+const d="${b64}";
+eval(Buffer.from(d,"base64").toString("utf8"));
+})();`;
+};
+
+// ================= 10-STAGE MILITARY ENC =================
+const enc10 = (filePath) => {
+let c = fs.readFileSync(filePath, "utf8");
+c = filterSecret(c);
+
+// ===== STAGE 1 XOR =====
+const key = 33;
+let s1 = Buffer.from(c).map(b => b ^ key);
+
+// ===== STAGE 2 BASE64 =====
+let s2 = Buffer.from(s1).toString("base64");
+
+// ===== STAGE 3 BASE64 WRAP =====
+let s3 = Buffer.from(s2).toString("base64");
+
+// ===== STAGE 4 HEX =====
+let s4 = Buffer.from(s3).toString("hex");
+
+// ===== STAGE 5 SPLIT =====
+let s5 = s4.match(/.{1,65}/g);
+
+// ===== STAGE 6 JOIN WRAP =====
+let join = s5.map(x => `"${x}"`).join(",");
+
+// ===== FINAL SAFE WRAPPER (1 EXEC ONLY) =====
+return `
+// ===== MILITARY 10 LAYER CORE =====
+// JP-CN-KR-EN HYBRID PIPELINE
+
+(() => {
+
+const a = [${join}].join("");
+
+const b = Buffer.from(a,"hex").toString("utf8"); // stage 1
+const c = Buffer.from(b,"base64").toString("utf8"); // stage 2
+const d = Buffer.from(c,"base64"); // stage 3
+
+const e = Buffer.from(d).map(x => x ^ ${key}); // stage 4
+
+const f = Buffer.from(e).toString("utf8"); // stage 5
+
+(Function("return " + f))(); // execute
+
+})();
+`;
+};
+
+// ================= COPY PROJECT =================
+const exclude = ['node_modules', 'session', '.npm', '.cache', 'tmp'];
+
+const copy = (src, dest) => {
+const stat = fs.statSync(src);
+
+if (stat.isDirectory()) {
+fs.mkdirSync(dest, { recursive: true });
+for (let f of fs.readdirSync(src)) {
+if (exclude.includes(f)) continue;
+copy(path.join(src, f), path.join(dest, f));
+}
+} else {
+fs.copyFileSync(src, dest);
+}
+};
+
+copy(rootDir, tmpDir);
+
+// ================= ENCRYPT FILES =================
+
+// AseppLohya.js → 10 layer
+const asepp = path.join(tmpDir, "AseppLohya.js");
+if (fs.existsSync(asepp)) {
+fs.writeFileSync(asepp, enc10(asepp));
+}
+
+// start.js → base64
+const start = path.join(tmpDir, "start.js");
+if (fs.existsSync(start)) {
+fs.writeFileSync(start, encBase64(start));
+}
+
+// config.js → base64
+const config = path.join(tmpDir, "config.js");
+if (fs.existsSync(config)) {
+fs.writeFileSync(config, encBase64(config));
+}
+
+// ================= GITHUB PUSH =================
+async function pushGit() {
+const file = fs.readFileSync(asepp, "utf8");
+
+const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/AseppLohya.js`;
+
+let sha = null;
+
+try {
+const res = await axios.get(url, {
+});
+sha = res.data.sha;
+} catch {}
+
+await axios.put(url, {
+message: "Trinity backup",
+content: Buffer.from(file).toString("base64"),
+sha
+}, {
+});
+}
+
+await pushGit();
+
+// ================= ZIP =================
+const cmd = `cd "${tmpDir}" && zip -r "${zipPath}" .`;
+
+exec(cmd, async (err) => {
+if (err) {
+return Asepp.sendMessage(m.chat, { text: "❌ Zip error: " + err.message }, { quoted: m });
+}
+
+const size = (fs.statSync(zipPath).size / 1024 / 1024).toFixed(2);
+
+await Asepp.sendMessage(m.chat, {
+text:
+`🪖 Enc To Script Trinity DONE\n` +
+`📦 ${zipName}\n` +
+`📊 ${size} MB\n` +
+`🔐 AseppLohya.js = 10 STAGE PIPELINE`
+}, { quoted: m });
+
+await Asepp.sendMessage(m.chat, {
+document: fs.readFileSync(zipPath),
+fileName: zipName,
+mimetype: "application/zip"
+}, { quoted: m });
+
+fs.rmSync(tmpDir, { recursive: true, force: true });
+fs.unlinkSync(zipPath);
+});
+
+} catch (e) {
+return Asepp.sendMessage(m.chat, { text: "❌ Error: " + e.message }, { quoted: m });
+}
+}
+
+case 'totalline': {
+try {
+const fs = require('fs')
+const path = require('path')
+
+const filePath = path.join(__dirname, 'AseppLohya.js')
+const data = fs.readFileSync(filePath, 'utf-8')
+
+const allLines = data.split('\n')
+const totalLine = allLines.length
+const codeLines = allLines.filter(line => line.trim() !== '').length
+const emptyLines = totalLine - codeLines
+const sizeKB = (Buffer.byteLength(data, 'utf-8') / 1024).toFixed(2)
+
+const ownerNum = global.owner[0].replace(/[^0-9]/g, '')
+const ownerJid = `${ownerNum}@s.whatsapp.net`
+
+let teks = `\`𝗙𝗜𝗟𝗘 𝗦𝗧𝗔𝗧𝗦 𝗖𝗢𝗡𝗧𝗥𝗢𝗟\`
+
+Hi \`${pushname}\` 👋 ini hasil scan file *AseppLohya.js*. Semua data real time langsung dari source file 👑
+
+⌲ \`𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍\`
+┏━━━━━━━━
+┃✦ *File Name »* AseppLohya.js
+┃✦ *Total Line »* ${totalLine} baris
+┃✦ *Code Line »* ${codeLines} baris
+┃✦ *Empty Line »* ${emptyLines} baris
+┃✦ *File Size »* ${sizeKB} KB
+┃✦ *Developer »* Asepp
+┃✦ *RunTime »* ${runtime(process.uptime())}
+┗━━━━━━━━━━
+
+⌲ \`𝐒𝐓𝐀𝐓𝐔𝐒\`
+┏━━━━━━━━
+┃☇ Status File » ✅ Loaded
+┃☇ Path » ./AseppLohya.js
+┗━━━━━━━━━━
+
+\`[洛] 𝐅𝐈𝐋𝐄 𝐌𝐀𝐍𝐀𝐆𝐄𝐑 [洛]\`
+Owner : @${ownerNum}
+`
+
+const msg = generateWAMessageFromContent(
+m.chat,
+{
+viewOnceMessage: {
+message: {
+interactiveMessage: proto.Message.InteractiveMessage.create({
+body: proto.Message.InteractiveMessage.Body.create({
+text: ""
+}),
+footer: proto.Message.InteractiveMessage.Footer.create({
+text: teks
+}),
+header: proto.Message.InteractiveMessage.Header.create({
+title: "𝗙𝗜𝗟𝗘 𝗦𝗧𝗔𝗧𝗦"
+}),
+contextInfo: {
+mentionedJid: [m.sender, ownerJid]
+},
+nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+buttons: [
+{
+name: "single_select",
+buttonParamsJson: JSON.stringify({
+title: "© FILE MENU",
+sections: [{
+title: "File Control System",
+highlight_label: "𝐅𝐈𝐋𝐄 📂",
+rows: [
+{
+title: "🔄 Refresh Stats",
+description: "Refresh total line file",
+id: ".totalline"
+},
+{
+title: "📂 Check Runtime",
+description: "Lihat runtime bot",
+id: ".runtime"
+}
+]
+}]
+})
+}
+]
+})
+})
+}
+}
+},
+{ quoted: m }
+)
+
+await Asepp.relayMessage(m.chat, msg.message, {
+messageId: msg.key.id
+})
+
+} catch (e) {
+console.log("Error totalline:", e)
+await payreply("❌ Error: " + e.message)
+}
+}
+break
+
+
+case 'tovn': {
+try {
+const axios = require('axios')
+
+let text = m.quoted
+? (m.quoted.text || m.quoted.caption || '')
+: args.join(' ')
+
+if (!text)
+return payreply(
+'⚠️ Reply pesan atau ketik teksnya bro\nContoh: .tovn aku cintaku'
+)
+
+if (text.length > 200)
+return payreply('❌ Maksimal 200 karakter aja ya, kepanjangan')
+
+let lang = 'id'
+
+let url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${lang}&client=tw-ob`
+
+let res = await axios.get(url, {
+responseType: 'arraybuffer',
+headers: {
+'User-Agent': 'Mozilla/5.0'
+}
+})
+
+let audioBuffer = Buffer.from(res.data)
+
+// KIRIM VN DULU
+await Asepp.sendMessage(
+m.chat,
+{
+audio: audioBuffer,
+mimetype: 'audio/mpeg',
+ptt: true
+},
+{ quoted: m }
+)
+
+const ownerNum = global.owner[0].replace(/[^0-9]/g, '')
+const ownerJid = `${ownerNum}@s.whatsapp.net`
+
+let teks = `\`𝗧𝗢 𝗩𝗢𝗜𝗖𝗘 𝗡𝗢𝗧𝗘\`
+
+Hi \`${pushname}\` 👋 Voice note berhasil dibuat 👑
+
+⌲ \`𝐈𝐍𝐅𝐎 𝐓𝐓𝐒\`
+┏━━━━━━━━
+┃✦ *Text »* ${text}
+┃✦ *Language »* Indonesia
+┃✦ *Type »* Voice Note
+┃✦ *Status »* Success ✅
+┗━━━━━━━━━━
+
+⌲ \`𝐒𝐓𝐀𝐓𝐔𝐒\`
+┏━━━━━━━━
+┃☇ TTS Engine » Google Translate
+┃☇ Audio Mode » PTT Voice Note
+┗━━━━━━━━━━
+
+\`[洛] 𝐓𝐎𝐕𝐍 𝐒𝐘𝐒𝐓𝐄𝐌 [洛]\`
+Owner : @${ownerNum}
+`
+
+const msg = generateWAMessageFromContent(
+m.chat,
+{
+viewOnceMessage: {
+message: {
+interactiveMessage: proto.Message.InteractiveMessage.create({
+body: proto.Message.InteractiveMessage.Body.create({
+text: ""
+}),
+footer: proto.Message.InteractiveMessage.Footer.create({
+text: teks
+}),
+header: proto.Message.InteractiveMessage.Header.create({
+title: "𝗧𝗢 𝗩𝗢𝗜𝗖𝗘 𝗡𝗢𝗧𝗘"
+}),
+contextInfo: {
+mentionedJid: [m.sender, ownerJid]
+},
+nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+buttons: [
+{
+name: "single_select",
+buttonParamsJson: JSON.stringify({
+title: "© TOVN MENU",
+sections: [{
+title: "Voice Note System",
+highlight_label: "𝐓𝐎𝐕𝐍 🎙️",
+rows: [
+{
+title: "🎙️ Generate Lagi",
+description: "Buat voice note baru",
+id: ".tovn halo bang"
+},
+{
+title: "📋 Copy Text",
+description: "Salin text voice note",
+id: `.tts ${text}`
+}
+]
+}]
+})
+}
+]
+})
+})
+}
+}
+},
+{ quoted: m }
+)
+
+await Asepp.relayMessage(m.chat, msg.message, {
+messageId: msg.key.id
+})
+
+} catch (e) {
+console.log('Error TOVN:', e)
+await payreply(`❌ Error: ${e.message}`)
+}
+}
+break
+break;
 
 //END 
  
