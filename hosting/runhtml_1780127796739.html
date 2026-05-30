@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>WALZ OFFICIAL - Blue Theme with Cool Effects</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            background: #000;
+        }
+
+        /* Background biru dengan gradasi */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a1628, #001a4d, #0033aa);
+            z-index: -5;
+            animation: breatheBlue 6s ease-in-out infinite;
+        }
+
+        @keyframes breatheBlue {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+        }
+
+        /* Efek bintang/partikel biru */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 40%, rgba(0,100,255,0.2) 0%, transparent 50%);
+            z-index: -4;
+            animation: pulseBlue 8s ease-in-out infinite;
+        }
+
+        @keyframes pulseBlue {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Efek partikel bercahaya */
+        .particle-system {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(0,200,255,0.8), rgba(0,100,255,0));
+            border-radius: 50%;
+            animation: floatParticle linear infinite;
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-20vh) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        /* Efek bola cahaya */
+        .light-ball {
+            position: absolute;
+            background: radial-gradient(circle, rgba(0,200,255,0.4), rgba(0,100,255,0));
+            border-radius: 50%;
+            filter: blur(8px);
+            animation: floatLightBall linear infinite;
+        }
+
+        @keyframes floatLightBall {
+            0% {
+                transform: translateX(-10vw) translateY(0) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateX(110vw) translateY(-50px) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Efek bintang jatuh */
+        .shooting-star {
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(0,200,255,0), #00ccff, rgba(0,200,255,0));
+            animation: shootStar linear infinite;
+            filter: blur(2px);
+        }
+
+        @keyframes shootStar {
+            0% {
+                transform: translateX(-10vw) translateY(0) rotate(25deg);
+                opacity: 0;
+            }
+            5% {
+                opacity: 1;
+            }
+            95% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(110vw) translateY(-80px) rotate(25deg);
+                opacity: 0;
+            }
+        }
+
+        /* Efek glow biru */
+        .glow-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(0,150,255,0.1), transparent 70%);
+            z-index: -2;
+            pointer-events: none;
+            animation: glowPulse 4s infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Efek grid futuristic */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0,150,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,150,255,0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Card utama */
+        .profile-card {
+            max-width: 650px;
+            width: 100%;
+            background: rgba(10,20,45,0.75);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            border: 1px solid rgba(0,150,255,0.5);
+            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.5), 0 0 30px rgba(0,100,255,0.3);
+            padding: 2rem 1.8rem;
+            z-index: 1;
+            animation: cardGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes cardGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0,100,255,0.2); }
+            50% { box-shadow: 0 0 40px rgba(0,100,255,0.5); }
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 3px solid #0099ff;
+            box-shadow: 0 0 20px rgba(0,150,255,0.6);
+            overflow: hidden;
+            animation: avatarPulse 2s ease-in-out infinite;
+            background: linear-gradient(135deg, #1a2a5f, #0a1a4f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(0,150,255,0.4); border-color: #0099ff; }
+            50% { box-shadow: 0 0 35px rgba(0,150,255,0.9); border-color: #33ccff; }
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(120deg, #88ccff, #0099ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            display: inline;
+            animation: textGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 5px rgba(0,150,255,0.3); }
+            50% { text-shadow: 0 0 15px rgba(0,150,255,0.6); }
+        }
+
+        .badge {
+            background: rgba(0,150,255,0.2);
+            border: 1px solid #0099ff;
+            border-radius: 100px;
+            padding: 0.2rem 0.9rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #88ccff;
+            display: inline-block;
+            margin-left: 8px;
+        }
+
+        .handle {
+            font-size: 0.85rem;
+            color: #88aaff;
+            margin-top: 5px;
+        }
+
+        .handle span {
+            background: #0a1a3f;
+            padding: 4px 10px;
+            border-radius: 30px;
+            border-left: 3px solid #0099ff;
+            font-family: monospace;
+        }
+
+        .description {
+            color: #bbddff;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            margin: 1rem 0;
+            padding: 0.8rem 0;
+            border-top: 1px solid rgba(0,150,255,0.3);
+            border-bottom: 1px solid rgba(0,150,255,0.3);
+        }
+
+        .support-link {
+            background: #0a1a3f;
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+            border: 1px solid #0099ff44;
+            font-size: 0.85rem;
+        }
+
+        .support-link a {
+            color: #88ccff;
+            text-decoration: none;
+        }
+
+        .profile-data {
+            background: rgba(0,0,0,0.4);
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            margin: 1.2rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.8rem;
+            border: 1px solid rgba(0,150,255,0.3);
+        }
+
+        .data-item {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .data-item:hover {
+            transform: translateX(5px);
+            text-shadow: 0 0 5px rgba(0,150,255,0.5);
+        }
+
+        .data-label {
+            font-weight: 600;
+            color: #88ccff;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            background: rgba(0,150,255,0.2);
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        .data-value {
+            color: #cceeff;
+        }
+
+        .data-value a {
+            color: #aaddff;
+            text-decoration: none;
+        }
+
+        .data-value a:hover {
+            color: #0099ff;
+            text-decoration: underline;
+        }
+
+        .social-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 1rem 0;
+        }
+
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-btn { background: #075e54; color: white; border: 1px solid #25d366; }
+        .telegram-btn { background: #0088cc; color: white; border: 1px solid #00acee; }
+        .tiktok-btn { background: #000000; color: white; border: 1px solid #ff0050; }
+        .social-btn:hover { transform: scale(1.05) translateY(-2px); }
+
+        .footer {
+            margin-top: 1.8rem;
+            font-size: 0.7rem;
+            text-align: center;
+            color: #6688aa;
+            border-top: 1px solid rgba(0,150,255,0.2);
+            padding-top: 1.2rem;
+        }
+
+        @media (max-width: 550px) {
+            .profile-card { padding: 1.5rem; }
+            .profile-header { flex-direction: column; text-align: center; }
+            .profile-data { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Efek keren -->
+    <div class="particle-system" id="particleSystem"></div>
+    <div class="grid-overlay"></div>
+    <div class="glow-overlay"></div>
+
+    <div class="profile-card">
+        <div class="profile-header">
+            <div class="avatar" id="avatarContainer">
+                <img src="https://img2.pixhost.to/images/8261/732428892_exo.jpg" alt="Profile Picture">
+            </div>
+            <div>
+                <div>
+                    <span class="brand">WALZ OFFICIAL</span>
+                    <span class="badge">⚡ VERIFIED</span>
+                </div>
+                <div class="handle"><span>@walzofficialId</span></div>
+            </div>
+        </div>
+
+        <div class="description">
+            Сфокусирован на автоматизации, чистых структурах и создании небольших open-source проектов.<br>
+            Пишу код, чтобы пропустить скучную рутину.
+        </div>
+
+        <div class="support-link">
+            🧠 support system: <a href="#" id="supportLink">walz.dev/support</a>
+        </div>
+
+        <div class="profile-data">
+            <div class="data-item"><span class="data-label">name</span><span class="data-value">walz official</span></div>
+            <div class="data-item"><span class="data-label">age</span><span class="data-value">17+</span></div>
+            <div class="data-item"><span class="data-label">store</span><span class="data-value">walz-store.id</span></div>
+            <div class="data-item"><span class="data-label">tools</span><span class="data-value">walztools.web.app</span></div>
+            <div class="data-item"><span class="data-label">yt</span><span class="data-value">@walzchannel</span></div>
+            <div class="data-item"><span class="data-label">tele</span><span class="data-value"><a href="https://t.me/WalzNewEra" target="_blank">@WalzNewEra</a></span></div>
+            <div class="data-item"><span class="data-label">tiktok</span><span class="data-value"><a href="https://www.tiktok.com/@awlajaaaa29" target="_blank">@awlajaaaa29</a></span></div>
+            <div class="data-item"><span class="data-label">wa</span><span class="data-value"><a href="https://wa.me/6285832839863" target="_blank">6285832839863</a></span></div>
+        </div>
+
+        <div class="social-buttons">
+            <a href="https://wa.me/6285832839863" target="_blank" class="social-btn whatsapp-btn">💬 WhatsApp</a>
+            <a href="https://t.me/WalzNewEra" target="_blank" class="social-btn telegram-btn">📨 Telegram</a>
+            <a href="https://www.tiktok.com/@awlajaaaa29" target="_blank" class="social-btn tiktok-btn">🎵 TikTok</a>
+        </div>
+
+        <div class="footer">© 2026 ⚙️ WALZ OFFICIAL. All Rights Reserved.</div>
+    </div>
+
+    <script>
+        // === EFEK PARTIKEL BERCahaya ===
+        function createParticles() {
+            const container = document.getElementById('particleSystem');
+            
+            // Partikel kecil (seperti debu bercahaya)
+            for (let i = 0; i < 60; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                const size = Math.random() * 4 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = Math.random() * 8 + 5 + 's';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.opacity = Math.random() * 0.5 + 0.3;
+                container.appendChild(particle);
+            }
+            
+            // Bola cahaya besar
+            for (let i = 0; i < 15; i++) {
+                const lightBall = document.createElement('div');
+                lightBall.classList.add('light-ball');
+                const size = Math.random() * 60 + 30;
+                lightBall.style.width = size + 'px';
+                lightBall.style.height = size + 'px';
+                lightBall.style.left = Math.random() * 100 + '%';
+                lightBall.style.animationDuration = Math.random() * 15 + 10 + 's';
+                lightBall.style.animationDelay = Math.random() * 8 + 's';
+                container.appendChild(lightBall);
+            }
+            
+            // Bintang jatuh
+            for (let i = 0; i < 8; i++) {
+                const star = document.createElement('div');
+                star.classList.add('shooting-star');
+                star.style.top = Math.random() * 50 + '%';
+                star.style.animationDuration = Math.random() * 4 + 3 + 's';
+                star.style.animationDelay = Math.random() * 12 + 's';
+                container.appendChild(star);
+            }
+        }
+        
+        createParticles();
+
+        // === MUSIK LANGSUNG MUTAR OTOMATIS ===
+        const audio = new Audio();
+        audio.loop = true;
+        audio.volume = 0.3;
+        audio.src = 'https://litter.catbox.moe/isa57v.bin';
+        
+        // Mulai musik segera
+        audio.play().then(() => {
+            console.log("✅ Musik otomatis menyala!");
+        }).catch(e => {
+            console.log("⚠️ Auto-play tidak diizinkan browser:", e);
+            // Fallback: mulai musik saat user klik pertama kali
+            document.body.addEventListener('click', function startOnClick() {
+                audio.play();
+                document.body.removeEventListener('click', startOnClick);
+            }, { once: true });
+        });
+
+        // Link support
+        document.getElementById('supportLink').onclick = (e) => {
+            e.preventDefault();
+            alert('🔗 Support system: walz.dev/support');
+        };
+    </script>
+</body>
+</html>
