@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="A little universe made just for you, filled with everything I feel.">
+<meta name="keywords" content="A little universe made just for you, filled with everything I feel.">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Lovescape Team">
+<link rel="canonical" href="https://loveplanet.vercel.app/">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://loveplanet.vercel.app/">
+<meta property="og:title" content="Just for You">
+<meta property="og:description" content="Every star here holds a piece of my heart.">
+<meta property="og:image" content="https://loveplanet.vercel.app/assets/images/planet.png">
+
+<title>Anita My World 🌏</title>
+<link rel="icon" type="image/x-icon" href="assets/images/planet.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  background: #000;
+  overflow: hidden;
+  font-family: 'Outfit', 'Arial', sans-serif;
+}
+
+canvas {
+  display: block;
+  width: 100vw!important;
+  height: 100vh!important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.stars-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px);
+  background-size: 10px 10px;
+  z-index: 0;
+  animation: twinkle 4s infinite;
+}
+
+@keyframes twinkle {
+ 0% { opacity: 0.5; }
+ 50% { opacity: 0.9; }
+ 100% { opacity: 0.5; }
+}
+
+/* ========== RAIN TEXT + FOTO DI KOLOM TENGAH ========== */
+:root {
+  --primary: #ff6eb4;
+  --primary-dark: #ff2d78;
+  --accent: #d500f9;
+  --text-glow: 0 0 12px var(--primary), 0 0 25px var(--primary);
+  --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 110, 180, 0.2);
+}
+
+.text {
+  position: absolute;
+  font-weight: 100;
+  white-space: nowrap;
+  animation: fall3d linear infinite;
+  pointer-events: none;
+  z-index: 10;
+  text-shadow: 0 0 10px currentColor, 0 0 22px currentColor;
+  will-change: transform, opacity;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Outfit', sans-serif;
+}
+
+@keyframes fall3d {
+  from { transform: translate3d(0, -150px, var(--tz)) rotateY(var(--ry)); }
+  to { transform: translate3d(0, 120vh, var(--tz)) rotateY(var(--ry)); }
+}
+
+.photo {
+  position: absolute;
+  border-radius: 24px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  animation: fall3d linear infinite;
+  z-index: 11;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--card-shadow);
+  will-change: transform, opacity;
+}
+
+.photo:hover {
+  transform: scale(1.38) translateZ(70px)!important;
+  border: 1.5px solid currentColor;
+  box-shadow: 0 0 45px currentColor, 0 0 90px currentColor;
+  z-index: 20;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(1.1) contrast(1.06) saturate(1.12);
+}
+
+/* ========== MUSIC PLAYER - ANTI PECAH ========== */
+#musicBtn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(15, 15, 25, 0.9), rgba(5, 5, 10, 0.9));
+  border: 2px solid rgba(255, 110, 180, 0.65);
+  color: var(--primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 0 22px rgba(255, 110, 180, 0.55), inset 0 0 18px rgba(255, 110, 180, 0.18);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#musicBtn:hover {
+  transform: scale(1.2) rotate(12deg);
+  box-shadow: 0 0 38px rgba(255, 110, 180, 0.85), inset 0 0 25px rgba(255, 110, 180, 0.3);
+  border-color: var(--primary);
+}
+
+#musicPanel {
+  position: fixed;
+  bottom: 80px;
+  right: 24px;
+  z-index: 1000;
+  background: linear-gradient(135deg, rgba(12, 12, 20, 0.96), rgba(5, 5, 10, 0.96));
+  border: 1.5px solid rgba(255, 110, 180, 0.45);
+  border-radius: 24px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.65), 0 0 35px rgba(255, 110, 180, 0.28);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(14px) scale(0.93);
+  transition: all 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 180px;
+  backdrop-filter: blur(10px);
+}
+
+#musicPanel.open {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0) scale(1);
+}
+
+.panel-label {
+  font-size: 10px;
+  letter-spacing: 6px;
+  color: rgba(255, 255, 255, 0.48);
+  font-weight: 200;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-btns { display: flex; gap: 10px; }
+
+.pbtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 110, 180, 0.55);
+  background: linear-gradient(135deg, rgba(255, 110, 180, 0.14), rgba(255, 45, 120, 0.1));
+  color: var(--primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 14px rgba(255, 110, 180, 0.28);
+}
+
+.pbtn:hover {
+  background: linear-gradient(135deg, rgba(255, 110, 180, 0.32), rgba(255, 45, 120, 0.22));
+  box-shadow: 0 0 22px rgba(255, 110, 180, 0.75);
+  transform: scale(1.16);
+}
+
+.vol-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 3px;
+  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark), var(--accent));
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 12px var(--primary);
+  border: 2px solid var(--primary);
+  cursor: pointer;
+}
+
+/* Sisa CSS lu tetep */
+.info { position: absolute; top: 70px; left: 10px; color: white; font-family: Arial, sans-serif; background: rgba(0, 0, 0, 0.5); padding: 10px; border-radius: 5px; z-index: 3; }
+.hidden { display: none!important; }
+</style>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.174.0/build/three.module.js",
+    "three/addons/controls/OrbitControls.js": "https://unpkg.com/three@0.152.2/examples/jsm/controls/OrbitControls.js",
+    "three/addons/loaders/FontLoader.js": "https://unpkg.com/three@0.152.2/examples/jsm/loaders/FontLoader.js",
+    "three/addons/geometries/TextGeometry.js": "https://unpkg.com/three@0.152.2/examples/jsm/geometries/TextGeometry.js",
+    "three/addons/utils/BufferGeometryUtils.js": "https://unpkg.com/three@0.152.2/examples/jsm/utils/BufferGeometryUtils.js",
+    "three/addons/loaders/GLTFLoader.js": "https://unpkg.com/three@0.152.2/examples/jsm/loaders/GLTFLoader.js",
+    "three/addons/postprocessing/EffectComposer.js": "https://unpkg.com/three@0.152.2/examples/jsm/postprocessing/EffectComposer.js",
+    "three/addons/postprocessing/RenderPass.js": "https://unpkg.com/three@0.152.2/examples/jsm/postprocessing/RenderPass.js",
+    "three/addons/postprocessing/UnrealBloomPass.js": "https://unpkg.com/three@0.152.2/examples/jsm/postprocessing/UnrealBloomPass.js"
+  }
+}
+</script>
+
+</head>
+
+<body>
+<canvas id="canvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:10;pointer-events:none;"></canvas>
+<div class="stars-bg"></div>
+
+<!-- MUSIC PLAYER BARU -->
+<div id="musicBtn" title="Music Player">
+  <i class="fa-solid fa-music" id="musicIcon"></i>
+</div>
+
+<div id="musicPanel">
+  <div class="panel-label"><i class="fa-solid fa-music"></i> NOW PLAYING</div>
+  <div class="panel-btns">
+    <button class="pbtn" id="btnPlay" aria-label="Play/Pause">
+      <i class="fa-solid fa-play" id="playIcon"></i>
+    </button>
+    <button class="pbtn" id="btnMute" aria-label="Mute">
+      <i class="fa-solid fa-volume-high" id="muteIcon"></i>
+    </button>
+    <button class="pbtn" id="btnLoop" aria-label="Loop">
+      <i class="fa-solid fa-repeat"></i>
+    </button>
+  </div>
+  <div class="vol-row">
+    <i class="fa-solid fa-volume-low" style="font-size: 9px; color: rgba(255,255,255,0.35)"></i>
+    <input type="range" id="volSlider" min="0" max="100" value="55" aria-label="Volume">
+    <i class="fa-solid fa-volume-high" style="font-size: 9px; color: rgba(255,255,255,0.35)"></i>
+  </div>
+</div>
+
+<audio id="bg-audio" loop preload="auto" style="display:none">
+  <source src="https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780912781430.mpeg" type="audio/mpeg">
+</audio>
+
+<!-- SISA HTML LU TETEP -->
+<div id="questionPanel" class="overlay-panel">
+  <div class="panel-content">
+    <h2>Do you want to see my favorite person?</h2>
+    <div>
+      <button id="btnYes">Of course 😍</button>
+      <button id="noBtn" onclick="moveNoBtn()">No way 🙂‍↔️</button>
+    </div>
+  </div>
+</div>
+
+<div class="help-panel">
+  <div class="controls-header" style="display:flex;justify-content:space-between;align-items:center;">
+    <h3 class="help-title" style="margin:0;">Petunjuk Singkat</h3>
+    <button class="close-btn"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="help-section">
+    <div class="section-divider"><h4>Kontrol Dasar</h4></div>
+    <ul>
+      <li><span class="label-mobile">[Mobile]</span> Ketuk 2x di mana saja untuk memulai momen kecil ini ✨</li>
+      <li><span class="label-pc">[PC]</span> Klik dua kali di mana saja untuk memulai momen kecil ini ✨</li>
+    </ul>
+  </div>
+</div>
+
+<div class="help-icon">
+  <i class="fas fa-question-circle"></i>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { EffectComposer } from 'https://unpkg.com/three@0.152.2/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'https://unpkg.com/three@0.152.2/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'https://unpkg.com/three@0.152.2/examples/jsm/postprocessing/UnrealBloomPass.js';
+
+// ========== DATA RAIN TEXT + FOTO ==========
+const MESSAGES = [
+  "i love you", "i miss you", "thinking of u", "my favorite person",
+  "forever", "love u more", "always with you", "you are enough",
+  "my safe place", "you mean everything", "always on my mind",
+  "stay with me", "only you", "my heart is yours", "cantik banget",
+  "kangen", "senyum dong", "you're my home"
+];
+
+const PHOTOS = [
+  "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780912322029.jpeg",
+  "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780912330911.jpeg",
+  "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780912337371.jpeg",
+  "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780912399598.jpeg",
+  "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780912406654.jpeg",
+  "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780912412479.jpeg"
+];
+
+const COLORS = ["#ffffff", "#ffe4ef", "#ffb6d5", "#ff6eb4", "#ff2d78", "#ff1744", "#00e5ff", "#d500f9"];
+let currentColor = 0;
+
+const COLUMN_WIDTH = 380;
+const getColumnLeft = () => (window.innerWidth - COLUMN_WIDTH) / 2;
+
+function applyGlobalColor() {
+  const color = COLORS[currentColor];
+  document.querySelectorAll('.text').forEach(el => el.style.color = color);
+  document.querySelectorAll('.photo').forEach(el => el.style.borderColor = color + 'aa');
+  document.documentElement.style.setProperty('--primary', color);
+}
+
+setInterval(() => {
+  currentColor = (currentColor + 1) % COLORS.length;
+  applyGlobalColor();
+}, 3300);
+
+// TEXT RAIN DI KOLOM TENGAH
+for (let i = 0; i < 28; i++) {
+  const el = document.createElement('div');
+  el.className = 'text';
+  el.innerText = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
+  const depth = Math.random();
+  const sz = 12 + depth * 16;
+  const columnLeft = getColumnLeft();
+  const maxTextWidth = Math.min(170, COLUMN_WIDTH * 0.75);
+  const randomLeft = columnLeft + Math.random() * (COLUMN_WIDTH - maxTextWidth);
+  el.style.cssText = `
+    left: ${randomLeft}px;
+    max-width: ${maxTextWidth}px;
+    font-size: ${sz}px;
+    opacity: ${0.2 + depth * 0.45};
+    color: var(--primary);
+    animation-duration: ${14 + Math.random() * 18}s;
+    animation-delay: ${-Math.random() * 30}s;
+    --tz: ${depth * 180 - 60}px;
+    --ry: ${(Math.random() - 0.5) * 22}deg;
+  `;
+  document.body.appendChild(el);
+}
+
+// PHOTO RAIN DI KOLOM TENGAH
+const columnLeft = getColumnLeft();
+for (let i = 0; i < 6; i++) {
+  const el = document.createElement('div');
+  el.className = 'photo';
+  const depth = Math.random();
+  const sz = 80 + depth * 40;
+  const randomLeft = columnLeft + Math.random() * (COLUMN_WIDTH - sz);
+  el.style.cssText = `
+    width: ${sz}px;
+    height: ${sz}px;
+    left: ${randomLeft}px;
+    opacity: ${0.42 + depth * 0.43};
+    animation-duration: ${19 + Math.random() * 14}s;
+    animation-delay: ${-i * 3.2 - Math.random() * 7}s;
+    --tz: ${depth * 150 - 50}px;
+    --ry: ${(Math.random() - 0.5) * 18}deg;
+  `;
+  const img = document.createElement('img');
+  img.src = PHOTOS[i % PHOTOS.length];
+  img.loading = 'lazy';
+  el.appendChild(img);
+  document.body.appendChild(el);
+}
+
+// Resize handler
+window.addEventListener('resize', () => {
+  const newColumnLeft = getColumnLeft();
+  document.querySelectorAll('.photo').forEach(photo => {
+    const width = parseFloat(photo.style.width);
+    const maxLeft = newColumnLeft + (COLUMN_WIDTH - width);
+    const currentLeft = parseFloat(photo.style.left);
+    photo.style.left = Math.max(newColumnLeft, Math.min(currentLeft, maxLeft)) + 'px';
+  });
+  document.querySelectorAll('.text').forEach(text => {
+    const maxWidth = parseFloat(text.style.maxWidth);
+    const maxLeft = newColumnLeft + (COLUMN_WIDTH - maxWidth);
+    const currentLeft = parseFloat(text.style.left);
+    text.style.left = Math.max(newColumnLeft, Math.min(currentLeft, maxLeft)) + 'px';
+  });
+});
+
+// ========== MUSIC CONTROLS ==========
+let panelOpen = false;
+const musicBtn = document.getElementById('musicBtn');
+const audio = document.getElementById('bg-audio');
+let isPlaying = false, isMuted = false;
+
+musicBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  panelOpen =!panelOpen;
+  document.getElementById('musicPanel').classList.toggle('open', panelOpen);
+  document.getElementById('musicIcon').className = panelOpen? 'fa-solid fa-xmark' : 'fa-solid fa-music';
+});
+
+document.addEventListener('click', e => {
+  if (panelOpen &&!musicBtn.contains(e.target) &&!document.getElementById('musicPanel').contains(e.target)) {
+    panelOpen = false;
+    document.getElementById('musicPanel').classList.remove('open');
+    document.getElementById('musicIcon').className = 'fa-solid fa-music';
+  }
+});
+
+document.getElementById('btnPlay').addEventListener('click', () => {
+  if (isPlaying) {
+    audio.pause();
+    document.getElementById('playIcon').className = 'fa-solid fa-play';
+  } else {
+    audio.play().catch(() => {});
+    document.getElementById('playIcon').className = 'fa-solid fa-pause';
+  }
+  isPlaying =!isPlaying;
+});
+
+document.getElementById('btnMute').addEventListener('click', () => {
+  isMuted =!isMuted;
+  audio.muted = isMuted;
+  document.getElementById('muteIcon').className = isMuted? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
+});
+
+document.getElementById('btnLoop').addEventListener('click', function() {
+  audio.loop =!audio.loop;
+  this.style.opacity = audio.loop? '1' : '0.4';
+});
+
+document.getElementById('volSlider').addEventListener('input', function() {
+  audio.volume = this.value / 100;
+  if (audio.volume > 0 && isMuted) {
+    isMuted = false;
+    audio.muted = false;
+    document.getElementById('muteIcon').className = 'fa-solid fa-volume-high';
+  }
+});
+
+audio.addEventListener('play', () => {
+  isPlaying = true;
+  document.getElementById('playIcon').className = 'fa-solid fa-pause';
+});
+
+audio.addEventListener('pause', () => {
+  isPlaying = false;
+  document.getElementById('playIcon').className = 'fa-solid fa-play';
+});
+
+// Auto play setelah user klik Yes
+const btnYes = document.getElementById("btnYes");
+btnYes.addEventListener("click", () => {
+  audio.volume = 0.55;
+  audio.play().catch(() => {});
+  applyGlobalColor();
+});
+
+// SISA SCRIPT 3D LU TETEP DI SINI
+//... kode three.js lu dari template asli...
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 5000);
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x000);
+renderer.setPixelRatio(window.devicePixelRatio);
+document.body.appendChild(renderer.domElement);
+
+// BLOOM SETUP
+const BLOOM_LAYER = 1;
+const bloomParams = { exposure: 1, bloomStrength: 1.5, bloomThreshold: 0, bloomRadius: 0.25 };
+const renderScene = new RenderPass(scene, camera);
+const bloomPass = new UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, window.innerHeight),
+  bloomParams.bloomStrength,
+  bloomParams.bloomRadius,
+  bloomParams.bloomThreshold
+);
+const composer = new EffectComposer(renderer);
+composer.addPass(renderScene);
+composer.addPass(bloomPass);
+
+window.addEventListener('resize', () => {
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  composer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+});
+
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambientLight);
+
+const light1 = new THREE.PointLight(0xffffff, 1, 500);
+light1.position.set(100, 100, 100);
+scene.add(light1);
+
+function animate() {
+  requestAnimationFrame(animate);
+  camera.layers.set(BLOOM_LAYER);
+  composer.render();
+  camera.layers.set(0);
+  renderer.render(scene, camera);
+}
+animate();
+</script>
+
+</body>
+</html>
