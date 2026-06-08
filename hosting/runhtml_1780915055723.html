@@ -1275,7 +1275,12 @@
         // Event listener cho user profile đã được xử lý trong auth.js
     </script>
     <div id="flower-toast"
-        style="position:fixed;bottom:32px;left:50%;right:auto;transform:translateX(-50%);background:rgba(30,30,30,0.92);color:#fff;font-size:13px;padding:7px 18px;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,0.12);z-index:9999;opacity:0;transition:opacity 0.2s;">
+<script>
+setTimeout(() => {
+    const loading = document.getElementById('flower-loading-overlay');
+    if(loading) loading.style.display = 'none';
+}, 5000); // 5 detik auto hilangin loading
+    </script>
     </div>
 </body>
 </html>
