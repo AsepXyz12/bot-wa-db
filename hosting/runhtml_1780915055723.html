@@ -1281,6 +1281,21 @@ setTimeout(() => {
     if(loading) loading.style.display = 'none';
 }, 5000); // 5 detik auto hilangin loading
     </script>
+        <script>
+(function forceKillLoading(){
+    function kill(){
+        const loading = document.getElementById('flower-loading-overlay');
+        if(loading) loading.style.display = 'none';
+    }
+    // Coba tiap 1 detik sampe 10 detik
+    let i = 0;
+    const timer = setInterval(() => {
+        kill();
+        i++;
+        if(i > 10) clearInterval(timer);
+    }, 1000);
+})();
+</script>
     </div>
 </body>
 </html>
