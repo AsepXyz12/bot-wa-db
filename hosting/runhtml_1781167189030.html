@@ -753,7 +753,7 @@ class DataProcessor {
 <!-- ── COPY TOAST ─────────────────────────────────────────────── -->
 <div class="copy-flash" id="copyFlash">✓ Copied to clipboard</div>
 
-<<!-- ── CDN LIBRARIES ─────────────────────────────────────────── -->
+<!-- ── CDN LIBRARIES ─────────────────────────────────────────── -->
 <script src="https://unpkg.com/acorn@8.14.0/dist/acorn.min.js"></script>
 <script src="https://unpkg.com/estraverse@5.3.0/dist/estraverse.browser.js"></script>
 <script src="https://unpkg.com/escodegen@2.1.0/dist/escodegen.browser.js"></script>
@@ -926,8 +926,14 @@ function transformCode(sourceCode, options = {}) {
   } = options;
 
   resetMapping();
-const _estraverse = window.estraverse;
+const _acorn = window.acorn;
+const _estraverse = window.estraverse; 
 const _escodegen = window.escodegen;
+
+// Terus pake _acorn.parse bukan window.acorn.parse
+const ast = _acorn.parse(sourceCode, {...});
+_estraverse.traverse(ast, {...});
+const output = _escodegen.generate(ast, {...});
   // ── 1. Parse ─────────────────────────────────────────────────
   const ast = window.acorn.parse(sourceCode, {
     ecmaVersion: 'latest',
