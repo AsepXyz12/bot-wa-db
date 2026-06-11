@@ -940,7 +940,7 @@ function transformCode(sourceCode, options = {}) {
 
   resetMapping();
 
-  const ast = acornLib.parse(sourceCode, {
+  const ast = window.acorn.parse(sourceCode, {
     ecmaVersion: 'latest',
     sourceType: 'module',
     locations: true,
