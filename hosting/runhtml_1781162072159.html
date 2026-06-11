@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AST Language Studio AsepXyz</title>
+<style>
+:root{
+  --bg:#090d16;--panel:#0f172a;--border:#1e293b;--text:#e5e7eb;--muted:#94a3b8;
+  --accent:#4f46e5;--ok:#16a34a;--err:#dc2626;--warn:#d97706;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,Arial;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column}
+header{padding:14px 20px;background:var(--panel);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+header h1{font-size:16px;font-weight:700} header span{color:var(--muted);font-size:12px}
+main{flex:1;display:grid;grid-template-columns:1fr 1fr 360px;gap:1px;background:var(--border)}
+.panel{background:var(--panel);display:flex;flex-direction:column;min-height:0}
+.panel-header{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.panel-body{flex:1;overflow:auto;position:relative}
+textarea{width:100%;height:100%;background:transparent;border:0;color:var(--text);font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;line-height:1.6;padding:14px;resize:none;outline:0;tab-size:2}
+.controls{padding:10px;display:flex;gap:8px;border-top:1px solid var(--border);flex-wrap:wrap}
+button{padding:8px 12px;background:var(--accent);color:#fff;border:0;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+button:hover{filter:brightness(1.1)} button:disabled{opacity:.4;cursor:not-allowed}
+button.secondary{background:#334155} button.warn{background:var(--warn)}
+#stats,#mapping{padding:12px;font-size:12px;font-family:monospace;white-space:pre-wrap;color:var(--muted)}
+#progress{height:3px;background:var(--accent);width:0%;transition:width.3s}
+.err{color:var(--err)}.ok{color:var(--ok)}
+.dropzone{position:absolute;inset:0;border:2px dashed var(--border);display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);z-index:10;font-size:14px;color:var(--muted)}
+.dropzone.active{display:flex}
+input[type=file]{display:none}
+table{width:100%;border-collapse:collapse;font-size:12px}
+td{padding:6px 8px;border-bottom:1px solid var(--border);font-family:monospace}
+td:first-child{color:var(--warn)} td:last-child{color:var(--accent)}
+@media (max-width:1100px){main{grid-template-columns:1fr}}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "acorn": "https://cdn.jsdelivr.net/npm/acorn@8.14.0/dist/acorn.min.js",
+    "estraverse": "https://cdn.jsdelivr.net/npm/estraverse@5.3.0/estraverse.min.js",
+    "escodegen": "https://cdn.jsdelivr.net/npm/escodegen@2.1.0/escodegen.min.js"
+  }
+}
+</script>
+</head>
+<body>
+<header>
+  <h1>AST Language Studio <span>Identifier Language System AsepXyz</span></h1>
+  <span>Deterministic • Consistent Pattern • No Random</span>
+</header>
+<div id="progress"></div>
+<main>
+  <div class="panel">
+    <div class="panel-header">
+      <span>Input Source</span>
+      <span id="inputInfo"></span>
+    </div>
+    <div class="panel-body">
+      <div class="dropzone" id="dropzone">Drop file.js di sini</div>
+      <textarea id="input" placeholder="// Paste kode JS atau upload file.js&#10;function hello(name){let message='Hi '+name;return message;}"></textarea>
+    </div>
+    <div class="controls">
+      <input type="file" id="fileInput" accept=".js,.mjs,.cjs,.ts">
+      <button id="uploadBtn">Upload File</button>
+      <button id="renameBtn">Rename Identifiers</button>
+      <button id="clearBtn" class="secondary">Clear</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <span>Output Source</span>
+      <span id="status"></span>
+    </div>
+    <div class="panel-body">
+      <textarea id="output" readonly placeholder="// Hasil transformasi muncul di sini..."></textarea>
+    </div>
+    <div class="controls">
+      <button id="copyBtn" class="secondary">Copy</button>
+      <button id="downloadBtn" class="secondary">Download</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">Statistics</div>
+    <div class="panel-body"><div id="stats">Belum ada data</div></div>
+    <div class="panel-header">Mapping Viewer</div>
+    <div class="panel-body"><div id="mapping">Mapping kosong</div></div>
+  </div>
+</main>
+
+<script type="module">
+import * as acorn from 'acorn';
+import * as estraverse from 'estraverse';
+import * as escodegen from 'escodegen';
+
+const $ = s=>document.querySelector(s);
+const input = $('#input'), output = $('#output'), fileInput = $('#fileInput');
+const uploadBtn = $('#uploadBtn'), renameBtn = $('#renameBtn'), clearBtn = $('#clearBtn');
+const copyBtn = $('#copyBtn'), downloadBtn = $('#downloadBtn');
+const statsEl = $('#stats'), mappingEl = $('#mapping'), statusEl = $('#status'), inputInfo = $('#inputInfo');
+const progressEl = $('#progress'), dropzone = $('#dropzone');
+
+// Token DNA bahasa identifier - semua identifier akan dibentuk dari token ini
+const TOKENS = {
+  prefix: ['難読化','装置','AsepXyz'],
+  mid: ['変数','起動','暗号','秘匿'],
+  numeral: ['零','壱','弐','参','肆','伍','陸','漆','捌','玖','拾','拾壱','拾弐','拾参','拾肆','拾伍','拾陸','拾漆','拾捌','拾玖','弐拾','弐拾壱','弐拾弐']
+};
+
+class LanguageEngine{
+  constructor(){
+    this.map = new Map();
+    this.counter = 0;
+    this.pattern = 'prefix+mid+numeral'; // pattern konsisten untuk semua identifier
+  }
+
+  generate(originalName){
+    if(this.map.has(originalName)) return this.map.get(originalName);
+
+    const p = TOKENS.prefix.join('');
+    const m = TOKENS.mid[this.counter % TOKENS.mid.length];
+    const n = TOKENS.numeral[this.counter];
+
+    const newName = p + m + n;
+    this.map.set(originalName, newName);
+    this.counter++;
+    return newName;
+  }
+
+  getMap(){return this.map}
+  reset(){this.map.clear();this.counter=0}
+}
+
+// Plugin system untuk ekstensi transformasi
+class PluginManager{
+  constructor(){this.plugins=[]}
+  register(p){this.plugins.push(p)}
+  apply(ast,ctx){
+    this.plugins.forEach(p=>p.transform && p.transform(ast,ctx));
+  }
+}
+
+const BrandingPlugin = {
+  name:'BrandingHeader',
+  transform(ast,ctx){
+    ast.body.unshift({
+      type:'ExpressionStatement',
+      expression:{type:'Literal',value:'/* AsepXyz Language System */',raw:'"/* AsepXyz Language System */"'}
+    });
+  }
+};
+
+function shouldRename(node,parent){
+  if(node.type!=='Identifier') return false;
+  // Jangan rename property key: obj.key
+  if(parent?.type==='MemberExpression' && parent.property===node &&!parent.computed) return false;
+  // Jangan rename object literal key: {key:1}
+  if(parent?.type==='Property' && parent.key===node &&!parent.computed) return false;
+  // Jangan rename method key class
+  if(parent?.type==='MethodDefinition' && parent.key===node &&!parent.computed) return false;
+  return true;
+}
+
+function transformAST(code){
+  const engine = new LanguageEngine();
+  const plugins = new PluginManager();
+  plugins.register(BrandingPlugin);
+
+  let ast = acorn.parse(code,{ecmaVersion:'latest',sourceType:'module',allowHashBang:true});
+
+  ast = estraverse.replace(ast,{
+    enter(node,parent){
+      if(shouldRename(node,parent)){
+        node.name = engine.generate(node.name);
+      }
+    }
+  });
+
+  plugins.apply(ast,{engine});
+  const result = escodegen.generate(ast,{format:{indent:{style:' '},semicolons:true}});
+  return {code:result,mapping:engine.getMap()};
+}
+
+function setProgress(p){progressEl.style.width=p+'%'}
+
+function updateUI(original,transformed,mapping){
+  statsEl.textContent =
+`Total Identifiers : ${mapping.size}
+Ukuran Asli : ${(original.length/1024).toFixed(2)} KB
+Ukuran Output : ${(transformed.length/1024).toFixed(2)} KB
+Pattern : ${TOKENS.prefix.join('')}+[変数|起動|暗号|秘匿]+[零...]
+Deterministic : Ya
+Konsistensi : 100%`;
+
+  let table = '<table><tr><td>Original</td><td>Transformed</td></tr>';
+  for(const [k,v] of mapping.entries()){
+    table += `<tr><td>${k}</td><td>${v}</td></tr>`;
+  }
+  table += '</table>';
+  mappingEl.innerHTML = table || 'Tidak ada identifier';
+}
+
+// Upload file
+uploadBtn.onclick = ()=>fileInput.click();
+fileInput.onchange = e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  inputInfo.textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = ev=>{input.value=ev.target.result;statusEl.innerHTML='<span class="ok">File dimuat</span>'};
+  reader.readAsText(file);
+}
+
+// Drag drop
+['dragenter','dragover'].forEach(evt=>{
+  input.parentElement.addEventListener(evt,e=>{
+    e.preventDefault();dropzone.classList.add('active');
+  });
+});
+['dragleave','drop'].forEach(evt=>{
+  input.parentElement.addEventListener(evt,e=>{
+    e.preventDefault();dropzone.classList.remove('active');
+  });
+});
+dropzone.addEventListener('drop',e=>{
+  const file = e.dataTransfer.files[0];
+  if(file && file.name.endsWith('.js')){
+    inputInfo.textContent=file.name;
+    file.text().then(t=>input.value=t);
+    statusEl.innerHTML='<span class="ok">File dimuat</span>';
+  }
+});
+
+renameBtn.onclick = async ()=>{
+  const code = input.value.trim();
+  if(!code){statusEl.innerHTML='<span class="err">Input kosong</span>';return}
+  renameBtn.disabled=true;
+  statusEl.textContent='Processing...';
+  setProgress(40);
+  try{
+    setTimeout(()=>{
+      const {code:res,mapping} = transformAST(code);
+      output.value=res;
+      updateUI(code,res,mapping);
+      statusEl.innerHTML='<span class="ok">Selesai</span>';
+      setProgress(100);
+      setTimeout(()=>setProgress(0),800);
+      renameBtn.disabled=false;
+    },50);
+  }catch(e){
+    statusEl.innerHTML=`<span class="err">Error: ${e.message}</span>`;
+    output.value='';statsEl.textContent='Parse error';mappingEl.textContent='';
+    setProgress(0);renameBtn.disabled=false;
+  }
+};
+
+copyBtn.onclick = ()=>{
+  navigator.clipboard.writeText(output.value);
+  copyBtn.textContent='Copied!';
+  setTimeout(()=>copyBtn.textContent='Copy',1200);
+};
+
+downloadBtn.onclick = ()=>{
+  const blob = new Blob([output.value],{type:'application/javascript'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url;a.download='AsepXyz_Language.js';a.click();
+  URL.revokeObjectURL(url);
+};
+
+clearBtn.onclick = ()=>{
+  input.value='';output.value='';statsEl.textContent='Belum ada data';
+  mappingEl.textContent='Mapping kosong';statusEl.textContent='';inputInfo.textContent='';
+};
+</script>
+</body>
+</html>
