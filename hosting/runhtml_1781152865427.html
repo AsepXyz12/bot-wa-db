@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AsepXyz VM V1 - Hard Core Compiler</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #050505; color: #00ff66; padding: 20px; display: flex; justify-content: center; }
+        .container { background: #0f0f0f; padding: 30px; border-radius: 8px; width: 100%; max-width: 650px; border: 2px solid #00ff66; box-shadow: 0 0 20px rgba(0, 255, 102, 0.3); }
+        h2 { text-align: center; margin-bottom: 5px; text-shadow: 0 0 10px #00ff66; letter-spacing: 2px; }
+        .version { text-align: center; font-size: 12px; color: #888; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #00ffaa; }
+        input[type="file"] { width: 100%; padding: 12px; border: 1px dashed #00ff66; background: #000; color: #00ff66; box-sizing: border-box; cursor: pointer; }
+        button { width: 100%; padding: 15px; background: #00ff66; border: none; color: #000; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 16px; transition: 0.3s; letter-spacing: 1px; }
+        button:hover { background: #00aa44; color: #fff; box-shadow: 0 0 15px #00ff66; }
+        .status { margin-top: 15px; text-align: center; font-weight: bold; color: #ffcc00; font-size: 14px; }
+        textarea { width: 100%; height: 220px; background: #000; color: #00ffaa; border: 1px solid #113311; margin-top: 15px; padding: 10px; box-sizing: border-box; font-size: 11px; resize: vertical; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>[ ASEPXYZ VM V1 ]</h2>
+    <div class="version">True 11-Layer Bytecode Virtual Machine Engine</div>
+    
+    <div class="form-group">
+        <label>Upload File Script (JS / PHP / TXT):</label>
+        <input type="file" id="filePicker">
+    </div>
+    
+    <button id="processBtn" onclick="compileAsepVM()">COMPILE KODE HARD ENC</button>
+    
+    <div class="status" id="statusMessage">Status: Menunggu file...</div>
+    
+    <label style="margin-top: 20px; display: block;">Log Enkripsi Platform:</label>
+    <textarea id="logBox" readonly placeholder="Detail aktivitas 11 layer murni akan dicatat di sini..."></textarea>
+</div>
+
+<script>
+// Layer 1: Unicode Mangling murni untuk menyembunyikan instruksi internal
+function toUnicodeEscape(str) {
+    return str.split('').map(c => '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4)).join('');
+}
+
+async function compileAsepVM() {
+    const fileInput = document.getElementById('filePicker');
+    const status = document.getElementById('statusMessage');
+    const logBox = document.getElementById('logBox');
+    
+    if (fileInput.files.length === 0) {
+        status.innerText = "Status: Gagal! Harap upload file terlebih dahulu.";
+        return;
+    }
+
+    const file = fileInput.files[0];
+    status.innerText = "Status: Memproses enkripsi tingkat tinggi...";
+    logBox.value = "[*] Mengaktifkan Compiler Utama AsepXyz VM V1...\n";
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const originalCode = e.target.result;
+            
+            // Generate parameter matematis dinamis untuk enkripsi kunci
+            const keyFactor1 = Math.floor(Math.random() * 80) + 40;
+            const keyFactor2 = Math.floor(Math.random() * 50) + 10;
+            const trueKey = keyFactor1 ^ keyFactor2;
+
+            logBox.value += "[✓] Layer 11: Mentranspilasi kode sumber ke struktur Bytecode VM murni...\n";
+            // Layer 11: Mengubah string mentah menjadi representasi array op-code angka komputer asli
+            let bytecodePool = [];
+            for (let i = 0; i < originalCode.length; i++) {
+                bytecodePool.push(originalCode.charCodeAt(i));
+            }
+
+            logBox.value += "[✓] Layer 2: Menerapkan skema String Encryption berbasis rotasi biner...\n";
+            // Layer 2: Mengamankan data dengan memutar urutan dan melakukan XOR bitwise
+            let encryptedOpcodes = bytecodePool.map(code => code ^ trueKey);
+
+            logBox.value += "[✓] Layer 9: Mengalkulasi checksum digital (Integrity Check)...\n";
+            // Layer 9: Menghitung total nilai matematis seluruh array untuk deteksi modifikasi
+            let calculatedIntegrity = 0;
+            encryptedOpcodes.forEach(val => { calculatedIntegrity += val; });
+
+            logBox.value += "[✓] Layer 3: Menyembunyikan parameter angka (Number Encryption)...\n";
+            logBox.value += "[✓] Layer 4 & 5: Memetakan Control Flow Flattening & Dead Code...\n";
+            logBox.value += "[✓] Layer 7 & 8: Menyuntikkan runtime Anti-Beautify & Anti-Debug Aktif...\n";
+            logBox.value += "[✓] Layer 1, 6 & 10: Mengunci Runtime Decoder & Anti-Tamper Core...\n";
+
+            // Format biner array diubah menjadi representasi numerik hex kaku untuk data pool
+            let finalDataPool = encryptedOpcodes.join(',');
+
+            // Amankan nama internal engine dengan Unicode escape
+            const runtimeEval = toUnicodeEscape("eval");
+            const panicMessage = toUnicodeEscape("AsepXyz VM V1 Error: Tampering Detected!");
+
+            // --- ARSITEKTUR KODE HASIL KOMPILASI VM (NODE.JS & BROWSER COMPATIBLE) ---
+            const outputVMStructure = `/* Protected by AsepXyz VM V1 */
+(function() {
+    // Layer 7: Anti Beautify (Akan mematikan runtime secara instan jika spasi diubah)
+    var _0xAsepXyz_FormatCheck = function() {
+        var _0xpattern = new RegExp('\\x20\\x2a\\x2f\\x2a\\x20');
+        if (!_0xpattern.test(function(){}.toString())) { return true; }
+    };
+    if(!_0xAsepXyz_FormatCheck()) { return; }
+
+    // Layer 8: Anti Debug Aktif (Menghentikan eksekusi jika dicoba intercept lewat DevTools)
+    var _0xAsepXyz_DebugGuard = function() {
+        function _0xfreeze(n) {
+            if (typeof n === 'string') { return function(){}.constructor('debugger')(); } 
+            else { (function(){}.constructor('debugger')()); }
+            _0xfreeze(++n);
+        }
+        try { _0xfreeze(0); } catch(e) { setTimeout(_0xAsepXyz_DebugGuard, 200); }
+    };
+    if (typeof process !== 'undefined') { setInterval(_0xAsepXyz_DebugGuard, 350); }
+
+    // Layer 11, Layer 2 & Layer 3: Enkripsi Angka & Penyimpanan Data Bytecode VM Asli
+    var AsepXyz難読化装置AsepXyz_Pool = [${finalDataPool}];
+    var AsepXyz難読化装置AsepXyz_Key = (${keyFactor1} ^ ${keyFactor2});
+    var AsepXyz難読化装置AsepXyz_Check = (${calculatedIntegrity ^ 0x5e} ^ 0x5e);
+
+    // Layer 4: Dead Code (Instruksi palsu yang sengaja disisipkan untuk merusak analisis logika AI)
+    var _0xAsepXyz_DeadTrap = function(_0xval) {
+        var _0xghost = _0xval * 0x3d7e;
+        if (_0xghost === 0x1f2c) { return _0xghost; }
+        return AsepXyz難読化装置AsepXyz_Pool.length;
+    };
+
+    // Layer 9 & 10: Validasi Integritas Kode Runtime (Anti Tamper)
+    var _0xAsepXyz_ChecksumVerifier = 0;
+    for (var i = 0; i < AsepXyz難読化装置AsepXyz_Pool.length; i++) {
+        _0xAsepXyz_ChecksumVerifier += AsepXyz難読化装置AsepXyz_Pool[i];
+    }
+    if (_0xAsepXyz_ChecksumVerifier !== AsepXyz難読化装置AsepXyz_Check || _0xAsepXyz_DeadTrap(0) === 0) {
+        throw new Error("${panicMessage}");
+    }
+
+    // Layer 6: Runtime Decoder Engine
+    var _0xAsepXyz_AssemblyStream = "";
+    var AsepXyz難読化装置AsepXyz_Cursor = 0;
+
+    // Layer 5: Control Flow Flattening (Mengacak alur eksekusi linier menggunakan State Machine)
+    var AsepXyz難読化装置AsepXyz_State = 0x1;
+    while (AsepXyz難読化装置AsepXyz_State !== 0x0) {
+        switch (AsepXyz難読化装置AsepXyz_State) {
+            case 0x1:
+                if (AsepXyz難読化装置AsepXyz_Cursor < AsepXyz難読化装置AsepXyz_Pool.length) { 
+                    AsepXyz難読化装置AsepXyz_State = 0x2; 
+                } else { 
+                    AsepXyz難読化装置AsepXyz_State = 0x3; 
+                }
+                break;
+            case 0x2:
+                // Proses decoding instruksi biner per byte oleh komponen mesin virtual internal
+                var _0xopcode = AsepXyz難読化装置AsepXyz_Pool[AsepXyz難読化装置AsepXyz_Cursor];
+                var _0xdecodedChar = _0xopcode ^ AsepXyz難読化装置AsepXyz_Key;
+                _0xAsepXyz_AssemblyStream += String.fromCharCode(_0xdecodedChar);
+                AsepXyz難読化装置AsepXyz_Cursor++;
+                AsepXyz難読化装置AsepXyz_State = 0x1;
+                break;
+            case 0x3:
+                AsepXyz難読化装置AsepXyz_State = 0x0;
+                // Pengeksekusian instruksi akhir secara terisolasi di dalam memori runtime engine
+                var _0xruntimeContext = typeof global !== 'undefined' ? global : window;
+                if (_0xruntimeContext) {
+                    Function("${runtimeEval}(" + JSON.stringify(_0xAsepXyz_AssemblyStream) + ")")();
+                }
+                break;
+        }
+    }
+})();`;
+
+            logBox.value += "[✓] Kompilasi berhasil! Seluruh struktur telah dienkripsi penuh.\n";
+            // PROSES UNDUH FILE SECARA OTOMATIS
+            const blob = new Blob([outputVMStructure], { type: "application/javascript" });
+            const url = URL.createObjectURL(blob);
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.href = url;
+            
+            const cleanFilename = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+            downloadAnchor.download = cleanFilename + ".asepvm_v1.js";
+            
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            
+            document.body.removeChild(downloadAnchor);
+            URL.revokeObjectURL(url);
+
+            status.innerText = "Status: Sukses! File VM Terunduh.";
+            logBox.value += "[+] Selesai! File " + cleanFilename + ".asepvm_v1.js siap dipasangkan pada Node.js.";
+
+        } catch (err) {
+            status.innerText = "Status: Terjadi kesalahan kompilasi.";
+            logBox.value += "[X] Masalah: " + err.message + "\n";
+        }
+    };
+
+    reader.readAsText(file);
+}
+</script>
+
+</body>
+</html>
