@@ -1467,16 +1467,12 @@ UI.btnDownload.addEventListener('click', () => {
 });
 
 // ── Library Load Check ────────────────────────────────────────
+// ── Library Load Check ────────────────────────────────────────
 window.addEventListener('load', () => {
   const missing = [];
-if (!window.acorn)
-  missing.push('Acorn');
-
-if (!window.estraverse)
-  missing.push('Estraverse');
-
-if (!window.escodegen)
-  missing.push('Escodegen');
+  if (typeof window.acorn === 'undefined' && typeof acorn === 'undefined') missing.push('Acorn');
+  if (typeof window.estraverse === 'undefined' && typeof estraverse === 'undefined') missing.push('Estraverse'); 
+  if (typeof window.escodegen === 'undefined' && typeof escodegen === 'undefined') missing.push('Escodegen');
 
   if (missing.length) {
     showError(`Failed to load: ${missing.join(', ')}. Check your internet connection.`);
@@ -1486,6 +1482,8 @@ if (!window.escodegen)
     UI.btnRun.disabled = UI.inputCode.value.trim() === '';
   }
 });
+
+
 
 // Enable run on initial value if present
 UI.btnRun.disabled = UI.inputCode.value.trim() === '';
