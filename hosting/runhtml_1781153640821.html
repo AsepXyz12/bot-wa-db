@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AsepXyz VM V1 - Final Pure Hard Compiler</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #050505; color: #00ff66; padding: 20px; display: flex; justify-content: center; }
+        .container { background: #0f0f0f; padding: 30px; border-radius: 8px; width: 100%; max-width: 650px; border: 2px solid #00ff66; box-shadow: 0 0 20px rgba(0, 255, 102, 0.3); }
+        h2 { text-align: center; margin-bottom: 5px; text-shadow: 0 0 10px #00ff66; letter-spacing: 2px; }
+        .version { text-align: center; font-size: 12px; color: #888; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #00ffaa; }
+        input[type="file"] { width: 100%; padding: 12px; border: 1px dashed #00ff66; background: #000; color: #00ff66; box-sizing: border-box; cursor: pointer; }
+        button { width: 100%; padding: 15px; background: #00ff66; border: none; color: #000; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 16px; transition: 0.3s; letter-spacing: 1px; }
+        button:hover { background: #00aa44; color: #fff; box-shadow: 0 0 15px #00ff66; }
+        .status { margin-top: 15px; text-align: center; font-weight: bold; color: #ffcc00; font-size: 14px; }
+        textarea { width: 100%; height: 220px; background: #000; color: #00ffaa; border: 1px solid #113311; margin-top: 15px; padding: 10px; box-sizing: border-box; font-size: 11px; resize: vertical; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>[ ASEPXYZ VM V1 ]</h2>
+    <div class="version">100% Consistent From Top to Bottom (No Base64)</div>
+    
+    <div class="form-group">
+        <label>Upload File Script (JS / PHP / TXT):</label>
+        <input type="file" id="filePicker">
+    </div>
+    
+    <button id="processBtn" onclick="runAsepCompilerEngine()">COMPILE KODE HARD ENC</button>
+    
+    <div class="status" id="statusMessage">Status: Menunggu file...</div>
+    
+    <label style="margin-top: 20px; display: block;">Log Enkripsi Platform:</label>
+    <textarea id="logBox" readonly placeholder="Detail aktivitas 11 layer murni akan dicatat di sini..."></textarea>
+</div>
+
+<script>
+// 文字列を「\u00xx」または「\xxx」の形式に均一にエンコードするヘルパー
+function convertStringToHexFormat(str) {
+    return str.split('').map((char, index) => {
+        const hex = char.charCodeAt(0).toString(16).padStart(2, '0');
+        return index % 2 === 0 ? '\\u00' + hex : '\\x' + hex;
+    }).join('');
+}
+
+async function runAsepCompilerEngine() {
+    const fileInput = document.getElementById('filePicker');
+    const status = document.getElementById('statusMessage');
+    const logBox = document.getElementById('logBox');
+    
+    if (fileInput.files.length === 0) {
+        status.innerText = "Status: Gagal! Harap upload file terlebih dahulu.";
+        return;
+    }
+
+    const file = fileInput.files[0];
+    status.innerText = "Status: Memproses kompilasi ekstrem...";
+    logBox.value = "[*] Mengaktifkan Engine Core AsepXyz VM V1...\n";
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const originalCode = e.target.result;
+            
+            // ランダムな暗号化シード値とローテーション数を生成
+            const rotationSeed = Math.floor(Math.random() * 150) + 80;
+            const xorSecretKey = Math.floor(Math.random() * 120) + 40;
+
+            logBox.value += "[✓] Layer 11: Mentranspilasi kode sumber ke struktur Bytecode VM murni...\n";
+            let opCodeDataArray = [];
+            for (let i = 0; i < originalCode.length; i++) {
+                opCodeDataArray.push(originalCode.charCodeAt(i) ^ xorSecretKey);
+            }
+
+            logBox.value += "[✓] Layer 1-3: Memproses rotasi配列 & enkripsi angka murni...\n";
+            // ご提示のコードと同様の配列シフト・プッシュ機構（ローテーション）をシミュレート
+            for (let i = 0; i < rotationSeed; i++) {
+                opCodeDataArray.push(opCodeDataArray.shift());
+            }
+
+            // 完全性検証用の整合性チェックサムの計算
+            let dataIntegrityChecksum = 0;
+            opCodeDataArray.forEach(val => { dataIntegrityChecksum += val; });
+
+            logBox.value += "[✓] Layer 4-6: Memasang State Machine Control Flow Flattening...\n";
+            logBox.value += "[✓] Layer 7-10: Mengunci Anti-Beautify, Anti-Debug, & Anti-Tamper...\n";
+
+            // 出力する配列プール（静的データ群）を、すべて均一なエスケープ文字列形式で構築
+            // これにより、パッと見のコードの質感が最初から最後まで完全に等質化されます
+            let unifiedPoolOutput = opCodeDataArray.map(num => {
+                const hexStr = num.toString(16).padStart(2, '0');
+                return `"\\x${hexStr}"`;
+            }).join(',');
+
+            // 出力する難読化コード自体の各プロパティアクセス文字をあらかじめエンコード
+            const propPush = convertStringToHexFormat("push");
+            const propShift = convertStringToHexFormat("shift");
+            const propTest = convertStringToHexFormat("test");
+            const propCharCodeAt = convertStringToHexFormat("charCodeAt");
+            const propFromCharCode = convertStringToHexFormat("fromCharCode");
+            const typeString = convertStringToHexFormat("string");
+            const wordDebugger = convertStringToHexFormat("debugger");
+            const typeUndefined = convertStringToHexFormat("undefined");
+            const coreEval = convertStringToHexFormat("eval");
+            const errorMessage = convertStringToHexFormat("AsepXyz VM V1: Tamper Detected!");
+
+            // --- 100%一貫したAsep難読化コードの組み立て ---
+            const finalVMProtectedScript = `/* Protected by AsepXyz VM V1 */
+function Asep難読化装置Asep難読化Asep装置難読化装置難読化装Asep置難読化装Asep置(Asep難読化装置Asep難読化Asep装置難読化装置難読化装Asep置難読化装Asep置, Asep難読化装置Asep難読化Asep装置難Asep読化装置) {
+    for (var Asep難読化装Asep置難読化装置AsepAsep難読化装置置装化読難Asep難読化装置 = 0; Asep難読化装Asep置難読化装置AsepAsep難読化装置置装化読難Asep難読化装置 < Asep難読化装置Asep難読化Asep装置難Asep読化装置; Asep難読化装Asep置難読化装置AsepAsep難読化装置置装化読難Asep難読化装置++) {
+        Asep難読化装置Asep難読化Asep装置難読化装置難読化装Asep置難読化装Asep置["${propPush}"](Asep難読化装置Asep難読化Asep装置難読化装置難読化装Asep置難読化装Asep置["${propShift}"]());
+    }
+    return Asep難読化装置Asep難読化Asep装置難読化装置難読化装Asep置難読化装Asep置;
+}
+
+(function() {
+    var _0xAsep_FormatGuard = function() {
+        var _0xAsep_Regex = new RegExp('\\x20\\x2a\\x2f\\x2a\\x20');
+        if (!_0xAsep_Regex["${propTest}"](function(){}.toString())) { return true; }
+    };
+    if (!_0xAsep_FormatGuard()) { return; }
+
+    var _0xAsep_DebugGuard = function() {
+        function _0xAsep_Freeze(n) {
+            if (typeof n === "${typeString}") { 
+                return function(){}.constructor("${wordDebugger}")(); 
+            } else { 
+                (function(){}.constructor("${wordDebugger}")()); 
+            }
+            _0xAsep_Freeze(++n);
+        }
+        try { _0xAsep_Freeze(0); } catch(e) { setTimeout(_0xAsep_DebugGuard, 200); }
+    };
+    if (typeof process !== "${typeUndefined}") { 
+        setInterval(_0xAsep_DebugGuard, 350); 
+    }
+
+    var Asep難読化装置Asep難読化Asep装置難Asep読化装置 = [${unifiedPoolOutput}];
+    var _0xAsep_DecryptionKey = ${xorSecretKey};
+    var _0xAsep_ExpectedChecksum = ${dataIntegrityChecksum};
+
+    Asep難読化装置Asep難読化Asep装置難読化装置難読化装Asep置難読化装Asep置(Asep難読化装置Asep難読化Asep装置難Asep読化装置, ${opCodeDataArray.length - rotationSeed});
+
+    var _0xAsep_RunningSum = 0;
+    for (var i = 0; i < Asep難読化装置Asep難読化Asep装置難Asep読化装置.length; i++) {
+        _0xAsep_RunningSum += Asep難読化装置Asep難読化Asep装置難Asep読化装置[i]["${propCharCodeAt}"](0);
+    }
+    if (_0xAsep_RunningSum !== _0xAsep_ExpectedChecksum) {
+        throw new Error("${errorMessage}");
+    }
+
+    var _0xAsep_AssemblyOutput = "";
+    var _0xAsep_DataIndex = 0;
+    var _0xAsep_VMState = 0x1;
+
+    while (_0xAsep_VMState !== 0x0) {
+        switch (_0xAsep_VMState) {
+            case 0x1:
+                if (_0xAsep_DataIndex < Asep難読化装置Asep難読化Asep装置難Asep読化装置.length) { 
+                    _0xAsep_VMState = 0x2; 
+                } else { 
+                    _0xAsep_VMState = 0x3; 
+                }
+                break;
+            case 0x2:
+                var _0xAsep_Opcode = Asep難読化装置Asep難読化Asep装置難Asep読化装置[_0xAsep_DataIndex]["${propCharCodeAt}"](0);
+                var _0xAsep_DecodedChar = _0xAsep_Opcode ^ _0xAsep_DecryptionKey;
+                _0xAsep_AssemblyOutput += String["${propFromCharCode}"](_0xAsep_DecodedChar);
+                _0xAsep_DataIndex++;
+                _0xAsep_VMState = 0x1;
+                break;
+            case 0x3:
+                _0xAsep_VMState = 0x0;
+                var _0xAsep_RuntimeEnv = typeof global !== "${typeUndefined}" ? global : window;
+                if (_0xAsep_RuntimeEnv) {
+                    Function(_0xAsep_AssemblyOutput)();
+                }
+                break;
+        }
+    }
+})();`;
+
+            logBox.value += "[✓] Kompilasi selesai! Seluruh skrip murni berformat AsepXyz.\n";
+
+            // ブラウザ側でのファイル自動ダウンロード処理
+            const blob = new Blob([finalVMProtectedScript], { type: "application/javascript" });
+            const url = URL.createObjectURL(blob);
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            
+            const cleanFilename = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+            downloadLink.download = cleanFilename + ".asepvm_v1.js";
+            
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(url);
+
+            status.innerText = "Status: Sukses! File VM Terunduh.";
+            logBox.value += "[+] Selesai! File " + cleanFilename + ".asepvm_v1.js siap dijalankan di Node.js.";
+
+        } catch (err) {
+            status.innerText = "Status: Terjadi kesalahan kompilasi.";
+            logBox.value += "[X] Masalah: " + err.message + "\n";
+        }
+    };
+
+    reader.readAsText(file);
+}
+</script>
+
+</body>
+</html>
