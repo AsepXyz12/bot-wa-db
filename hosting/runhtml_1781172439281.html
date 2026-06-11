@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AST Transformation Studio · Identifier Language System</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+:root {
+  --bg-void: #080b10; --bg-deep: #0d1117; --bg-panel: #111720; --bg-card: #161d2b;
+  --bg-input: #0f1520; --bg-hover: #1c2535; --border: #1e2d42; --border-hi: #2a3f5a;
+  --accent: #4fc3f7; --accent-dim: #1e6fa0; --accent-glow:#4fc3f733;
+  --gold: #f9a825; --green: #00e676; --red: #ff5252; --purple: #b39ddb;
+  --text-hi: #e8f0fe; --text-mid: #8da4bf; --text-lo: #3d5068;
+  --mono: 'JetBrains Mono', monospace; --sans: 'Space Grotesk', sans-serif;
+  --radius: 8px; --radius-lg: 14px; --shadow: 0 4px 24px rgba(0,0,0,0.5);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg-void); color: var(--text-hi); font-family: var(--sans); min-height: 100vh; display: flex; flex-direction: column; }
+.app-header { background: var(--bg-deep); border-bottom: 1px solid var(--border); padding: 0 28px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.logo-group { display: flex; align-items: center; gap: 14px; }
+.logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent-dim), var(--accent)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 17px; }
+.logo-text { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--text-hi); line-height: 1.3; }
+.logo-text span { color: var(--accent); }
+.logo-sub { font-size: 10px; color: var(--text-mid); font-weight: 400; }
+.header-badges { display: flex; gap: 8px; }
+.badge { font-family: var(--mono); font-size: 10px; padding: 3px 9px; border-radius: 20px; border: 1px solid; font-weight: 600; }
+.badge-acorn { color: var(--gold); border-color: #7a5000; background: rgba(249,168,37,0.07); }
+.badge-trav { color: var(--purple); border-color: #4a3870; background: rgba(179,157,219,0.07); }
+.badge-escodegen { color: var(--green); border-color: #004d24; background: rgba(0,230,118,0.07); }
+.app-body { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 20px; max-width: 1800px; margin: 0 auto; width: 100%; }
+.col-left { display: flex; flex-direction: column; gap: 14px; }
+.col-right { display: flex; flex-direction: column; gap: 14px; }
+.col-full { grid-column: 1 / -1; }
+.panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
+.panel-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg-card); }
+.panel-title { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--text-mid); text-transform: uppercase; letter-spacing: 1.2px; display: flex; align-items: center; gap: 8px; }
+.panel-title.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.panel-title.dot.green { background: var(--green); }
+.panel-title.dot.gold { background: var(--gold); }
+.panel-title.dot.purple { background: var(--purple); }
+.btn { font-family: var(--mono); font-size: 11px; font-weight: 600; padding: 6px 14px; border-radius: var(--radius); border: 1px solid transparent; cursor: pointer; transition: all 0.15s ease; display: inline-flex; align-items: center; gap: 6px; }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-primary { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
+.btn-primary:hover:not(:disabled) { background: #81d4fa; box-shadow: 0 0 14px var(--accent-glow); }
+.btn-ghost { background: transparent; color: var(--text-mid); border-color: var(--border); }
+.btn-ghost:hover:not(:disabled) { background: var(--bg-hover); color: var(--text-hi); border-color: var(--border-hi); }
+.btn-green { background: rgba(0,230,118,0.1); color: var(--green); border-color: #004d24; }
+.btn-green:hover:not(:disabled) { background: rgba(0,230,118,0.2); }
+.btn-red { background: rgba(255,82,82,0.08); color: var(--red); border-color: #4a0000; }
+.upload-zone { position: relative; border: 1.5px dashed var(--border-hi); border-radius: var(--radius); padding: 28px; text-align: center; cursor: pointer; background: var(--bg-input); margin: 14px; }
+.upload-zone:hover { border-color: var(--accent); background: rgba(79,195,247,0.04); }
+.upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+.editor-wrap { padding: 0 14px 14px; flex: 1; display: flex; flex-direction: column; }
+.code-editor { width: 100%; flex: 1; min-height: 300px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-hi); font-family: var(--mono); font-size: 12.5px; line-height: 1.7; padding: 14px; resize: vertical; outline: none; tab-size: 2; }
+.code-editor:focus { border-color: var(--accent-dim); }
+.transform-bar { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.run-btn { background: linear-gradient(135deg, #1565c0, var(--accent)); color: #fff; font-family: var(--mono); font-size: 13px; font-weight: 700; padding: 11px 28px; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 9px; box-shadow: 0 4px 16px rgba(79,195,247,0.25); }
+.run-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(79,195,247,0.4); }
+.run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.options-row { display: flex; gap: 14px; flex-wrap: wrap; }
+.opt-chip { display: flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 11px; color: var(--text-mid); cursor: pointer; }
+.opt-chip input[type=checkbox] { appearance: none; width: 15px; height: 15px; border: 1.5px solid var(--border-hi); border-radius: 4px; background: var(--bg-input); cursor: pointer; }
+.opt-chip input[type=checkbox]:checked { background: var(--accent); border-color: var(--accent); }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 14px; }
+.stat-card { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; text-align: center; }
+.stat-val { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); line-height: 1; margin-bottom: 4px; }
+.stat-val.gold { color: var(--gold); }
+.stat-val.green { color: var(--green); }
+.stat-val.purple { color: var(--purple); }
+.stat-lbl { font-size: 10px; color: var(--text-lo); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.8px; }
+.mapping-wrap { padding: 0 14px 14px; max-height: 320px; overflow-y: auto; }
+.mapping-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 11.5px; }
+.mapping-table th { text-align: left; color: var(--text-lo); font-size: 10px; text-transform: uppercase; padding: 6px 10px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg-panel); }
+.mapping-table td { padding: 7px 10px; border-bottom: 1px solid rgba(30,45,66,0.5); }
+.mapping-orig { color: var(--gold); }
+.mapping-new { color: var(--accent); }
+.error-panel { background: rgba(255,82,82,0.06); border: 1px solid rgba(255,82,82,0.25); border-radius: var(--radius); margin: 0 14px 14px; padding: 12px 14px; font-family: var(--mono); font-size: 11.5px; color: var(--red); display: none; }
+.error-panel.visible { display: block; }
+.app-footer { background: var(--bg-deep); border-top: 1px solid var(--border); padding: 10px 28px; display: flex; align-items: center; justify-content: space-between; font-family: var(--mono); font-size: 10px; color: var(--text-lo); }
+.copy-flash { position: fixed; bottom: 28px; right: 28px; background: var(--green); color: #000; font-family: var(--mono); font-size: 11px; font-weight: 700; padding: 10px 20px; border-radius: 10px; transform: translateY(60px); opacity: 0; transition: all 0.25s; pointer-events: none; z-index: 9999; }
+.copy-flash.show { transform: translateY(0); opacity: 1; }
+.id-preview { background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; margin: 0 14px 14px; font-family: var(--mono); font-size: 11px; color: var(--accent); line-height: 1.8; }
+.processing { animation: glow-pulse 1.2s infinite; }
+@keyframes glow-pulse { 0%,100% { box-shadow: 0 0 5px var(--accent-glow); } 50% { box-shadow: 0 0 20px var(--accent-glow); } }
+@media (max-width: 900px) {.app-body { grid-template-columns: 1fr; }.col-full { grid-column: 1; } }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo-group">
+    <div class="logo-icon">⬡</div>
+    <div class="logo-text">
+      AST Transformation Studio
+      <div class="logo-sub">Identifier Language System · <span>AsepXyz</span> DNA Engine</div>
+    </div>
+  </div>
+  <div class="header-badges">
+    <span class="badge badge-acorn">Acorn</span>
+    <span class="badge badge-trav">Estraverse</span>
+    <span class="badge badge-escodegen">Escodegen</span>
+  </div>
+</header>
+
+<main class="app-body">
+  <section class="col-left">
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title"><span class="dot gold"></span>Input Source</span>
+        <div class="panel-actions">
+          <button class="btn btn-red" id="btnClear">✕ Clear</button>
+        </div>
+      </div>
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="fileInput" accept=".js,.mjs,.cjs" />
+        <div style="font-size:28px;margin-bottom:10px">📂</div>
+        <div style="font-size:12px;color:var(--text-mid);font-family:var(--mono)"><strong>Drop.js file here</strong> or click to browse</div>
+      </div>
+      <div class="editor-wrap">
+        <textarea class="code-editor" id="inputCode" placeholder="function greet(name) {
+  const message = 'Hello, ' + name;
+  let counter = 0;
+  return message;
+}"></textarea>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><span class="panel-title"><span class="dot purple"></span>Statistics</span></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-val" id="statTotal">0</div><div class="stat-lbl">Identifiers</div></div>
+        <div class="stat-card"><div class="stat-val gold" id="statRenamed">0</div><div class="stat-lbl">Renamed</div></div>
+        <div class="stat-card"><div class="stat-val green" id="statChars">0</div><div class="stat-lbl">Output Chars</div></div>
+        <div class="stat-card"><div class="stat-val purple" id="statTime">0ms</div><div class="stat-lbl">Transform</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="col-right">
+    <div class="transform-bar">
+      <div style="display:flex;gap:10px">
+        <button class="run-btn" id="btnRun" disabled><span id="runBtnIcon">▶</span><span id="runBtnText">Transform</span></button>
+        <button class="btn btn-ghost" id="btnCopy" disabled>⎘ Copy</button>
+        <button class="btn btn-green" id="btnDownload" disabled>↓ Download</button>
+      </div>
+      <div class="options-row">
+        <label class="opt-chip"><input type="checkbox" id="optVars" checked /> Variables</label>
+        <label class="opt-chip"><input type="checkbox" id="optFunctions" checked /> Functions</label>
+        <label class="opt-chip"><input type="checkbox" id="optClasses" checked /> Classes</label>
+        <label class="opt-chip"><input type="checkbox" id="optParams" checked /> Params</label>
+        <label class="opt-chip"><input type="checkbox" id="optCatch" checked /> Catch</label>
+      </div>
+    </div>
+
+    <div class="panel" style="flex:1;">
+      <div class="panel-head"><span class="panel-title"><span class="dot green"></span>Transformed Output</span></div>
+      <div class="error-panel" id="errorPanel"><div style="font-size:10px;font-weight:700;margin-bottom:6px">⚠ Parse Error</div><div id="errorMsg"></div></div>
+      <div class="editor-wrap"><textarea class="code-editor" id="outputCode" readonly placeholder="// Output here..."></textarea></div>
+    </div>
+  </section>
+
+  <section class="col-full">
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title"><span class="dot"></span>Identifier Mapping</span>
+        <span id="mapCount" style="font-family:var(--mono);font-size:11px;color:var(--text-lo);">0 mappings</span>
+      </div>
+      <div class="id-preview" id="idPreview"><div style="font-size:10px;color:var(--text-lo);margin-bottom:8px">Identifier DNA Preview</div><span id="previewTokens" style="color:var(--text-lo)">Run transform...</span></div>
+      <div class="mapping-wrap" id="mappingWrap"><div style="text-align:center;color:var(--text-lo);padding:40px">No mappings yet</div></div>
+    </div>
+  </section>
+</main>
+
+<footer class="app-footer">
+  <span>AST Transformation Studio · AsepXyz DNA Engine</span>
+  <span id="footerStatus">Loading libraries...</span>
+</footer>
+
+<div class="copy-flash" id="copyFlash">✓ Copied</div>
+
+<!-- CDN FIXED TANPA INTEGRITY -->
+<script src="https://cdn.jsdelivr.net/npm/acorn@8.11.3/dist/acorn.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/estraverse@5.3.0/dist/estraverse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/escodegen@2.1.0/dist/escodegen.min.js"></script>
+
+<script>
+// ===== ENGINE AsepXyz DNA =====
+const TOKEN_SYSTEM = {
+  prefix: ['難読化装置AsepXyz','AsepXyz難読化装置','暗号化装置AsepXyz','AsepXyz変数装置','秘匿装置AsepXyz','AsepXyz起動装置','難読化AsepXyz変数','AsepXyz秘匿変数','暗号AsepXyz装置','装置AsepXyz難読化'],
+  middle: ['変数','起動','暗号','秘匿','制御','処理','格納','転送','生成','解析'],
+  suffix: ['零','壱','弐','参','肆','伍','陸','漆','捌','玖','拾零','拾壱','拾弐','拾参','拾肆','拾伍','拾陸','拾漆','拾捌','拾玖','弐拾零','弐拾壱','弐拾弐','弐拾参','弐拾肆','弐拾伍','弐拾陸','弐拾漆','弐拾捌','弐拾玖']
+};
+
+function buildIdentifier(index) {
+  const P = TOKEN_SYSTEM.prefix;
+  const M = TOKEN_SYSTEM.middle;
+  const S = TOKEN_SYSTEM.suffix;
+  const sIdx = index % S.length;
+  const mIdx = Math.floor(index / S.length) % M.length;
+  const pIdx = Math.floor(index / (S.length * M.length)) % P.length;
+  return P[pIdx] + M[mIdx] + S[sIdx];
+}
+
+const identifierMap = new Map();
+let identifierCounter = 0;
+function getOrCreate(name) {
+  if (identifierMap.has(name)) return identifierMap.get(name);
+  const gen = buildIdentifier(identifierCounter++);
+  identifierMap.set(name, gen);
+  return gen;
+}
+function resetMapping() { identifierMap.clear(); identifierCounter = 0; }
+
+const RESERVED = new Set(['undefined','null','true','false','NaN','Infinity','this','super','arguments','window','document','console','Object','Array','Function','String','Number','Boolean','Symbol','BigInt','RegExp','Date','Promise','Map','Set','JSON','Math','parseInt','parseFloat','require','module','exports','process','setTimeout','setInterval','clearTimeout','clearInterval','fetch','import','export','default','new','delete','typeof','instanceof','void','in','of','return','throw','try','catch','finally','if','else','for','while','do','switch','case','break','continue','class','extends','yield','async','await','get','set','from','as','let','const','var','function']);
+
+function transformCode(src, opts) {
+  if (!window.acorn ||!window.estraverse ||!window.escodegen) throw new Error('Libraries not loaded');
+
+  resetMapping();
+  const ast = acorn.parse(src, {ecmaVersion: 'latest', sourceType: 'module'});
+
+  // Pass 1: collect declarations
+  estraverse.traverse(ast, {
+    enter(node) {
+      if (node.type === 'VariableDeclaration') {
+        node.declarations.forEach(d => {
+          if (d.id && d.id.type === 'Identifier' && opts.renameVars &&!RESERVED.has(d.id.name)) getOrCreate(d.id.name);
+        });
+      }
+      if (node.type === 'FunctionDeclaration' && node.id && opts.renameFunctions &&!RESERVED.has(node.id.name)) getOrCreate(node.id.name);
+      if (node.type === 'ClassDeclaration' && node.id && opts.renameClasses &&!RESERVED.has(node.id.name)) getOrCreate(node.id.name);
+      if ((node.type === 'FunctionDeclaration' || node.type === 'FunctionExpression' || node.type === 'ArrowFunctionExpression') && opts.renameParams) {
+        node.params.forEach(p => {
+          if (p.type === 'Identifier' &&!RESERVED.has(p.name)) getOrCreate(p.name);
+        });
+      }
+      if (node.type === 'CatchClause' && node.param && node.param.type === 'Identifier' && opts.renameCatch &&!RESERVED.has(node.param.name)) getOrCreate(node.param.name);
+    }
+  });
+
+  // Pass 2: rename
+  estraverse.traverse(ast, {
+    enter(node, parent) {
+      if (node.type === 'Identifier') {
+        const pt = parent?.type || '';
+        if (pt === 'Property' && parent.key === node &&!parent.computed) return;
+        if (pt === 'MemberExpression' && parent.property === node &&!parent.computed) return;
+        if (RESERVED.has(node.name)) return;
+        if (identifierMap.has(node.name)) node.name = identifierMap.get(node.name);
+      }
+    }
+  });
+
+  const code = escodegen.generate(ast, {format: {indent: {style: ' '}, quotes: 'single', semicolons: true}});
+  return {code, mapping: new Map(identifierMap)};
+}
+
+// ===== UI =====
+const $ = id => document.getElementById(id);
+const UI = {
+  input: $('inputCode'), output: $('outputCode'), run: $('btnRun'), copy: $('btnCopy'), download: $('btnDownload'), clear: $('btnClear'),
+  error: $('errorPanel'), errorMsg: $('errorMsg'), total: $('statTotal'), renamed: $('statRenamed'), chars: $('statChars'), time: $('statTime'),
+  mapping: $('mappingWrap'), mapCount: $('mapCount'), footer: $('footerStatus'), preview: $('previewTokens'),
+  optVars: $('optVars'), optFuncs: $('optFunctions'), optClasses: $('optClasses'), optParams: $('optParams'), optCatch: $('optCatch')
+};
+
+UI.input.addEventListener('input', () => { UI.run.disabled =!UI.input.value.trim(); UI.error.classList.remove('visible'); });
+
+UI.fileInput.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (file) new FileReader().readAsText(file, {onload: ev => { UI.input.value = ev.target.result; UI.run.disabled = false; }});
+});
+
+UI.clear.onclick = () => {
+  UI.input.value = ''; UI.output.value = ''; UI.run.disabled = true; UI.copy.disabled = true; UI.download.disabled = true;
+  UI.total.textContent = '0'; UI.renamed.textContent = '0'; UI.chars.textContent = '0'; UI.time.textContent = '0ms';
+  UI.mapping.innerHTML = '<div style="text-align:center;color:var(--text-lo);padding:40px">No mappings yet</div>';
+  UI.mapCount.textContent = '0 mappings'; UI.preview.innerHTML = '<span style="color:var(--text-lo)">Run transform...</span>';
+  UI.error.classList.remove('visible'); UI.footer.textContent = 'Ready';
+};
+
+UI.run.onclick = async () => {
+  const src = UI.input.value.trim();
+  if (!src) return;
+  UI.error.classList.remove('visible'); UI.run.disabled = true; UI.run.classList.add('processing');
+  $('runBtnIcon').textContent = '◌'; $('runBtnText').textContent = 'Transforming...';
+  await new Promise(r => setTimeout(r, 10));
+  const t0 = performance.now();
+  try {
+    const res = transformCode(src, {
+      renameVars: UI.optVars.checked,
+      renameFunctions: UI.optFuncs.checked,
+      renameClasses: UI.optClasses.checked,
+      renameParams: UI.optParams.checked,
+      renameCatch: UI.optCatch.checked
+    });
+    const dt = (performance.now() - t0).toFixed(1);
+    UI.output.value = res.code;
+    UI.total.textContent = res.mapping.size;
+    UI.renamed.textContent = res.mapping.size;
+    UI.chars.textContent = res.code.length.toLocaleString();
+    UI.time.textContent = dt + 'ms';
+
+    if (res.mapping.size === 0) {
+      UI.mapping.innerHTML = '<div style="text-align:center;color:var(--text-lo);padding:40px">No identifiers renamed</div>';
+    } else {
+      let html = '<table class="mapping-table"><thead><tr><th>Original</th><th></th><th>Generated</th></tr></thead><tbody>';
+      let i = 0;
+      for (const [o, n] of res.mapping) {
+        html += `<tr><td class="mapping-orig">${o}</td><td>→</td><td class="mapping-new">${n}</td></tr>`;
+        if (++i >= 200) { html += `<tr><td colspan="3" style="text-align:center;color:var(--text-lo)">+${res.mapping.size - 200} more...</td></tr>`; break; }
+      }
+      html += '</tbody></table>';
+      UI.mapping.innerHTML = html;
+      UI.mapCount.textContent = res.mapping.size + ' mappings';
+
+      const samples = [...res.mapping.entries()].slice(0, 5);
+      UI.preview.innerHTML = samples.map(([o, n]) => `${o} → <span style="color:var(--accent)">${n}</span>`).join(' | ');
+    }
+
+    UI.copy.disabled = false; UI.download.disabled = false;
+    UI.footer.textContent = `Done · ${res.mapping.size} renamed · ${dt}ms`;
+  } catch (err) {
+    UI.error.classList.add('visible'); UI.errorMsg.textContent = err.message; UI.footer.textContent = 'Parse failed';
+  }
+  UI.run.disabled = false; UI.run.classList.remove('processing');
+  $('runBtnIcon').textContent = '▶'; $('runBtnText').textContent = 'Transform';
+};
+
+UI.copy.onclick = () => {
+  navigator.clipboard.writeText(UI.output.value);
+  $('copyFlash').classList.add('show');
+  setTimeout(() => $('copyFlash').classList.remove('show'), 2000);
+};
+
+UI.download.onclick = () => {
+  const blob = new Blob([UI.output.value], {type: 'application/javascript'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'asepxyz-transformed.js'; a.click();
+};
+
+window.addEventListener('load', () => {
+  if (!window.acorn ||!window.estraverse ||!window.escodegen) {
+    UI.error.classList.add('visible'); UI.errorMsg.textContent = 'Libraries failed to load. Refresh or check internet.';
+    UI.footer.textContent = 'Library load failed';
+  } else {
+    UI.footer.textContent = 'Ready · Libraries loaded';
+    UI.run.disabled =!UI.input.value.trim();
+  }
+});
+</script>
+</body>
+</html>
