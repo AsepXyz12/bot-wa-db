@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AST Studio · AsepXyz Branding Engine</title>
+<style>
+:root{
+  --bg:#0a0f1a; --bg2:#111827; --bg3:#1f2937; --border:#2d3748;
+  --accent:#38bdf8; --green:#22c55e; --red:#ef4444; --gold:#fbbf24;
+  --text:#e5e7eb; --text2:#9ca3af; --mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:var(--mono);font-weight:700;font-size:14px}
+.logo span{color:var(--accent)}
+.badges{display:flex;gap:6px}
+.badge{font-size:10px;padding:3px 8px;border:1px solid var(--border);border-radius:12px;font-family:var(--mono)}
+main{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px;max-width:1600px;margin:0 auto;width:100%}
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;overflow:hidden}
+.panel-head{padding:10px 14px;border-bottom:1px solid var(--border);background:var(--bg3);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text2);display:flex;justify-content:space-between}
+.panel-body{flex:1;padding:12px;display:flex;flex-direction:column;gap:10px}
+textarea{flex:1;width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:12px;padding:10px;resize:none;outline:none;tab-size:2}
+textarea:focus{border-color:var(--accent)}
+.btn{font-family:var(--mono);font-size:12px;padding:8px 16px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--text);cursor:pointer;transition:.15s}
+.btn:hover:not(:disabled){border-color:var(--accent);background:var(--bg)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-primary{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
+.btn-primary:hover:not(:disabled){filter:brightness(1.1)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.options{display:flex;gap:12px;font-size:11px;color:var(--text2)}
+.options label{display:flex;gap:4px;align-items:center;cursor:pointer}
+input[type=checkbox]{accent-color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stat{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px;text-align:center}
+.stat-val{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--accent)}
+.stat-lbl{font-size:9px;color:var(--text2);text-transform:uppercase}
+.error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:6px;padding:8px;font-family:var(--mono);font-size:11px;color:var(--red);display:none}
+.error.show{display:block}
+.mapping{max-height:200px;overflow:auto;font-family:var(--mono);font-size:11px}
+.mapping table{width:100%;border-collapse:collapse}
+.mapping th{text-align:left;padding:4px 6px;border-bottom:1px solid var(--border);color:var(--text2);font-size:10px}
+.mapping td{padding:4px 6px;border-bottom:1px solid rgba(45,55,72,.5)}
+.mapping tr:hover td{background:var(--bg3)}
+.orig{color:var(--gold)}.new{color:var(--accent)}
+footer{padding:8px 20px;border-top:1px solid var(--border);background:var(--bg2);font-size:10px;color:var(--text2);font-family:var(--mono)}
+.upload{border:1.5px dashed var(--border);border-radius:6px;padding:20px;text-align:center;cursor:pointer;font-size:11px;color:var(--text2)}
+.upload:hover{border-color:var(--accent);background:rgba(56,189,248,.05)}
+.upload input{position:absolute;opacity:0;width:100%;height:100%;left:0;top:0;cursor:pointer}
+.progress{height:3px;background:var(--border);border-radius:2px;overflow:hidden;display:none}
+.progress.active{display:block}
+.progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#60a5fa);transition:.3s}
+@media(max-width:900px){main{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">AST Studio · <span>AsepXyz</span> Branding Engine</div>
+  <div class="badges">
+    <span class="badge" id="badgeAcorn">Acorn</span>
+    <span class="badge" id="badgeTrav">Estraverse</span>
+    <span class="badge" id="badgeCodegen">Escodegen</span>
+  </div>
+</header>
+
+<main>
+  <section class="panel">
+    <div class="panel-head">
+      <span>Input Source</span>
+      <button class="btn" id="btnClear" style="font-size:10px;padding:4px 8px">Clear</button>
+    </div>
+    <div class="panel-body">
+      <div class="upload" id="uploadZone">
+        <input type="file" id="fileInput" accept=".js,.mjs,.cjs">
+        Drop.js file here or click to browse
+      </div>
+      <textarea id="inputCode" placeholder="// Paste JS here or drop file above&#10;&#10;function greet(name){&#10; const message = 'Hello ' + name;&#10; let counter = 0;&#10; return message;&#10;}&#10;&#10;class DataProcessor{&#10; process(input){&#10; return input.map(x => x * 2);&#10; }&#10;}"></textarea>
+      <div class="stats">
+        <div class="stat"><div class="stat-val" id="statTotal">0</div><div class="stat-lbl">Identifiers</div></div>
+        <div class="stat"><div class="stat-val" id="statRenamed">0</div><div class="stat-lbl">Renamed</div></div>
+        <div class="stat"><div class="stat-val" id="statChars">0</div><div class="stat-lbl">Chars Out</div></div>
+        <div class="stat"><div class="stat-val" id="statTime">0ms</div><div class="stat-lbl">Time</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <span>Output + Controls</span>
+      <span id="status">Ready</span>
+    </div>
+    <div class="panel-body">
+      <div class="toolbar">
+        <button class="btn btn-primary" id="btnRun" disabled>▶ Transform</button>
+        <button class="btn" id="btnCopy" disabled>⎘ Copy</button>
+        <button class="btn" id="btnDownload" disabled>↓ Download</button>
+      </div>
+      <div class="options">
+        <label><input type="checkbox" id="optVars" checked> Variables</label>
+        <label><input type="checkbox" id="optFuncs" checked> Functions</label>
+        <label><input type="checkbox" id="optClasses" checked> Classes</label>
+        <label><input type="checkbox" id="optParams" checked> Params</label>
+        <label><input type="checkbox" id="optCatch" checked> Catch</label>
+      </div>
+      <div class="progress" id="progressWrap"><div class="progress-bar" id="progressBar"></div></div>
+      <div class="error" id="errorBox"></div>
+      <textarea id="outputCode" readonly placeholder="// Transformed output will appear here..."></textarea>
+    </div>
+  </section>
+
+  <section class="panel" style="grid-column:1/-1">
+    <div class="panel-head"><span>Identifier Mapping · AsepXyz DNA</span><span id="mapCount">0 mappings</span></div>
+    <div class="panel-body">
+      <div class="mapping" id="mappingWrap">
+        <div style="color:var(--text2);text-align:center;padding:20px;font-size:11px">No mappings yet. Run transform to see branding pattern...</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="footerStatus">Waiting for libraries...</footer>
+
+<!-- MODE 1: CDN - kalo diblok ganti ke MODE 2 -->
+<script src="https://cdn.skypack.dev/acorn@8.14.0"></script>
+<script src="https://cdn.skypack.dev/estraverse@5.3.0"></script>
+<script src="https://cdn.skypack.dev/escodegen@2.1.0"></script>
+
+<!-- MODE 2: LOCAL FALLBACK - download 3 file.min.js taruh 1 folder sama HTML ini, lalu uncomment 3 baris di bawah -->
+<!-- <script src="./acorn.min.js"></script> -->
+<!-- <script src="./estraverse.min.js"></script> -->
+<!-- <script src="./escodegen.min.js"></script> -->
+
+<script>
+/* ================== IDENTIFIER BRANDING ENGINE ================== */
+const SUFFIX = ['零','壱','弐','参','肆','伍','陸','漆','捌','玖','拾零','拾壱','拾弐','拾参','拾肆','拾伍','拾陸','拾漆','拾捌','拾玖'];
+const MIDDLE = ['装置','変数','処理','制御','解析','生成','転送','格納','暗号','秘匿'];
+const PREFIX = ['難読化','暗号化','AsepXyz','秘匿装置','制御装置','AsepXyz装置','難読化装置AsepXyz','AsepXyz変数装置'];
+
+const RESERVED = new Set(['undefined','null','true','false','NaN','Infinity','this','super','arguments','window','document','console','Object','Array','Function','String','Number','Boolean','Symbol','BigInt','RegExp','Date','Promise','Map','Set','JSON','Math','parseInt','parseFloat','isNaN','isFinite','require','module','exports','process','Buffer','setTimeout','setInterval','clearTimeout','clearInterval','fetch']);
+
+const map = new Map();
+let counter = 0;
+
+function genName(index){
+  const s = SUFFIX[index % SUFFIX.length];
+  const m = MIDDLE[Math.floor(index / SUFFIX.length) % MIDDLE.length];
+  const p = PREFIX[Math.floor(index / (SUFFIX.length * MIDDLE.length)) % PREFIX.length];
+  return p + m + s; // contoh: 難読化装置AsepXyz零
+}
+
+function getName(original){
+  if(map.has(original)) return map.get(original);
+  const name = genName(counter++);
+  map.set(original, name);
+  return name;
+}
+
+function resetMap(){ map.clear(); counter = 0; }
+
+/* ================== AST TRANSFORMER ================== */
+function transform(source, opts){
+  const _acorn = window.acorn;
+  const _estraverse = window.estraverse;
+  const _escodegen = window.escodegen;
+
+  if(!_acorn) throw new Error('Acorn not loaded');
+  if(!_estraverse) throw new Error('Estraverse not loaded');
+  if(!_escodegen) throw new Error('Escodegen not loaded');
+
+  resetMap();
+  const ast = _acorn.parse(source, {ecmaVersion:'latest', sourceType:'module', locations:true});
+
+  const scopes = [new Set()];
+  const current = () => scopes[scopes.length-1];
+  const push = () => scopes.push(new Set());
+  const pop = () => scopes.pop();
+
+  function declare(name, kind){
+    if(RESERVED.has(name)) return;
+    const ok =
+      (kind==='var' && opts.vars) ||
+      (kind==='func' && opts.funcs) ||
+      (kind==='class' && opts.classes) ||
+      (kind==='param' && opts.params) ||
+      (kind==='catch' && opts.catch);
+    if(ok){
+      getName(name);
+      current().add(name);
+    }
+  }
+
+  function collectPattern(node, kind){
+    if(!node) return;
+    if(node.type==='Identifier') declare(node.name, kind);
+    else if(node.type==='ObjectPattern') node.properties.forEach(p => collectPattern(p.value||p.argument, kind));
+    else if(node.type==='ArrayPattern') node.elements.forEach(e => e && collectPattern(e, kind));
+    else if(node.type==='AssignmentPattern') collectPattern(node.left, kind);
+    else if(node.type==='RestElement') collectPattern(node.argument, kind);
+  }
+
+  // Pass 1: collect declarations
+  _estraverse.traverse(ast, {
+    enter(node){
+      if(node.type==='FunctionDeclaration'||node.type==='FunctionExpression'||node.type==='ArrowFunctionExpression'){
+        push();
+        if(node.id) declare(node.id.name, 'func');
+        node.params?.forEach(p => collectPattern(p, 'param'));
+      }
+      if(node.type==='ClassDeclaration'||node.type==='ClassExpression'){
+        push();
+        if(node.id) declare(node.id.name, 'class');
+      }
+      if(node.type==='VariableDeclaration'){
+        node.declarations.forEach(d => collectPattern(d.id, 'var'));
+      }
+      if(node.type==='CatchClause'){
+        push();
+        collectPattern(node.param, 'catch');
+      }
+    },
+    leave(node){
+      if(['FunctionDeclaration','FunctionExpression','ArrowFunctionExpression','ClassDeclaration','ClassExpression','CatchClause'].includes(node.type)) pop();
+    }
+  });
+
+  // Pass 2: rename references
+  const rScopes = [new Set()];
+  const rCurrent = () => rScopes[rScopes.length-1];
+  const rPush = () => rScopes.push(new Set());
+  const rPop = () => rScopes.pop();
+
+  function rDeclare(name){
+    if(!RESERVED.has(name) && map.has(name)) rCurrent().add(name);
+  }
+  function rCollect(node){
+    if(!node) return;
+    if(node.type==='Identifier') rDeclare(node.name);
+    else if(node.type==='ObjectPattern') node.properties.forEach(p => rCollect(p.value||p.argument));
+    else if(node.type==='ArrayPattern') node.elements.forEach(e => e && rCollect(e));
+    else if(node.type==='AssignmentPattern') rCollect(node.left);
+    else if(node.type==='RestElement') rCollect(node.argument);
+  }
+
+  _estraverse.traverse(ast, {
+    enter(node, parent){
+      if(['FunctionDeclaration','FunctionExpression','ArrowFunctionExpression'].includes(node.type)){
+        rPush();
+        if(node.id) rDeclare(node.id.name);
+        node.params?.forEach(rCollect);
+      }
+      if(['ClassDeclaration','ClassExpression'].includes(node.type)){
+        rPush();
+        if(node.id) rDeclare(node.id.name);
+      }
+      if(node.type==='CatchClause'){ rPush(); rCollect(node.param); }
+      if(node.type==='VariableDeclaration') node.declarations.forEach(d => rCollect(d.id));
+
+      if(node.type==='Identifier'){
+        const pt = parent?.type || '';
+        // skip property keys, member props, imports, labels
+        if(pt==='Property' && parent.key===node &&!parent.computed) return;
+        if(pt==='MemberExpression' && parent.property===node &&!parent.computed) return;
+        if(['ImportSpecifier','ExportSpecifier','MethodDefinition','LabeledStatement','BreakStatement','ContinueStatement'].includes(pt)) return;
+        if(map.has(node.name)) node.name = map.get(node.name);
+      }
+    },
+    leave(node){
+      if(['FunctionDeclaration','FunctionExpression','ArrowFunctionExpression','ClassDeclaration','ClassExpression','CatchClause'].includes(node.type)) rPop();
+    }
+  });
+
+  const code = _escodegen.generate(ast, {format:{indent:{style:' '}, quotes:'single', semicolons:true}, comment:true});
+  return {code, mapping:new Map(map)};
+}
+
+/* ================== UI CONTROLLER ================== */
+const $ = id => document.getElementById(id);
+const UI = {
+  input:$('inputCode'), output:$('outputCode'), run:$('btnRun'), copy:$('btnCopy'),
+  download:$('btnDownload'), clear:$('btnClear'), file:$('fileInput'), upload:$('uploadZone'),
+  error:$('errorBox'), progress:$('progressWrap'), bar:$('progressBar'), status:$('status'),
+  total:$('statTotal'), renamed:$('statRenamed'), chars:$('statChars'), time:$('statTime'),
+  mapping:$('mappingWrap'), mapCount:$('mapCount'), footer:$('footerStatus'),
+  optVars:$('optVars'), optFuncs:$('optFuncs'), optClasses:$('optClasses'), optParams:$('optParams'), optCatch:$('optCatch')
+};
+
+function showError(msg){ UI.error.textContent = msg; UI.error.classList.add('show'); }
+function hideError(){ UI.error.classList.remove('show'); }
+function setProgress(p){ UI.progress.classList.add('active'); UI.bar.style.width = p + '%'; }
+function hideProgress(){ UI.progress.classList.remove('active'); UI.bar.style.width = '0%'; }
+
+UI.input.addEventListener('input', () => { UI.run.disabled =!UI.input.value.trim(); hideError(); });
+
+UI.file.addEventListener('change', e => {
+  const f = e.target.files[0];
+  if(f) new FileReader().readAsText(f, {onload:ev => { UI.input.value = ev.target.result; UI.run.disabled=false; }});
+});
+
+UI.upload.addEventListener('dragover', e => { e.preventDefault(); UI.upload.style.borderColor='var(--accent)'; });
+UI.upload.addEventListener('dragleave', () => UI.upload.style.borderColor='var(--border)');
+UI.upload.addEventListener('drop', e => {
+  e.preventDefault(); UI.upload.style.borderColor='var(--border)';
+  const f = e.dataTransfer.files[0];
+  if(f && f.name.endsWith('.js')) new FileReader().readAsText(f, {onload:ev => { UI.input.value = ev.target.result; UI.run.disabled=false; }});
+});
+
+UI.clear.onclick = () => {
+  UI.input.value=''; UI.output.value=''; UI.run.disabled=true; UI.copy.disabled=true; UI.download.disabled=true;
+  UI.total.textContent='0'; UI.renamed.textContent='0'; UI.chars.textContent='0'; UI.time.textContent='0ms';
+  UI.mapping.innerHTML='<div style="color:var(--text2);text-align:center;padding:20px">No mappings yet...</div>';
+  UI.mapCount.textContent='0 mappings'; hideError(); UI.status.textContent='Ready';
+};
+
+UI.run.onclick = async () => {
+  const src = UI.input.value.trim();
+  if(!src) return;
+  hideError(); UI.run.disabled=true; setProgress(20); UI.status.textContent='Processing...';
+  await new Promise(r=>setTimeout(r,10));
+  const t0 = performance.now();
+  try{
+    setProgress(50);
+    const result = transform(src, {
+      vars:UI.optVars.checked,
+      funcs:UI.optFuncs.checked,
+      classes:UI.optClasses.checked,
+      params:UI.optParams.checked,
+      catch:UI.optCatch.checked
+    });
+    setProgress(90);
+    const dt = (performance.now()-t0).toFixed(1);
+    UI.output.value = result.code;
+    UI.total.textContent = result.mapping.size;
+    UI.renamed.textContent = result.mapping.size;
+    UI.chars.textContent = result.code.length.toLocaleString();
+    UI.time.textContent = dt + 'ms';
+
+    if(result.mapping.size===0){
+      UI.mapping.innerHTML='<div style="color:var(--text2);text-align:center;padding:20px">No identifiers renamed. Enable options.</div>';
+    }else{
+      let html = '<table><thead><tr><th>Original</th><th>→</th><th>AsepXyz Branded</th></tr></thead><tbody>';
+      let i=0;
+      for(const [o,n] of result.mapping){
+        html += `<tr><td class="orig">${o}</td><td>→</td><td class="new">${n}</td></tr>`;
+        if(++i>200){ html+=`<tr><td colspan="3" style="text-align:center;color:var(--text2)">+${result.mapping.size-200} more...</td></tr>`; break; }
+      }
+      html += '</tbody></table>';
+      UI.mapping.innerHTML = html;
+      UI.mapCount.textContent = result.mapping.size + ' mappings';
+    }
+
+    UI.copy.disabled=false; UI.download.disabled=false;
+    setProgress(100); setTimeout(hideProgress,500);
+    UI.status.textContent = `Done · ${result.mapping.size} renamed · ${dt}ms`;
+  }catch(err){
+    hideProgress(); showError(err.message); UI.status.textContent='Error';
+  }
+  UI.run.disabled=false;
+};
+
+UI.copy.onclick = () => {
+  navigator.clipboard.writeText(UI.output.value);
+  UI.status.textContent = 'Copied!';
+  setTimeout(()=>UI.status.textContent='Ready',1000);
+};
+
+UI.download.onclick = () => {
+  const blob = new Blob([UI.output.value], {type:'application/javascript'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'asepxyz-transformed.js';
+  a.click();
+};
+
+/* Library check */
+window.addEventListener('load', () => {
+  const missing = [];
+  if(!window.acorn) missing.push('Acorn');
+  if(!window.estraverse) missing.push('Estraverse');
+  if(!window.escodegen) missing.push('Escodegen');
+
+  if(missing.length){
+    showError('Libraries failed to load: ' + missing.join(', ') + '. Use MODE 2: download 3.min.js files and put them in same folder.');
+    UI.footer.textContent = '✗ Library load failed - use local files';
+    ['badgeAcorn','badgeTrav','badgeCodegen'].forEach(id => $(id).style.color='var(--red)');
+  }else{
+    UI.footer.textContent = 'Ready · Acorn + Estraverse + Escodegen loaded';
+    ['badgeAcorn','badgeTrav','badgeCodegen'].forEach(id => $(id).style.color='var(--green)');
+    UI.run.disabled =!UI.input.value.trim();
+  }
+});
+</script>
+</body>
+</html>
