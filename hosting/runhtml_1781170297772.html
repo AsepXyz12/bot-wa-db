@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AST Transformation Studio · Identifier Language System</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg-void:    #080b10;
+    --bg-deep:    #0d1117;
+    --bg-panel:   #111720;
+    --bg-card:    #161d2b;
+    --bg-input:   #0f1520;
+    --bg-hover:   #1c2535;
+    --border:     #1e2d42;
+    --border-hi:  #2a3f5a;
+    --accent:     #4fc3f7;
+    --accent-dim: #1e6fa0;
+    --accent-glow:#4fc3f733;
+    --gold:       #f9a825;
+    --gold-dim:   #7a5000;
+    --green:      #00e676;
+    --green-dim:  #004d24;
+    --red:        #ff5252;
+    --red-dim:    #4a0000;
+    --purple:     #b39ddb;
+    --text-hi:    #e8f0fe;
+    --text-mid:   #8da4bf;
+    --text-lo:    #3d5068;
+    --mono:       'JetBrains Mono', monospace;
+    --sans:       'Space Grotesk', sans-serif;
+    --radius:     8px;
+    --radius-lg:  14px;
+    --shadow:     0 4px 24px rgba(0,0,0,0.5);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 14px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-void);
+    color: var(--text-hi);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ─────────────────────────────────────────────── */
+  .app-header {
+    background: var(--bg-deep);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent-dim), var(--accent));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+
+  .logo-text {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-hi);
+    line-height: 1.3;
+  }
+  .logo-text span { color: var(--accent); }
+  .logo-sub { font-size: 10px; color: var(--text-mid); font-weight: 400; }
+
+  .header-badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    border: 1px solid;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+  .badge-acorn  { color: var(--gold);   border-color: var(--gold-dim);   background: rgba(249,168,37,0.07); }
+  .badge-trav   { color: var(--purple); border-color: #4a3870; background: rgba(179,157,219,0.07); }
+  .badge-escodegen { color: var(--green); border-color: var(--green-dim); background: rgba(0,230,118,0.07); }
+
+  /* ── LAYOUT ─────────────────────────────────────────────── */
+  .app-body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    gap: 0;
+    padding: 20px;
+    gap: 16px;
+    max-width: 1800px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .col-left  { display: flex; flex-direction: column; gap: 14px; }
+  .col-right { display: flex; flex-direction: column; gap: 14px; }
+  .col-full  { grid-column: 1 / -1; }
+
+  /* ── PANELS ─────────────────────────────────────────────── */
+  .panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
+  .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-card);
+  }
+
+  .panel-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-mid);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .panel-title .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .panel-title .dot.green  { background: var(--green); }
+  .panel-title .dot.gold   { background: var(--gold);  }
+  .panel-title .dot.red    { background: var(--red);   }
+  .panel-title .dot.purple { background: var(--purple);}
+
+  .panel-actions { display: flex; gap: 8px; align-items: center; }
+
+  /* ── BUTTONS ─────────────────────────────────────────────── */
+  .btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+  }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: #81d4fa;
+    border-color: #81d4fa;
+    box-shadow: 0 0 14px var(--accent-glow);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-mid);
+    border-color: var(--border);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background: var(--bg-hover);
+    color: var(--text-hi);
+    border-color: var(--border-hi);
+  }
+
+  .btn-green {
+    background: rgba(0,230,118,0.1);
+    color: var(--green);
+    border-color: var(--green-dim);
+  }
+  .btn-green:hover:not(:disabled) {
+    background: rgba(0,230,118,0.2);
+    box-shadow: 0 0 12px rgba(0,230,118,0.15);
+  }
+
+  .btn-red {
+    background: rgba(255,82,82,0.08);
+    color: var(--red);
+    border-color: var(--red-dim);
+  }
+  .btn-red:hover:not(:disabled) {
+    background: rgba(255,82,82,0.16);
+  }
+
+  .btn-lg {
+    padding: 10px 24px;
+    font-size: 13px;
+    border-radius: 10px;
+  }
+
+  /* ── UPLOAD ZONE ──────────────────────────────────────────── */
+  .upload-zone {
+    position: relative;
+    border: 1.5px dashed var(--border-hi);
+    border-radius: var(--radius);
+    padding: 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--bg-input);
+    margin: 14px;
+  }
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--accent);
+    background: rgba(79,195,247,0.04);
+    box-shadow: inset 0 0 30px rgba(79,195,247,0.04);
+  }
+  .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+  .upload-icon { font-size: 28px; margin-bottom: 10px; }
+  .upload-text { font-size: 12px; color: var(--text-mid); font-family: var(--mono); }
+  .upload-text strong { color: var(--accent); }
+  .upload-hint { font-size: 10px; color: var(--text-lo); margin-top: 6px; }
+
+  /* ── TEXTAREA ─────────────────────────────────────────────── */
+  .editor-wrap { padding: 0 14px 14px; flex: 1; display: flex; flex-direction: column; }
+  .code-editor {
+    width: 100%;
+    flex: 1;
+    min-height: 300px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-hi);
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    padding: 14px;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.15s;
+    tab-size: 2;
+  }
+  .code-editor:focus { border-color: var(--accent-dim); }
+  .code-editor::placeholder { color: var(--text-lo); }
+
+  /* ── TRANSFORM BAR ───────────────────────────────────────── */
+  .transform-bar {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .transform-main { display: flex; gap: 10px; align-items: center; }
+
+  .run-btn {
+    background: linear-gradient(135deg, #1565c0, var(--accent));
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 11px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 16px rgba(79,195,247,0.25);
+  }
+  .run-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(79,195,247,0.4);
+  }
+  .run-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .options-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .opt-chip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: color 0.15s;
+    user-select: none;
+  }
+  .opt-chip:hover { color: var(--text-hi); }
+  .opt-chip input[type=checkbox] {
+    appearance: none;
+    width: 15px; height: 15px;
+    border: 1.5px solid var(--border-hi);
+    border-radius: 4px;
+    background: var(--bg-input);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .opt-chip input[type=checkbox]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .opt-chip input[type=checkbox]:checked::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: #000;
+    font-weight: 900;
+  }
+
+  /* ── PROGRESS ─────────────────────────────────────────────── */
+  .progress-bar-wrap {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 0 14px 14px;
+    display: none;
+  }
+  .progress-bar-wrap.active { display: block; }
+  .progress-bar-inner {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--accent-glow);
+  }
+
+  .progress-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-lo);
+    padding: 0 14px 8px;
+    display: none;
+  }
+  .progress-label.active { display: block; }
+
+  /* ── STATS ────────────────────────────────────────────────── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 14px;
+  }
+  .stat-card {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+  .stat-card:hover { border-color: var(--border-hi); }
+  .stat-val {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-val.gold   { color: var(--gold);   }
+  .stat-val.green  { color: var(--green);  }
+  .stat-val.purple { color: var(--purple); }
+  .stat-lbl {
+    font-size: 10px;
+    color: var(--text-lo);
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  /* ── MAPPING TABLE ───────────────────────────────────────── */
+  .mapping-wrap {
+    padding: 0 14px 14px;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+  .mapping-wrap::-webkit-scrollbar { width: 5px; }
+  .mapping-wrap::-webkit-scrollbar-track { background: transparent; }
+  .mapping-wrap::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 4px; }
+
+  .mapping-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 11.5px;
+  }
+  .mapping-table th {
+    text-align: left;
+    color: var(--text-lo);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg-panel);
+  }
+  .mapping-table td {
+    padding: 7px 10px;
+    border-bottom: 1px solid rgba(30,45,66,0.5);
+    vertical-align: middle;
+  }
+  .mapping-table tr:hover td { background: var(--bg-hover); }
+  .mapping-orig { color: var(--gold); }
+  .mapping-arrow { color: var(--text-lo); padding: 0 4px; }
+  .mapping-new { color: var(--accent); }
+  .mapping-type {
+    font-size: 9.5px;
+    color: var(--text-lo);
+    background: var(--bg-input);
+    padding: 2px 7px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  .mapping-empty {
+    text-align: center;
+    color: var(--text-lo);
+    padding: 40px;
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+
+  /* ── ERROR PANEL ──────────────────────────────────────────── */
+  .error-panel {
+    background: rgba(255,82,82,0.06);
+    border: 1px solid rgba(255,82,82,0.25);
+    border-radius: var(--radius);
+    margin: 0 14px 14px;
+    padding: 12px 14px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--red);
+    display: none;
+    line-height: 1.6;
+  }
+  .error-panel.visible { display: block; }
+  .error-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── SCROLLBAR GLOBAL ─────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 4px; }
+
+  /* ── FOOTER ───────────────────────────────────────────────── */
+  .app-footer {
+    background: var(--bg-deep);
+    border-top: 1px solid var(--border);
+    padding: 10px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-lo);
+  }
+
+  /* ── COPY FLASH ───────────────────────────────────────────── */
+  .copy-flash {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--green);
+    color: #000;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,230,118,0.4);
+    transform: translateY(60px);
+    opacity: 0;
+    transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    pointer-events: none;
+    z-index: 9999;
+  }
+  .copy-flash.show { transform: translateY(0); opacity: 1; }
+
+  /* ── RESIZE GRID WHEN NARROW ─────────────────────────────── */
+  @media (max-width: 900px) {
+    .app-body { grid-template-columns: 1fr; }
+    .col-full  { grid-column: 1; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ── IDENTIFIER PREVIEW BOX ──────────────────────────────── */
+  .id-preview {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    margin: 0 14px 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    line-height: 1.8;
+  }
+  .id-preview-title {
+    font-size: 10px;
+    color: var(--text-lo);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+  }
+
+  /* ── GLOW PULSE ANIMATION ─────────────────────────────────── */
+  @keyframes glow-pulse {
+    0%,100% { box-shadow: 0 0 5px var(--accent-glow); }
+    50%      { box-shadow: 0 0 20px var(--accent-glow), 0 0 40px rgba(79,195,247,0.15); }
+  }
+  .processing { animation: glow-pulse 1.2s infinite; }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ───────────────────────────────────────────────── -->
+<header class="app-header">
+  <div class="logo-group">
+    <div class="logo-icon">⬡</div>
+    <div class="logo-text">
+      AST Transformation Studio
+      <div class="logo-sub">Identifier Language System · <span>AsepXyz</span> DNA Engine</div>
+    </div>
+  </div>
+  <div class="header-badges">
+    <span class="badge badge-acorn">Acorn</span>
+    <span class="badge badge-trav">Estraverse</span>
+    <span class="badge badge-escodegen">Escodegen</span>
+  </div>
+</header>
+
+<!-- ── MAIN BODY ─────────────────────────────────────────────── -->
+<main class="app-body">
+
+  <!-- LEFT COL: INPUT ────────────────────────────────────────── -->
+  <section class="col-left">
+
+    <!-- Upload Zone -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title"><span class="dot gold"></span>Input Source</span>
+        <div class="panel-actions">
+          <button class="btn btn-red" id="btnClear">✕ Clear</button>
+        </div>
+      </div>
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="fileInput" accept=".js,.mjs,.cjs,.ts" />
+        <div class="upload-icon">📂</div>
+        <div class="upload-text">
+          <strong>Drop .js file here</strong> or click to browse
+        </div>
+        <div class="upload-hint">Supports .js · .mjs · .cjs</div>
+      </div>
+      <div class="editor-wrap">
+        <textarea class="code-editor" id="inputCode"
+          placeholder="// Paste your JavaScript here...
+// or drop a file above.
+
+function greet(name) {
+  const message = 'Hello, ' + name;
+  let counter = 0;
+  return message;
+}
+
+class DataProcessor {
+  constructor(config) {
+    this.data = config.data;
+    this.limit = config.limit;
+  }
+  process(input) {
+    const result = input.map(x => x * 2);
+    return result;
+  }
+}"></textarea>
+      </div>
+    </div>
+
+    <!-- Stats Panel -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title"><span class="dot purple"></span>Statistics</span>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-val" id="statTotal">0</div>
+          <div class="stat-lbl">Identifiers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val gold" id="statRenamed">0</div>
+          <div class="stat-lbl">Renamed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val green" id="statChars">0</div>
+          <div class="stat-lbl">Output Chars</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val purple" id="statTime">0ms</div>
+          <div class="stat-lbl">Transform</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- RIGHT COL: OUTPUT ──────────────────────────────────────── -->
+  <section class="col-right">
+
+    <!-- Transform Bar -->
+    <div class="transform-bar">
+      <div class="transform-main">
+        <button class="run-btn" id="btnRun" disabled>
+          <span id="runBtnIcon">▶</span>
+          <span id="runBtnText">Transform</span>
+        </button>
+        <button class="btn btn-ghost" id="btnCopy" disabled>⎘ Copy Output</button>
+        <button class="btn btn-green" id="btnDownload" disabled>↓ Download</button>
+      </div>
+      <div class="options-row">
+        <label class="opt-chip">
+          <input type="checkbox" id="optVars" checked /> Variables
+        </label>
+        <label class="opt-chip">
+          <input type="checkbox" id="optFunctions" checked /> Functions
+        </label>
+        <label class="opt-chip">
+          <input type="checkbox" id="optClasses" checked /> Classes
+        </label>
+        <label class="opt-chip">
+          <input type="checkbox" id="optParams" checked /> Parameters
+        </label>
+        <label class="opt-chip">
+          <input type="checkbox" id="optCatch" checked /> Catch vars
+        </label>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-bar-wrap" id="progressWrap">
+      <div class="progress-bar-inner" id="progressBar"></div>
+    </div>
+    <div class="progress-label" id="progressLabel">Parsing AST…</div>
+
+    <!-- Output Editor -->
+    <div class="panel" style="flex:1;">
+      <div class="panel-head">
+        <span class="panel-title"><span class="dot green"></span>Transformed Output</span>
+      </div>
+      <!-- Error -->
+      <div class="error-panel" id="errorPanel">
+        <div class="error-title">⚠ Parse Error</div>
+        <div id="errorMsg"></div>
+      </div>
+      <div class="editor-wrap">
+        <textarea class="code-editor" id="outputCode" readonly
+          placeholder="// Transformed output will appear here…"></textarea>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- BOTTOM FULL: MAPPING TABLE ─────────────────────────────── -->
+  <section class="col-full">
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title"><span class="dot accent"></span>Identifier Mapping</span>
+        <div class="panel-actions">
+          <span id="mapCount" style="font-family:var(--mono);font-size:11px;color:var(--text-lo);">0 mappings</span>
+        </div>
+      </div>
+
+      <!-- Preview of identifier style -->
+      <div class="id-preview" id="idPreview">
+        <div class="id-preview-title">Identifier Language DNA Preview</div>
+        <span id="previewTokens" style="color:var(--text-lo);">Run transform to see generated identifier patterns…</span>
+      </div>
+
+      <div class="mapping-wrap" id="mappingWrap">
+        <div class="mapping-empty">No mappings yet. Paste code and click Transform.</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── FOOTER ───────────────────────────────────────────────── -->
+<footer class="app-footer">
+  <span>AST Transformation Studio · Identifier Language System</span>
+  <span id="footerStatus">Ready · Acorn ESNext</span>
+</footer>
+
+<!-- ── COPY TOAST ─────────────────────────────────────────────── -->
+<div class="copy-flash" id="copyFlash">✓ Copied to clipboard</div>
+
+<!-- ── CDN LIBRARIES ─────────────────────────────────────────── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/acorn/8.11.3/acorn.min.js"
+  integrity="sha512-ahk7n/wCbNe/+EBNhsrSs/K8sYiB7Y3O4LOHKS2vRygQWyGxdqFCvdZBH03PCLBmSz7cQ0YIjBD6FGKtbhNQ=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/estraverse/5.3.0/estraverse.js"
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/escodegen/2.1.0/escodegen.browser.min.js"
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+/* =============================================================
+   IDENTIFIER LANGUAGE SYSTEM
+   ─────────────────────────────────────────────────────────────
+   Token families — the "DNA" of all generated identifiers.
+   Every identifier produced by this engine is a combination
+   of these exact token families, in consistent order.
+   No randomness. No fallback. No outside names.
+================================================================ */
+
+const TOKEN_SYSTEM = {
+
+  // PREFIX family — always appears at the start of every identifier
+  prefix: [
+    '難読化装置AsepXyz',
+    'AsepXyz難読化装置',
+    '暗号化装置AsepXyz',
+    'AsepXyz変数装置',
+    '秘匿装置AsepXyz',
+    'AsepXyz起動装置',
+    '難読化AsepXyz変数',
+    'AsepXyz秘匿変数',
+    '暗号AsepXyz装置',
+    '装置AsepXyz難読化',
+  ],
+
+  // MIDDLE family — semantic category marker
+  middle: [
+    '変数',
+    '起動',
+    '暗号',
+    '秘匿',
+    '制御',
+    '処理',
+    '格納',
+    '転送',
+    '生成',
+    '解析',
+  ],
+
+  // SUFFIX family — ordinal/serial distinguisher
+  suffix: [
+    '零', '壱', '弐', '参', '肆', '伍', '陸', '漆', '捌', '玖',
+    '拾零', '拾壱', '拾弐', '拾参', '拾肆', '拾伍', '拾陸', '拾漆', '拾捌', '拾玖',
+    '弐拾零', '弐拾壱', '弐拾弐', '弐拾参', '弐拾肆', '弐拾伍', '弐拾陸', '弐拾漆', '弐拾捌', '弐拾玖',
+  ],
+
+};
+
+/* =============================================================
+   DETERMINISTIC IDENTIFIER GENERATOR
+   ─────────────────────────────────────────────────────────────
+   Given an integer index, produces one unique identifier.
+   The same index always produces the same string.
+   Structure: prefix + middle + suffix
+   All three slots are derived from a base-10 system so the
+   pattern remains visually identical across every index.
+================================================================ */
+
+function buildIdentifier(index) {
+  const P = TOKEN_SYSTEM.prefix;
+  const M = TOKEN_SYSTEM.middle;
+  const S = TOKEN_SYSTEM.suffix;
+
+  const sTot = S.length;              // 30
+  const mTot = M.length;              // 10
+  const pTot = P.length;              // 10
+
+  const sIdx = index % sTot;
+  const mIdx = Math.floor(index / sTot) % mTot;
+  const pIdx = Math.floor(index / (sTot * mTot)) % pTot;
+
+  return P[pIdx] + M[mIdx] + S[sIdx];
+}
+
+/* The mapping is global across the whole file: original → generated */
+const identifierMap = new Map();
+let identifierCounter = 0;
+
+function getOrCreate(originalName) {
+  if (identifierMap.has(originalName)) {
+    return identifierMap.get(originalName);
+  }
+  const generated = buildIdentifier(identifierCounter++);
+  identifierMap.set(originalName, generated);
+  return generated;
+}
+
+function resetMapping() {
+  identifierMap.clear();
+  identifierCounter = 0;
+}
+
+/* =============================================================
+   RESERVED NAMES — must never be renamed
+================================================================ */
+const RESERVED = new Set([
+  // JS built-ins
+  'undefined','null','true','false','NaN','Infinity','this','super',
+  'arguments','globalThis','window','document','console',
+  // Constructors
+  'Object','Array','Function','Boolean','Number','String','Symbol',
+  'BigInt','RegExp','Date','Promise','Map','Set','WeakMap','WeakSet',
+  'Error','TypeError','RangeError','SyntaxError','ReferenceError',
+  'ArrayBuffer','DataView','Int8Array','Uint8Array','Float32Array',
+  'Float64Array','JSON','Math','Reflect','Proxy','Intl',
+  // Common globals
+  'setTimeout','setInterval','clearTimeout','clearInterval',
+  'fetch','XMLHttpRequest','FormData','URL','URLSearchParams',
+  'location','history','navigator','performance','crypto',
+  // Module helpers
+  'require','module','exports','__dirname','__filename','process','Buffer',
+  'import','export','default',
+  // Operators / keywords (just in case)
+  'new','delete','typeof','instanceof','void','in','of','return',
+  'throw','try','catch','finally','if','else','for','while','do',
+  'switch','case','break','continue','class','extends','yield','async','await',
+  'get','set','from','as','let','const','var','function',
+]);
+
+/* =============================================================
+   SCOPE TRACKER
+   A simple scope chain to correctly resolve which bindings
+   are local vs. which are references to outer scopes.
+================================================================ */
+
+class Scope {
+  constructor(parent = null) {
+    this.parent = parent;
+    this.bindings = new Set(); // names declared in this scope
+  }
+  declare(name) { this.bindings.add(name); }
+  has(name) {
+    if (this.bindings.has(name)) return true;
+    return this.parent ? this.parent.has(name) : false;
+  }
+}
+
+/* =============================================================
+   MAIN TRANSFORM FUNCTION
+================================================================ */
+
+function transformCode(sourceCode, options = {}) {
+
+  const acornLib =
+    window.acorn ||
+    globalThis.acorn;
+
+  const estraverseLib =
+    window.estraverse ||
+    globalThis.estraverse;
+
+  const escodegenLib =
+    window.escodegen ||
+    globalThis.escodegen;
+
+  if (!acornLib) {
+    throw new Error('Acorn failed to load');
+  }
+
+  if (!estraverseLib) {
+    throw new Error('Estraverse failed to load');
+  }
+
+  if (!escodegenLib) {
+    throw new Error('Escodegen failed to load');
+  }
+
+  const {
+    renameVars      = true,
+    renameFunctions = true,
+    renameClasses   = true,
+    renameParams    = true,
+    renameCatch     = true,
+  } = options;
+
+  resetMapping();
+
+  const ast = acornLib.parse(sourceCode, {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    locations: true,
+  });
+
+  // ── 2. Two-Pass Processing ────────────────────────────────────
+  //
+  // PASS A: Collect all declarations in scope order.
+  // PASS B: Rename all references.
+  //
+  // We attach a `_scope` to each node during traversal.
+
+  const scopeStack = [new Scope()];
+  const currentScope = () => scopeStack[scopeStack.length - 1];
+
+  function pushScope() { scopeStack.push(new Scope(currentScope())); }
+  function popScope()  { scopeStack.pop(); }
+
+  function declareIfEnabled(name, kind) {
+    if (RESERVED.has(name)) return;
+    const enabled =
+      (kind === 'var'      && renameVars)      ||
+      (kind === 'function' && renameFunctions) ||
+      (kind === 'class'    && renameClasses)   ||
+      (kind === 'param'    && renameParams)    ||
+      (kind === 'catch'    && renameCatch);
+    if (enabled) {
+      getOrCreate(name);              // registers the mapping
+      currentScope().declare(name);   // marks as known in this scope
+    }
+  }
+
+  // ── PASS A: Declaration collection (scope-aware) ───────────────
+  estraverseLib.traverse(ast, {
+    enter(node) {
+      switch (node.type) {
+
+        case 'Program':
+        case 'BlockStatement': {
+          // Hoist function/class declarations first (like JS does)
+          if (node.body) {
+            node.body.forEach(stmt => {
+              if (stmt.type === 'FunctionDeclaration' && stmt.id) {
+                declareIfEnabled(stmt.id.name, 'function');
+              }
+              if (stmt.type === 'ClassDeclaration' && stmt.id) {
+                declareIfEnabled(stmt.id.name, 'class');
+              }
+            });
+          }
+          break;
+        }
+
+        case 'FunctionDeclaration':
+        case 'FunctionExpression':
+        case 'ArrowFunctionExpression': {
+          pushScope();
+          // parameters
+          if (node.params) {
+            node.params.forEach(p => collectParam(p));
+          }
+          break;
+        }
+
+        case 'ClassDeclaration':
+        case 'ClassExpression': {
+          // class body creates a new scope
+          pushScope();
+          break;
+        }
+
+        case 'VariableDeclaration': {
+          node.declarations.forEach(d => {
+            if (d.id) collectPattern(d.id, 'var');
+          });
+          break;
+        }
+
+        case 'CatchClause': {
+          pushScope();
+          if (node.param) collectParam(node.param, 'catch');
+          break;
+        }
+      }
+    },
+
+    leave(node) {
+      if (
+        node.type === 'FunctionDeclaration'   ||
+        node.type === 'FunctionExpression'    ||
+        node.type === 'ArrowFunctionExpression'||
+        node.type === 'ClassDeclaration'      ||
+        node.type === 'ClassExpression'       ||
+        node.type === 'CatchClause'
+      ) {
+        popScope();
+      }
+    },
+  });
+
+  function collectPattern(pat, kind) {
+    if (!pat) return;
+    if (pat.type === 'Identifier') {
+      declareIfEnabled(pat.name, kind);
+    } else if (pat.type === 'ObjectPattern') {
+      pat.properties.forEach(p => {
+        if (p.type === 'RestElement') collectPattern(p.argument, kind);
+        else collectPattern(p.value, kind);
+      });
+    } else if (pat.type === 'ArrayPattern') {
+      pat.elements.forEach(el => el && collectPattern(el, kind));
+    } else if (pat.type === 'AssignmentPattern') {
+      collectPattern(pat.left, kind);
+    } else if (pat.type === 'RestElement') {
+      collectPattern(pat.argument, kind);
+    }
+  }
+
+  function collectParam(p, kind = 'param') {
+    collectPattern(p, kind);
+  }
+
+  // ── PASS B: Rename references ─────────────────────────────────
+  // We use a fresh scope-tracking pass for renaming.
+
+  const rScopeStack = [new Scope()];
+  const rCurrent = () => rScopeStack[rScopeStack.length - 1];
+
+  function rPush() { rScopeStack.push(new Scope(rCurrent())); }
+  function rPop()  { rScopeStack.pop(); }
+
+  function rDeclare(name) {
+    if (!RESERVED.has(name) && identifierMap.has(name)) {
+      rCurrent().declare(name);
+    }
+  }
+
+  function rDeclarePattern(pat) {
+    if (!pat) return;
+    if (pat.type === 'Identifier') rDeclare(pat.name);
+    else if (pat.type === 'ObjectPattern')
+      pat.properties.forEach(p => {
+        if (p.type === 'RestElement') rDeclarePattern(p.argument);
+        else rDeclarePattern(p.value);
+      });
+    else if (pat.type === 'ArrayPattern')
+      pat.elements.forEach(el => el && rDeclarePattern(el));
+    else if (pat.type === 'AssignmentPattern')
+      rDeclarePattern(pat.left);
+    else if (pat.type === 'RestElement')
+      rDeclarePattern(pat.argument);
+  }
+
+  function shouldRename(name) {
+    if (RESERVED.has(name)) return false;
+    return identifierMap.has(name);
+  }
+
+  estraverseLib.traverse(ast, {
+    enter(node, parent) {
+
+      // ── Scope management ───────────────────────────────────────
+      if (
+        node.type === 'FunctionDeclaration'    ||
+        node.type === 'FunctionExpression'     ||
+        node.type === 'ArrowFunctionExpression'
+      ) {
+        rPush();
+        if (node.type === 'FunctionDeclaration' && node.id) {
+          rDeclare(node.id.name);
+        }
+        if (node.params) node.params.forEach(rDeclarePattern);
+      }
+
+      if (node.type === 'ClassDeclaration' || node.type === 'ClassExpression') {
+        rPush();
+        if (node.id) rDeclare(node.id.name);
+      }
+
+      if (node.type === 'CatchClause') {
+        rPush();
+        if (node.param) rDeclarePattern(node.param);
+      }
+
+      if (node.type === 'VariableDeclaration') {
+        node.declarations.forEach(d => d.id && rDeclarePattern(d.id));
+      }
+
+      // ── Actual renaming ────────────────────────────────────────
+      if (node.type === 'Identifier') {
+        const parentType = parent ? parent.type : '';
+
+        // Skip object property keys (e.g. { key: val } — "key" stays)
+        if (parentType === 'Property' && parent.key === node && !parent.computed) return;
+
+        // Skip member expression properties (e.g. obj.prop — "prop" stays)
+        if (parentType === 'MemberExpression' && parent.property === node && !parent.computed) return;
+
+        // Skip import/export specifier "imported" side
+        if (parentType === 'ImportSpecifier' && parent.imported === node) return;
+        if (parentType === 'ExportSpecifier' && parent.exported === node) return;
+
+        // Skip method definition keys
+        if (parentType === 'MethodDefinition' && parent.key === node) return;
+
+        // Skip label identifiers
+        if (parentType === 'LabeledStatement' && parent.label === node) return;
+        if (parentType === 'BreakStatement'   && parent.label === node) return;
+        if (parentType === 'ContinueStatement'&& parent.label === node) return;
+
+        // Rename if it's in our map
+        if (shouldRename(node.name)) {
+          node.name = identifierMap.get(node.name);
+        }
+      }
+    },
+
+    leave(node) {
+      if (
+        node.type === 'FunctionDeclaration'    ||
+        node.type === 'FunctionExpression'     ||
+        node.type === 'ArrowFunctionExpression'||
+        node.type === 'ClassDeclaration'       ||
+        node.type === 'ClassExpression'        ||
+        node.type === 'CatchClause'
+      ) {
+        rPop();
+      }
+    },
+  });
+
+  // ── 3. Generate output code ───────────────────────────────────
+ const output = escodegenLib.generate(ast, {
+    format: {
+      indent:   { style: '  ', base: 0 },
+      newline:  '\n',
+      space:    ' ',
+      quotes:   'single',
+      semicolons: true,
+    },
+    comment: true,
+  });
+
+  return {
+    code:    output,
+    mapping: new Map(identifierMap),
+  };
+}
+
+/* =============================================================
+   UI CONTROLLER
+================================================================ */
+
+const $ = id => document.getElementById(id);
+
+const UI = {
+  fileInput:     $('fileInput'),
+  uploadZone:    $('uploadZone'),
+  inputCode:     $('inputCode'),
+  outputCode:    $('outputCode'),
+  btnRun:        $('btnRun'),
+  btnCopy:       $('btnCopy'),
+  btnDownload:   $('btnDownload'),
+  btnClear:      $('btnClear'),
+  progressWrap:  $('progressWrap'),
+  progressBar:   $('progressBar'),
+  progressLabel: $('progressLabel'),
+  errorPanel:    $('errorPanel'),
+  errorMsg:      $('errorMsg'),
+  statTotal:     $('statTotal'),
+  statRenamed:   $('statRenamed'),
+  statChars:     $('statChars'),
+  statTime:      $('statTime'),
+  mappingWrap:   $('mappingWrap'),
+  mapCount:      $('mapCount'),
+  footerStatus:  $('footerStatus'),
+  copyFlash:     $('copyFlash'),
+  previewTokens: $('previewTokens'),
+  optVars:       $('optVars'),
+  optFunctions:  $('optFunctions'),
+  optClasses:    $('optClasses'),
+  optParams:     $('optParams'),
+  optCatch:      $('optCatch'),
+};
+
+// Enable run button when there's content
+UI.inputCode.addEventListener('input', () => {
+  UI.btnRun.disabled = UI.inputCode.value.trim() === '';
+  hideError();
+});
+
+// ── File Upload ───────────────────────────────────────────────
+UI.fileInput.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (file) loadFile(file);
+});
+
+UI.uploadZone.addEventListener('dragover', e => {
+  e.preventDefault();
+  UI.uploadZone.classList.add('drag-over');
+});
+UI.uploadZone.addEventListener('dragleave', () => {
+  UI.uploadZone.classList.remove('drag-over');
+});
+UI.uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  UI.uploadZone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && (file.name.endsWith('.js') || file.name.endsWith('.mjs') || file.name.endsWith('.cjs'))) {
+    loadFile(file);
+  }
+});
+
+function loadFile(file) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    UI.inputCode.value = ev.target.result;
+    UI.btnRun.disabled = false;
+    UI.footerStatus.textContent = `Loaded: ${file.name} · ${(file.size / 1024).toFixed(1)} KB`;
+    hideError();
+  };
+  reader.readAsText(file);
+}
+
+// ── Clear ─────────────────────────────────────────────────────
+UI.btnClear.addEventListener('click', () => {
+  UI.inputCode.value    = '';
+  UI.outputCode.value   = '';
+  UI.btnRun.disabled    = true;
+  UI.btnCopy.disabled   = true;
+  UI.btnDownload.disabled = true;
+  UI.statTotal.textContent   = '0';
+  UI.statRenamed.textContent = '0';
+  UI.statChars.textContent   = '0';
+  UI.statTime.textContent    = '0ms';
+  UI.mappingWrap.innerHTML   = '<div class="mapping-empty">No mappings yet. Paste code and click Transform.</div>';
+  UI.mapCount.textContent    = '0 mappings';
+  UI.previewTokens.innerHTML = '<span style="color:var(--text-lo)">Run transform to see generated identifier patterns…</span>';
+  hideError();
+  UI.footerStatus.textContent = 'Ready · Acorn ESNext';
+});
+
+// ── Progress helpers ──────────────────────────────────────────
+function setProgress(pct, label) {
+  UI.progressWrap.classList.add('active');
+  UI.progressLabel.classList.add('active');
+  UI.progressBar.style.width  = pct + '%';
+  UI.progressLabel.textContent = label;
+}
+function hideProgress() {
+  UI.progressWrap.classList.remove('active');
+  UI.progressLabel.classList.remove('active');
+  UI.progressBar.style.width = '0%';
+}
+
+// ── Error helpers ─────────────────────────────────────────────
+function showError(msg) {
+  UI.errorPanel.classList.add('visible');
+  UI.errorMsg.textContent = msg;
+}
+function hideError() {
+  UI.errorPanel.classList.remove('visible');
+  UI.errorMsg.textContent = '';
+}
+
+// ── Run Transform ─────────────────────────────────────────────
+UI.btnRun.addEventListener('click', async () => {
+  const src = UI.inputCode.value.trim();
+  if (!src) return;
+
+  hideError();
+  UI.btnRun.disabled = true;
+  UI.btnRun.classList.add('processing');
+  $('runBtnIcon').textContent = '◌';
+  $('runBtnText').textContent = 'Transforming…';
+
+  // async tick so UI can repaint
+  await new Promise(r => setTimeout(r, 10));
+
+  const t0 = performance.now();
+
+  try {
+    setProgress(20, 'Parsing AST…');
+    await new Promise(r => setTimeout(r, 20));
+
+    setProgress(50, 'Collecting declarations…');
+    await new Promise(r => setTimeout(r, 20));
+
+    const options = {
+      renameVars:      UI.optVars.checked,
+      renameFunctions: UI.optFunctions.checked,
+      renameClasses:   UI.optClasses.checked,
+      renameParams:    UI.optParams.checked,
+      renameCatch:     UI.optCatch.checked,
+    };
+
+    const result = transformCode(src, options);
+
+    setProgress(85, 'Generating code…');
+    await new Promise(r => setTimeout(r, 20));
+
+    const elapsed = (performance.now() - t0).toFixed(1);
+
+    UI.outputCode.value = result.code;
+
+    // ── Stats ───────────────────────────────────────────────────
+    UI.statTotal.textContent   = result.mapping.size;
+    UI.statRenamed.textContent = result.mapping.size;
+    UI.statChars.textContent   = result.code.length.toLocaleString();
+    UI.statTime.textContent    = elapsed + 'ms';
+
+    // ── Mapping Table ───────────────────────────────────────────
+    renderMapping(result.mapping);
+
+    // ── Identifier Preview ──────────────────────────────────────
+    renderPreview(result.mapping);
+
+    UI.btnCopy.disabled    = false;
+    UI.btnDownload.disabled = false;
+
+    setProgress(100, 'Done!');
+    setTimeout(hideProgress, 600);
+
+    UI.footerStatus.textContent = `Transform complete · ${result.mapping.size} identifiers renamed · ${elapsed}ms`;
+
+  } catch (err) {
+    hideProgress();
+    showError(err.message);
+    UI.footerStatus.textContent = '✗ Parse failed';
+  }
+
+  UI.btnRun.disabled = false;
+  UI.btnRun.classList.remove('processing');
+  $('runBtnIcon').textContent = '▶';
+  $('runBtnText').textContent = 'Transform';
+});
+
+// ── Render Mapping Table ──────────────────────────────────────
+function renderMapping(map) {
+  if (map.size === 0) {
+    UI.mappingWrap.innerHTML = '<div class="mapping-empty">No identifiers were renamed. Try enabling more options.</div>';
+    UI.mapCount.textContent  = '0 mappings';
+    return;
+  }
+
+  UI.mapCount.textContent = `${map.size} mapping${map.size !== 1 ? 's' : ''}`;
+
+  let html = `
+  <table class="mapping-table">
+    <thead>
+      <tr>
+        <th>Original Identifier</th>
+        <th></th>
+        <th>Generated Identifier</th>
+      </tr>
+    </thead>
+    <tbody>`;
+
+  let i = 0;
+  for (const [orig, generated] of map) {
+    html += `
+      <tr>
+        <td class="mapping-orig">${escHtml(orig)}</td>
+        <td class="mapping-arrow">→</td>
+        <td class="mapping-new">${escHtml(generated)}</td>
+      </tr>`;
+    i++;
+    if (i >= 200) {
+      html += `<tr><td colspan="3" style="color:var(--text-lo);text-align:center;padding:10px;font-size:10px;font-family:var(--mono);">${map.size - 200} more…</td></tr>`;
+      break;
+    }
+  }
+
+  html += '</tbody></table>';
+  UI.mappingWrap.innerHTML = html;
+}
+
+// ── Render Identifier Preview ─────────────────────────────────
+function renderPreview(map) {
+  if (map.size === 0) {
+    UI.previewTokens.innerHTML = '<span style="color:var(--text-lo)">No identifiers generated.</span>';
+    return;
+  }
+
+  const entries = [...map.entries()];
+  const samples = entries.slice(0, 6);
+
+  UI.previewTokens.innerHTML = samples
+    .map(([o, n]) => `<span style="color:var(--text-lo)">${escHtml(o)}</span>&nbsp;<span style="color:var(--text-lo)">→</span>&nbsp;<span style="color:var(--accent)">${escHtml(n)}</span>`)
+    .join(' &nbsp;|&nbsp; ');
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Copy Output ───────────────────────────────────────────────
+UI.btnCopy.addEventListener('click', () => {
+  const txt = UI.outputCode.value;
+  if (!txt) return;
+  navigator.clipboard.writeText(txt).then(() => {
+    UI.copyFlash.classList.add('show');
+    setTimeout(() => UI.copyFlash.classList.remove('show'), 2000);
+  }).catch(() => {
+    // fallback
+    UI.outputCode.select();
+    document.execCommand('copy');
+    UI.copyFlash.classList.add('show');
+    setTimeout(() => UI.copyFlash.classList.remove('show'), 2000);
+  });
+});
+
+// ── Download ──────────────────────────────────────────────────
+UI.btnDownload.addEventListener('click', () => {
+  const txt = UI.outputCode.value;
+  if (!txt) return;
+  const blob = new Blob([txt], { type: 'application/javascript' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'transformed.js';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// ── Library Load Check ────────────────────────────────────────
+window.addEventListener('load', () => {
+  const missing = [];
+if (!window.acorn)
+  missing.push('Acorn');
+
+if (!window.estraverse)
+  missing.push('Estraverse');
+
+if (!window.escodegen)
+  missing.push('Escodegen');
+
+  if (missing.length) {
+    showError(`Failed to load: ${missing.join(', ')}. Check your internet connection.`);
+    UI.footerStatus.textContent = '✗ Library load failed';
+  } else {
+    UI.footerStatus.textContent = 'Ready · Acorn ESNext · Estraverse · Escodegen';
+    UI.btnRun.disabled = UI.inputCode.value.trim() === '';
+  }
+});
+
+// Enable run on initial value if present
+UI.btnRun.disabled = UI.inputCode.value.trim() === '';
+</script>
+</body>
+</html>
