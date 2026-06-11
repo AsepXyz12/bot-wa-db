@@ -753,10 +753,9 @@ class DataProcessor {
 <!-- ── COPY TOAST ─────────────────────────────────────────────── -->
 <div class="copy-flash" id="copyFlash">✓ Copied to clipboard</div>
 
-<!-- ── CDN LIBRARIES ─────────────────────────────────────────── -->
-<script src="https://unpkg.com/acorn@8.14.0/dist/acorn.min.js"></script>
-<script src="https://unpkg.com/estraverse@5.3.0/dist/estraverse.browser.js"></script>
-<script src="https://unpkg.com/escodegen@2.1.0/dist/escodegen.browser.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/acorn@8.14.0/dist/acorn.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/estraverse@5.3.0/estraverse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/escodegen@2.1.0/dist/escodegen.min.js"></script>
 <script>
 window.addEventListener('load', () => {
   const missing = [];
@@ -926,9 +925,9 @@ function transformCode(sourceCode, options = {}) {
   } = options;
 
   resetMapping();
-const _acorn = window.acorn;
-const _estraverse = window.estraverse; 
-const _escodegen = window.escodegen;
+const _acorn = window.acorn || {};
+const _estraverse = window.estraverse || {};
+const _escodegen = window.escodegen || {};
 
 // Terus pake _acorn.parse bukan window.acorn.parse
 const ast = _acorn.parse(sourceCode, {...});
