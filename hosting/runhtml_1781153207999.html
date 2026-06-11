@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AsepXyz VM V1 - Custom Hard Obfuscator</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #050505; color: #00ff66; padding: 20px; display: flex; justify-content: center; }
+        .container { background: #0f0f0f; padding: 30px; border-radius: 8px; width: 100%; max-width: 650px; border: 2px solid #00ff66; box-shadow: 0 0 20px rgba(0, 255, 102, 0.3); }
+        h2 { text-align: center; margin-bottom: 5px; text-shadow: 0 0 10px #00ff66; letter-spacing: 2px; }
+        .version { text-align: center; font-size: 12px; color: #888; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #00ffaa; }
+        input[type="file"] { width: 100%; padding: 12px; border: 1px dashed #00ff66; background: #000; color: #00ff66; box-sizing: border-box; cursor: pointer; }
+        button { width: 100%; padding: 15px; background: #00ff66; border: none; color: #000; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 16px; transition: 0.3s; letter-spacing: 1px; }
+        button:hover { background: #00aa44; color: #fff; box-shadow: 0 0 15px #00ff66; }
+        .status { margin-top: 15px; text-align: center; font-weight: bold; color: #ffcc00; font-size: 14px; }
+        textarea { width: 100%; height: 220px; background: #000; color: #00ffaa; border: 1px solid #113311; margin-top: 15px; padding: 10px; box-sizing: border-box; font-size: 11px; resize: vertical; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>[ ASEPXYZ HARDENC ]</h2>
+    <div class="version">Asian Characters Style - 11 Layer Obfuscation Engine</div>
+    
+    <div class="form-group">
+        <label>Upload File Script Anda (JS):</label>
+        <input type="file" id="filePicker">
+    </div>
+    
+    <button id="processBtn" onclick="compileAsepVM()">COMPILE GAYA PAPI QUEN (ASEPXYZ)</button>
+    
+    <div class="status" id="statusMessage">Status: Menunggu file...</div>
+    
+    <label style="margin-top: 20px; display: block;">Log Enkripsi Platform:</label>
+    <textarea id="logBox" readonly placeholder="Aktivitas enkripsi karakter asing dicatat di sini..."></textarea>
+</div>
+
+<script>
+function toUnicodeEscape(str) {
+    return str.split('').map(c => {
+        const code = c.charCodeAt(0);
+        if (code < 128) {
+            return '\\u' + ('0000' + code.toString(16)).slice(-4);
+        }
+        return c;
+    }).join('');
+}
+
+function toHexEscape(str) {
+    return str.split('').map(c => '\\x' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('');
+}
+
+async function compileAsepVM() {
+    const fileInput = document.getElementById('filePicker');
+    const status = document.getElementById('statusMessage');
+    const logBox = document.getElementById('logBox');
+    
+    if (fileInput.files.length === 0) {
+        status.innerText = "Status: Gagal! Harap upload file terlebih dahulu.";
+        return;
+    }
+
+    const file = fileInput.files[0];
+    status.innerText = "Status: Mentranspilasi struktur karakter asing...";
+    logBox.value = "[*] Memulai Injeksi Kode Gaya Karakter Asing (AsepXyz Edisi)...\n";
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const originalCode = e.target.result;
+            
+            // Pengacak kunci matematika dinamis
+            const keyFactor1 = Math.floor(Math.random() * 90) + 30;
+            const keyFactor2 = Math.floor(Math.random() * 40) + 20;
+            const trueKey = keyFactor1 ^ keyFactor2;
+
+            logBox.value += "[✓] Mengubah kode sumber ke struktur Bytecode numerik...\n";
+            let bytecodePool = [];
+            for (let i = 0; i < originalCode.length; i++) {
+                bytecodePool.push(originalCode.charCodeAt(i));
+            }
+
+            logBox.value += "[✓] Melakukan enkripsi XOR bitwise...\n";
+            let encryptedOpcodes = bytecodePool.map(code => code ^ trueKey);
+
+            let calculatedIntegrity = 0;
+            encryptedOpcodes.forEach(val => { calculatedIntegrity += val; });
+
+            let finalDataPool = encryptedOpcodes.join(',');
+
+            // Enkripsi string internal bawaan sistem untuk dimasukkan ke dalam array penyamaran
+            const encEval = toUnicodeEscape("eval");
+            const encProcess = toHexEscape("process");
+            const encDebugger = toUnicodeEscape("debugger");
+            const encPattern = toHexEscape(" ");
+            const encPanic = toUnicodeEscape("AsepXyz VM Error: Tampering Detected!");
+
+            logBox.value += "[✓] Menyusun struktur Obfuscation dengan nama AsepXyz, Papa, Queen...\n";
+
+            // --- STRUKTUR OUTPUT UTUH DENGAN MODEL VARIABEL AKSARA ASING ---
+            const outputVMStructure = `function 難読化装置AsepXyz難読化装置Queen難読化装置AsepXyz置難読化装置AsepXyzQueen置難読化装置AsepXyz置(難読化装置AsepXyz置, 難読化装置Papa置) {
+    var 難読化装置Papa置難読化装置Papa置難読化装置AsepXyz置 = [
+        "${encEval}", false, 0.1, 4290772992, "${encProcess}", null, 10.33554432, 2.4, 16.2246, "${encDebugger}", true, "${encPattern}", 1023, 65536, "${encPanic}"
+    ];
+    for (var 難読化装置AsepXyz置難読化装置AsepXyz置 = 0; 難読化装置AsepXyz置難読化装置AsepXyz置 < 難読化装置Papa置難読化装置Papa置難読化装置AsepXyz置.length; 難読化装置AsepXyz置難読化装置AsepXyz置++) {
+        if (難読化装置Papa置難読化装置Papa置難読化装置AsepXyz置[難読化装置AsepXyz置難読化装置AsepXyz置] === 難読化装置AsepXyz置) {
+            return 難読化装置Papa置難読化装置Papa置難読化装置AsepXyz置[難読化装置AsepXyz置難読化装置AsepXyz置];
+        }
+    }
+    return 難読化装置Papa置;
+}
+
+(function() {
+    var 難読化装置AsepXyz_FormatCheck = function() {
+        var _0xpattern = new RegExp('\\\\x20\\\\x2a\\\\x2f\\\\x2a\\\\x20');
+        if (!_0xpattern.test(function(){}.toString())) { return true; }
+    };
+    if(!難読化装置AsepXyz_FormatCheck()) { return; }
+
+    var 難読化装置AsepXyz_DebugGuard = function() {
+        function _0xfreeze(n) {
+            if (typeof n === 'string') { 
+                return function(){}.constructor(難読化装置AsepXyz難読化装置Queen難読化装置AsepXyz置難読化装置AsepXyzQueen置難読化装置AsepXyz置('${encDebugger}'))(); 
+            } else { 
+                (function(){}.constructor(難読化装置AsepXyz難読化装置Queen難読化装置AsepXyz置難読化装置AsepXyzQueen置難読化装置AsepXyz置('${encDebugger}'))()); 
+            }
+            _0xfreeze(++n);
+        }
+        try { _0xfreeze(0); } catch(e) { setTimeout(難読化装置AsepXyz_DebugGuard, 200); }
+    };
+    if (typeof process !== 'undefined') { setInterval(難読化装置AsepXyz_DebugGuard, 350); }
+
+    var 難読化装置AsepXyz難読化装置Papa_Pool = [${finalDataPool}];
+    var 難読化装置AsepXyz難読化装置Papa_Key = (${keyFactor1} ^ ${keyFactor2});
+    var 難読化装置AsepXyz難読化装置Papa_Check = (${calculatedIntegrity ^ 0x5e} ^ 0x5e);
+
+    var 難読化装置Queen_DeadTrap = function(_0xval) {
+        var _0xghost = _0xval * 0x3d7e;
+        if (_0xghost === 0x1f2c) { return _0xghost; }
+        return 難読化装置AsepXyz難読化装置Papa_Pool.length;
+    };
+
+    var 難読化装置AsepXyz_ChecksumVerifier = 0;
+    for (var i = 0; i < 難読化装置AsepXyz難読化装置Papa_Pool.length; i++) {
+        難読化装置AsepXyz_ChecksumVerifier += 難読化装置AsepXyz難読化装置Papa_Pool[i];
+    }
+    if (難読化装置AsepXyz_ChecksumVerifier !== 難読化装置AsepXyz難読化装置Papa_Check || 難読化装置Queen_DeadTrap(0) === 0) {
+        throw new Error(難読化装置AsepXyz難読化装置Queen難読化装置AsepXyz置難読化装置AsepXyzQueen置難読化装置AsepXyz置('${encPanic}'));
+    }
+
+    var 難読化装置AsepXyz_AssemblyStream = "";
+    var 難読化装置AsepXyz難読化装置AsepXyz_Cursor = 0;
+
+    var 難読化装置AsepXyz難読化装置AsepXyz_State = 0x1;
+    while (難読化装置AsepXyz難読化装置AsepXyz_State !== 0x0) {
+        switch (難読化装置AsepXyz難読化装置AsepXyz_State) {
+            case 0x1:
+                if (難読化装置AsepXyz難読化装置AsepXyz_Cursor < 難読化装置AsepXyz難読化装置Papa_Pool.length) { 
+                    難読化装置AsepXyz難読化装置AsepXyz_State = 0x2; 
+                } else { 
+                    難読化装置AsepXyz難読化装置AsepXyz_State = 0x3; 
+                }
+                break;
+            case 0x2:
+                var _0xopcode = 難読化装置AsepXyz難読化装置Papa_Pool[難読化装置AsepXyz難読化装置AsepXyz_Cursor];
+                var _0xdecodedChar = _0xopcode ^ 難読化装置AsepXyz難読化装置Papa_Key;
+                難読化装置AsepXyz_AssemblyStream += String.fromCharCode(_0xdecodedChar);
+                難読化装置AsepXyz難読化装置AsepXyz_Cursor++;
+                難読化装置AsepXyz難読化装置AsepXyz_State = 0x1;
+                break;
+            case 0x3:
+                難読化装置AsepXyz難読化装置AsepXyz_State = 0x0;
+                var _0xruntimeContext = typeof global !== 'undefined' ? global : window;
+                if (_0xruntimeContext) {
+                    Function(難読化装置AsepXyz難読化装置Queen難読化装置AsepXyz置難読化装置AsepXyzQueen置難読化装置AsepXyz置('${encEval}') + "(" + JSON.stringify(難読化装置AsepXyz_AssemblyStream) + ")")();
+                }
+                break;
+        }
+    }
+})();`;
+
+            logBox.value += "[✓] Berhasil menyusun kode kustom bergaya aksara asing!\n";
+            const blob = new Blob([outputVMStructure], { type: "application/javascript" });
+            const url = URL.createObjectURL(blob);
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.href = url;
+            
+            const cleanFilename = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+            downloadAnchor.download = cleanFilename + ".asepvm_v1.js";
+            
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            
+            document.body.removeChild(downloadAnchor);
+            URL.revokeObjectURL(url);
+
+            status.innerText = "Status: Sukses! File Gaya Papi Quen Terunduh.";
+            logBox.value += "[+] Selesai! File " + cleanFilename + ".asepvm_v1.js siap dipasangkan pada Node.js.";
+
+        } catch (err) {
+            status.innerText = "Status: Terjadi kesalahan kompilasi.";
+            logBox.value += "[X] Masalah: " + err.message + "\n";
+        }
+    };
+
+    reader.readAsText(file);
+}
+</script>
+
+</body>
+</html>
