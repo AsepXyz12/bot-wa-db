@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AST Transformation Studio</title>
+<style>
+:root {
+  --bg-void: #050508;
+  --bg-panel: #0a0a12;
+  --bg-elevated: #121220;
+  --accent-primary: #00d4ff;
+  --accent-secondary: #7c3aed;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-dim: #64748b;
+  --border-subtle: #1e293b;
+  --border-glow: rgba(0, 212, 255, 0.3);
+  --success: #22c55e;
+  --error: #ef4444;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  background: var(--bg-void);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(124, 58, 237, 0.05) 0%, transparent 50%);
+}
+
+header {
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.status {
+  font-size: 12px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+ 0%, 100% { opacity: 1; }
+ 50% { opacity: 0.5; }
+}
+
+main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 16px;
+  min-height: 0;
+}
+
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.panel:hover {
+  border-color: var(--border-glow);
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+}
+
+.panel-header {
+  padding: 14px 18px;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+}
+
+button {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+button:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  transform: translateY(-1px);
+}
+
+button.primary {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  border: none;
+  color: #000;
+  font-weight: 700;
+}
+
+button.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4);
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+textarea {
+  flex: 1;
+  background: var(--bg-void);
+  border: none;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 18px;
+  resize: none;
+  outline: none;
+  tab-size: 2;
+}
+
+textarea::placeholder {
+  color: var(--text-dim);
+}
+
+.output-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.error-display {
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 3px solid var(--error);
+  color: var(--error);
+  padding: 12px 16px;
+  font-size: 12px;
+  font-family: monospace;
+  display: none;
+}
+
+.error-display.show {
+  display: block;
+}
+
+.mapping-table {
+  flex: 1;
+  overflow: auto;
+  padding: 16px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+th {
+  text-align: left;
+  padding: 10px 12px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 1px;
+  position: sticky;
+  top: 0;
+  border-bottom: 2px solid var(--border-subtle);
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+
+tr:hover td {
+  background: rgba(0, 212, 255, 0.05);
+}
+
+.type-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(124, 58, 237, 0.2);
+  color: var(--accent-secondary);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+}
+
+.stats {
+  padding: 12px 18px;
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  gap: 24px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-value {
+  color: var(--accent-primary);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+@media (max-width: 968px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-void);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span>⬢</span>
+    <span>AST Transformation Studio</span>
+  </div>
+  <div class="status">
+    <span class="status-dot"></span>
+    <span id="libStatus">Loading libraries...</span>
+  </div>
+</header>
+
+<main>
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">Source Input</div>
+      <div class="controls">
+        <button onclick="clearInput()">Clear</button>
+        <button onclick="loadExample()">Example</button>
+      </div>
+    </div>
+    <textarea id="input" placeholder="// Paste your JavaScript code here
+function obfuscate(str) {
+  return str.split('').reverse().join('');
+}
+
+const secret = 'hidden_message';
+console.log(obfuscate(secret));"></textarea>
+    <div class="stats">
+      <div class="stat-item">
+        <span>Chars:</span>
+        <span class="stat-value" id="charCount">0</span>
+      </div>
+      <div class="stat-item">
+        <span>Lines:</span>
+        <span class="stat-value" id="lineCount">0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">Transformed Output</div>
+      <div class="controls">
+        <button class="primary" id="transformBtn" onclick="transform()">Transform</button>
+        <button onclick="copyOutput()">Copy</button>
+      </div>
+    </div>
+    <div class="output-area">
+      <div class="error-display" id="errorBox"></div>
+      <textarea id="output" readonly placeholder="// Transformed code will appear here..."></textarea>
+    </div>
+    <div class="stats">
+      <div class="stat-item">
+        <span>Identifiers:</span>
+        <span class="stat-value" id="idCount">0</span>
+      </div>
+      <div class="stat-item">
+        <span>Ratio:</span>
+        <span class="stat-value" id="ratio">0%</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="panel" style="margin: 0 16px 16px;">
+  <div class="panel-header">
+    <div class="panel-title">Identifier Mapping Table</div>
+  </div>
+  <div class="mapping-table" id="mappingTable">
+    <div style="text-align: center; color: var(--text-dim); padding: 40px;">
+      Run transformation to see identifier mappings
+    </div>
+  </div>
+</div>
+
+<!-- CDN tanpa integrity biar ga error -->
+<script src="https://cdn.jsdelivr.net/npm/acorn@8.11.3/dist/acorn.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/acorn-walk@8.3.2/dist/walk.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/escodegen@2.1.0/escodegen.min.js"></script>
+
+<script>
+let identifierMap = new Map();
+let counter = 0;
+
+// Check libraries loaded
+function checkLibs() {
+  const status = document.getElementById('libStatus');
+  if (window.acorn && window.escodegen && window.acornWalk) {
+    status.textContent = 'Libraries loaded ✓';
+    document.getElementById('transformBtn').disabled = false;
+  } else {
+    status.textContent = 'Loading failed - refresh page';
+    status.style.color = 'var(--error)';
+    document.getElementById('transformBtn').disabled = true;
+  }
+}
+
+setTimeout(checkLibs, 500);
+
+const inputEl = document.getElementById('input');
+const outputEl = document.getElementById('output');
+
+inputEl.addEventListener('input', updateStats);
+updateStats();
+
+function updateStats() {
+  const text = inputEl.value;
+  document.getElementById('charCount').textContent = text.length;
+  document.getElementById('lineCount').textContent = text.split('\n').length;
+}
+
+function generateName() {
+  const chars = 'abcdefghijklmnopqrstuvwxyz';
+  let name = '';
+  let num = counter++;
+  do {
+    name = chars[num % 26] + name;
+    num = Math.floor(num / 26) - 1;
+  } while (num >= 0);
+  return name;
+}
+
+function transform() {
+  const source = inputEl.value.trim();
+  if (!source) {
+    showError('Please enter JavaScript code first');
+    return;
+  }
+
+  hideError();
+  document.getElementById('transformBtn').disabled = true;
+  
+  try {
+    identifierMap.clear();
+    counter = 0;
+
+    // Parse AST
+    const ast = acorn.parse(source, {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      locations: true
+    });
+
+    // Collect identifiers
+    const reserved = new Set(['console', 'window', 'document', 'Array', 'Object', 'String', 'Number', 'Math', 'Date', 'JSON', 'parseInt', 'parseFloat']);
+    
+    acornWalk.simple(ast, {
+      Identifier(node) {
+        const name = node.name;
+        if (!identifierMap.has(name) && !reserved.has(name) && /^[a-zA-Z_$]/.test(name)) {
+          identifierMap.set(name, generateName());
+        }
+      }
+    });
+
+    // Replace identifiers
+    acornWalk.simple(ast, {
+      Identifier(node) {
+        if (identifierMap.has(node.name)) {
+          node.name = identifierMap.get(node.name);
+        }
+      }
+    });
+
+    // Generate code
+    const output = escodegen.generate(ast, {
+      format: {
+        indent: { style: '  ' },
+        semicolons: true
+      }
+    });
+
+    outputEl.value = output;
+    renderMapping();
+    updateOutputStats();
+
+  } catch (err) {
+    showError('Parse Error: ' + err.message);
+    console.error(err);
+  } finally {
+    document.getElementById('transformBtn').disabled = false;
+  }
+}
+
+function renderMapping() {
+  const container = document.getElementById('mappingTable');
+  
+  if (identifierMap.size === 0) {
+    container.innerHTML = '<div style="text-align: center; color: var(--text-dim); padding: 40px;">No identifiers found</div>';
+    return;
+  }
+
+  let html = '<table><thead><tr><th>Original</th><th>Type</th><th>→</th><th>Transformed</th></tr></thead><tbody>';
+  
+  for (const [original, transformed] of identifierMap) {
+    html += `<tr>
+      <td><code>${original}</code></td>
+      <td><span class="type-tag">IDENT</span></td>
+      <td>→</td>
+      <td><code style="color: var(--accent-primary)">${transformed}</code></td>
+    </tr>`;
+  }
+  
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+function updateOutputStats() {
+  document.getElementById('idCount').textContent = identifierMap.size;
+  const ratio = inputEl.value.length > 0 
+    ? Math.round((outputEl.value.length / inputEl.value.length) * 100)
+    : 0;
+  document.getElementById('ratio').textContent = ratio + '%';
+}
+
+function showError(msg) {
+  const box = document.getElementById('errorBox');
+  box.textContent = msg;
+  box.classList.add('show');
+}
+
+function hideError() {
+  document.getElementById('errorBox').classList.remove('show');
+}
+
+function clearInput() {
+  inputEl.value = '';
+  outputEl.value = '';
+  identifierMap.clear();
+  document.getElementById('mappingTable').innerHTML = '<div style="text-align: center; color: var(--text-dim); padding: 40px;">Run transformation to see identifier mappings</div>';
+  updateStats();
+  updateOutputStats();
+  hideError();
+}
+
+function loadExample() {
+  inputEl.value = `function encrypt(data, key) {
+  let result = '';
+  for (let i = 0; i < data.length; i++) {
+    result += String.fromCharCode(data.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+  }
+  return btoa(result);
+}
+
+const password = 'mySecret123';
+const token = encrypt(password, 'key');
+console.log(token);`;
+  updateStats();
+}
+
+function copyOutput() {
+  if (!outputEl.value) return;
+  navigator.clipboard.writeText(outputEl.value);
+  const btn = event.target;
+  const oldText = btn.textContent;
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = oldText, 2000);
+}
+</script>
+
+</body>
+</html>
