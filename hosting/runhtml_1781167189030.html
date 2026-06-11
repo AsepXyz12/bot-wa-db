@@ -927,9 +927,8 @@ function transformCode(sourceCode, options = {}) {
   } = options;
 
   resetMapping();
-const _estraverse = (typeof window !== 'undefined' && window.estraverse) || (typeof estraverse !== 'undefined' && estraverse);
-const _escodegen = (typeof window !== 'undefined' && window.escodegen) || (typeof escodegen !== 'undefined' && escodegen);
-
+const _estraverse = window.estraverse || estraverse || window;
+const _escodegen = window.escodegen || escodegen || window;
   // ── 1. Parse ─────────────────────────────────────────────────
   const ast = window.acorn.parse(sourceCode, {
     ecmaVersion: 'latest',
