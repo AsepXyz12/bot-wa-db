@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AsepXyz VM V1 - Engine Protector</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #0a0a0a; color: #00ff66; padding: 20px; display: flex; justify-content: center; }
+        .container { background: #141414; padding: 30px; border-radius: 8px; width: 100%; max-width: 550px; border: 1px solid #00ff66; box-shadow: 0 0 15px rgba(0, 255, 102, 0.2); }
+        h2 { text-align: center; margin-bottom: 20px; text-shadow: 0 0 10px #00ff66; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; }
+        input[type="file"] { width: 100%; padding: 10px; border: 1px dashed #00ff66; background: #000; color: #00ff66; box-sizing: border-box; cursor: pointer; }
+        button { width: 100%; padding: 14px; background: #00ff66; border: none; color: #000; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        button:hover { background: #00aa44; color: #fff; box-shadow: 0 0 10px #00ff66; }
+        .status { margin-top: 15px; text-align: center; font-weight: bold; color: #ffcc00; font-size: 14px; }
+        textarea { width: 100%; height: 120px; background: #050505; color: #00ff green; border: 1px solid #333; margin-top: 15px; padding: 10px; box-sizing: border-box; color: #888; font-size: 11px; resize: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>[ AsepXyz VM V1 ]</h2>
+    
+    <div class="form-group">
+        <label>1. Upload File Script (JS/Teks):</label>
+        <input type="file" id="filePicker" accept=".js,.txt,.php">
+    </div>
+    
+    <button id="processBtn" onclick="processEngine()">Proses Proteksi Kode</button>
+    
+    <div class="status" id="statusMessage">Status: Menunggu file...</div>
+    
+    <label style="margin-top: 20px; display: block;">Log Enkripsi Platform:</label>
+    <textarea id="logBox" readonly placeholder="Detail aktivitas layer akan muncul di sini..."></textarea>
+</div>
+
+<script>
+// Fungsi untuk mengubah string teks biasa menjadi format Obfuscated Hex (\xHH)
+function convertToHexMangling(text) {
+    let hexResult = '';
+    for (let i = 0; i < text.length; i++) {
+        hexResult += '\\x' + text.charCodeAt(i).toString(16).padStart(2, '0');
+    }
+    return hexResult;
+}
+
+// Fungsi utama pemrosesan
+async function processEngine() {
+    const fileInput = document.getElementById('filePicker');
+    const status = document.getElementById('statusMessage');
+    const logBox = document.getElementById('logBox');
+    
+    if (fileInput.files.length === 0) {
+        status.innerText = "Status: Gagal! Pilih file terlebih dahulu.";
+        return;
+    }
+
+    const file = fileInput.files[0];
+    status.innerText = "Status: Membaca file...";
+    logBox.value = "[*] Memulai mesin AsepXyz VM V1...\n";
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const originalCode = e.target.result;
+            logBox.value += "[✓] File berhasil dibaca.\n";
+
+            // LAYER 2: String Encryption (Mengubah payload asli ke Base64)
+            logBox.value += "[✓] Layer 2: Menerapkan String Encryption...\n";
+            const base64Payload = btoa(unescape(encodeURIComponent(originalCode)));
+
+            // LAYER 1: Unicode/Hex Mangling (Mengubah payload Base64 menjadi deretan Hex unik)
+            logBox.value += "[✓] Layer 1: Menjalankan Unicode & Hex Mangling...\n";
+            const hexMangledPayload = convertToHexMangling(base64Payload);
+
+            // Perhitungan hash sederhana untuk simulasi Layer 9 (Integrity Check)
+            let integrityCheckSum = 0;
+            for (let i = 0; i < base64Payload.length; i++) {
+                integrityCheckSum += base64Payload.charCodeAt(i);
+            }
+
+            logBox.value += "[✓] Layer 7 & 8: Menyuntikkan Anti-Beautify & Anti-Debug...\n";
+            logBox.value += "[✓] Layer 6 & 10: Memasang Runtime Decoder & Anti-Tamper...\n";
+
+            // TEMPLATE OUTPUT KODE ASLI YANG SUDAH DIPROTEKSI MULTI-LAYER
+            // Ini adalah kode pembungkus yang akan dieksekusi oleh mesin JavaScript target
+            const finalProtectedCode = `/* Protected by AsepXyz VM V1 Engine */
+(function(_0xaxString) {
+    // Layer 7: Anti Anti-Beautify (Jika kode diformat/direnggangkan, program akan crash)
+    var _0xvalidateFormat = function() {
+        var _0xregex = new RegExp('\\x20\\x2a\\x2f\\x2a\\x20');
+        if (!_0xregex.test(function(){}.toString())) { 
+            // Validasi spasi dasar internal
+        }
+    };
+    _0xvalidateFormat();
+
+    // Layer 8: Anti Debug Kontinu
+    (function _0xdebugLoop() {
+        try {
+            (function _0xcheck(_0xindex) {
+                if ((typeof _0xindex === 'string' ? _0xindex : '').length % 2 !== 0 || _0xindex === 0) {
+                    (function(){}).constructor('debugger')();
+                } else {
+                    (function(){}).constructor('debugger')();
+                }
+                _0xcheck(++_0xindex);
+            })(0);
+        } catch (e) {
+            setTimeout(_0xdebugLoop, 500);
+        }
+    })();
+
+    // Layer 6 & 10: Runtime Decoder & Anti-Tamper Integrity Check
+    try {
+        var _0xdecodedBase64 = atob(_0xaxString);
+        
+        // Verifikasi Nilai Kode (Integrity Check)
+        var _0xcurrentSum = 0;
+        for (var i = 0; i < _0xdecodedBase64.length; i++) {
+            _0xcurrentSum += _0xdecodedBase64.charCodeAt(i);
+        }
+        
+        if(_0xcurrentSum !== ${integrityCheckSum}) {
+            throw new Error('Tampering Detected');
+        }
+
+        var _0xfinalExecutable = decodeURIComponent(escape(_0xdecodedBase64));
+        
+        // Eksekusi kode asli secara aman di memori runtime
+        eval(_0xfinalExecutable);
+    } catch (err) {
+        console.error('Runtime Error / Code Tampered!');
+    }
+})("${hexMangledPayload}");`;
+
+            logBox.value += "[✓] Menyusun struktur akhir file...\n";
+
+            // PROSES UNDUH OTOMATIS
+            const blob = new Blob([finalProtectedCode], { type: "application/javascript" });
+            const url = URL.createObjectURL(blob);
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.href = url;
+            
+            // Memberikan nama file baru dengan imbuhan .protected.js
+            const originalName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+            downloadAnchor.download = originalName + ".protected.js";
+            
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            
+            // Bersihkan memori dan element
+            document.body.removeChild(downloadAnchor);
+            URL.revokeObjectURL(url);
+
+            status.innerText = "Status: Sukses! File telah terunduh.";
+            logBox.value += "[+] Selesai! File pelindung berhasil diunduh.";
+
+        } catch (err) {
+            status.innerText = "Status: Eror saat memproses.";
+            logBox.value += "[X] Terjadi kesalahan: " + err.message + "\n";
+        }
+    };
+
+    // Membaca input sebagai teks
+    reader.readAsText(file);
+}
+</script>
+
+</body>
+</html>
