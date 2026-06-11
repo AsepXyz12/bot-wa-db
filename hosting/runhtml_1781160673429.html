@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AST Studio AsepXyz</title>
+<style>
+:root {
+  --bg: #0a0e14;
+  --panel: #111827;
+  --border: #1f2937;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --accent: #3b82f6;
+  --ok: #10b981;
+  --err: #ef4444;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+header {
+  padding: 12px 20px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+header h1 { font-size: 16px; font-weight: 600; }
+header span { color: var(--muted); font-size: 12px; }
+main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr 320px;
+  gap: 1px;
+  background: var(--border);
+}
+.panel {
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+}
+.panel-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+}
+.panel-body {
+  flex: 1;
+  overflow: auto;
+}
+textarea {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 12px;
+  resize: none;
+  outline: none;
+}
+.controls {
+  padding: 10px;
+  display: flex;
+  gap: 8px;
+  border-top: 1px solid var(--border);
+}
+button {
+  flex: 1;
+  padding: 8px 12px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+button:hover { opacity: 0.9; }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+button.secondary { background: #374151; }
+#stats, #mapping {
+  padding: 12px;
+  font-size: 12px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  color: var(--muted);
+}
+#progress {
+  height: 3px;
+  background: var(--accent);
+  width: 0%;
+  transition: width 0.3s;
+}
+.err { color: var(--err); }
+.ok { color: var(--ok); }
+@media (max-width: 1024px) {
+  main { grid-template-columns: 1fr; }
+ .panel:last-child { display: none; }
+}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "acorn": "https://cdn.jsdelivr.net/npm/acorn@8.14.0/dist/acorn.min.js",
+    "estraverse": "https://cdn.jsdelivr.net/npm/estraverse@5.3.0/estraverse.min.js",
+    "escodegen": "https://cdn.jsdelivr.net/npm/escodegen@2.1.0/escodegen.min.js"
+  }
+}
+</script>
+</head>
+<body>
+<header>
+  <h1>JavaScript AST Studio <span>by AsepXyz</span></h1>
+  <span>Deterministic Branding Engine</span>
+</header>
+<div id="progress"></div>
+<main>
+  <div class="panel">
+    <div class="panel-header">Input Source</div>
+    <div class="panel-body">
+      <textarea id="input" placeholder="// Paste kode JS kamu di sini...&#10;function hello(name) {&#10; let message = 'Hello ' + name;&#10; return message;&#10;}"></textarea>
+    </div>
+    <div class="controls">
+      <button id="rename">Rename Identifiers</button>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">
+      <span>Output Source</span>
+      <span id="status"></span>
+    </div>
+    <div class="panel-body">
+      <textarea id="output" readonly placeholder="// Hasil transformasi akan muncul di sini..."></textarea>
+    </div>
+    <div class="controls">
+      <button id="copy" class="secondary">Copy</button>
+      <button id="download" class="secondary">Download</button>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">Statistics</div>
+    <div class="panel-body">
+      <div id="stats">Belum ada data</div>
+    </div>
+    <div class="panel-header">Identifier Mapping</div>
+    <div class="panel-body">
+      <div id="mapping">Mapping kosong</div>
+    </div>
+  </div>
+</main>
+
+<script type="module">
+import * as acorn from 'acorn';
+import * as estraverse from 'estraverse';
+import * as escodegen from 'escodegen';
+
+const input = document.getElementById('input');
+const output = document.getElementById('output');
+const renameBtn = document.getElementById('rename');
+const copyBtn = document.getElementById('copy');
+const downloadBtn = document.getElementById('download');
+const statsEl = document.getElementById('stats');
+const mappingEl = document.getElementById('mapping');
+const statusEl = document.getElementById('status');
+const progressEl = document.getElementById('progress');
+
+// Angka kanji untuk naming konsisten
+const KANJI_NUM = ['零','壱','弐','参','肆','伍','陸','漆','捌','玖','拾','拾壱','拾弐','拾参','拾肆','拾伍','拾陸','拾漆','拾捌','拾玖'];
+
+class BrandingEngine {
+  constructor() {
+    this.map = new Map();
+    this.counter = 0;
+    this.prefix = '難読化装置AsepXyz';
+  }
+
+  generate(originalName) {
+    if (this.map.has(originalName)) {
+      return this.map.get(originalName);
+    }
+    const num = this.toKanji(this.counter++);
+    const newName = this.prefix + num;
+    this.map.set(originalName, newName);
+    return newName;
+  }
+
+  toKanji(n) {
+    if (n < KANJI_NUM.length) return KANJI_NUM[n];
+    return '数' + n; // fallback kalo kebanyakan
+  }
+
+  getMap() { return this.map; }
+  reset() { this.map.clear(); this.counter = 0; }
+}
+
+// Plugin architecture
+class PluginManager {
+  constructor() {
+    this.plugins = [];
+  }
+  register(plugin) { this.plugins.push(plugin); }
+  apply(ast, ctx) {
+    for (const p of this.plugins) {
+      if (p.transform) p.transform(ast, ctx);
+    }
+  }
+}
+
+// Plugin contoh: branding injection
+const brandingPlugin = {
+  name: 'BrandingInjection',
+  transform(ast, ctx) {
+    // Inject comment header
+    ast.body.unshift({
+      type: 'ExpressionStatement',
+      expression: {
+        type: 'Literal',
+        value: '/* Transformed by AsepXyz AST Studio */',
+        raw: '"/* Transformed by AsepXyz AST Studio */"'
+      }
+    });
+  }
+};
+
+function isIdentifierNode(node, parent) {
+  if (node.type!== 'Identifier') return false;
+
+  // Jangan rename property key: obj.key
+  if (parent && parent.type === 'MemberExpression' && parent.property === node &&!parent.computed) return false;
+
+  // Jangan rename object key: {key: value}
+  if (parent && parent.type === 'Property' && parent.key === node &&!parent.computed) return false;
+
+  // Jangan rename function name di FunctionDeclaration yang exported
+  if (parent && parent.type === 'ExportNamedDeclaration') return false;
+
+  return true;
+}
+
+function transformAST(code) {
+  const engine = new BrandingEngine();
+  const pluginManager = new PluginManager();
+  pluginManager.register(brandingPlugin);
+
+  let ast = acorn.parse(code, { ecmaVersion: 'latest', sourceType: 'module' });
+
+  // Pass 1: collect dan rename semua identifier
+  ast = estraverse.replace(ast, {
+    enter(node, parent) {
+      if (isIdentifierNode(node, parent)) {
+        node.name = engine.generate(node.name);
+      }
+    }
+  });
+
+  // Pass 2: apply plugins
+  pluginManager.apply(ast, { engine });
+
+  const result = escodegen.generate(ast, {
+    format: { indent: { style: ' ' }, semicolons: true }
+  });
+
+  return { code: result, mapping: engine.getMap() };
+}
+
+function setProgress(p) {
+  progressEl.style.width = p + '%';
+}
+
+function updateStats(original, transformed, mapping) {
+  const stats =
+`Total Identifiers : ${mapping.size}
+Size Original : ${(original.length/1024).toFixed(2)} KB
+Size Output : ${(transformed.length/1024).toFixed(2)} KB
+Branding Pattern : 難読化装置AsepXyz + Kanji
+Deterministic : Ya`;
+  statsEl.textContent = stats;
+
+  let mapText = '';
+  for (const [k,v] of mapping.entries()) {
+    mapText += `${k} -> ${v}\n`;
+  }
+  mappingEl.textContent = mapText || 'Tidak ada identifier';
+}
+
+renameBtn.onclick = async () => {
+  const code = input.value.trim();
+  if (!code) {
+    statusEl.innerHTML = '<span class="err">Input kosong</span>';
+    return;
+  }
+
+  renameBtn.disabled = true;
+  statusEl.textContent = 'Processing...';
+  setProgress(30);
+
+  try {
+    setTimeout(() => {
+      const { code: result, mapping } = transformAST(code);
+      output.value = result;
+      updateStats(code, result, mapping);
+      statusEl.innerHTML = '<span class="ok">Selesai</span>';
+      setProgress(100);
+      setTimeout(() => setProgress(0), 1000);
+      renameBtn.disabled = false;
+    }, 100);
+  } catch (e) {
+    statusEl.innerHTML = `<span class="err">Error: ${e.message}</span>`;
+    output.value = '';
+    statsEl.textContent = 'Error parsing';
+    mappingEl.textContent = '';
+    setProgress(0);
+    renameBtn.disabled = false;
+  }
+};
+
+copyBtn.onclick = () => {
+  navigator.clipboard.writeText(output.value);
+  copyBtn.textContent = 'Copied!';
+  setTimeout(() => copyBtn.textContent = 'Copy', 1500);
+};
+
+downloadBtn.onclick = () => {
+  const blob = new Blob([output.value], { type: 'application/javascript' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'transformed_AsepXyz.js';
+  a.click();
+  URL.revokeObjectURL(url);
+};
+</script>
+</body>
+</html>
