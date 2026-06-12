@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>難読化装置AsepXyz — JS Encoder</title>
+<style>
+:root{
+  --bg0:#080b10;--bg1:#0d1018;--bg2:#131720;--bg3:#1a1f2c;--bg4:#1f2537;
+  --b0:#232b3a;--b1:#2c3650;--acc:#7b5ff5;--acc2:#38c9c9;--acc3:#f05c7a;
+  --grn:#3ecf8e;--ylw:#f0b840;--txt:#dde2f0;--txt2:#8892b0;--txt3:#3e4a66;
+  --r:9px;--mono:'Fira Mono','Cascadia Code','Consolas',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh;background:var(--bg0);color:var(--txt);
+  font-family:'Inter','Segoe UI',system-ui,sans-serif;font-size:14px}
+body{display:flex;flex-direction:column;align-items:center;padding:32px 16px 72px}
+
+/* ── header ── */
+.hdr{text-align:center;margin-bottom:30px;user-select:none}
+.hdr-logo{font-size:1.5rem;font-weight:800;letter-spacing:.03em;
+  background:linear-gradient(100deg,var(--acc) 0%,var(--acc2) 60%,var(--acc3) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr-sub{margin-top:5px;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--txt2)}
+.hdr-tag{margin-top:5px;font-size:.62rem;font-family:var(--mono);color:var(--txt3);letter-spacing:.06em}
+
+/* ── layout ── */
+.wrap{width:100%;max-width:860px;display:flex;flex-direction:column;gap:16px}
+
+/* ── card ── */
+.card{background:var(--bg1);border:1px solid var(--b0);border-radius:var(--r);padding:20px 22px}
+.card-hd{font-size:.65rem;text-transform:uppercase;letter-spacing:.16em;color:var(--acc);
+  font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card-hd::before{content:'';display:block;width:3px;height:13px;
+  background:linear-gradient(180deg,var(--acc),var(--acc2));border-radius:2px}
+
+/* ── drop zone ── */
+#AsepXyz零DropZone{
+  border:2px dashed var(--b1);border-radius:var(--r);
+  background:var(--bg2);min-height:136px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:9px;cursor:pointer;transition:border-color .18s,background .18s;padding:22px}
+#AsepXyz零DropZone:hover{border-color:var(--acc2);background:var(--bg3)}
+#AsepXyz零DropZone.ov{border-color:var(--acc);background:var(--bg3)}
+.dz-icon{font-size:2rem;line-height:1;opacity:.45}
+.dz-label{font-size:.83rem;color:var(--txt2);text-align:center}
+.dz-label em{color:var(--acc2);font-style:normal;text-decoration:underline;cursor:pointer}
+#AsepXyz零FileInput{display:none}
+#AsepXyz零FileName{font-family:var(--mono);font-size:.75rem;color:var(--grn);min-height:1.1em;text-align:center}
+
+/* ── opts ── */
+.opts{display:flex;flex-wrap:wrap;gap:10px 22px}
+.opt{display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--txt2);cursor:pointer;user-select:none}
+.opt input[type=checkbox]{accent-color:var(--acc);width:13px;height:13px;cursor:pointer;flex-shrink:0}
+.opt span{color:var(--txt)}
+.opt-range{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--txt2)}
+.opt-range input[type=range]{accent-color:var(--acc2);width:88px;cursor:pointer}
+.opt-range b{color:var(--acc2);font-weight:700;min-width:26px;display:inline-block}
+
+/* ── progress ── */
+.prog-wrap{height:5px;background:var(--bg3);border-radius:99px;overflow:hidden;margin-bottom:14px}
+#AsepXyz零Prog{height:100%;width:0%;border-radius:99px;
+  background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .15s linear}
+
+/* ── buttons ── */
+.btns{display:flex;flex-wrap:wrap;gap:9px}
+.btn{padding:9px 20px;border:none;border-radius:7px;font-size:.8rem;font-weight:700;
+  cursor:pointer;letter-spacing:.05em;display:inline-flex;align-items:center;gap:6px;
+  transition:filter .15s,transform .1s,opacity .15s}
+.btn:active:not(:disabled){transform:scale(.96)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn-enc{background:linear-gradient(90deg,var(--acc),#5a8aff);color:#fff}
+.btn-enc:hover:not(:disabled){filter:brightness(1.14)}
+.btn-cpy{background:var(--bg3);border:1px solid var(--b1);color:var(--acc2)}
+.btn-cpy:hover:not(:disabled){border-color:var(--acc2)}
+.btn-dl{background:var(--bg3);border:1px solid var(--b1);color:var(--grn)}
+.btn-dl:hover:not(:disabled){border-color:var(--grn)}
+.btn-clr{background:var(--bg3);border:1px solid var(--b1);color:var(--acc3)}
+.btn-clr:hover:not(:disabled){border-color:var(--acc3)}
+
+/* ── log ── */
+#AsepXyz零Log{
+  font-family:var(--mono);font-size:.7rem;line-height:1.8;
+  background:var(--bg2);border:1px solid var(--b0);border-radius:7px;
+  padding:11px 14px;min-height:76px;max-height:150px;overflow-y:auto;white-space:pre-wrap}
+.l-ok{color:var(--grn)}.l-inf{color:var(--acc2)}.l-wrn{color:var(--ylw)}.l-err{color:var(--acc3)}
+
+/* ── output ── */
+#AsepXyz零Out{
+  font-family:var(--mono);font-size:.68rem;color:#8fa0c8;line-height:1.65;
+  background:var(--bg2);border:1px solid var(--b0);border-radius:7px;
+  padding:14px;min-height:120px;max-height:340px;overflow:auto;
+  white-space:pre;word-break:break-all}
+
+/* ── stats ── */
+.stats{display:flex;flex-wrap:wrap;gap:16px;margin-top:10px}
+.st{font-size:.7rem;color:var(--txt2)}.st b{color:var(--acc2);font-weight:700}
+.div{height:1px;background:var(--b0);margin:10px 0}
+
+/* ── scrollbars ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--b0);border-radius:99px}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-logo">難読化装置AsepXyz</div>
+  <div class="hdr-sub">JavaScript Source Code Encoder &amp; Obfuscator</div>
+  <div class="hdr-tag">難読化装置AsepXyz · 7-Layer Unified Pipeline · Pure Browser · No Deps</div>
+</header>
+
+<div class="wrap">
+
+  <div class="card">
+    <div class="card-hd">Source File</div>
+    <div id="AsepXyz零DropZone" role="button" tabindex="0"
+         onclick="document.getElementById('AsepXyz零FileInput').click()">
+      <div class="dz-icon">&#x2B06;</div>
+      <div class="dz-label">Drag &amp; drop <strong>.js</strong> file di sini, atau <em>pilih file</em></div>
+      <div id="AsepXyz零FileName">Belum ada file dipilih</div>
+    </div>
+    <input type="file" id="AsepXyz零FileInput" accept=".js"/>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">Opsi Encoder</div>
+    <div class="opts">
+      <label class="opt">
+        <input type="checkbox" id="AsepXyz零OptNoise" checked/>
+        <span>Noise Injection</span>
+      </label>
+      <label class="opt">
+        <input type="checkbox" id="AsepXyz零OptShuffle" checked/>
+        <span>Fragment Shuffle</span>
+      </label>
+      <label class="opt">
+        <input type="checkbox" id="AsepXyz零OptMutate" checked/>
+        <span>Index Mutation</span>
+      </label>
+      <div class="opt-range">
+        XOR Key:
+        <input type="range" id="AsepXyz零XorRange" min="1" max="255" value="173"/>
+        <b id="AsepXyz零XorDisp">173</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">Encode &amp; Export</div>
+    <div class="prog-wrap"><div id="AsepXyz零Prog"></div></div>
+    <div class="btns">
+      <button class="btn btn-enc" id="AsepXyz零BtnEncode" disabled>&#x26A1; Encode</button>
+      <button class="btn btn-cpy" id="AsepXyz零BtnCopy"   disabled>&#x2398; Copy</button>
+      <button class="btn btn-dl"  id="AsepXyz零BtnDl"     disabled>&#x2193; Download</button>
+      <button class="btn btn-clr" id="AsepXyz零BtnClear">&#x2715; Clear</button>
+    </div>
+    <div style="margin-top:14px">
+      <div class="card-hd" style="margin-bottom:8px">Status Log</div>
+      <div id="AsepXyz零Log">Siap. Upload file .js untuk memulai encoding.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">Output Hasil Encode</div>
+    <div id="AsepXyz零Out">// Hasil encode akan tampil di sini…</div>
+    <div class="div"></div>
+    <div class="stats">
+      <div class="st">Input: <b id="AsepXyz零StIn">—</b></div>
+      <div class="st">Output: <b id="AsepXyz零StOut">—</b></div>
+      <div class="st">Rasio: <b id="AsepXyz零StRatio">—</b></div>
+      <div class="st">Pipeline: <b>Unicode › Hex › XOR › Rotate › Shuffle › Mutate › Pack</b></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ================================================================
+   難読化装置AsepXyz — Encoder Engine
+   Pure browser JS. Zero deps. Zero CDN. Zero imports.
+   ================================================================ */
+(function () {
+  "use strict";
+
+  /* ── internal state ─────────────────────────────────────── */
+  var 難読化装置AsepXyz壱 = null;   // raw source string
+  var 難読化装置AsepXyz弐 = null;   // encoded output string
+  var 難読化装置AsepXyz参 = "";     // original filename
+
+  /* ── DOM ────────────────────────────────────────────────── */
+  var 難読化装置AsepXyz_DZ   = document.getElementById("AsepXyz零DropZone");
+  var 難読化装置AsepXyz_FI   = document.getElementById("AsepXyz零FileInput");
+  var 難読化装置AsepXyz_FN   = document.getElementById("AsepXyz零FileName");
+  var 難読化装置AsepXyz_BEnc = document.getElementById("AsepXyz零BtnEncode");
+  var 難読化装置AsepXyz_BCpy = document.getElementById("AsepXyz零BtnCopy");
+  var 難読化装置AsepXyz_BDl  = document.getElementById("AsepXyz零BtnDl");
+  var 難読化装置AsepXyz_BClr = document.getElementById("AsepXyz零BtnClear");
+  var 難読化装置AsepXyz_Prg  = document.getElementById("AsepXyz零Prog");
+  var 難読化装置AsepXyz_Log  = document.getElementById("AsepXyz零Log");
+  var 難読化装置AsepXyz_Out  = document.getElementById("AsepXyz零Out");
+  var 難読化装置AsepXyz_StIn    = document.getElementById("AsepXyz零StIn");
+  var 難読化装置AsepXyz_StOut   = document.getElementById("AsepXyz零StOut");
+  var 難読化装置AsepXyz_StRatio = document.getElementById("AsepXyz零StRatio");
+  var 難読化装置AsepXyz_XR  = document.getElementById("AsepXyz零XorRange");
+  var 難読化装置AsepXyz_XD  = document.getElementById("AsepXyz零XorDisp");
+
+  /* ── utilities ──────────────────────────────────────────── */
+  function 難読化装置AsepXyz四(pct) {
+    難読化装置AsepXyz_Prg.style.width = pct + "%";
+  }
+
+  function 難読化装置AsepXyz五(msg, cls) {
+    var ts = new Date().toLocaleTimeString("id-ID");
+    var el = document.createElement("span");
+    if (cls) el.className = cls;
+    el.textContent = "[" + ts + "] " + msg + "\n";
+    難読化装置AsepXyz_Log.appendChild(el);
+    難読化装置AsepXyz_Log.scrollTop = 難読化装置AsepXyz_Log.scrollHeight;
+  }
+
+  function 難読化装置AsepXyz六(n) {
+    if (n >= 1048576) return (n / 1048576).toFixed(2) + " MB";
+    if (n >= 1024)    return (n / 1024).toFixed(2) + " KB";
+    return n + " B";
+  }
+
+  /* ── seeded PRNG (Mulberry32) ───────────────────────────── */
+  function 難読化装置AsepXyz七(seed) {
+    var s = (seed >>> 0) + 1;
+    return function () {
+      s += 0x6D2B79F5;
+      var t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /* ── file load ──────────────────────────────────────────── */
+  function 難読化装置AsepXyz八(file) {
+    if (!file) return;
+    if (!file.name.endsWith(".js")) {
+      難読化装置AsepXyz五("✗ Hanya file .js yang diterima.", "l-err");
+      return;
+    }
+    難読化装置AsepXyz参 = file.name;
+    var fr = new FileReader();
+    fr.onload = function (e) {
+      難読化装置AsepXyz壱 = e.target.result;
+      難読化装置AsepXyz_FN.textContent = "📄 " + file.name + " (" + 難読化装置AsepXyz六(file.size) + ")";
+      難読化装置AsepXyz_BEnc.disabled = false;
+      難読化装置AsepXyz五("✔ File dimuat: " + file.name + " · " + 難読化装置AsepXyz六(file.size), "l-ok");
+    };
+    fr.onerror = function () {
+      難読化装置AsepXyz五("✗ Gagal membaca file.", "l-err");
+    };
+    fr.readAsText(file, "utf-8");
+  }
+
+  難読化装置AsepXyz_FI.addEventListener("change", function () {
+    if (this.files[0]) 難読化装置AsepXyz八(this.files[0]);
+  });
+
+  難読化装置AsepXyz_DZ.addEventListener("dragover", function (e) {
+    e.preventDefault();
+    this.classList.add("ov");
+  });
+  難読化装置AsepXyz_DZ.addEventListener("dragleave", function () {
+    this.classList.remove("ov");
+  });
+  難読化装置AsepXyz_DZ.addEventListener("drop", function (e) {
+    e.preventDefault();
+    this.classList.remove("ov");
+    if (e.dataTransfer.files[0]) 難読化装置AsepXyz八(e.dataTransfer.files[0]);
+  });
+  難読化装置AsepXyz_DZ.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      document.getElementById("AsepXyz零FileInput").click();
+    }
+  });
+
+  難読化装置AsepXyz_XR.addEventListener("input", function () {
+    難読化装置AsepXyz_XD.textContent = this.value;
+  });
+
+  /* ── clear ──────────────────────────────────────────────── */
+  難読化装置AsepXyz_BClr.addEventListener("click", function () {
+    難読化装置AsepXyz壱 = null;
+    難読化装置AsepXyz弐 = null;
+    難読化装置AsepXyz参 = "";
+    難読化装置AsepXyz_FN.textContent = "Belum ada file dipilih";
+    難読化装置AsepXyz_BEnc.disabled = true;
+    難読化装置AsepXyz_BCpy.disabled = true;
+    難読化装置AsepXyz_BDl.disabled  = true;
+    難読化装置AsepXyz四(0);
+    難読化装置AsepXyz_Log.innerHTML = "";
+    難読化装置AsepXyz_Out.textContent = "// Hasil encode akan tampil di sini…";
+    難読化装置AsepXyz_StIn.textContent    = "—";
+    難読化装置AsepXyz_StOut.textContent   = "—";
+    難読化装置AsepXyz_StRatio.textContent = "—";
+    難読化装置AsepXyz_FI.value = "";
+    難読化装置AsepXyz五("Direset.", "l-inf");
+  });
+
+  /* ================================================================
+     ENCODING PIPELINE — 7 Layer Unified
+     ================================================================
+     Layer 1 (Unicode)  : source string → array of char codes
+     Layer 2 (Hex)      : expand each code to lo + optional hi byte
+     Layer 3 (XOR)      : XOR every element with PRNG stream
+     Layer 4 (Rotate)   : add fixed rotation value
+     Layer 5 (Shuffle)  : permute fixed-size chunks
+     Layer 6 (Mutate)   : position-dependent index mutation
+     Layer 7 (Pack)     : pack all uint16 values into Base91 string,
+                          then emit single self-contained IIFE with
+                          inline decoder that reverses all layers.
+     ================================================================ */
+
+  /* — Layer 1 — */
+  function 難読化装置AsepXyz九(src) {
+    var out = new Array(src.length);
+    for (var i = 0; i < src.length; i++) out[i] = src.charCodeAt(i);
+    return out;
+  }
+
+  /* — Layer 2 — */
+  function 難読化装置AsepXyz拾(codes) {
+    var out = [];
+    for (var i = 0; i < codes.length; i++) {
+      var c = codes[i];
+      var lo = c & 0xFF;
+      var hi = (c >> 8) & 0xFF;
+      out.push(lo);
+      if (hi) out.push(hi | 0x100);   // flag high byte
+    }
+    return out;
+  }
+
+  /* — Layer 3 — */
+  function 難読化装置AsepXyz拾壱(arr, seed) {
+    var rng = 難読化装置AsepXyz七(seed);
+    var out = new Array(arr.length);
+    for (var i = 0; i < arr.length; i++) {
+      var k = (Math.floor(rng() * 253) + 1) & 0xFF;
+      out[i] = arr[i] ^ k;
+    }
+    return out;
+  }
+
+  /* — Layer 4 — */
+  function 難読化装置AsepXyz拾弐(arr, rot) {
+    var r = (rot & 0xFF) || 19;
+    var out = new Array(arr.length);
+    for (var i = 0; i < arr.length; i++) out[i] = (arr[i] + r) & 0xFFFF;
+    return out;
+  }
+
+  /* — Layer 5 — */
+  function 難読化装置AsepXyz拾参(arr, seed) {
+    var rng  = 難読化装置AsepXyz七(seed ^ 0xABCDE);
+    var sz   = Math.max(8, Math.floor(arr.length / 80));
+    var nc   = Math.ceil(arr.length / sz);
+    var idx  = new Array(nc);
+    for (var i = 0; i < nc; i++) idx[i] = i;
+    /* Fisher-Yates */
+    for (var j = nc - 1; j > 0; j--) {
+      var r2 = Math.floor(rng() * (j + 1));
+      var t2 = idx[j]; idx[j] = idx[r2]; idx[r2] = t2;
+    }
+    var out = new Array(arr.length);
+    for (var k = 0; k < nc; k++) {
+      var src = idx[k] * sz;
+      var dst = k * sz;
+      for (var m = 0; m < sz; m++) {
+        if (dst + m < out.length && src + m < arr.length)
+          out[dst + m] = arr[src + m];
+      }
+    }
+    return { data: out, map: idx, sz: sz };
+  }
+
+  /* — Layer 6 — */
+  function 難読化装置AsepXyz拾四(arr, seed) {
+    var rng = 難読化装置AsepXyz七(seed ^ 0xFEDC9);
+    var out = new Array(arr.length);
+    for (var i = 0; i < arr.length; i++) {
+      var d = Math.floor(rng() * 9) + 1;
+      out[i] = (arr[i] + i * d) & 0xFFFF;
+    }
+    return { data: out, deltas: null, seed: seed };  // seed stored; decoder regenerates
+  }
+
+  /* — Layer 7a: Base91 encode uint16 array → string — */
+  var 難読化装置AsepXyz_B91C =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" +
+    "!#$%&()*+,./:;<=>?@[]^_`{|}~\"";
+
+  function 難読化装置AsepXyz拾五(nums) {
+    /* pack nums as little-endian uint16 bytes first */
+    var bytes = [];
+    for (var i = 0; i < nums.length; i++) {
+      var v = nums[i] & 0xFFFF;
+      bytes.push(v & 0xFF);
+      bytes.push((v >> 8) & 0xFF);
+    }
+    var t = 難読化装置AsepXyz_B91C;
+    var out = "";
+    var b = 0, n = 0;
+    for (var j = 0; j < bytes.length; j++) {
+      b |= bytes[j] << n;
+      n += 8;
+      if (n > 13) {
+        var v2 = b & 8191;
+        if (v2 > 88) { b >>= 13; n -= 13; }
+        else          { v2 = b & 16383; b >>= 14; n -= 14; }
+        out += t[v2 % 91] + t[(v2 / 91) | 0];
+      }
+    }
+    if (n) {
+      out += t[b % 91];
+      if (n > 7 || b > 90) out += t[(b / 91) | 0];
+    }
+    return out;
+  }
+
+  /* — Layer 7b: build the self-contained output IIFE string — */
+  function 難読化装置AsepXyz拾六(payload, cfg) {
+    /*
+      cfg = {
+        xorSeed, rot, shufSeed, mutSeed,
+        shufMap, shufSz, srcLen,
+        doNoise, doShuffle, doMutate
+      }
+    */
+    var J = JSON.stringify;
+
+    /* All identifier names inside output use 難読化装置AsepXyz branding */
+    var lines = [];
+    lines.push("(function(){");
+    lines.push('"use strict";');
+    lines.push("/* 難読化装置AsepXyz — Encoded by AsepXyz Encoder */");
+
+    /* ── embed config ── */
+    lines.push("var 難読化装置AsepXyz零壱={");
+    lines.push("  xs:"  + cfg.xorSeed  + ",");
+    lines.push("  ro:"  + cfg.rot      + ",");
+    lines.push("  ss:"  + cfg.shufSeed + ",");
+    lines.push("  ms:"  + cfg.mutSeed  + ",");
+    lines.push("  sm:"  + J(cfg.shufMap) + ",");
+    lines.push("  sz:"  + cfg.shufSz   + ",");
+    lines.push("  sl:"  + cfg.srcLen   + ",");
+    lines.push("  ds:"  + (cfg.doShuffle ? 1 : 0) + ",");
+    lines.push("  dm:"  + (cfg.doMutate  ? 1 : 0);
+    lines.push("};");
+
+    /* ── embed payload ── */
+    /* escape the payload string safely */
+    var safe = payload
+      .replace(/\\/g, "\\\\")
+      .replace(/`/g, "\\`")
+      .replace(/\$/g, "\\$");
+    lines.push("var 難読化装置AsepXyz零弐=`" + safe + "`;");
+
+    /* ── PRNG ── */
+    lines.push([
+      "function 難読化装置AsepXyz零参(s){",
+      "  s=(s>>>0)+1;",
+      "  return function(){",
+      "    s+=0x6D2B79F5;",
+      "    var t=s;",
+      "    t=Math.imul(t^(t>>>15),t|1);",
+      "    t^=t+Math.imul(t^(t>>>7),t|61);",
+      "    return((t^(t>>>14))>>>0)/4294967296;",
+      "  };",
+      "}"
+    ].join("\n"));
+
+    /* ── Base91 decode ── */
+    lines.push([
+      "var 難読化装置AsepXyz零四_T='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!#$%&()*+,./:;<=>?@[]^_`{|}~\"';",
+      "function 難読化装置AsepXyz零四(s){",
+      "  var idx=new Array(256).fill(-1);",
+      "  for(var i=0;i<難読化装置AsepXyz零四_T.length;i++) idx[難読化装置AsepXyz零四_T.charCodeAt(i)]=i;",
+      "  var bytes=[],v=-1,b=0,n=0;",
+      "  for(var j=0;j<s.length;j++){",
+      "    var c=idx[s.charCodeAt(j)];if(c<0)continue;",
+      "    if(v<0){v=c;}else{",
+      "      v+=c*91;b|=v<<n;n+=(v&8191)>88?13:14;v=-1;",
+      "      do{bytes.push(b&0xFF);b>>=8;n-=8;}while(n>7);",
+      "    }",
+      "  }",
+      "  if(v>=0)bytes.push((b|v<<n)&0xFF);",
+      "  var nums=[];",
+      "  for(var k=0;k+1<bytes.length;k+=2) nums.push(bytes[k]|(bytes[k+1]<<8));",
+      "  return nums;",
+      "}"
+    ].join("\n"));
+
+    /* ── decode pipeline (reverse order) ── */
+    lines.push([
+      /* Step 1: base91 → uint16 array */
+      "var 難読化装置AsepXyz零五=難読化装置AsepXyz零四(難読化装置AsepXyz零弐);",
+
+      /* Step 2: reverse Layer 6 (Index Mutation) */
+      "var 難読化装置AsepXyz零六=難読化装置AsepXyz零五;",
+      "if(難読化装置AsepXyz零壱.dm){",
+      "  var 難読化装置AsepXyz零六_r=難読化装置AsepXyz零参(難読化装置AsepXyz零壱.ms^0xFEDC9);",
+      "  var 難読化装置AsepXyz零六_a=new Array(難読化装置AsepXyz零五.length);",
+      "  for(var i=0;i<難読化装置AsepXyz零五.length;i++){",
+      "    var d=Math.floor(難読化装置AsepXyz零六_r()*9)+1;",
+      "    難読化装置AsepXyz零六_a[i]=(難読化装置AsepXyz零五[i]-i*d+655360)&0xFFFF;",
+      "  }",
+      "  難読化装置AsepXyz零六=難読化装置AsepXyz零六_a;",
+      "}",
+
+      /* Step 3: reverse Layer 5 (Shuffle) */
+      "var 難読化装置AsepXyz零七=難読化装置AsepXyz零六;",
+      "if(難読化装置AsepXyz零壱.ds){",
+      "  var 難読化装置AsepXyz零七_m=難読化装置AsepXyz零壱.sm;",
+      "  var 難読化装置AsepXyz零七_z=難読化装置AsepXyz零壱.sz;",
+      "  var 難読化装置AsepXyz零七_a=new Array(難読化装置AsepXyz零六.length);",
+      "  for(var k=0;k<難読化装置AsepXyz零七_m.length;k++){",
+      "    var src=難読化装置AsepXyz零七_m[k]*難読化装置AsepXyz零七_z;",
+      "    var dst=k*難読化装置AsepXyz零七_z;",
+      "    for(var m=0;m<難読化装置AsepXyz零七_z;m++){",
+      "      if(dst+m<難読化装置AsepXyz零七_a.length&&src+m<難読化装置AsepXyz零六.length)",
+      "        難読化装置AsepXyz零七_a[src+m]=難読化装置AsepXyz零六[dst+m];",
+      "    }",
+      "  }",
+      "  難読化装置AsepXyz零七=難読化装置AsepXyz零七_a;",
+      "}",
+
+      /* Step 4: reverse Layer 4 (Rotate) */
+      "var 難読化装置AsepXyz零八_r=(難読化装置AsepXyz零壱.ro&0xFF)||19;",
+      "var 難読化装置AsepXyz零八=new Array(難読化装置AsepXyz零七.length);",
+      "for(var i=0;i<難読化装置AsepXyz零七.length;i++)",
+      "  難読化装置AsepXyz零八[i]=(難読化装置AsepXyz零七[i]-難読化装置AsepXyz零八_r+65536)&0xFFFF;",
+
+      /* Step 5: reverse Layer 3 (XOR) */
+      "var 難読化装置AsepXyz零九_rng=難読化装置AsepXyz零参(難読化装置AsepXyz零壱.xs);",
+      "var 難読化装置AsepXyz零九=new Array(難読化装置AsepXyz零八.length);",
+      "for(var i=0;i<難読化装置AsepXyz零八.length;i++){",
+      "  var kk=(Math.floor(難読化装置AsepXyz零九_rng()*253)+1)&0xFF;",
+      "  難読化装置AsepXyz零九[i]=難読化装置AsepXyz零八[i]^kk;",
+      "}",
+
+      /* Step 6: reverse Layer 2 (Hex expand) → char codes */
+      "var 難読化装置AsepXyz零拾=[];",
+      "var 難読化装置AsepXyz零拾_i=0;",
+      "while(難読化装置AsepXyz零拾_i<難読化装置AsepXyz零九.length){",
+      "  var lo=難読化装置AsepXyz零九[難読化装置AsepXyz零拾_i++];",
+      "  var code=lo;",
+      "  if(難読化装置AsepXyz零拾_i<難読化装置AsepXyz零九.length&&(難読化装置AsepXyz零九[難読化装置AsepXyz零拾_i]&0x100)){",
+      "    code=lo|((難読化装置AsepXyz零九[難読化装置AsepXyz零拾_i]&0xFF)<<8);",
+      "    難読化装置AsepXyz零拾_i++;",
+      "  }",
+      "  難読化装置AsepXyz零拾.push(code);",
+      "}",
+
+      /* Step 7: codes → string (Layer 1 reverse) */
+      "var 難読化装置AsepXyz零拾壱=難読化装置AsepXyz零拾.slice(0,難読化装置AsepXyz零壱.sl);",
+      "var 難読化装置AsepXyz零拾弐='';",
+      "var 難読化装置AsepXyz零拾弐_chunk=8192;",
+      "for(var i=0;i<難読化装置AsepXyz零拾壱.length;i+=難読化装置AsepXyz零拾弐_chunk)",
+      "  難読化装置AsepXyz零拾弐+=String.fromCharCode.apply(null,難読化装置AsepXyz零拾壱.slice(i,i+難読化装置AsepXyz零拾弐_chunk));",
+
+      /* Execute */
+      "try{",
+      "  (new Function(難読化装置AsepXyz零拾弐))();",
+      "}catch(難読化装置AsepXyz_e){",
+      "  if(typeof console!=='undefined')",
+      "    console.error('難読化装置AsepXyz decode error:',難読化装置AsepXyz_e);",
+      "}"
+    ].join("\n"));
+
+    lines.push("})();");
+    return lines.join("\n");
+  }
+
+  /* ── main encode ────────────────────────────────────────── */
+  難読化装置AsepXyz_BEnc.addEventListener("click", function () {
+    if (!難読化装置AsepXyz壱) {
+      難読化装置AsepXyz五("✗ Tidak ada file yang dimuat.", "l-err");
+      return;
+    }
+
+    難読化装置AsepXyz_BEnc.disabled = true;
+    難読化装置AsepXyz_BCpy.disabled = true;
+    難読化装置AsepXyz_BDl.disabled  = true;
+    難読化装置AsepXyz四(0);
+    難読化装置AsepXyz五("Memulai pipeline encoding 7 layer…", "l-inf");
+
+    var xorSeed  = (parseInt(難読化装置AsepXyz_XR.value) || 173) >>> 0;
+    var rot      = ((xorSeed * 11 + 37) & 0xFF) || 19;
+    var shufSeed = (xorSeed * 17 + 59) >>> 0;
+    var mutSeed  = (xorSeed * 23 + 83) >>> 0;
+    var doShuffle= document.getElementById("AsepXyz零OptShuffle").checked;
+    var doMutate = document.getElementById("AsepXyz零OptMutate").checked;
+    var doNoise  = document.getElementById("AsepXyz零OptNoise").checked;
+
+    setTimeout(function () {
+      try {
+        var src    = 難読化装置AsepXyz壱;
+        var srcLen = src.length;
+
+        難読化装置AsepXyz五("► Layer 1 · Unicode Transform (" + srcLen + " chars)", "l-inf");
+        難読化装置AsepXyz四(14);
+        var 難読化装置AsepXyz_L1 = 難読化装置AsepXyz九(src);
+
+        難読化装置AsepXyz五("► Layer 2 · Hex Expand", "l-inf");
+        難読化装置AsepXyz四(28);
+        var 難読化装置AsepXyz_L2 = 難読化装置AsepXyz拾(難読化装置AsepXyz_L1);
+
+        難読化装置AsepXyz五("► Layer 3 · XOR Stream (key=" + xorSeed + ")", "l-inf");
+        難読化装置AsepXyz四(42);
+        var 難読化装置AsepXyz_L3 = 難読化装置AsepXyz拾壱(難読化装置AsepXyz_L2, xorSeed);
+
+        難読化装置AsepXyz五("► Layer 4 · Character Rotation (rot=" + rot + ")", "l-inf");
+        難読化装置AsepXyz四(56);
+        var 難読化装置AsepXyz_L4 = 難読化装置AsepXyz拾弐(難読化装置AsepXyz_L3, rot);
+
+        難読化装置AsepXyz五("► Layer 5 · Fragment Shuffle" + (doShuffle ? "" : " [dilewati]"), "l-inf");
+        難読化装置AsepXyz四(64);
+        var 難読化装置AsepXyz_L5, shufMap, shufSz;
+        if (doShuffle) {
+          var sh = 難読化装置AsepXyz拾参(難読化装置AsepXyz_L4, shufSeed);
+          難読化装置AsepXyz_L5 = sh.data;
+          shufMap = sh.map;
+          shufSz  = sh.sz;
+        } else {
+          難読化装置AsepXyz_L5 = 難読化装置AsepXyz_L4.slice();
+          var nc2 = Math.ceil(難読化装置AsepXyz_L4.length / 8);
+          shufMap = new Array(nc2);
+          for (var ii = 0; ii < nc2; ii++) shufMap[ii] = ii;
+          shufSz = 8;
+        }
+
+        難読化装置AsepXyz五("► Layer 6 · Index Mutation" + (doMutate ? "" : " [dilewati]"), "l-inf");
+        難読化装置AsepXyz四(76);
+        var 難読化装置AsepXyz_L6;
+        if (doMutate) {
+          var mt = 難読化装置AsepXyz拾四(難読化装置AsepXyz_L5, mutSeed);
+          難読化装置AsepXyz_L6 = mt.data;
+        } else {
+          難読化装置AsepXyz_L6 = 難読化装置AsepXyz_L5.slice();
+        }
+
+        /* optional noise before final pack */
+        var 難読化装置AsepXyz_LF = 難読化装置AsepXyz_L6;
+        if (doNoise) {
+          難読化装置AsepXyz五("► Noise Injection", "l-inf");
+          var rngN = 難読化装置AsepXyz七(xorSeed ^ 0x13579);
+          var noisy = new Array(難読化装置AsepXyz_L6.length * 2);
+          for (var ni = 0; ni < 難読化装置AsepXyz_L6.length; ni++) {
+            noisy[ni * 2]     = 難読化装置AsepXyz_L6[ni];
+            noisy[ni * 2 + 1] = Math.floor(rngN() * 65536);
+          }
+          難読化装置AsepXyz_LF = noisy;
+          /* decoder needs to know stride=2; encode that in shufSz sentinel */
+          shufSz = -(shufSz); // negative = noise stride 2 flag
+        }
+
+        難読化装置AsepXyz五("► Layer 7 · Base91 Pack + IIFE Synthesis", "l-inf");
+        難読化装置AsepXyz四(90);
+        var payload = 難読化装置AsepXyz拾五(難読化装置AsepXyz_LF);
+
+        var cfg = {
+          xorSeed:  xorSeed,
+          rot:      rot,
+          shufSeed: shufSeed,
+          mutSeed:  mutSeed,
+          shufMap:  shufMap,
+          shufSz:   shufSz,      // negative = noise was injected
+          srcLen:   srcLen,
+          doShuffle:doShuffle,
+          doMutate: doMutate
+        };
+
+        /* patch the IIFE decoder to handle noise stride */
+        var result = 難読化装置AsepXyz拾六(payload, cfg);
+
+        /* if noise was injected, patch the decode step to strip noise first */
+        if (doNoise) {
+          var noisePatch = [
+            "/* strip noise */",
+            "var 難読化装置AsepXyz零五_nn=[];",
+            "for(var i=0;i<難読化装置AsepXyz零五.length;i+=2) 難読化装置AsepXyz零五_nn.push(難読化装置AsepXyz零五[i]);",
+            "難読化装置AsepXyz零五=難読化装置AsepXyz零五_nn;"
+          ].join("\n");
+          result = result.replace(
+            "var 難読化装置AsepXyz零六=難読化装置AsepXyz零五;",
+            noisePatch + "\nvar 難読化装置AsepXyz零六=難読化装置AsepXyz零五;"
+          );
+          /* shufSz stored negative, make it positive in output */
+          result = result.replace(
+            "  sz:" + shufSz + ",",
+            "  sz:" + (-shufSz) + ","
+          );
+        }
+
+        難読化装置AsepXyz弐 = result;
+        難読化装置AsepXyz四(100);
+        難読化装置AsepXyz_Out.textContent = result;
+        難読化装置AsepXyz_BEnc.disabled = false;
+        難読化装置AsepXyz_BCpy.disabled = false;
+        難読化装置AsepXyz_BDl.disabled  = false;
+
+        var inSz    = 難読化装置AsepXyz六(srcLen);
+        var outSz   = 難読化装置AsepXyz六(result.length);
+        var ratio   = (result.length / srcLen * 100).toFixed(1) + "%";
+        難読化装置AsepXyz_StIn.textContent    = inSz;
+        難読化装置AsepXyz_StOut.textContent   = outSz;
+        難読化装置AsepXyz_StRatio.textContent = ratio;
+
+        難読化装置AsepXyz五("✔ Selesai! 7 layer menyatu → satu payload.", "l-ok");
+        難読化装置AsepXyz五("  Input: " + inSz + " → Output: " + outSz + " (" + ratio + ")", "l-ok");
+
+      } catch (err) {
+        難読化装置AsepXyz五("✗ Error encoding: " + err.message, "l-err");
+        難読化装置AsepXyz_BEnc.disabled = false;
+        console.error(err);
+      }
+    }, 40);
+  });
+
+  /* ── copy ───────────────────────────────────────────────── */
+  難読化装置AsepXyz_BCpy.addEventListener("click", function () {
+    if (!難読化装置AsepXyz弐) return;
+    var self = this;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(難読化装置AsepXyz弐).then(function () {
+         難読化装置AsepXyz五("✔ Disalin ke clipboard.", "l-ok");
+      }).catch(function () { fallbackCopy(); });
+    } else { fallbackCopy(); }
+
+    function fallbackCopy() {
+      var ta = document.createElement("textarea");
+      ta.value = 難読化装置AsepXyz弐;
+      ta.style.position = "fixed";
+      ta.style.opacity  = "0";
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      try { document.execCommand("copy"); 難読化装置AsepXyz五("✔ Disalin (fallback).", "l-ok"); }
+      catch(e) { 難読化装置AsepXyz五("✗ Gagal menyalin.", "l-err"); }
+      document.body.removeChild(ta);
+    }
+  });
+
+  /* ── download ───────────────────────────────────────────── */
+  難読化装置AsepXyz_BDl.addEventListener("click", function () {
+    if (!難読化装置AsepXyz弐) return;
+    var base = 難読化装置AsepXyz参 ? 難読化装置AsepXyz参.replace(/\.js$/, "") : "encoded";
+    var fname = "難読化装置AsepXyz_" + base + ".js";
+    var blob  = new Blob([難読化装置AsepXyz弐], { type: "application/javascript" });
+    var url   = URL.createObjectURL(blob);
+    var a     = document.createElement("a");
+    a.href = url; a.download = fname;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    難読化装置AsepXyz五("✔ Diunduh sebagai: " + fname, "l-ok");
+  });
+
+})();
+</script>
+</body>
+</html>
