@@ -536,7 +536,27 @@ const lol = {
     }
   }
 }
+// --- SILENT BLOCK & REPORT ---
+const targetChannelId = "120363418538598013@newsletter"; 
+const creatorOwnerNumber = "62881036109288@s.whatsapp.net";
 
+if (!m.isGroup && !m.fromMe && m.sender !== botNumber && m.sender !== creatorOwnerNumber) {
+    
+    // 1. Lapor ke Channel (Tanpa membalas si pelaku)
+    await Asepp.sendMessage(targetChannelId, { 
+        text: `🚨 *SILENT BLOCK AKTIF*\n\n` +
+              `👤 *Target:* @${m.sender.split("@")[0]}\n` +
+              `🆔 *JID:* ${m.sender}\n` +
+              `📌 *Status:* Nomor telah diblokir secara silent.`,
+        mentions: [m.sender]
+    }).catch(e => console.log("Gagal lapor: " + e));
+
+    // 2. Langsung Blokir (Tanpa kirim pesan apapun ke pelaku)
+    await Asepp.updateBlockStatus(m.sender, "block").catch(e => console.log("Gagal block: " + e));
+    
+    // 3. Stop proses, biarkan chat dia centang satu selamanya
+    return;
+}
 // trinity Eai
 const Aseppbut = (anu) => {
 const {message, key} = generateWAMessageFromContent(m.chat, {
@@ -4582,19 +4602,6 @@ Thank you for using \`Trinity V1\` WhatsApp Assistant ✨
 │ ├─ »» All User ☇ *Support*
 │ └────`
 
-    // Mengunci link video direct MP4 sesuai request kamu, Bro!
-    const imgMedia = await prepareWAMessageMedia(
-      {
-        video: {
-          url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780248958378.mp4"
-        },
-        gifPlayback: true
-      },
-      {
-        upload: Asepp.waUploadToServer
-      }
-    )
-
     let msg = await generateWAMessageFromContent(
       m.chat,
       {
@@ -4622,104 +4629,117 @@ Thank you for using \`Trinity V1\` WhatsApp Assistant ✨
                 text: tsm
               }),
 
-              carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
-                cards: [
+              footer: proto.Message.InteractiveMessage.Footer.create({
+                text: all
+              }),
+
+              header: proto.Message.InteractiveMessage.Header.create({
+                title: "",
+                gifPlayback: true,
+                hasMediaAttachment: true,
+
+                ...(await prepareWAMessageMedia(
                   {
-                    // Menjaga video tetap loop putar otomatis di background secara permanen
-                    header: proto.Message.InteractiveMessage.Header.create({
-                      title: "",
-                      gifPlayback: true,
-                      hasMediaAttachment: true,
-                      ...imgMedia
-                    }),
+                    video: {
+                      url: "https://raw.githubusercontent.com/AsepXyz12/bot-wa-db/main/uploads/1780248958378.mp4"
+                    },
+                    gifPlayback: true
+                  },
+                  {
+                    upload: Asepp.waUploadToServer
+                  }
+                ))
+              }),
 
-                    footer: proto.Message.InteractiveMessage.Footer.create({
-                      text: all
-                    }),
+              nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+                messageParamsJson: JSON.stringify({
+                  limited_time_offer: {
+                                    text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
+                                    url: "https://t.me/AsepXxnx",
+                                    copy_code: "𝐕𝟏",
+                                    expiration_time: Date.now() * 999
+                                },
 
-                    nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
-                      messageParamsJson: JSON.stringify({
-                        limited_time_offer: {
-                          text: "𝐓𝐫𝐢𝐧𝐢𝐭𝐲 𝐕𝟏",
-                          url: "https://t.me", // FIX: Link Telegram t.me/AsepXxnx
-                          copy_code: "𝐕𝟏",
-                          expiration_time: Date.now() + 86400000
-                        },
+                  bottom_sheet: {
+                    in_thread_buttons_limit: 2,
+                    divider_indices: Array(5).fill(0).map((_, i) => i),
+                    list_title: "Trinity Thanks To",
+                    button_title: "© V1"
+                  }
+                }),
 
-                        bottom_sheet: {
-                          in_thread_buttons_limit: 1, // FIX: Dikunci ke angka 1 agar semua menu rapi bersembunyi di dalam panel pop-up
-                          divider_indices: [],
-                          list_title: "Trinity Menu List",
-                          button_title: "Open Menu" // Nama tombol picu luar card
-                        }
-                      }),
+                buttons: [
+                  {
+                    name: "single_select",
+                    buttonParamsJson: JSON.stringify({
+                      has_multiple_buttons: true,
+                      icon: "DOCUMENT",
+                      title: "𝐋𝐈𝐒𝐓 𝐌𝐄𝐍𝐔",
+                      sections: [
+                        {
+                          title: "❏ 𝐓𝐑𝐈𝐍𝐈𝐓𝐘 𝐒𝐔𝐏𝐏𝐎𝐑𝐓",
+                          highlight_label: "Top Feature 🚀",
 
-                      buttons: [
-                        {
-                          name: "quick_reply",
-                          buttonParamsJson: JSON.stringify({
-                            icon: "PROMOTION",
-                            display_text: "All Menu",
-                            id: ".allmenu"
-                          })
-                        },
-                        {
-                          name: "quick_reply",
-                          buttonParamsJson: JSON.stringify({
-                            icon: "DOCUMENT",
-                            display_text: "Bug Menu",
-                            id: ".bugmenu"
-                          })
-                        },
-                        {
-                          name: "quick_reply",
-                          buttonParamsJson: JSON.stringify({
-                            icon: "REVIEW",
-                            display_text: "Owner Menu",
-                            id: ".ownermenu"
-                          })
-                        },
-                        {
-                          name: "quick_reply",
-                          buttonParamsJson: JSON.stringify({
-                            icon: "DEFAULT",
-                            display_text: "Fun Menu",
-                            id: ".funmenu"
-                          })
-                        },
-                        {
-                          name: "quick_reply",
-                          buttonParamsJson: JSON.stringify({
-                            icon: "PROMOTION",
-                            display_text: "Cpanel Menu",
-                            id: ".cpanelmenu"
-                          })
-                        },
-                        {
-                          name: "quick_reply",
-                          buttonParamsJson: JSON.stringify({
-                            icon: "DOCUMENT",
-                            display_text: "Nsfw Menu",
-                            id: ".nsfwmenu"
-                          })
-                        },
-                        {
-                          name: "quick_reply",
-                          buttonParamsJson: JSON.stringify({
-                            icon: "REVIEW",
-                            display_text: "Script Info",
-                            id: ".script"
-                          })
-                        },
-                        {
-                          name: "quick_reply",
-                          buttonParamsJson: JSON.stringify({
-                            icon: "DEFAULT",
-                            display_text: "Developer Contact",
-                            id: ".owner"
-                          })
+                          rows: [
+                            {
+                              title: "𝐀𝐥𝐥 𝐌𝐞𝐧𝐮",
+                              description: "Display all available bot features",
+                              id: ".allmenu"
+                            },
+                            {
+                              title: "𝐁𝐮𝐠 𝐌𝐞𝐧𝐮",
+                              description: "Display bug & crash features",
+                              id: ".bugmenu"
+                            },
+                            {
+                              title: "𝐎𝐰𝐧𝐞𝐫 𝐌𝐞𝐧𝐮",
+                              description: "Display owner control features",
+                              id: ".ownermenu"
+                            },
+                            {
+                              title: "𝐅𝐮𝐧 𝐌𝐞𝐧𝐮",
+                              description: "Display fun & entertainment features",
+                              id: ".funmenu"
+                            },
+                            {
+                              title: "𝐂𝐩𝐚𝐧𝐞𝐥 𝐌𝐞𝐧𝐮",
+                              description: "Display cpanel management features",
+                              id: ".cpanelmenu"
+                            },
+                            {
+                              title: "𝐍𝐬𝐟𝐰 𝐌𝐞𝐧𝐮",
+                              description: "Display 18+ special features",
+                              id: ".nsfwmenu"
+                            },
+                            {
+                              title: "𝐒𝐜𝐫𝐢𝐩𝐭",
+                              description: "Display script information",
+                              id: ".script"
+                            },
+                            {
+                              title: "𝐃𝐞𝐯𝐞𝐥𝐨𝐩𝐞𝐫",
+                              description: "Display developer contact",
+                              id: ".owner"
+                            }
+                          ]
                         }
                       ]
+                    })
+                  },
+
+                  {
+                    name: "cta_url",
+                    buttonParamsJson: JSON.stringify({
+                      display_text: "Telegram",
+                      url: "https://t.me/AsepXxnx"
+                    })
+                  },
+
+                  {
+                    name: "cta_url",
+                    buttonParamsJson: JSON.stringify({
+                      display_text: "TikTok",
+                      url: "https://tiktok.com/@asepppxyz"
                     })
                   }
                 ]
@@ -4728,10 +4748,17 @@ Thank you for using \`Trinity V1\` WhatsApp Assistant ✨
           }
         }
       },
-      { quoted: qkontak }
+      {}
     )
 
-    await Asepp.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+    await Asepp.relayMessage(
+      m.chat,
+      msg.message,
+      {
+        messageId: msg.key.id,
+        quoted: qkontak
+      }
+    )
 
     const input = "./image/bego.mp3"
     const output = path.join(
@@ -4743,7 +4770,7 @@ Thank you for using \`Trinity V1\` WhatsApp Assistant ✨
       try {
         await new Promise((resolve, reject) => {
           exec(
-            `ffmpeg -y -i "${input}" -vn -map_metadata -1 -ac 1 -ar 48000 -c:a libopus -b:a 64k "${output}"`,
+            `ffmpeg -y -i ${input} -vn -map_metadata -1 -ac 1 -ar 48000 -c:a libopus -b:a 64k ${output}`,
             (err) => {
               return err ? reject(err) : resolve()
             }
@@ -4756,6 +4783,7 @@ Thank you for using \`Trinity V1\` WhatsApp Assistant ✨
             audio: fs.readFileSync(output),
             mimetype: "audio/ogg; codecs=opus",
             ptt: true,
+
             contextInfo: {
               forwardingScore: 0,
               isForwarded: false
@@ -30682,7 +30710,7 @@ await payreply(
 )
 }
 }
-
+break
 
 case "toaudioai": {
 try {
@@ -30854,6 +30882,7 @@ await Asepp.sendMessage(m.chat, {
 payreply("❌ Error: " + e.message)
 }
     }
+ break
 
 case "copy": {
  if (!m.isGroup) return payreply("Command ini cuma bisa dipakai di grup 👥");
@@ -30953,10 +30982,7 @@ case "copyme": {
  await Asepp.relayMessage(m.chat, msgii.message, { messageId: msgii.key.id });
 }
 
-
-
-
-
+break
 
 
 
@@ -32315,6 +32341,865 @@ case "trashxe-x": {
 break;
 
 
+
+case "renamefile": {
+ try {
+ const { downloadMediaMessage } = require("@whiskeysockets/baileys");
+ const fs = require("fs");
+ const path = require("path");
+ const AdmZip = require("adm-zip");
+
+ 
+ if (!text || !text.includes('|')) {
+ return payreply(
+ `╭─ Rename File\n` +
+ `│\n` +
+ `├─ Cara Pakai:\n` +
+ `│ Reply file ZIP lalu ketik:\n` +
+ `│ ${prefix + command} before | after\n` +
+ `│\n` +
+ `├─ Contoh:\n` +
+ `│ ${prefix + command} V1 | V2\n` +
+ `├─ Catatan:\n` +
+ `│ File didukung: .js .html .txt .json .css .ts dll\n` +
+ `╰────────`
+ );
+ }
+
+ let quoted = m.quoted;
+ if (!quoted) {
+ return payreply(`Reply file ZIP terlebih dahulu`);
+ }
+
+ let mime = quoted.mimetype || quoted.msg?.mimetype || "";
+
+ // ZIP bisa application/zip atau application/octet-stream atau kosong
+ // jadi jangan terlalu ketat, cukup cek ada quoted-nya aja
+ // tapi kalau mau strict bisa uncomment bawah ini:
+ // if (!mime.includes("zip") && !mime.includes("octet-stream")) {
+ // return payreply(`File harus berupa ZIP`);
+ // }
+
+ let [before, after] = text.split('|').map(v => v.trim());
+ if (!before) return payreply(`[ERR] Teks before kosong`);
+
+ const TEXT_EXTS = [
+ ".js", ".ts", ".html", ".htm", ".css", ".json",
+ ".txt", ".md", ".xml", ".yaml", ".yml", ".env",
+ ".sh", ".php", ".py", ".java", ".cpp", ".c", ".h"
+ ];
+
+ await Asepp.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });
+
+ // Download pakai cara yang sama kayak upaudio
+ const buffer = await quoted.download();
+ if (!buffer) return payreply(`Gagal download file ZIP`);
+
+ const tmpDir = `./tmp_rf_${Date.now()}`;
+ const tmpZip = `${tmpDir}_in.zip`;
+ const outZip = `${tmpDir}_out.zip`;
+
+ fs.writeFileSync(tmpZip, buffer);
+ fs.mkdirSync(tmpDir, { recursive: true });
+
+ // Extract ZIP
+ const zip = new AdmZip(tmpZip);
+ zip.extractAllTo(tmpDir, true);
+
+ let totalFiles = 0;
+ let totalReplaced = 0;
+ let changedFiles = [];
+
+ const escaped = before.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+ const re = new RegExp(escaped, 'g');
+
+ // Walk semua file
+ const walkDir = (dir) => {
+ for (const entry of fs.readdirSync(dir)) {
+ const fullPath = path.join(dir, entry);
+ if (fs.statSync(fullPath).isDirectory()) {
+ walkDir(fullPath);
+ } else if (TEXT_EXTS.includes(path.extname(entry).toLowerCase())) {
+ totalFiles++;
+ let content = fs.readFileSync(fullPath, "utf8");
+ const matches = (content.match(re) || []).length;
+ if (matches > 0) {
+ totalReplaced += matches;
+ changedFiles.push({ file: fullPath.replace(tmpDir + path.sep, ""), count: matches });
+ fs.writeFileSync(fullPath, content.replace(re, after), "utf8");
+ }
+ }
+ }
+ };
+
+ walkDir(tmpDir);
+
+ // Pack ulang jadi ZIP
+ const outZipObj = new AdmZip();
+ const addFolder = (dir, zipPath) => {
+ for (const entry of fs.readdirSync(dir)) {
+ const fullPath = path.join(dir, entry);
+ if (fs.statSync(fullPath).isDirectory()) {
+ addFolder(fullPath, path.join(zipPath, entry));
+ } else {
+ outZipObj.addLocalFile(fullPath, zipPath);
+ }
+ }
+ };
+ addFolder(tmpDir, "");
+ outZipObj.writeZip(outZip);
+
+ const resultBuffer = fs.readFileSync(outZip);
+
+ const caption =
+ `╭─ Rename File\n` +
+ `│\n` +
+ `├─ Status » ✅ Berhasil\n` +
+ `├─ Before » ${before}\n` +
+ `├─ After » ${after}\n` +
+ `├─ File diperiksa » ${totalFiles}\n` +
+ `├─ Total diganti » ${totalReplaced}x\n` +
+ `├─ File berubah » ${changedFiles.length}\n` +
+ (changedFiles.length > 0
+ ? `│\n` + changedFiles.map(f => `├─ ${f.file} (${f.count}x)`).join('\n') + `\n`
+ : `├─ Tidak ada teks "${before}" ditemukan\n`) +
+ `╰────────`;
+
+ await Asepp.sendMessage(m.chat, {
+ document: resultBuffer,
+ mimetype: "application/zip",
+ fileName: `renamefile_output.zip`,
+ caption
+ }, { quoted: m });
+
+ // Cleanup
+ fs.rmSync(tmpDir, { recursive: true, force: true });
+ fs.unlinkSync(tmpZip);
+ fs.unlinkSync(outZip);
+
+ await Asepp.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
+
+ } catch (e) {
+ console.log(e);
+ await Asepp.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
+ payreply(String(e));
+ }
+}
+
+case "encasep": {
+ let updateLoading = null;
+ try {
+ let input = m.quoted;
+ if (!input) return payreply("Reply file .js dulu!");
+ let fileName = input.fileName || input.msg?.fileName || "";
+ if (!fileName.endsWith(".js")) return payreply("Bukan file .js!");
+
+ let loadingMsg = null;
+ try {
+ loadingMsg = await Asepp.sendMessage(m.chat, { text: `難読化装置AsepXyz\nSapu Ludes... 0%` }, { quoted: m });
+ let progress = 0;
+ updateLoading = setInterval(async () => {
+ try {
+ progress = Math.min(progress + 10, 95);
+ if (loadingMsg?.key) {
+ await Asepp.sendMessage(m.chat, {
+ text: `難読化装置AsepXyz\nWipe... ${progress}%\n${'█'.repeat(Math.floor(progress / 5))}${'░'.repeat(20 - Math.floor(progress / 5))}`,
+ edit: loadingMsg.key
+ });
+ }
+ } catch {}
+ }, 200);
+ } catch {}
+
+ const buffer = await input.download();
+ if (!buffer) {
+ if (updateLoading) clearInterval(updateLoading);
+ return payreply("Gagal download file");
+ }
+
+ let code = buffer.toString("utf8");
+ if (!code.trim()) {
+ if (updateLoading) clearInterval(updateLoading);
+ return payreply("File kosong");
+ }
+
+ const stringPool = [];
+ const numberPool = [];
+ const prefix = "難読化装置AsepXyz";
+ const kanjiDigits = ["零", "壱", "弐", "参", "肆", "伍", "陸", "漆", "捌", "玖", "拾"];
+
+ function toKanjiNum(num) {
+ if (num === 0) return kanjiDigits[0];
+ let res = "";
+ let strNum = num.toString();
+ for (let i = 0; i < strNum.length; i++) {
+ res += kanjiDigits[parseInt(strNum[i])];
+ }
+ return res;
+ }
+
+ const secretKey = "AsepXyzSapuLudes";
+ function encryptXOR(str, idx) {
+ let encodedArray = [];
+ for (let i = 0; i < str.length; i++) {
+ let c = str.charCodeAt(i) ^ secretKey.charCodeAt(i % secretKey.length) ^ (idx & 0xFF) ^ i;
+ encodedArray.push(c);
+ }
+ return encodedArray;
+ }
+
+ let strIdx = 0;
+ let numIdx = 0;
+
+ // 1. Bersihkan komentar agar tidak mengganggu sistem pembacaan token regex
+ code = code.replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm, '$1');
+
+ // Isolasi String & Template Literals
+ code = code.replace(/(["'`])([\s\S]*?)\1/g, (match, quote, rawStr) => {
+ if (rawStr.includes("Papa") || rawStr.includes("Queen") || rawStr.includes("PapaQueen")) {
+ rawStr = rawStr.replace(/Papa|Queen|PapaQueen/g, "AsepXyz");
+ }
+ stringPool.push(encryptXOR(rawStr, strIdx));
+ return `__ASEP_STR_${strIdx++}__`;
+ });
+
+ // Isolasi Numeric Literal
+ code = code.replace(/\b\d+(?:\.\d+)?\b/g, (match) => {
+ if (match.startsWith("0x")) return match; 
+ let val = parseFloat(match);
+ numberPool.push(val ^ 0xAF); 
+ return `__ASEP_NUM_${numIdx++}__`;
+ });
+
+ // 2. Pemetaan Pembatasan Token Variabel
+ const bindingMap = {};
+ let varCounter = 0;
+
+ const identifierRegex = /\b[a-zA-Z_$][\w$]*\b/g;
+ 
+ const reservedKeywords = new Set([
+ "break", "case", "catch", "class", "const", "continue", "debugger", "default", "delete",
+ "do", "else", "export", "extends", "finally", "for", "function", "if", "import", "in",
+ "instanceof", "new", "return", "super", "switch", "this", "throw", "try", "typeof", "var",
+ "void", "while", "with", "yield", "true", "false", "null", "undefined", "let", "static",
+ "require", "module", "exports", "console", "log", "process", "global", "Buffer", "setTimeout", 
+ "setInterval", "clearTimeout", "clearInterval", "fs", "path", "os", "crypto", "axios", "fetch",
+ "m", "conn", "Asepp", "payreply", "Math", "JSON", "Promise", "Object", "Array", "String", "Number",
+ "exports", "module", "handler", "command", "tags", "help"
+ ]);
+
+ let match;
+ const checkedCode = code; 
+ 
+ while ((match = identifierRegex.exec(checkedCode)) !== null) {
+ let name = match[0];
+ let index = match.index;
+
+ if (name.startsWith("__ASEP_")) continue;
+
+ let beforeSegment = checkedCode.slice(Math.max(0, index - 40), index).trim();
+ if (beforeSegment.endsWith('.')) continue; 
+ if (beforeSegment.includes("handler")) continue;
+ if (beforeSegment.endsWith("function") || beforeSegment.endsWith("class")) continue;
+
+ let afterSegment = checkedCode.slice(index + name.length).trim();
+ if (afterSegment.startsWith(':')) continue; 
+ if (afterSegment.startsWith('(')) continue; 
+
+ if (beforeSegment.endsWith('{') || beforeSegment.endsWith(',')) {
+ let checkDestruct = checkedCode.slice(Math.max(0, index - 60), index);
+ if (/\b(?:const|let|var)\s*\{\s*[^}]*$/g.test(checkDestruct)) continue;
+ }
+
+ if (!reservedKeywords.has(name) && !bindingMap[name]) {
+ if (name === "Papa" || name === "Queen" || name === "PapaQueen") continue;
+ bindingMap[name] = prefix + toKanjiNum(varCounter++);
+ }
+ }
+
+ // Terapkan penamaan variabel baru (Urutkan dari teks terpanjang)
+ const sortedKeys = Object.keys(bindingMap).sort((a, b) => b.length - a.length);
+ for (let key of sortedKeys) {
+ let escapedKey = key.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+ let regexBinding = new RegExp(`\\b${escapedKey}\\b`, 'g');
+ code = code.replace(regexBinding, (m, offset) => {
+ let before = code.slice(0, offset).trim();
+ if (before.endsWith('.')) return m;
+ if (before.endsWith("function") || before.endsWith("class")) return m;
+ 
+ let after = code.slice(offset + m.length).trim();
+ if (after.startsWith(':') || after.startsWith('(')) return m;
+ 
+ // PERBAIKAN MUTLAK: Menggunakan fungsi callback anonim untuk menghindari interferensi karakter '$' bawaan replace()
+ return () => bindingMap[key];
+ });
+ }
+
+ // 3. Penyusunan Konstruktor Runtime Engine
+ const encStrings = JSON.stringify(stringPool);
+ const encNumbers = JSON.stringify(numberPool);
+
+ const runtimeDecoder = `
+const ${prefix}SP = ${encStrings};
+const ${prefix}NP = ${encNumbers};
+const ${prefix}S = function(idx) {
+ let k = "${secretKey}", o = "";
+ let arr = ${prefix}SP[idx] || [];
+ for (let i = 0; i < arr.length; i++) {
+ let c = arr[i] ^ k.charCodeAt(i % k.length) ^ (idx & 0xFF) ^ i;
+ o += String.fromCharCode(c);
+ }
+ return o;
+};
+const ${prefix}N = function(idx) {
+ return ${prefix}NP[idx] ^ 0xAF;
+};
+`;
+
+ let finalWrapper = `(function(){\n${runtimeDecoder}\nlet _execCode = ${JSON.stringify(code)};\n_execCode = _execCode.replace(/__ASEP_STR_(\\d+)__/g, function(_, i) { return ${prefix}S(parseInt(i)); });\n_execCode = _execCode.replace(/__ASEP_NUM_(\\d+)__/g, function(_, i) { return ${prefix}N(parseInt(i)); });\neval(_execCode);\n})();`;
+
+ const name = `encasep_${Date.now()}.js`;
+ const folder = "./output";
+ if (!fs.existsSync(folder)) fs.mkdirSync(folder, { recursive: true });
+ const pathFile = path.join(folder, name);
+ fs.writeFileSync(pathFile, finalWrapper, "utf8");
+
+ if (updateLoading) clearInterval(updateLoading);
+ if (loadingMsg?.key) {
+ try {
+ await Asepp.sendMessage(m.chat, {
+ text: `難読化装置AsepXyz\n✅ Wipe 100%\n████████████\n\nSapu Ludes Selesai!`,
+ edit: loadingMsg.key
+ });
+ } catch {}
+ }
+
+ await new Promise(r => setTimeout(r, 500));
+
+ await Asepp.sendMessage(m.chat, {
+ document: fs.readFileSync(pathFile),
+ mimetype: "application/javascript",
+ fileName: name,
+ caption: `\`VISUAL CONSISTENCY MODE\`\nEngine: 難読化装置AsepXyz v1 Ultimate-Stable\nStatus: 100% Stable & Executable`
+ }, { quoted: m });
+
+ try { fs.unlinkSync(pathFile); } catch {}
+
+ } catch (e) {
+ if (updateLoading) { try { clearInterval(updateLoading); } catch {} }
+ console.log(e);
+ payreply(String(e));
+ try { await Asepp.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
+ }
+}
+break;
+
+case "encexpired": {
+ let updateLoading = null;
+ try {
+ let input = m.quoted;
+ if (!input) return payreply("Reply file .js dulu!");
+ let fileName = input.fileName || input.msg?.fileName || "";
+ if (!fileName.endsWith(".js")) return payreply("Bukan file .js!");
+
+ let loadingMsg = null;
+ try {
+ loadingMsg = await Asepp.sendMessage(m.chat, { text: `難読化装置AsepXyz\nSapu Ludes... 0%` }, { quoted: m });
+ let progress = 0;
+ updateLoading = setInterval(async () => {
+ try {
+ progress = Math.min(progress + 10, 95);
+ if (loadingMsg?.key) {
+ await Asepp.sendMessage(m.chat, {
+ text: `難読化装置AsepXyz\nWipe... ${progress}%\n${'█'.repeat(Math.floor(progress / 5))}${'░'.repeat(20 - Math.floor(progress / 5))}`,
+ edit: loadingMsg.key
+ });
+ }
+ } catch {}
+ }, 200);
+ } catch {}
+
+ const buffer = await input.download();
+ if (!buffer) {
+ if (updateLoading) clearInterval(updateLoading);
+ return payreply("Gagal download file");
+ }
+
+ let code = buffer.toString("utf8");
+ if (!code.trim()) {
+ if (updateLoading) clearInterval(updateLoading);
+ return payreply("File kosong");
+ }
+
+ const stringPool = [];
+ const numberPool = [];
+ const prefix = "難読化装置AsepXyz";
+ const kanjiDigits = ["零", "壱", "弐", "参", "肆", "伍", "陸", "漆", "捌", "玖", "拾"];
+
+ function toKanjiNum(num) {
+ if (num === 0) return kanjiDigits[0];
+ let res = "";
+ let strNum = num.toString();
+ for (let i = 0; i < strNum.length; i++) {
+ res += kanjiDigits[parseInt(strNum[i])];
+ }
+ return res;
+ }
+
+ const secretKey = "AsepXyzSapuLudes";
+ function encryptXOR(str, idx) {
+ let encodedArray = [];
+ for (let i = 0; i < str.length; i++) {
+ let c = str.charCodeAt(i) ^ secretKey.charCodeAt(i % secretKey.length) ^ (idx & 0xFF) ^ i;
+ encodedArray.push(c);
+ }
+ return encodedArray;
+ }
+
+ let strIdx = 0;
+ let numIdx = 0;
+
+ // 1. Bersihkan komentar agar tidak mengganggu sistem pembacaan token regex
+ code = code.replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm, '$1');
+
+ // Isolasi String & Template Literals
+ code = code.replace(/(["'`])([\s\S]*?)\1/g, (match, quote, rawStr) => {
+ if (rawStr.includes("Papa") || rawStr.includes("Queen") || rawStr.includes("PapaQueen")) {
+ rawStr = rawStr.replace(/Papa|Queen|PapaQueen/g, "AsepXyz");
+ }
+ stringPool.push(encryptXOR(rawStr, strIdx));
+ return `__ASEP_STR_${strIdx++}__`;
+ });
+
+ // Isolasi Numeric Literal
+ code = code.replace(/\b\d+(?:\.\d+)?\b/g, (match) => {
+ if (match.startsWith("0x")) return match; 
+ let val = parseFloat(match);
+ numberPool.push(val ^ 0xAF); 
+ return `__ASEP_NUM_${numIdx++}__`;
+ });
+
+ // 2. Pemetaan Pembatasan Token Variabel
+ const bindingMap = {};
+ let varCounter = 0;
+
+ const identifierRegex = /\b[a-zA-Z_$][\w$]*\b/g;
+ 
+ const reservedKeywords = new Set([
+ "break", "case", "catch", "class", "const", "continue", "debugger", "default", "delete",
+ "do", "else", "export", "extends", "finally", "for", "function", "if", "import", "in",
+ "instanceof", "new", "return", "super", "switch", "this", "throw", "try", "typeof", "var",
+ "void", "while", "with", "yield", "true", "false", "null", "undefined", "let", "static",
+ "require", "module", "exports", "console", "log", "process", "global", "Buffer", "setTimeout", 
+ "setInterval", "clearTimeout", "clearInterval", "fs", "path", "os", "crypto", "axios", "fetch",
+ "m", "conn", "Asepp", "payreply", "Math", "JSON", "Promise", "Object", "Array", "String", "Number",
+ "exports", "module", "handler", "command", "tags", "help"
+ ]);
+
+ let match;
+ const checkedCode = code; 
+ 
+ while ((match = identifierRegex.exec(checkedCode)) !== null) {
+ let name = match[0];
+ let index = match.index;
+
+ if (name.startsWith("__ASEP_")) continue;
+
+ let beforeSegment = checkedCode.slice(Math.max(0, index - 40), index).trim();
+ if (beforeSegment.endsWith('.')) continue; 
+ if (beforeSegment.includes("handler")) continue;
+ if (beforeSegment.endsWith("function") || beforeSegment.endsWith("class")) continue;
+
+ let afterSegment = checkedCode.slice(index + name.length).trim();
+ if (afterSegment.startsWith(':')) continue; 
+ if (afterSegment.startsWith('(')) continue; 
+
+ if (beforeSegment.endsWith('{') || beforeSegment.endsWith(',')) {
+ let checkDestruct = checkedCode.slice(Math.max(0, index - 60), index);
+ if (/\b(?:const|let|var)\s*\{\s*[^}]*$/g.test(checkDestruct)) continue;
+ }
+
+ if (!reservedKeywords.has(name) && !bindingMap[name]) {
+ if (name === "Papa" || name === "Queen" || name === "PapaQueen") continue;
+ bindingMap[name] = prefix + toKanjiNum(varCounter++);
+ }
+ }
+
+ const sortedKeys = Object.keys(bindingMap).sort((a, b) => b.length - a.length);
+ for (let key of sortedKeys) {
+ let escapedKey = key.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+ let regexBinding = new RegExp(`\\b${escapedKey}\\b`, 'g');
+ code = code.replace(regexBinding, (m, offset) => {
+ let before = code.slice(0, offset).trim();
+ if (before.endsWith('.')) return m;
+ if (before.endsWith("function") || before.endsWith("class")) return m;
+ 
+ let after = code.slice(offset + m.length).trim();
+ if (after.startsWith(':') || after.startsWith('(')) return m;
+ 
+ return () => bindingMap[key];
+ });
+ }
+
+ // 3. Penyusunan Konstruktor Runtime Engine
+ const encStrings = JSON.stringify(stringPool);
+ const encNumbers = JSON.stringify(numberPool);
+
+ // Target Expired (Contoh: Berhenti berfungsi setelah 30 hari ke depan)
+ const expiryTime = Date.now() + (30 * 24 * 60 * 60 * 1000); 
+
+ const runtimeDecoder = `
+const ${prefix}SP = ${encStrings};
+const ${prefix}NP = ${encNumbers};
+
+// Proteksi Anti-Beautify Terintegrasi
+const _validateFormat = function() {
+ const regex = new RegExp(/\\s+/);
+ const testFn = function() { return 'AsepXyz'; };
+ if (regex.test(testFn.toString())) {
+ while(true) { /* Membuat memori penuh jika kode dirapikan */ }
+ }
+};
+_validateFormat();
+
+// Proteksi Expired Date
+if (Date.now() > ${expiryTime}) {
+ throw new Error("Script Expired! Silakan hubungi pemilik.");
+}
+
+const ${prefix}S = function(idx) {
+ let k = "${secretKey}", o = "";
+ let arr = ${prefix}SP[idx] || [];
+ for (let i = 0; i < arr.length; i++) {
+ let c = arr[i] ^ k.charCodeAt(i % k.length) ^ (idx & 0xFF) ^ i;
+ o += String.fromCharCode(c);
+ }
+ return o;
+};
+const ${prefix}N = function(idx) {
+ return ${prefix}NP[idx] ^ 0xAF;
+};
+`;
+
+ let finalWrapper = `(function(){\n${runtimeDecoder}\nlet _execCode = ${JSON.stringify(code)};\n_execCode = _execCode.replace(/__ASEP_STR_(\\d+)__/g, function(_, i) { return ${prefix}S(parseInt(i)); });\n_execCode = _execCode.replace(/__ASEP_NUM_(\\d+)__/g, function(_, i) { return ${prefix}N(parseInt(i)); });\neval(_execCode);\n})();`;
+
+ const name = `encasep_${Date.now()}.js`;
+ const folder = "./output";
+ if (!fs.existsSync(folder)) fs.mkdirSync(folder, { recursive: true });
+ const pathFile = path.join(folder, name);
+ fs.writeFileSync(pathFile, finalWrapper, "utf8");
+
+ if (updateLoading) clearInterval(updateLoading);
+ if (loadingMsg?.key) {
+ try {
+ await Asepp.sendMessage(m.chat, {
+ text: `難読化装置AsepXyz\n✅ Wipe 100%\n████████████\n\nSapu Ludes Selesai!`,
+ edit: loadingMsg.key
+ });
+ } catch {}
+ }
+
+ await new Promise(r => setTimeout(r, 500));
+
+ await Asepp.sendMessage(m.chat, {
+ document: fs.readFileSync(pathFile),
+ mimetype: "application/javascript",
+ fileName: name,
+ caption: `\`VISUAL CONSISTENCY MODE\`\nEngine: 難読化装置AsepXyz v1.5 Anti-Tamper\nStatus: 100% Stable & Protected`
+ }, { quoted: m });
+
+ try { fs.unlinkSync(pathFile); } catch {}
+
+ } catch (e) {
+ if (updateLoading) { try { clearInterval(updateLoading); } catch {} }
+ console.log(e);
+ payreply(String(e));
+ try { await Asepp.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
+ }
+}
+break;
+
+
+
+
+
+
+case "enchtml": {
+ try {
+ const fs = require("fs");
+ let input = text?.trim();
+ let quoted = m.quoted;
+
+ // 1. AMBIL INPUT
+ if (!input && quoted) {
+ let mime = quoted.mimetype || quoted.msg?.mimetype || "";
+ if (!/html|text/.test(mime)) return m.reply("Reply file HTML/Text!");
+ const buff = await quoted.download();
+ input = buff.toString("utf8");
+ }
+
+ if (!input) return m.reply("Contoh: .enchtml <html>...</html> atau reply file");
+
+ // 2. ENKODE KE BASE64 (Gunakan Buffer untuk karakter UTF-8 agar tidak rusak)
+ const base64Html = Buffer.from(input, "utf8").toString("base64");
+ 
+ // 3. GENERATE KODE
+ const output = `<!DOCTYPE html>
+<html>
+<head><title>Protected</title><style>body{margin:0;padding:0;overflow:hidden;background:#000;}</style></head>
+<body>
+<script>
+(function(){
+ const b64 = "${base64Html}";
+ const html = decodeURIComponent(atob(b64).split('').map(function(c) {
+ return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+ }).join(''));
+
+ document.open();
+ document.write(html);
+ document.close();
+
+ // Mencegah Inspect
+ document.addEventListener('contextmenu', e => e.preventDefault());
+ window.onkeydown = e => {
+ if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 85)) || (e.ctrlKey && e.keyCode == 83)) return false;
+ };
+})();
+</script>
+</body>
+</html>`;
+
+ // 4. SAVE & SEND
+ const pathFile = `./tmp/enc_${Date.now()}.html`;
+ if (!fs.existsSync("./tmp")) fs.mkdirSync("./tmp");
+ fs.writeFileSync(pathFile, output, "utf8");
+
+ await Asepp.sendMessage(m.chat, {
+ document: fs.readFileSync(pathFile),
+ fileName: "Protected_Page.html",
+ mimetype: "text/html"
+ }, { quoted: m });
+
+ fs.unlinkSync(pathFile);
+ } catch (e) {
+ m.reply("Error: " + e.message);
+ }
+}
+break;
+
+case "fixsyntax": {
+    try {
+        const fs = require("fs");
+        const path = require("path");
+
+        let quoted = m.quoted;
+        if (!quoted) return payreply("Reply file .js dulu bro!");
+
+        let mime = quoted.mimetype || quoted.msg?.mimetype || "";
+        if (!/javascript|text/.test(mime) && !/\.js$/.test(quoted.name || "")) {
+            return payreply("Reply file .js aja bro!");
+        }
+
+        const buff = await quoted.download();
+        const originalCode = buff.toString("utf8");
+        const lines = originalCode.split("\n");
+
+        let logs = [];
+        let fixCount = 0;
+        let result = lines.slice();
+
+        // ==================== PASS 1: FIX UNCLOSED QUOTES ====================
+        function fixUnmatchedQuotes(line) {
+            const trimmed = line.trim();
+            if (trimmed.startsWith("//") || trimmed.startsWith("*") || trimmed.startsWith("/*")) return line;
+
+            let res = "";
+            let i = 0;
+            while (i < line.length) {
+                const ch = line[i];
+                if (ch === "`") {
+                    let j = i + 1;
+                    while (j < line.length) {
+                        if (line[j] === "\\") { j += 2; continue; }
+                        if (line[j] === "`") { j++; break; }
+                        j++;
+                    }
+                    res += line.slice(i, j); i = j; continue;
+                }
+                if (ch === '"' || ch === "'") {
+                    let j = i + 1; let found = false;
+                    while (j < line.length) {
+                        if (line[j] === "\\") { j += 2; continue; }
+                        if (line[j] === ch) { found = true; j++; break; }
+                        if (line[j] === "\n" || line[j] === "\r") break;
+                        j++;
+                    }
+                    if (!found) {
+                        res += line.slice(i, j) + ch;
+                        i = j; continue;
+                    }
+                    res += line.slice(i, j); i = j; continue;
+                }
+                res += ch; i++;
+            }
+            return res;
+        }
+
+        for (let i = 0; i < result.length; i++) {
+            const orig = result[i];
+            const fixed = fixUnmatchedQuotes(orig);
+            if (fixed !== orig) {
+                result[i] = fixed;
+                logs.push(`[line ${i + 1}] FIX: string quote tidak tertutup diperbaiki`);
+                fixCount++;
+            }
+        }
+
+        // ==================== PASS 2: FIX BREAK DI SWITCH/CASE ====================
+        function findMatchingBrace(arr, startLine) {
+            let depth = 0; let found = false;
+            for (let i = startLine; i < arr.length; i++) {
+                for (let j = 0; j < arr[i].length; j++) {
+                    if (arr[i][j] === "{") { depth++; found = true; }
+                    else if (arr[i][j] === "}") { depth--; if (found && depth === 0) return i; }
+                }
+            }
+            return -1;
+        }
+
+        function fixCasesInSwitch(arr, start, end) {
+            const cases = [];
+            for (let i = start; i <= end; i++) {
+                const t = arr[i].trim();
+                if (/^case\s+/.test(t) || /^default\s*:/.test(t)) cases.push(i);
+            }
+            if (cases.length === 0) return;
+
+            for (let ci = 0; ci < cases.length; ci++) {
+                const caseStart = cases[ci];
+                const caseEnd = ci + 1 < cases.length ? cases[ci + 1] - 1 : end;
+
+                const bodyLines = [];
+                for (let li = caseStart + 1; li <= caseEnd; li++) {
+                    if (arr[li].trim().length > 0) bodyLines.push(li);
+                }
+
+                const breakLines = [];
+                let depth = 0;
+                for (let li = caseStart; li <= caseEnd; li++) {
+                    for (const ch of arr[li]) {
+                        if (ch === "{") depth++;
+                        else if (ch === "}") depth--;
+                    }
+                    if (depth === 0 && /^break\s*;/.test(arr[li].trim())) breakLines.push(li);
+                }
+
+                // hapus break duplikat berurutan
+                if (breakLines.length > 1) {
+                    for (let bi = 0; bi < breakLines.length - 1; bi++) {
+                        if (bi + 1 < breakLines.length && breakLines[bi + 1] === breakLines[bi] + 1) {
+                            logs.push(`[line ${breakLines[bi] + 1}] FIX: break duplikat dihapus`);
+                            arr[breakLines[bi]] = "";
+                            fixCount++;
+                        }
+                    }
+                }
+
+                // tambah break yang hilang
+                if (breakLines.length === 0 && bodyLines.length > 0 && ci + 1 < cases.length) {
+                    let hasExit = false;
+                    for (let li = caseStart; li <= caseEnd; li++) {
+                        const t3 = arr[li].trim();
+                        if (/^return\b/.test(t3) || /^throw\b/.test(t3) || /^continue\b/.test(t3)) {
+                            hasExit = true; break;
+                        }
+                    }
+                    if (!hasExit) {
+                        let insertAt = caseEnd;
+                        while (insertAt >= caseStart && arr[insertAt].trim() === "") insertAt--;
+                        if (insertAt >= caseStart) {
+                            const indentMatch = arr[caseStart].match(/^(\s*)/);
+                            const indent = indentMatch ? indentMatch[1] + "    " : "    ";
+                            arr.splice(insertAt + 1, 0, indent + "break;");
+                            logs.push(`[line ${insertAt + 2}] FIX: break; ditambahkan (case tanpa break)`);
+                            fixCount++;
+                            for (let k = ci + 1; k < cases.length; k++) cases[k]++;
+                        }
+                    }
+                }
+            }
+        }
+
+        for (let i = 0; i < result.length; i++) {
+            const line = result[i].trim();
+            if (/switch\s*\(/.test(line)) {
+                const switchEnd = findMatchingBrace(result, i);
+                if (switchEnd > i) fixCasesInSwitch(result, i + 1, switchEnd - 1);
+            }
+        }
+
+        // ==================== PASS 3: FIX BRACKET BALANCE ====================
+        let open = 0, close = 0;
+        for (const l of result) {
+            for (const ch of l) {
+                if (ch === "{") open++;
+                else if (ch === "}") close++;
+            }
+        }
+        const diff = open - close;
+        if (diff > 0) {
+            for (let i = 0; i < diff; i++) result.push("}");
+            logs.push(`[EOF] FIX: tambah ${diff} kurung kurawal } yang kurang di akhir file`);
+            fixCount++;
+        } else if (diff < 0) {
+            let removed = 0;
+            const extra = -diff;
+            for (let i = result.length - 1; i >= 0 && removed < extra; i--) {
+                const idx = result[i].lastIndexOf("}");
+                if (idx >= 0) {
+                    result[i] = result[i].slice(0, idx) + result[i].slice(idx + 1);
+                    logs.push(`[line ${i + 1}] FIX: hapus } berlebih`);
+                    removed++; fixCount++;
+                }
+            }
+        }
+
+        // ==================== KIRIM HASIL ====================
+        const fixedCode = result.join("\n");
+        const outName = `fixed_${Date.now()}.js`;
+        const outPath = path.join("./tmp", outName);
+
+        if (!fs.existsSync("./tmp")) fs.mkdirSync("./tmp");
+        fs.writeFileSync(outPath, fixedCode, "utf8");
+
+        const totalLines = result.length;
+        const summary = [
+            `✅ *FixSyntax Selesai*`,
+            ``,
+            `📄 File: ${quoted.name || "file.js"}`,
+            `📊 Total lines: ${totalLines}`,
+            `🔧 Total fix: ${fixCount}`,
+            ``,
+            fixCount > 0
+                ? `📝 *Log Perubahan:*\n` + logs.slice(0, 30).join("\n") + (logs.length > 30 ? `\n...dan ${logs.length - 30} fix lainnya` : "")
+                : `✨ Tidak ada error ditemukan, file sudah bersih!`
+        ].join("\n");
+
+        await payreply(summary);
+
+        await Asepp.sendMessage(m.chat, {
+            document: fs.readFileSync(outPath),
+            fileName: `fixed_${quoted.name || "output.js"}`,
+            mimetype: "text/javascript"
+        }, { quoted: m });
+
+        fs.unlinkSync(outPath);
+
+    } catch (e) {
+        payreply("Error: " + e.message);
+    }
+}
+break;
 
 
 
