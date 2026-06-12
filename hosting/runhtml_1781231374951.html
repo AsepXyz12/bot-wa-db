@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>難読化装置AsepXyz — AST-Based Scope Renamer & Lightweight Obfuscator Engine</title>
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #131a2c;
+            --border-color: #24314f;
+            --text-main: #e2e8f0;
+            --text-muted: #718096;
+            --accent-primary: #5a67d8;
+            --accent-hover: #4c51bf;
+            --accent-success: #48bb78;
+            --accent-error: #f56565;
+            --code-color: #38bdf8;
+            --code-output: #34d399;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding: 30px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 26px;
+            color: #818cf8;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .drop-zone {
+            background-color: var(--bg-card);
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .drop-zone.dragover {
+            border-color: var(--accent-primary);
+            color: var(--text-main);
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background-color: var(--accent-primary);
+            color: #ffffff;
+            border: none;
+            padding: 10px 22px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background-color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background-color: #2d3748;
+        }
+
+        .btn-success {
+            background-color: var(--accent-success);
+        }
+
+        .btn-success:hover {
+            background-color: #38a169;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #1a202c;
+            border-radius: 4px;
+            height: 6px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--accent-success);
+            transition: width 0.1s ease;
+        }
+
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .panel {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 550px;
+            background-color: var(--bg-card);
+            color: var(--code-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: "Fira Code", "Courier New", Courier, monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+        }
+
+        textarea[readonly] {
+            color: var(--code-output);
+        }
+
+        .logger-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .logger-box {
+            background-color: #070a12;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            height: 150px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+            color: #cbd5e0;
+            white-space: pre-wrap;
+        }
+
+        .error-banner {
+            background-color: #2d1f1f;
+            border: 1px solid var(--accent-error);
+            color: #fecaca;
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-family: monospace;
+            font-size: 13px;
+            margin-top: 15px;
+            display: none;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>難読化装置AsepXyz — Semantical Compiler Engine</h1>
+        <div class="tagline">AST-Driven Identifier Substitution and Lexical Component Mutator for Pure Node.js Production</div>
+    </header>
+
+    <div class="drop-zone" id="uiDropZone">
+        Tarik & jatuhkan file JavaScript (.js) Anda di sini untuk memuat kode sumber secara lokal
+    </div>
+
+    <div class="action-bar">
+        <label class="btn btn-secondary">
+            📁 Buka File JS
+            <input type="file" id="uiFileInput" accept=".js">
+        </label>
+        <button class="btn" id="uiBtnCompile">Jalankan Kompilasi Obfuscation ⚡</button>
+        <button class="btn btn-success" id="uiBtnCopy">Salin Kode Output</button>
+        <button class="btn btn-success" id="uiBtnDownload">Unduh hasil.js</button>
+    </div>
+
+    <div class="progress-container" id="uiProgressContainer">
+        <div class="progress-bar" id="uiProgressBar"></div>
+    </div>
+
+    <div class="workspace-grid">
+        <div class="panel">
+            <div class="panel-label">Source Code Input (JavaScript Murni)</div>
+            <textarea id="uiTxtInput" spellcheck="false" placeholder="// Masukkan kode JavaScript Anda di sini...&#10;const fs = require('fs');&#10;let nilaiUtama = 42;&#10;&#10;function kalkulasiSistem(dataAngka) {&#10;    let hasilPerhitungan = dataAngka * 2;&#10;    console.log('Nilai internal:', hasilPerhitungan);&#10;    return hasilPerhitungan;&#10;}"></textarea>
+        </div>
+        <div class="panel">
+            <div class="panel-label">Hasil Cetak Ulang Semantik Obfuscated (Output Node.js)</div>
+            <textarea id="uiTxtOutput" readonly spellcheck="false" placeholder="// Hasil kompilasi token semantik akan muncul di sini..."></textarea>
+        </div>
+    </div>
+
+    <div class="logger-title">Compiler Step Log & Lexical Scope Monitor</div>
+    <div class="logger-box" id="uiLoggerBox">Menunggu pemanggilan unit parser...</div>
+
+    <div class="error-banner" id="uiErrorBanner"></div>
+</div>
+
+<script>
+    // Kamus Konversi Indeks Numerik Koleksi Kanji Tradisional (Rule #3)
+    const KANJI_STORE = ['零', '壱', '弐', '参', '肆', '伍', '陸', '漆', '捌', '玖', '拾', '百', '千', '万'];
+
+    // Generator Nama Pengenal Unik Wajib Tanpa Pemisahan Token / Satu Kesatuan Utuh
+    function createBrandedIdentityName(sequenceIndex) {
+        const rootBrandingPrefix = '難読化装置AsepXyz';
+        if (sequenceIndex < KANJI_STORE.length) {
+            return rootBrandingPrefix + KANJI_STORE[sequenceIndex];
+        }
+        let generatedChain = '';
+        let workingValue = sequenceIndex;
+        while (workingValue > 0) {
+            generatedChain = KANJI_STORE[workingValue % KANJI_STORE.length] + generatedChain;
+            workingValue = Math.floor(workingValue / KANJI_STORE.length);
+        }
+        return rootBrandingPrefix + generatedChain;
+    }
+
+    // Whitelist Proteksi Lingkungan Global Node.js & V8 Runtime (Rule #6)
+    const ENVIRONMENT_PROTECTED_SET = new Set([
+        'require', 'console', 'log', 'error', 'info', 'warn', 'dir', 'module', 'exports', 
+        'process', 'Buffer', 'setTimeout', 'setInterval', 'clearTimeout', 'clearInterval',
+        'global', 'globalThis', '__dirname', '__filename', 'Object', 'Array', 'String', 
+        'Number', 'Math', 'JSON', 'Error', 'var', 'let', 'const', 'function', 'class', 
+        'if', 'else', 'for', 'while', 'do', 'switch', 'case', 'break', 'return', 'try', 
+        'catch', 'new', 'await', 'async', 'true', 'false', 'null', 'undefined', 'this', 
+        'typeof', 'instanceof', 'in', 'import', 'export', 'default', 'arguments', 'eval',
+        'constructor', 'prototype', 'Map', 'Set', 'Promise', 'NaN', 'Infinity'
+    ]);
+
+    // Model Komponen Hirarki Lingkup Leksikal Kode (Rule #5)
+    class LexicalScope {
+        constructor(parentScope = null) {
+            this.parent = parentScope;
+            this.bindingsMap = {};
+        }
+
+        // Daftarkan nama asli dengan pasangan konversi barunya
+        register(originalName, brandedName) {
+            this.bindingsMap[originalName] = brandedName;
+        }
+
+        // Resolusi Nama Menggunakan Bubble-Up Scope Lookup Chain
+        lookup(originalName) {
+            if (this.bindingsMap[originalName] !== undefined) {
+                return this.bindingsMap[originalName];
+            }
+            if (this.parent !== null) {
+                return this.parent.lookup(originalName);
+            }
+            return null;
+        }
+    }
+
+    // =========================================================================
+    // PARSER & COMPILER CORE OBFUSCATOR ENGINE
+    // =========================================================================
+    class AdvancedCompilerEngine {
+        constructor() {
+            this.uniqueCounter = 0;
+            this.runtimeLogs = [];
+        }
+
+        addLog(message) {
+            this.runtimeLogs.push(message);
+        }
+
+        // Manual Mapping Translator untuk Mengubah String Menjadi Hex/Unicode Tanpa .replace()
+        encodeStringToHexEscape(rawString) {
+            if (rawString.length < 2) return rawString;
+            let delimiterSymbol = rawString[0]; // Menjaga tipe pembungkus asli (' atau ")
+            let innerContent = rawString.substring(1, rawString.length - 1);
+            let hexAccumulatorResult = '';
+
+            for (let idx = 0; idx < innerContent.length; idx++) {
+                let charCode = innerContent.charCodeAt(idx);
+                // Handle escape sequence standar agar tidak terjadi malformasi sintaksis
+                if (innerContent[idx] === '\\') {
+                    hexAccumulatorResult += '\\';
+                    continue;
+                }
+                if (charCode < 128) {
+                    hexAccumulatorResult += '\\x' + charCode.toString(16).padStart(2, '0');
+                } else {
+                    hexAccumulatorResult += '\\u' + charCode.toString(16).padStart(4, '0');
+                }
+            }
+            return delimiterSymbol + hexAccumulatorResult + delimiterSymbol;
+        }
+
+        // Fungsi Penerjemah Integer Menjadi Representasi Valid Hexadecimal Literal
+        encodeNumberToHexLiteral(rawNumberString) {
+            // Hindari memproses pecahan (float), eksponen, atau format modern yang sudah terbungkus
+            if (rawNumberString.indexOf('.') !== -1 || 
+                rawNumberString.indexOf('e') !== -1 || 
+                rawNumberString.indexOf('E') !== -1 || 
+                rawNumberString.indexOf('x') !== -1 || 
+                rawNumberString.indexOf('b') !== -1) {
+                return rawNumberString;
+            }
+            let isBigInt = false;
+            let targetString = rawNumberString;
+            if (rawNumberString.endsWith('n')) {
+                isBigInt = true;
+                targetString = rawNumberString.substring(0, rawNumberString.length - 1);
+            }
+            let numericValue = parseInt(targetString, 10);
+            if (isNaN(numericValue)) return rawNumberString;
+            
+            return '0x' + numericValue.toString(16) + (isBigInt ? 'n' : '');
+        }
+
+        // Tokenizer Utama Berbasis State Machine Tingkat Rendah (Murni Iterasi Pointer)
+        tokenize(sourceText) {
+            let tokensCollection = [];
+            let i = 0;
+            let len = sourceText.length;
+
+            while (i < len) {
+                let char = sourceText[i];
+
+                // 1. Whitespace Handler
+                if (char === ' ' || char === '\t' || char === '\n' || char === '\r') {
+                    tokensCollection.push({ type: 'Whitespace', value: char });
+                    i++;
+                    continue;
+                }
+
+                // 2. Comments Strip / Pass-Through Tracking
+                if (char === '/' && sourceText[i + 1] === '/') {
+                    let commentBuffer = '';
+                    while (i < len && sourceText[i] !== '\n' && sourceText[i] !== '\r') {
+                        commentBuffer += sourceText[i++];
+                    }
+                    tokensCollection.push({ type: 'Comment', value: commentBuffer });
+                    continue;
+                }
+                if (char === '/' && sourceText[i + 1] === '*') {
+                    let commentBuffer = '/*';
+                    i += 2;
+                    while (i < len && !(sourceText[i] === '*' && sourceText[i + 1] === '/')) {
+                        commentBuffer += sourceText[i++];
+                    }
+                    if (i < len) { commentBuffer += '*/'; i += 2; }
+                    tokensCollection.push({ type: 'Comment', value: commentBuffer });
+                    continue;
+                }
+
+                // 3. String & Template Literal Block Scanner (Rule #8)
+                if (char === '"' || char === "'" || char === "`") {
+                    let quotesType = char;
+                    let stringBuffer = quotesType;
+                    i++;
+                    let hasEscapeActive = false;
+
+                    while (i < len) {
+                        let innerChar = sourceText[i];
+                        stringBuffer += innerChar;
+                        i++;
+
+                        if (hasEscapeActive) {
+                            hasEscapeActive = false;
+                        } else if (innerChar === '\\') {
+                            hasEscapeActive = true;
+                        } else if (innerChar === quotesType) {
+                            break;
+                        }
+                    }
+                    tokensCollection.push({ type: quotesType === "`" ? 'TemplateLiteral' : 'StringLiteral', value: stringBuffer });
+                    continue;
+                }
+
+                // 4. Advanced Numeric Literal Scanner (Mendukung Float, BigInt, Hex, Octal, Exponent)
+                if (char >= '0' && char <= '9') {
+                    let numberBuffer = '';
+                    while (i < len && ((sourceText[i] >= '0' && sourceText[i] <= '9') || 
+                                       sourceText[i] === '.' || 
+                                       /[xXbBoOnNa-fA-F]/.test(sourceText[i]))) {
+                        numberBuffer += sourceText[i++];
+                    }
+                    // Handle eksponen dengan tanda operasi matematika (+ atau -) di dalamnya
+                    if ((sourceText[i] === 'e' || sourceText[i] === 'E') && (sourceText[i+1] === '+' || sourceText[i+1] === '-')) {
+                        numberBuffer += sourceText[i++] + sourceText[i++];
+                        while (i < len && (sourceText[i] >= '0' && sourceText[i] <= '9')) {
+                            numberBuffer += sourceText[i++];
+                        }
+                    }
+                    tokensCollection.push({ type: 'NumberLiteral', value: numberBuffer });
+                    continue;
+                }
+
+                // 5. Valid Character Identifier Engine Scanner
+                if ((char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z') || char === '_' || char === '$') {
+                    let identifierBuffer = '';
+                    while (i < len && ((sourceText[i] >= 'a' && sourceText[i] <= 'z') || 
+                                       (sourceText[i] >= 'A' && sourceText[i] <= 'Z') || 
+                                       (sourceText[i] >= '0' && sourceText[i] <= '9') || 
+                                       sourceText[i] === '_' || sourceText[i] === '$')) {
+                        identifierBuffer += sourceText[i++];
+                    }
+                    tokensCollection.push({ type: 'Identifier', value: identifierBuffer });
+                    continue;
+                }
+
+                // 6. Punctuator / Operator Simbolik Standard
+                tokensCollection.push({ type: 'Punctuator', value: char });
+                i++;
+            }
+            return tokensCollection;
+        }
+
+        // Helper untuk Melompati Whitespace & Komentar Guna Menemukan Token Tetangga yang Valid
+        getAdjacentValidToken(tokens, currentIndex, direction) {
+            let targetIndex = currentIndex + direction;
+            while (targetIndex >= 0 && targetIndex < tokens.length) {
+                if (tokens[targetIndex].type !== 'Whitespace' && tokens[targetIndex].type !== 'Comment') {
+                    return { token: tokens[targetIndex], index: targetIndex };
+                }
+                targetIndex += direction;
+            }
+            return null;
+        }
+
+        // Pipeline Utama Transformasi Kode Sumber JavaScript
+        compile(rawSourceCode) {
+            this.uniqueCounter = 0;
+            this.runtimeLogs = [];
+            this.addLog('[System] Memulai analisis leksikal aliran token...');
+
+            let streamTokens = this.tokenize(rawSourceCode);
+            let rootGlobalScope = new LexicalScope(null);
+            let scopeStack = [rootGlobalScope];
+
+            // =================================================================
+            // FASE ANALISIS 1: Pemetaan Hierarki Blok & Registrasi Deklarasi Variabel
+            // =================================================================
+            for (let i = 0; i < streamTokens.length; i++) {
+                let currentToken = streamTokens[i];
+                let scopeSekarang = scopeStack[scopeStack.length - 1];
+
+                // Deteksi Masuk ke Sub-Scope Blok Baru
+                if (currentToken.type === 'Punctuator' && currentToken.value === '{') {
+                    let scopeBaru = new LexicalScope(scopeSekarang);
+                    scopeStack.push(scopeBaru);
+                    currentToken.associatedScopeContext = scopeBaru;
+                    continue;
+                }
+
+                // Deteksi Keluar Dari Sub-Scope Blok
+                if (currentToken.type === 'Punctuator' && currentToken.value === '}') {
+                    if (scopeStack.length > 1) {
+                        scopeStack.pop();
+                    }
+                    currentToken.associatedScopeContext = scopeStack[scopeStack.length - 1];
+                    continue;
+                }
+
+                currentToken.associatedScopeContext = scopeSekarang;
+
+                // Registrasi Deklarasi Variabel/Fungsi/Class (Rule #5)
+                if (currentToken.type === 'Identifier' && 
+                    (currentToken.value === 'let' || currentToken.value === 'const' || currentToken.value === 'var' || 
+                     currentToken.value === 'function' || currentToken.value === 'class' || currentToken.value === 'catch')) {
+                    
+                    let keywordTipe = currentToken.value;
+                    let targetTetangga = this.getAdjacentValidToken(streamTokens, i, 1);
+
+                    if (keywordTipe === 'catch') {
+                        // Menangani Catch Parameter: catch (err)
+                        if (targetTetangga && targetTetangga.token.value === '(') {
+                            let paramToken = this.getAdjacentValidToken(streamTokens, targetTetangga.index, 1);
+                            if (paramToken && paramToken.token.type === 'Identifier' && !ENVIRONMENT_PROTECTED_SET.has(paramToken.token.value)) {
+                                if (!scopeSekarang.bindingsMap[paramToken.token.value]) {
+                                    let newIdent = createBrandedIdentityName(this.uniqueCounter++);
+                                    scopeSekarang.register(paramToken.token.value, newIdent);
+                                    this.addLog(`[Scope Catch] Mendaftarkan variabel parameter error: "${paramToken.token.value}" -> ${newIdent}`);
+                                }
+                            }
+                        }
+                    } else if (targetTetangga && targetTetangga.token.type === 'Identifier') {
+                        let namaVariabelAsli = targetTetangga.token.value;
+                        if (!ENVIRONMENT_PROTECTED_SET.has(namaVariabelAsli)) {
+                            if (!scopeSekarang.bindingsMap[namaVariabelAsli]) {
+                                let newIdent = createBrandedIdentityName(this.uniqueCounter++);
+                                scopeSekarang.register(namaVariabelAsli, newIdent);
+                                this.addLog(`[Declaration Mapping] Berhasil memetakan "${namaVariabelAsli}" [${keywordTipe}] -> ${newIdent}`);
+                            }
+                        }
+                    } 
+                    // Struktur Destructuring Object / Array Handlers ({ atau [)
+                    else if (targetTetangga && (targetTetangga.token.value === '{' || targetTetangga.token.value === '[')) {
+                        let indexScan = targetTetangga.index + 1;
+                        let tokenPenutup = targetTetangga.token.value === '{' ? '}' : ']';
+                        
+                        while (indexScan < streamTokens.length && streamTokens[indexScan].value !== tokenPenutup) {
+                            let scanToken = streamTokens[indexScan];
+                            if (scanToken.type === 'Identifier' && !ENVIRONMENT_PROTECTED_SET.has(scanToken.value)) {
+                                // Pastikan ini bukan properti asal dari struktur destructuring { asal: hasil }
+                                let cekKanan = this.getAdjacentValidToken(streamTokens, indexScan, 1);
+                                if (!(targetTetangga.token.value === '{' && cekKanan && cekKanan.token.value === ':')) {
+                                    if (!scopeSekarang.bindingsMap[scanToken.value]) {
+                                        let newIdent = createBrandedIdentityName(this.uniqueCounter++);
+                                        scopeSekarang.register(scanToken.value, newIdent);
+                                        this.addLog(`[Destructuring Map] Berhasil mengekstrak pengenal "${scanToken.value}" -> ${newIdent}`);
+                                    }
+                                }
+                            }
+                            indexScan++;
+                        }
+                    }
+                }
+
+                // Penanganan Parameter Fungsi Konvensional / Arrow Function Parameter List
+                if (currentToken.type === 'Identifier' && currentToken.value === 'function') {
+                    let kursor = i;
+                    while (kursor < streamTokens.length && streamTokens[kursor].value !== '(') kursor++;
+                    if (kursor < streamTokens.length) {
+                        kursor++; // Lompat ke dalam kurung parameter ()
+                        while (kursor < streamTokens.length && streamTokens[kursor].value !== ')') {
+                            let tokenParam = streamTokens[kursor];
+                            if (tokenParam.type === 'Identifier' && !ENVIRONMENT_PROTECTED_SET.has(tokenParam.value)) {
+                                if (!scopeSekarang.bindingsMap[tokenParam.value]) {
+                                    let newIdent = createBrandedIdentityName(this.uniqueCounter++);
+                                    scopeSekarang.register(tokenParam.value, newIdent);
+                                    this.addLog(`[Parameter Scope] Memetakan Argumen Fungsi: "${tokenParam.value}" -> ${newIdent}`);
+                                }
+                            }
+                            kursor++;
+                        }
+                    }
+                }
+            }
+
+            // =================================================================
+            // FASE ANALISIS 2: Proses Substitusi Token & Rekonstruksi String Kode
+            // =================================================================
+            let finalCodeStringArrayOutput = [];
+            this.addLog('[System] Memasuki fase emisi dan eksekusi mutasi token komponen...');
+
+            for (let i = 0; i < streamTokens.length; i++) {
+                let tokenAktif = streamTokens[i];
+                let targetValueStringOutput = tokenAktif.value;
+                let scopeContextKontekstual = tokenAktif.associatedScopeContext || rootGlobalScope;
+
+                if (tokenAktif.type === 'Identifier') {
+                    let dataTetanggaKiri = this.getAdjacentValidToken(streamTokens, i, -1);
+                    let dataTetanggaKanan = this.getAdjacentValidToken(streamTokens, i, 1);
+
+                    let penandaAksesTitikProperty = (dataTetanggaKiri && dataTetanggaKiri.token.value === '.');
+                    let penandaKunciObjekLiteral = (dataTetanggaKanan && dataTetanggaKanan.token.value === ':');
+
+                    // Pencegahan Destruktif: Lewati modifikasi jika merupakan method bawaan class (Rule #9)
+                    let penandaDefinisiMethodClass = false;
+                    if (dataTetanggaKanan && dataTetanggaKanan.token.value === '(') {
+                        let indexLacakMundur = i - 1;
+                        while (indexLacakMundur >= 0 && streamTokens[indexLacakMundur].type === 'Whitespace') indexLacakMundur--;
+                        if (indexLacakMundur >= 0 && streamTokens[indexLacakMundur].value === '}') {
+                            // Kemungkinan penulisan method di dalam bodi struktur objek/class
+                            penandaDefinisiMethodClass = true;
+                        }
+                    }
+
+                    // Eksekusi Transformasi Property Access & Object Key (Rule #7)
+                    if ((penandaAksesTitikProperty || penandaKunciObjekLiteral) && !penandaDefinisiMethodClass && !ENVIRONMENT_PROTECTED_SET.has(targetValueStringOutput)) {
+                        let hexEncodedPropertiString = '';
+                        for (let charIndex = 0; charIndex < targetValueStringOutput.length; charIndex++) {
+                            hexEncodedPropertiString += '\\x' + targetValueStringOutput.charCodeAt(charIndex).toString(16).padStart(2, '0');
+                        }
+
+                        if (penandaAksesTitikProperty) {
+                            // Konversi bentuk obj.name -> obj["name"]
+                            targetValueStringOutput = '["' + hexEncodedPropertiString + '"]';
+                            // Eliminasi sisa token karakter titik ('.') pada array output
+                            let kursorBersih = finalCodeStringArrayOutput.length - 1;
+                            while (kursorBersih >= 0) {
+                                if (finalCodeStringArrayOutput[kursorBersih] === '.') {
+                                    finalCodeStringArrayOutput.splice(kursorBersih, 1);
+                                    break;
+                                }
+                                kursorBersih--;
+                            }
+                        } else if (penandaKunciObjekLiteral) {
+                            // Konversi bentuk { name: val } -> { ["name"]: val }
+                            targetValueStringOutput = '["' + hexEncodedPropertiString + '"]';
+                        }
+                    } else {
+                        // Jalankan Rantai Resolusi Nama Substitusi Identifier Rekursif
+                        let hasilNamaBaruKompilasi = scopeContextKontekstual.lookup(targetValueStringOutput);
+                        if (hasilNamaBaruKompilasi !== null) {
+                            targetValueStringOutput = hasilNamaBaruKompilasi;
+                        }
+                    }
+                } 
+                // Transformasi String Literal Murni Non-Backtick (Rule #7 & #8)
+                else if (tokenAktif.type === 'StringLiteral') {
+                    targetValueStringOutput = this.encodeStringToHexEscape(tokenAktif.value);
+                } 
+                // Transformasi Bilangan Desimal Bulat Ke Format Heksadesimal (Rule #7)
+                else if (tokenAktif.type === 'NumberLiteral') {
+                    targetValueStringOutput = this.encodeNumberToHexLiteral(tokenAktif.value);
+                }
+
+                finalCodeStringArrayOutput.push(targetValueStringOutput);
+            }
+
+            this.addLog('[Success] Proses standardisasi kompilasi AST-Shorthand selesai tanpa galat.');
+            return finalCodeStringArrayOutput.join('');
+        }
+    }
+
+    // =========================================================================
+    // MANAGEMENT UI / INTERACTION OPERATIONAL CONTROLLERS
+    // =========================================================================
+    const coreCompilerInstance = new AdvancedCompilerEngine();
+
+    const uiTxtInput = document.getElementById('uiTxtInput');
+    const uiTxtOutput = document.getElementById('uiTxtOutput');
+    const uiLoggerBox = document.getElementById('uiLoggerBox');
+    const uiErrorBanner = document.getElementById('uiErrorBanner');
+    const uiProgressContainer = document.getElementById('uiProgressContainer');
+    const uiProgressBar = document.getElementById('uiProgressBar');
+    const uiDropZone = document.getElementById('uiDropZone');
+    const uiFileInput = document.getElementById('uiFileInput');
+
+    // Handler Tombol Operasi Utama Kompilasi
+    document.getElementById('uiBtnCompile').addEventListener('click', function() {
+        const sourceInputCode = uiTxtInput.value;
+        uiErrorBanner.style.display = 'none';
+
+        if (!sourceInputCode.trim()) {
+            uiErrorBanner.textContent = 'Galat: Input kosong. Silakan ketik atau unggah file script JavaScript terlebih dahulu.';
+            uiErrorBanner.style.display = 'block';
+            return;
+        }
+
+        uiProgressContainer.style.display = 'block';
+        uiProgressBar.style.width = '30%';
+
+        setTimeout(() => {
+            uiProgressBar.style.width = '75%';
+            setTimeout(() => {
+                try {
+                    // Panggil mesin utama kompilasi
+                    const outputObfuscatedResult = coreCompilerInstance.compile(sourceInputCode);
+                    
+                    uiTxtOutput.value = outputObfuscatedResult;
+                    uiLoggerBox.textContent = coreCompilerInstance.runtimeLogs.join('\n');
+                    
+                    uiProgressBar.style.width = '100%';
+                    setTimeout(() => {
+                        uiProgressContainer.style.display = 'none';
+                        uiProgressBar.style.width = '0%';
+                    }, 250);
+                } catch (runtimeCompilerException) {
+                    uiProgressContainer.style.display = 'none';
+                    uiErrorBanner.textContent = 'Compiler Internals Exception Error:\n' + runtimeCompilerException.message;
+                    uiErrorBanner.style.display = 'block';
+                }
+            }, 100);
+        }, 100);
+    });
+
+    // Handler Salin Papan Klip
+    document.getElementById('uiBtnCopy').addEventListener('click', function() {
+        if (!uiTxtOutput.value.trim()) {
+            alert('Pemberitahuan: Tidak ada data teks output yang dapat disalin.');
+            return;
+        }
+        uiTxtOutput.select();
+        document.execCommand('copy');
+        alert('Sukses: Teks hasil kompilasi berhasil dipindahkan ke clipboard sistem!');
+    });
+
+    // Handler Pengunduhan File Lokal Hasil Kompilasi
+    document.getElementById('uiBtnDownload').addEventListener('click', function() {
+        const textOutputBlobData = uiTxtOutput.value;
+        if (!textOutputBlobData.trim()) {
+            alert('Galat: Teks output kosong. Harap jalankan kompilasi terlebih dahulu.');
+            return;
+        }
+        const fileBlobContainer = new Blob([textOutputBlobData], { type: 'application/javascript;charset=utf-8' });
+        const temporaryBlobUrl = URL.createObjectURL(fileBlobContainer);
+        
+        const anchorVirtualLinkElement = document.createElement('a');
+        anchorVirtualLinkElement.href = temporaryBlobUrl;
+        anchorVirtualLinkElement.download = 'hasil.js';
+        document.body.appendChild(anchorVirtualLinkElement);
+        anchorVirtualLinkElement.click();
+        
+        document.body.removeChild(anchorVirtualLinkElement);
+        URL.revokeObjectURL(temporaryBlobUrl);
+    });
+
+    // Operasional File Drag & Drop Handlers
+    uiDropZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uiDropZone.classList.add('dragover');
+    });
+
+    uiDropZone.addEventListener('dragleave', function() {
+        uiDropZone.classList.remove('dragover');
+    });
+
+    uiDropZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uiDropZone.classList.remove('dragover');
+        const fileTarget = e.dataTransfer.files[0];
+        if (fileTarget) { executeFileBufferRead(fileTarget); }
+    });
+
+    uiFileInput.addEventListener('change', function(e) {
+        const fileTarget = e.target.files[0];
+        if (fileTarget) { executeFileBufferRead(fileTarget); }
+    });
+
+    function executeFileBufferRead(jsFileObject) {
+        const fileReaderWorker = new FileReader();
+        fileReaderWorker.onload = function(eventResult) {
+            uiTxtInput.value = eventResult.target.result;
+            uiLoggerBox.textContent = `[FileSystem] Sukses memuat berkas offline lokal: ${jsFileObject.name} (${jsFileObject.size} bytes)`;
+            uiErrorBanner.style.display = 'none';
+        };
+        fileReaderWorker.readAsText(jsFileObject);
+    }
+</script>
+
+</body>
+</html>
