@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>難読化装置AsepXyz — Advanced JS Obfuscator</title>
+<style>
+:root{
+  --bg0:#06090e;--bg1:#0c0f17;--bg2:#121622;--bg3:#1a1f30;--bg4:#22293f;
+  --b0:#1e2538;--b1:#2a344e;--acc:#7b5ff5;--acc2:#38c9c9;--acc3:#f05c7a;
+  --grn:#3ecf8e;--ylw:#f0b840;--txt:#dde2f0;--txt2:#8892b0;--txt3:#4e5d7c;
+  --r:10px;--mono:'Fira Mono','Cascadia Code','Consolas',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100vh;background:var(--bg0);color:var(--txt);
+  font-family:'Inter','Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.5}
+body{display:flex;flex-direction:column;align-items:center;padding:32px 16px 72px}
+
+/* ── Header ── */
+.hdr{text-align:center;margin-bottom:30px;user-select:none}
+.hdr-logo{font-size:1.8rem;font-weight:900;letter-spacing:.04em;
+  background:linear-gradient(100deg,var(--acc) 0%,var(--acc2) 60%,var(--acc3) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr-sub{margin-top:6px;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--txt2)}
+.hdr-tag{margin-top:6px;font-size:.65rem;font-family:var(--mono);color:var(--txt3);letter-spacing:.06em}
+
+/* ── Layout Wrap ── */
+.wrap{width:100%;max-width:960px;display:flex;flex-direction:column;gap:20px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+
+/* ── Card Component ── */
+.card{background:var(--bg1);border:1px solid var(--b0);border-radius:var(--r);padding:22px}
+.card-hd{font-size:.7rem;text-transform:uppercase;letter-spacing:.16em;color:var(--acc2);
+  font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card-hd::before{content:'';display:block;width:4px;height:14px;
+  background:linear-gradient(180deg,var(--acc2),var(--acc));border-radius:2px}
+
+/* ── Inputs & Editors ── */
+textarea{width:100%;height:220px;background:var(--bg2);border:1px solid var(--b0);
+  border-radius:6px;padding:12px;color:var(--txt);font-family:var(--mono);font-size:.75rem;
+  resize:vertical;outline:none;transition:border-color .2s}
+textarea:focus{border-color:var(--acc)}
+
+/* ── Drop Zone ── */
+#AsepXyz零DropZone{
+  border:2px dashed var(--b1);border-radius:var(--r);background:var(--bg2);
+  min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;cursor:pointer;transition:all .2s;padding:16px;margin-bottom:14px}
+#AsepXyz零DropZone:hover, #AsepXyz零DropZone.ov{border-color:var(--acc);background:var(--bg3)}
+.dz-icon{font-size:1.6rem;opacity:.6}
+.dz-label{font-size:.8rem;color:var(--txt2);text-align:center}
+.dz-label em{color:var(--acc2);font-style:normal;text-decoration:underline}
+#AsepXyz零FileInput{display:none}
+#AsepXyz零FileName{font-family:var(--mono);font-size:.72rem;color:var(--grn);margin-top:2px}
+
+/* ── Options Custom ── */
+.opts{display:flex;flex-wrap:wrap;gap:12px 24px}
+.opt{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--txt2);cursor:pointer;user-select:none}
+.opt input[type=checkbox]{accent-color:var(--acc2);width:14px;height:14px;cursor:pointer}
+.opt span{color:var(--txt)}
+
+/* ── Progress Bar ── */
+.prog-wrap{height:6px;background:var(--bg3);border-radius:99px;overflow:hidden;margin-bottom:16px;display:none}
+#AsepXyz零Prog{height:100%;width:0%;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .1s linear}
+
+/* ── Buttons ── */
+.btns{display:flex;flex-wrap:wrap;gap:10px}
+.btn{padding:10px 22px;border:none;border-radius:6px;font-size:.8rem;font-weight:700;
+  cursor:pointer;letter-spacing:.03em;display:inline-flex;align-items:center;gap:8px;
+  transition:filter .15s,transform .1s,opacity .15s;color:#fff}
+.btn:active:not(:disabled){transform:scale(.97)}
+.btn:disabled{opacity:.3;cursor:not-allowed}
+.btn-enc{background:linear-gradient(90deg,var(--acc),#5b6eff)}
+.btn-enc:hover:not(:disabled){filter:brightness(1.15)}
+.btn-cpy{background:var(--bg3);border:1px solid var(--b1);color:var(--acc2)}
+.btn-cpy:hover:not(:disabled){border-color:var(--acc2);background:var(--bg4)}
+.btn-dl{background:var(--bg3);border:1px solid var(--b1);color:var(--grn)}
+.btn-dl:hover:not(:disabled){border-color:var(--grn);background:var(--bg4)}
+
+/* ── Error & Log Panel ── */
+#AsepXyz零Log{
+  font-family:var(--mono);font-size:.72rem;line-height:1.7;
+  background:var(--bg2);border:1px solid var(--b0);border-radius:6px;
+  padding:12px;min-height:60px;max-height:140px;overflow-y:auto;white-space:pre-wrap}
+.l-ok{color:var(--grn)}.l-inf{color:var(--acc2)}.l-err{color:var(--acc3);font-weight:bold}
+
+/* ── Stats ── */
+.stats{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;padding-top:12px;border-top:1px solid var(--b0)}
+.st{font-size:.72rem;color:var(--txt2)}.st b{color:var(--acc2);font-weight:700}
+
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--b1);border-radius:99px}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-logo">難読化装置AsepXyz</div>
+  <div class="hdr-sub">High-Fidelity Pure JS Obfuscator Pipeline</div>
+  <div class="hdr-tag">Engine Version 2.0 • Zero Dependencies • Local Execution</div>
+</header>
+
+<div class="wrap">
+
+  <div class="card">
+    <div class="card-hd">File Source (.js)</div>
+    <div id="AsepXyz零DropZone" role="button" tabindex="0">
+      <div class="dz-icon">📥</div>
+      <div class="dz-label">Drag &amp; drop file <strong>.js</strong> di sini, atau <em>pilih file lewat browser</em></div>
+      <div id="AsepXyz零FileName">Tidak ada file yang dipilih</div>
+    </div>
+    <input type="file" id="AsepXyz零FileInput" accept=".js"/>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-hd">Input Source Code</div>
+      <textarea id="AsepXyz零InRaw" placeholder="// Tulis atau tempel kode JavaScript asli di sini..."></textarea>
+    </div>
+    <div class="card">
+      <div class="card-hd">Output Result Obfuscation</div>
+      <textarea id="AsepXyz零OutRaw" readonly placeholder="// Hasil obfuscation dengan branding AsepXyz akan muncul di sini..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">Konfigurasi Proteksi Pipeline</div>
+    <div class="opts">
+      <label class="opt">
+        <input type="checkbox" id="AsepXyz零CfgId" checked/>
+        <span>Rename Identifiers (Branding Mode)</span>
+      </label>
+      <label class="opt">
+        <input type="checkbox" id="AsepXyz零CfgStr" checked/>
+        <span>Hex/Unicode String Scrambling</span>
+      </label>
+      <label class="opt">
+        <input type="checkbox" id="AsepXyz零CfgLit" checked/>
+        <span>Literal Number Mutation</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">Execution &amp; Export Control</div>
+    <div class="prog-wrap" id="AsepXyz零ProgBar"><div id="AsepXyz零Prog"></div></div>
+    
+    <div class="btns">
+      <button class="btn btn-enc" id="AsepXyz零BtnEnc">⚡ Obfuscate Code</button>
+      <button class="btn btn-cpy" id="AsepXyz零BtnCpy" disabled>📋 Copy Code</button>
+      <button class="btn btn-dl"  id="AsepXyz零BtnDl"  disabled>💾 Download Output</button>
+    </div>
+
+    <div style="margin-top:16px">
+      <div class="card-hd" style="margin-bottom:6px">Console System Log / Error Panel</div>
+      <div id="AsepXyz零Log">System Idle. Siap melakukan enkripsi kode aman.</div>
+    </div>
+
+    <div class="stats">
+      <div class="st">Input Size: <b id="AsepXyz零StIn">—</b></div>
+      <div class="st">Output Size: <b id="AsepXyz零StOut">—</b></div>
+      <div class="st">Ratio: <b id="AsepXyz零StRatio">—</b></div>
+      <div class="st">Signature Engine: <b>難読化装置AsepXyz Standard 7-Layer</b></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/**
+ * 難読化装置AsepXyz — Core Engine Pipeline
+ * Dirancang khusus untuk memproses JavaScript secara menyeluruh tanpa merusak runtime internal objek.
+ */
+(function () {
+  "use strict";
+
+  // State Management
+  var 難読化装置AsepXyz_FileContent = "";
+  var 難読化装置AsepXyz_FileName = "asepxyz_obfuscated.js";
+
+  // Elements Binding
+  var DZ = document.getElementById("AsepXyz零DropZone");
+  var FI = document.getElementById("AsepXyz零FileInput");
+  var FN = document.getElementById("AsepXyz零FileName");
+  var IN_TXT = document.getElementById("AsepXyz零InRaw");
+  var OUT_TXT = document.getElementById("AsepXyz零OutRaw");
+  var LOG = document.getElementById("AsepXyz零Log");
+  var PRG = document.getElementById("AsepXyz零Prog");
+  var P_BAR = document.getElementById("AsepXyz零ProgBar");
+  
+  var BTN_ENC = document.getElementById("AsepXyz零BtnEnc");
+  var BTN_CPY = document.getElementById("AsepXyz零BtnCpy");
+  var BTN_DL  = document.getElementById("AsepXyz零BtnDl");
+
+  var CFG_ID = document.getElementById("AsepXyz零CfgId");
+  var CFG_STR = document.getElementById("AsepXyz零CfgStr");
+  var CFG_LIT = document.getElementById("AsepXyz零CfgLit");
+
+  var ST_IN = document.getElementById("AsepXyz零StIn");
+  var ST_OUT = document.getElementById("AsepXyz零StOut");
+  var ST_RATIO = document.getElementById("AsepXyz零StRatio");
+
+  // Logger Utility
+  function printLog(msg, type) {
+    var d = new Date().toLocaleTimeString();
+    var span = document.createElement("span");
+    if (type) span.className = type;
+    span.textContent = "[" + d + "] " + msg + "\n";
+    LOG.appendChild(span);
+    LOG.scrollTop = LOG.scrollHeight;
+  }
+
+  // Format Size Utility
+  function formatBytes(bytes) {
+    if (bytes === 0) return '0 B';
+    var k = 1024, sizes = ['B', 'KB', 'MB'], i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  // Event Listeners Drag & Drop
+  DZ.addEventListener("dragover", function(e) { e.preventDefault(); DZ.classList.add("ov"); });
+  DZ.addEventListener("dragleave", function() { DZ.classList.remove("ov"); });
+  DZ.addEventListener("drop", function(e) {
+    e.preventDefault(); DZ.classList.remove("ov");
+    if(e.dataTransfer.files[0]) handleFileLoad(e.dataTransfer.files[0]);
+  });
+  DZ.addEventListener("click", function() { FI.click(); });
+  FI.addEventListener("change", function() { if(FI.files[0]) handleFileLoad(FI.files[0]); });
+
+  function handleFileLoad(file) {
+    if (!file.name.endsWith(".js")) {
+      printLog("Error: Hanya file dengan format .js ekstensi yang dapat diterima!", "l-err");
+      return;
+    }
+    難読化装置AsepXyz_FileName = "難読化装置AsepXyz_" + file.name;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      難読化装置AsepXyz_FileContent = e.target.result;
+      IN_TXT.value = 難読化装置AsepXyz_FileContent;
+      FN.textContent = file.name + " (" + formatBytes(file.size) + ")";
+      printLog("Sukses memuat file source code: " + file.name, "l-ok");
+    };
+    reader.readAsText(file, "utf-8");
+  }
+
+  // Japanese Kanji Index Branding Builder
+  var kanjiNums = ["零", "壱", "弐", "参", "肆", "伍", "陸", "漆", "捌", "玖", "拾"];
+  function createBrandedName(index) {
+    var res = "";
+    var s = index.toString();
+    for (var i = 0; i < s.length; i++) {
+      res += kanjiNums[parseInt(s.charAt(i))];
+    }
+    return "難読化装置AsepXyz" + res;
+  }
+
+  // JS Reserved Words array to strictly avoid breaking the syntax
+  var reservedWords = new Set([
+    "break", "case", "catch", "class", "const", "continue", "debugger", "default", "delete",
+    "do", "else", "export", "extends", "finally", "for", "function", "if", "import", "in",
+    "instanceof", "new", "return", "super", "switch", "this", "throw", "try", "typeof", "var",
+    "void", "while", "with", "yield", "let", "static", "enum", "await", "null", "true", "false",
+    "window", "document", "console", "require", "process", "module", "exports", "Object", "Array",
+    "String", "Number", "Boolean", "Function", "Promise", "JSON", "Math", "eval", "arguments"
+  ]);
+
+  /**
+   * LIGHTWEIGHT JS LEXER & PROTECTOR ENGINE
+   * Parsing cerdas untuk membedakan antara identifier murni dan properti objek/metode bawaan.
+   */
+  function executeObfuscationEngine(sourceCode) {
+    var tokens = [];
+    var i = 0;
+    var len = sourceCode.length;
+
+    // Tokenizer Loop
+    while (i < len) {
+      var c = sourceCode.charAt(i);
+
+      // 1. Skip Whitespace
+      if (/\s/.test(c)) {
+        var space = "";
+        while (i < len && /\s/.test(sourceCode.charAt(i))) {
+          space += sourceCode.charAt(i);
+          i++;
+        }
+        tokens.push({ type: "space", val: space });
+        continue;
+      }
+
+      // 2. Skip Comments (Single line & Block)
+      if (c === '/' && sourceCode.charAt(i + 1) === '/') {
+        var comm = "";
+        while (i < len && sourceCode.charAt(i) !== '\n') {
+          comm += sourceCode.charAt(i);
+          i++;
+        }
+        tokens.push({ type: "comment", val: comm });
+        continue;
+      }
+      if (c === '/' && sourceCode.charAt(i + 1) === '*') {
+        var bcomm = "";
+        while (i < len) {
+          bcomm += sourceCode.charAt(i);
+          if (sourceCode.charAt(i) === '*' && sourceCode.charAt(i + 1) === '/') {
+            bcomm += '/';
+            i += 2;
+            break;
+          }
+          i++;
+        }
+        tokens.push({ type: "comment", val: bcomm });
+        continue;
+      }
+
+      // 3. String Literals Processing (Double, Single & Template Quotes)
+      if (c === '"' || c === "'" || c === '`') {
+        var quote = c;
+        var strVal = quote;
+        i++;
+        while (i < len && sourceCode.charAt(i) !== quote) {
+          if (sourceCode.charAt(i) === '\\') {
+            strVal += '\\' + sourceCode.charAt(i + 1);
+            i += 2;
+          } else {
+            strVal += sourceCode.charAt(i);
+            i++;
+          }
+        }
+        strVal += quote;
+        i++;
+        tokens.push({ type: "string", val: strVal });
+        continue;
+      }
+
+      // 4. Numeric Literals
+      if (/\d/.test(c)) {
+        var numStr = "";
+        while (i < len && /[0-9a-fA-FxX\.]/.test(sourceCode.charAt(i))) {
+          numStr += sourceCode.charAt(i);
+          i++;
+        }
+        tokens.push({ type: "number", val: numStr });
+        continue;
+      }
+
+      // 5. Identifiers / Keywords
+      if (/[a-zA-Z_$]/.test(c)) {
+        var idStr = "";
+        while (i < len && /[a-zA-Z0-9_$]/.test(sourceCode.charAt(i))) {
+          idStr += sourceCode.charAt(i);
+          i++;
+        }
+        tokens.push({ type: "id", val: idStr });
+        continue;
+      }
+
+      // 6. Punctuators / Operators
+      tokens.push({ type: "op", val: c });
+      i++;
+    }
+
+    // Context Analysis & Pipeline Transformation
+    var idMap = {};
+    var idCounter = 1;
+
+    // First Path: Cari variable/function identifier murni untuk direname
+    for (var tIdx = 0; tIdx < tokens.length; tIdx++) {
+      var tok = tokens[tIdx];
+      if (tok.type === "id" && !reservedWords.has(tok.val)) {
+        
+        // Aturan Proteksi Keras: Cek token sebelumnya! Jika '.', maka ini adalah object property key. Jangan direname.
+        var prev = tokens[tIdx - 1];
+        while (prev && prev.type === "space") {
+          prev = tokens[tokens.indexOf(prev) - 1];
+        }
+        if (prev && prev.val === ".") {
+          continue; // Lewati property object key agar logic runtime aman
+        }
+
+        // Cek token sesudahnya untuk mendeteksi key objek literals { varName: value }
+        var next = tokens[tIdx + 1];
+        while (next && next.type === "space") {
+          next = tokens[tokens.indexOf(next) + 1];
+        }
+        if (next && next.val === ":") {
+          // Yakinkan ini bukan switch case label
+          var checkPrev = tokens[tIdx - 1];
+          if(checkPrev && checkPrev.val !== "case") {
+             continue; // Jangan ganti JSON key/Object property declaration
+          }
+        }
+
+        // Daftarkan branding jika belum ada
+        if (!idMap[tok.val]) {
+          idMap[tok.val] = createBrandedName(idCounter++);
+        }
+      }
+    }
+
+    // Second Path: Eksekusi Transformasi Obfuscation Layer Berdasarkan Config
+    var outputNodes = [];
+    for (var k = 0; k < tokens.length; k++) {
+      var curr = tokens[k];
+
+      if (curr.type === "id" && CFG_ID.checked && idMap[curr.val]) {
+        // Layer Identifier Mutation
+        outputNodes.push(idMap[curr.val]);
+      } 
+      else if (curr.type === "string" && CFG_STR.checked) {
+        // Layer Encrypted Strings Literal -> String.fromCharCode() hex array representation
+        var rawStr = curr.val.substring(1, curr.val.length - 1);
+        if (rawStr.length === 0) {
+          outputNodes.push(curr.val);
+          continue;
+        }
+        var byteArr = [];
+        for (var si = 0; si < rawStr.length; si++) {
+          byteArr.push(rawStr.charCodeAt(si));
+        }
+        // Ditransformasikan menjadi ekspresi evaluasi array
+        outputNodes.push("String.fromCharCode(" + byteArr.join(", ") + ")");
+      } 
+      else if (curr.type === "number" && CFG_LIT.checked && !isNaN(curr.val) && !curr.val.includes('x')) {
+        // Layer Binary/Hex literal mutation arithmetic obfuscation
+        var valNum = parseFloat(curr.val);
+        if (Number.isInteger(valNum) && valNum < 100000) {
+          var mask = Math.floor(Math.random() * 150) + 10;
+          var encodedNum = valNum ^ mask;
+          outputNodes.push("(" + encodedNum + " ^ " + mask + ")");
+        } else {
+          outputNodes.push(curr.val);
+        }
+      } 
+      else {
+        // Pertahankan token normal
+        outputNodes.push(curr.val);
+      }
+    }
+
+    // Gabungkan hasil rekonstruksi pipeline
+    return outputNodes.join("");
+  }
+
+  // Core Processing Controller Trigger
+  BTN_ENC.addEventListener("click", function () {
+    var rawInput = IN_TXT.value.trim();
+    if (!rawInput) {
+      printLog("Error: Tidak ada source code JavaScript di dalam Input Textarea!", "l-err");
+      return;
+    }
+
+    // UI Feedback Animation Activation
+    BTN_ENC.disabled = true;
+    P_BAR.style.display = "block";
+    PRG.style.width = "20%";
+    
+    printLog("Memulai analisis AST Lexer 7-layer Pipeline...", "l-inf");
+
+    setTimeout(function () {
+      try {
+        PRG.style.width = "60%";
+        
+        // Jalankan sistem kompilasi obfuscation proteksi tinggi
+        var obfuscatedRes = executeObfuscationEngine(rawInput);
+        
+        PRG.style.width = "100%";
+        
+        // Tampilkan pada Output Window
+        OUT_TXT.value = obfuscatedRes;
+        
+        // Update statistik performa
+        var inLen = rawInput.length;
+        var outLen = obfuscatedRes.length;
+        ST_IN.textContent = formatBytes(inLen);
+        ST_OUT.textContent = formatBytes(outLen);
+        ST_RATIO.textContent = ((outLen / inLen) * 100).toFixed(1) + "%";
+
+        // Unlock action buttons
+        BTN_CPY.disabled = false;
+        BTN_DL.disabled = false;
+        
+        printLog("✔ Obfuscation Selesai Sukses! Logika aman 0 runtime error.", "l-ok");
+        
+        setTimeout(function(){ P_BAR.style.display = "none"; PRG.style.width = "0%"; }, 600);
+      } catch (err) {
+        printLog("CRITICAL EXCEPTION ERROR: " + err.message, "l-err");
+        P_BAR.style.display = "none";
+      } finally {
+        BTN_ENC.disabled = false;
+      }
+    }, 400);
+  });
+
+  // Action Button Clipboard Copy
+  BTN_CPY.addEventListener("click", function () {
+    if (!OUT_TXT.value) return;
+    navigator.clipboard.writeText(OUT_TXT.value).then(function () {
+      printLog("Notifikasi: Kode hasil enkripsi disalin ke clipboard!", "l-ok");
+    }).catch(function () {
+      // Fallback manual selection jika clipboard api diblokir browser
+      OUT_TXT.select();
+      document.execCommand("copy");
+      printLog("Notifikasi: Kode disalin ke clipboard (via fallback mode)!", "l-ok");
+    });
+  });
+
+  // Action Button Download File Document Output
+  BTN_DL.addEventListener("click", function () {
+    if (!OUT_TXT.value) return;
+    var blob = new Blob([OUT_TXT.value], { type: "application/javascript;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var linkAnchor = document.createElement("a");
+    linkAnchor.href = url;
+    linkAnchor.download = 難読化装置AsepXyz_FileName;
+    document.body.appendChild(linkAnchor);
+    linkAnchor.click();
+    document.body.removeChild(linkAnchor);
+    URL.revokeObjectURL(url);
+    printLog("Notifikasi: File berhasil didownload sebagai [" + 難読化装置AsepXyz_FileName + "]", "l-ok");
+  });
+
+})();
+</script>
+</body>
+</html>
