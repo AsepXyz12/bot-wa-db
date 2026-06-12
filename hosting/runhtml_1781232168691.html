@@ -1,333 +1,915 @@
-<!DOCTYPE html>
-<html lang="id">
+ <!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>難読化装置AsepXyz - Professional Transformer</title>
+    <title>Advanced JavaScript AST Obfuscator Studio</title>
     <style>
         :root {
-            --bg-main: #060814;
-            --bg-card: #0b1120;
-            --border-color: #1e293b;
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --border-color: #334155;
             --text-main: #f8fafc;
-            --text-muted: #64748b;
-            --accent: #4f46e5;
-            --accent-hover: #4338ca;
-            --success: #059669;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #10b981;
+            --error: #ef4444;
+            --console-bg: #020617;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
             background-color: var(--bg-main);
             color: var(--text-main);
-            font-family: system-ui, -apple-system, sans-serif;
-            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 20px;
         }
-        .container { max-width: 1300px; margin: 0 auto; }
-        header { margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; }
-        h1 { color: #818cf8; font-size: 1.6rem; display: flex; align-items: center; gap: 0.5rem; }
-        p { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem; }
-        .toolbar { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-        .btn {
-            background-color: var(--accent); color: white; border: none; padding: 0.6rem 1.2rem;
-            border-radius: 0.375rem; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.2s;
+
+        header {
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
         }
-        .btn:hover { background-color: var(--accent-hover); }
-        .btn-success { background-color: var(--success); }
-        .btn-success:hover { background-color: #047857; }
-        .btn-file { background-color: #334155; }
-        .btn-file:hover { background-color: #475569; }
-        .btn:disabled { opacity: 0.3; cursor: not-allowed; }
-        input[type="file"] { display: none; }
-        .workspace { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
-        @media (min-width: 768px) { .workspace { grid-template-columns: 1fr 1fr; } }
-        .editor-box { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 0.5rem; overflow: hidden; display: flex; flex-direction: column; }
-        .editor-label { background-color: #1e293b; padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: bold; color: #94a3b8; letter-spacing: 0.05em; }
+
+        header h1 {
+            font-size: 24px;
+            color: var(--text-main);
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex: 1;
+            min-height: 500px;
+        }
+
+        @media (max-width: 900px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .dropzone {
+            border: 2px dashed var(--border-color);
+            margin: 15px;
+            padding: 20px;
+            text-align: center;
+            border-radius: 6px;
+            background: rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dropzone.dragover {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .dropzone p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .dropzone input {
+            display: none;
+        }
+
+        .editor-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 0 15px 15px 15px;
+        }
+
         textarea {
-            width: 100%; height: 480px; background: transparent; border: none; color: #38bdf8;
-            font-family: 'Courier New', Courier, monospace; padding: 1rem; font-size: 0.85rem; resize: none; outline: none; line-height: 1.6;
+            flex: 1;
+            background-color: var(--console-bg);
+            color: #34d399;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            line-height: 1.5;
         }
-        #txtOutput { color: #34d399; word-break: break-all; }
-        .console-box { background-color: #020617; border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 0.75rem 1rem; font-family: monospace; font-size: 0.75rem; max-height: 140px; overflow-y: auto; color: #cbd5e1; }
-        .log-item { margin-bottom: 0.2rem; }
-        .log-error { color: #f87171; font-weight: bold; }
-        .log-success { color: #4ade80; }
+
+        textarea::placeholder {
+            color: #475569;
+        }
+
+        .action-bar {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+        }
+
+        .btn-success:hover {
+            background-color: #059669;
+        }
+
+        .btn-secondary {
+            background-color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background-color: #334155;
+        }
+
+        .progress-container {
+            flex: 1;
+            background-color: var(--border-color);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: var(--success);
+            transition: width 0.1s ease;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 15px;
+            background-color: rgba(0,0,0,0.1);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stat-card {
+            background: var(--bg-main);
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 2px;
+            color: var(--accent);
+        }
+
+        .bottom-section {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .bottom-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .console-panel {
+            background-color: var(--console-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .console-output {
+            flex: 1;
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .log-info { color: #94a3b8; }
+        .log-success { color: #10b981; }
+        .log-error { color: #ef4444; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="container">
     <header>
-        <h1>難読化装置AsepXyz <span style="font-size: 0.7rem; background: #1e1b4b; border: 1px solid #4338ca; padding: 0.15rem 0.5rem; border-radius: 4px; color: #a5b4fc;">Monolithic Node.js Transformer v6</span></h1>
-        <p>JavaScript Transformer - Penyebaran Identitas Terdistribusi Merata untuk Kompatibilitas Node.js Modern</p>
+        <h1>Advanced JavaScript AST Obfuscator Studio</h1>
+        <p>Pure Offline JavaScript Compiler & Structural Refactoring Engine</p>
     </header>
 
-    <div class="toolbar">
-        <label class="btn btn-file">
-            📁 Upload File .js
-            <input type="file" id="fileInput" accept=".js">
-        </label>
-        <button class="btn" id="btnObfuscate">Transform Code ⚡</button>
-        <button class="btn btn-success" id="btnDownload" disabled>💾 Download hasil.js</button>
-        <button class="btn btn-file" id="btnCopy" disabled>Salin Kode</button>
-    </div>
-
     <div class="workspace">
-        <div class="editor-box">
-            <div class="editor-label">INPUT JAVASCRIPT (NODE.JS COMPATIBLE)</div>
-            <textarea id="txtInput" placeholder="// Masukkan kode Node.js murni di sini...&#10;const fs = require('fs');&#10;&#10;async function prosesData(pathFile, nilaiAwal) {&#10;    try {&#10;        let totalSkor = nilaiAwal + 150;&#10;        for (let i = 0; i < 5; i++) {&#10;            totalSkor += i;&#10;        }&#10;        console.log('Hasil kalkulasi:', totalSkor);&#10;        return totalSkor;&#10;    } catch (errorSistem) {&#10;        console.error(errorSistem);&#10;    }&#10;}&#10;&#10;prosesData('config.json', 10);"></textarea>
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Source JavaScript</span>
+            </div>
+            <div class="dropzone" id="dropzone">
+                <p>Drag & Drop file .js disini atau klik untuk memilih file</p>
+                <input type="file" id="fileInput" accept=".js">
+            </div>
+            <div class="editor-container">
+                <textarea id="srcEditor" placeholder="Tulis atau tempel kode JavaScript Anda disini..."></textarea>
+            </div>
+            <div class="action-bar">
+                <button class="btn" id="btnCompile">Obfuscate Code</button>
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
         </div>
-        <div class="editor-box">
-            <div class="editor-label">OUTPUT OBFUSCATED (DISTRIBUTED IDENTIFIER BRANDING)</div>
-            <textarea id="txtOutput" readonly placeholder="// Hasil kode terdistribusi merata akan tampil di sini..."></textarea>
+
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Obfuscated Output</span>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Identifiers</div>
+                    <div id="statId" class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Strings</div>
+                    <div id="statStr" class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Numbers</div>
+                    <div id="statNum" class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Properties</div>
+                    <div id="statProp" class="stat-value">0</div>
+                </div>
+            </div>
+            <div class="editor-container" style="padding-top: 15px;">
+                <textarea id="outEditor" readonly placeholder="Hasil obfuscasi akan muncul disini..."></textarea>
+            </div>
+            <div class="action-bar">
+                <button class="btn btn-success" id="btnCopy">Copy Output</button>
+                <button class="btn btn-secondary" id="btnDownload">Download Result</button>
+            </div>
         </div>
     </div>
 
-    <div class="console-box" id="divLog">
-        <div class="log-item">[System] Engine Siap. Menunggu instruksi...</div>
+    <div class="bottom-section">
+        <div class="console-panel">
+            <div class="panel-header"><span class="panel-title">Audit Log</span></div>
+            <div class="console-output" id="auditLog"></div>
+        </div>
+        <div class="console-panel">
+            <div class="panel-header"><span class="panel-title">Error Console</span></div>
+            <div class="console-output" id="errorConsole"></div>
+        </div>
     </div>
-</div>
 
-<script>
-    // Kamus Angka Kanji Tradisional Jepang Sesuai Aturan Wajib Kontinuitas
-    const KANJI_NUMBERS = ['零', '壱', '弐', '参', '四', '伍', '六', '七', '八', '九', '拾'];
+    <script>
+        // ====================================================
+        // PROTECTED IDENTIFIERS LIST
+        // ====================================================
+        const PROTECTED_IDENTIFIERS = new Set([
+            'require', 'module', 'exports', 'console', 'process', 'Buffer',
+            'setTimeout', 'setInterval', 'clearTimeout', 'clearInterval',
+            'global', 'globalThis', 'JSON', 'Math', 'Object', 'Array',
+            'String', 'Number', 'Boolean', 'Date', 'Promise', 'Map', 'Set',
+            'WeakMap', 'WeakSet', 'Symbol', 'Reflect', 'Proxy', 'window', 'document',
+            'true', 'false', 'null', 'undefined', 'arguments', 'eval', 'this'
+        ]);
 
-    // Strict Protected Tokens (Dilarang Keras Di-rename demi validitas API Node.js dan Environment runtime)
-    const PROTECTED_TOKENS = new Set([
-        'const', 'let', 'var', 'if', 'else', 'for', 'while', 'switch', 'case', 'break', 
-        'return', 'try', 'catch', 'function', 'class', 'new', 'await', 'async',
-        'true', 'false', 'null', 'undefined', 'this', 'typeof', 'instanceof', 'in', 'do',
-        'require', 'exports', 'module', 'process', 'Buffer', 'console', 'global', 'globalThis',
-        'setTimeout', 'setInterval', 'clearTimeout', 'clearInterval', 'log', 'error', 'info',
-        'warn', 'dir', '__dirname', '__filename', 'Object', 'Array', 'String', 'Number', 'Math', 'JSON'
-    ]);
+        const KANJI_NUMBERS = ['零', '壱', '弐', '参', '肆', '伍', '陸', '漆', '捌', '玖'];
 
-    // Generator Sekuensial Berbasis Aturan Penamaan Suffix Bertingkat
-    function generateSequentialBrandedName(index) {
-        const prefix = '難読化装置AsepXyz';
-        if (index < KANJI_NUMBERS.length) {
-            return prefix + KANJI_NUMBERS[index];
-        }
-        
-        let suffix = '';
-        let num = index;
-        while (num > 0) {
-            suffix = KANJI_NUMBERS[num % KANJI_NUMBERS.length] + suffix;
-            num = Math.floor(num / KANJI_NUMBERS.length);
-        }
-        return prefix + suffix;
-    }
-
-    // Mengonversi Angka Desimal Menjadi Struktur Aljabar Hexadecimal valid: (0xXX + 0xXX)
-    function encryptNumberToHexExpression(numStr) {
-        const value = parseInt(numStr, 10);
-        if (isNaN(value)) return numStr;
-        
-        // Memecah nilai dasar menjadi dua komponen aljabar acak
-        const part1 = Math.floor(value / 2);
-        const part2 = value - part1;
-        
-        return `(0x${part1.toString(16)} + 0x${part2.toString(16)})`;
-    }
-
-    // XOR + Hex/Unicode Escape String Generator (Bebas Base64)
-    const XOR_KEY = 0x5A; 
-    function encryptStringToXorUnicode(str) {
-        let output = '';
-        for (let i = 0; i < str.length; i++) {
-            let xorVal = str.charCodeAt(i) ^ XOR_KEY;
-            output += '\\x' + xorVal.toString(16).padStart(2, '0');
-        }
-        return output;
-    }
-
-    function writeLog(text, type = 'info') {
-        const time = new Date().toLocaleTimeString();
-        const item = document.createElement('div');
-        item.className = 'log-item';
-        if(type === 'error') item.className += ' log-error';
-        if(type === 'success') item.className += ' log-success';
-        item.innerText = `[${time}] ${text}`;
-        const logBox = document.getElementById('divLog');
-        logBox.appendChild(item);
-        logBox.scrollTop = logBox.scrollHeight;
-    }
-
-    // Event UI
-    document.getElementById('fileInput').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-            document.getElementById('txtInput').value = evt.target.result;
-            writeLog(`Berhasil memuat file eksternal: ${file.name}`);
-        };
-        reader.readAsText(file);
-    });
-
-    document.getElementById('btnCopy').addEventListener('click', function() {
-        const output = document.getElementById('txtOutput');
-        if(!output.value) return;
-        output.select();
-        document.execCommand('copy');
-        writeLog('Kode hasil replikasi monolitik berhasil disalin!', 'success');
-    });
-
-    document.getElementById('btnDownload').addEventListener('click', function() {
-        const code = document.getElementById('txtOutput').value;
-        if(!code) return;
-        const blob = new Blob([code], {type: 'application/javascript;charset=utf-8'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'hasil.js';
-        a.click();
-        URL.revokeObjectURL(url);
-    });
-
-    // =============================================================
-    // PROFESSIONAL LEXICAL CONTEXT TRANSFORMER V6
-    // =============================================================
-    document.getElementById('btnObfuscate').addEventListener('click', function() {
-        let code = document.getElementById('txtInput').value.trim();
-        if (!code) {
-            writeLog('Gagal: Teks input Node.js kosong!', 'error');
-            return;
+        function generateKanjiSuffix(index) {
+            if (index === 0) return KANJI_NUMBERS[0];
+            let res = '';
+            let num = index;
+            while (num > 0) {
+                res = KANJI_NUMBERS[num % 10] + res;
+                num = Math.floor(num / 10);
+            }
+            return res;
         }
 
-        try {
-            writeLog('Melakukan audit sintaksis awal dan stripping komentar...');
-            
-            // Step 1: Pembersihan Komentar Tanpa Merusak Spasi Baris
-            code = code.replace(/\/\*[\s\S]*?\*\//g, ' ');
-            code = code.replace(/\/\/.*$/gm, ' ');
-
-            let stringPool = [];
-            let stringMap = new Map();
-            let stringCounter = 0;
-
-            function registerString(strValue) {
-                if (stringMap.has(strValue)) return stringMap.get(strValue);
-                stringPool.push(strValue);
-                stringMap.set(strValue, stringCounter);
-                return stringCounter++;
+        // ====================================================
+        // TOKENIZER (LEXICAL ANALYSIS)
+        // ====================================================
+        class Tokenizer {
+            constructor(source) {
+                this.source = source;
+                this.cursor = 0;
+                this.length = source.length;
             }
 
-            // Step 2: Proteksi String Literal (Mencegah salah parsing regex kata di dalam string)
-            const stringRegex = /(["'`])((?:\\.|[^\\])*?)\1/g;
-            let preparedCode = code.replace(stringRegex, function(match, quote, content) {
-                let idx = registerString(content);
-                return `___ASEP_STR_LITERAL___[${idx}]`;
-            });
+            tokenize() {
+                const tokens = [];
+                while (this.cursor < this.length) {
+                    let char = this.source[this.cursor];
 
-            // Step 3: Proteksi Object Properties Dan JSON Keys (.property atau property:)
-            // Menandai properti agar tidak terkena rename parser global
-            const propertyDotRegex = /\.([a-zA-Z_$][a-zA-Z0-9_$]*)/g;
-            preparedCode = preparedCode.replace(propertyDotRegex, function(match, propName) {
-                if (PROTECTED_TOKENS.has(propName)) return match;
-                let idx = registerString(propName);
-                return `[___ASEP_STR_LITERAL___[${idx}]]`;
-            });
+                    // White Spaces & Newlines
+                    if (/\s/.test(char)) {
+                        this.cursor++;
+                        continue;
+                    }
 
-            const propertyObjectLiteralRegex = /\b([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g;
-            preparedCode = preparedCode.replace(propertyObjectLiteralRegex, function(match, propKey) {
-                if (PROTECTED_TOKENS.has(propKey)) return match;
-                let idx = registerString(propKey);
-                return `[___ASEP_STR_LITERAL___[${idx}]]:`;
-            });
-
-            // Step 4: Transformasi Angka Desimal Menjadi Aljabar Hexadecimal Math Expression
-            preparedCode = preparedCode.replace(/\b\d+\b/g, function(numMatch) {
-                return encryptNumberToHexExpression(numMatch);
-            });
-
-            // Step 5: Contextual Scanning - Menemukan Seluruh Identifier Lokal Yang Layak Ubah
-            let localRenamingMap = {};
-            let globalIdCounter = 0;
-
-            // Memindai pola deklarasi (let, const, var, function, class, catch, arrow, parameter)
-            const declarationRules = [
-                /\b(?:var|let|const|function|class)\s+([a-zA-Z_$][a-zA-Z0-9_$]*)/g, // Deklarasi Standar
-                /,\s*([a-zA-Z_$][a-zA-Z0-9_$]*)\s*(?=[=,;])/g,                      // Multideklarasi koma
-                /catch\s*\(\s*([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\)/g,                    // Catch error parameter
-                /\bfunction\s*[a-zA-Z_$][a-zA-Z0-9_$]*\s*\(([^)]*)\)/g,             // Parameter fungsi biasa
-                /\(([^)]*)\)\s*=>/g,                                                 // Arrow parameter multi
-                /\b([a-zA-Z_$][a-zA-Z0-9_$]*)\s*=>/g                                 // Arrow parameter tunggal
-            ];
-
-            // Sub-helper ekstraksi parameter fungsi hasil scanning regex
-            function extractSubParameters(paramString) {
-                let splitTokens = paramString.split(/[\s,{} [\]]+/);
-                splitTokens.forEach(function(token) {
-                    let cleaned = token.trim();
-                    if (cleaned && !PROTECTED_TOKENS.has(cleaned) && /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(cleaned)) {
-                        if (!localRenamingMap[cleaned]) {
-                            localRenamingMap[cleaned] = generateSequentialBrandedName(globalIdCounter++);
+                    // Comments
+                    if (char === '/' && this.source[this.cursor + 1] === '/') {
+                        this.cursor += 2;
+                        while (this.cursor < this.length && this.source[this.cursor] !== '\n') {
+                            this.cursor++;
                         }
+                        continue;
+                    }
+                    if (char === '/' && this.source[this.cursor + 1] === '*') {
+                        this.cursor += 2;
+                        while (this.cursor < this.length && !(this.source[this.cursor] === '*' && this.source[this.cursor + 1] === '/')) {
+                            this.cursor++;
+                        }
+                        this.cursor += 2;
+                        continue;
+                    }
+
+                    // Numbers
+                    if (/[0-9]/.test(char)) {
+                        let value = '';
+                        while (this.cursor < this.length && /[0-9xX0-9a-fA-F\.]/.test(this.source[this.cursor])) {
+                            value += this.source[this.cursor];
+                            this.cursor++;
+                        }
+                        tokens.push({ type: 'Number', value: value });
+                        continue;
+                    }
+
+                    // Strings
+                    if (char === '"' || char === "'" || char === '`') {
+                        let quote = char;
+                        let value = '';
+                        this.cursor++; // skip start quote
+                        while (this.cursor < this.length && this.source[this.cursor] !== quote) {
+                            if (this.source[this.cursor] === '\\') {
+                                value += this.source[this.cursor];
+                                this.cursor++;
+                            }
+                            value += this.source[this.cursor];
+                            this.cursor++;
+                        }
+                        this.cursor++; // skip end quote
+                        tokens.push({ type: 'String', value: value, quote: quote });
+                        continue;
+                    }
+
+                    // Identifiers / Keywords
+                    if (/[a-zA-Z_$]/.test(char)) {
+                        let value = '';
+                        while (this.cursor < this.length && /[a-zA-Z0-9_$]/.test(this.source[this.cursor])) {
+                            value += this.source[this.cursor];
+                            this.cursor++;
+                        }
+                        let type = 'Identifier';
+                        if (['const', 'let', 'var', 'function', 'class', 'return', 'async', 'await', 'for', 'in', 'of', 'if', 'else', 'catch', 'try', 'new'].includes(value)) {
+                            type = 'Keyword';
+                        }
+                        tokens.push({ type: type, value: value });
+                        continue;
+                    }
+
+                    // Punctuators / Operators
+                    tokens.push({ type: 'Punctuator', value: char });
+                    this.cursor++;
+                }
+                return tokens;
+            }
+        }
+
+        // ====================================================
+        // PARSER & SCOPE MANAGER (AST-LIKE SYNTACTIC ANALYSIS)
+        // ====================================================
+        class Scope {
+            constructor(parent = null) {
+                this.parent = parent;
+                this.bindings = new Map();
+            }
+        }
+
+        class ScopeManager {
+            constructor() {
+                this.globalScope = new Scope();
+                this.currentScope = this.globalScope;
+                this.renameMap = new Map();
+                this.renameCounter = 0;
+            }
+
+            enterScope() {
+                this.currentScope = new Scope(this.currentScope);
+            }
+
+            exitScope() {
+                if (this.currentScope.parent) {
+                    this.currentScope = this.currentScope.parent;
+                }
+            }
+
+            declare(name) {
+                if (PROTECTED_IDENTIFIERS.has(name)) return;
+                if (!this.currentScope.bindings.has(name)) {
+                    if (!this.renameMap.has(name)) {
+                        let newName = 'AsepXyz' + generateKanjiSuffix(this.renameCounter++);
+                        this.renameMap.set(name, newName);
+                    }
+                    this.currentScope.bindings.set(name, this.renameMap.get(name));
+                }
+            }
+
+            lookup(name) {
+                if (PROTECTED_IDENTIFIERS.has(name)) return name;
+                let scope = this.currentScope;
+                while (scope) {
+                    if (scope.bindings.has(name)) {
+                        return scope.bindings.get(name);
+                    }
+                    scope = scope.parent;
+                }
+                // Jika reference global yang tidak terikat deklarasi lokal/eksternal khusus
+                if (this.renameMap.has(name)) {
+                    return this.renameMap.get(name);
+                }
+                return name;
+            }
+        }
+
+        class Parser {
+            constructor(tokens, scopeManager) {
+                this.tokens = tokens;
+                this.sm = scopeManager;
+                this.cursor = 0;
+                this.stats = { id: 0, str: 0, num: 0, prop: 0 };
+            }
+
+            peek(offset = 0) {
+                return this.tokens[this.cursor + offset] || { type: 'EOF', value: '' };
+            }
+
+            consume() {
+                return this.tokens[this.cursor++];
+            }
+
+            parse() {
+                // First Pass: Analisis Deklarasi dan Scope Seluruh Token
+                this.analyzeScopes();
+                
+                // Second Pass: Transformasi Nilai Token Berdasarkan Hasil Scope Analysis
+                this.cursor = 0;
+                return this.transformAndGenerate();
+            }
+
+            analyzeScopes() {
+                while (this.cursor < this.tokens.length) {
+                    let token = this.peek();
+
+                    if (token.type === 'Keyword' && ['var', 'let', 'const'].includes(token.value)) {
+                        this.consume();
+                        this.parseDeclarationIdentifiers();
+                    } else if (token.type === 'Keyword' && token.value === 'function') {
+                        this.consume();
+                        if (this.peek().type === 'Identifier') {
+                            this.sm.declare(this.peek().value);
+                            this.consume();
+                        }
+                        this.parseFunctionBody();
+                    } else if (token.type === 'Keyword' && token.value === 'catch') {
+                        this.consume();
+                        this.sm.enterScope();
+                        if (this.peek().value === '(') this.consume();
+                        if (this.peek().type === 'Identifier') {
+                            this.sm.declare(this.peek().value);
+                            this.consume();
+                        }
+                    } else if (token.value === '{') {
+                        this.sm.enterScope();
+                        this.consume();
+                    } else if (token.value === '}') {
+                        this.sm.exitScope();
+                        this.consume();
+                    } else {
+                        this.consume();
+                    }
+                }
+            }
+
+            parseDeclarationIdentifiers() {
+                while (this.cursor < this.tokens.length) {
+                    let tok = this.peek();
+                    if (tok.type === 'Identifier') {
+                        // Cek jika ini property dari destructuring object, jangan di-declare sebagai variabel baru langsung
+                        if (this.peek(-1).value === '{' || this.peek(-1).value === ',') {
+                            if (this.peek(1).value === ':') {
+                                // destructuring custom name { real_key: user_variable }
+                                this.consume(); // key
+                                this.consume(); // :
+                                if (this.peek().type === 'Identifier') {
+                                    this.sm.declare(this.peek().value);
+                                    this.consume();
+                                }
+                                continue;
+                            }
+                        }
+                        this.sm.declare(tok.value);
+                        this.consume();
+                    } else if (tok.value === '=' || tok.value === ';'|| tok.value === ',') {
+                        if (tok.value === ';') break;
+                        this.consume();
+                    } else {
+                        this.consume();
+                    }
+                }
+            }
+
+            parseFunctionBody() {
+                this.sm.enterScope();
+                if (this.peek().value === '(') {
+                    this.consume();
+                    while (this.cursor < this.tokens.length && this.peek().value !== ')') {
+                        let tok = this.peek();
+                        if (tok.type === 'Identifier') {
+                            this.sm.declare(tok.value);
+                        }
+                        this.consume();
+                    }
+                }
+            }
+
+            transformAndGenerate() {
+                let output = '';
+                while (this.cursor < this.tokens.length) {
+                    let token = this.peek();
+
+                    // Object Literal Property & Bracket Obfuscation Check
+                    if (token.value === '{') {
+                        output += this.transformObjectLiteral();
+                        continue;
+                    }
+
+                    // Dot Notation Property Access (e.g., obj.name)
+                    if (token.type === 'Identifier' && this.peek(1).value === '.') {
+                        let baseObj = this.sm.lookup(token.value);
+                        if (baseObj !== token.value) this.stats.id++;
+                        
+                        this.consume(); // consume object name
+                        this.consume(); // consume dot '.'
+                        
+                        let propToken = this.peek();
+                        if (propToken.type === 'Identifier') {
+                            let encodedProp = StringEncoder.encode(propToken.value);
+                            output += `${baseObj}[${encodedProp}]`;
+                            this.stats.prop++;
+                            this.consume();
+                        } else {
+                            output += `${baseObj}.`;
+                        }
+                        continue;
+                    }
+
+                    // Normal Identifier Renamer
+                    if (token.type === 'Identifier') {
+                        let renamed = this.sm.lookup(token.value);
+                        if (renamed !== token.value) this.stats.id++;
+                        output += renamed;
+                        this.consume();
+                        continue;
+                    }
+
+                    // String Encoder
+                    if (token.type === 'String') {
+                        output += StringEncoder.encode(token.value);
+                        this.stats.str++;
+                        this.consume();
+                        continue;
+                    }
+
+                    // Number Encoder
+                    if (token.type === 'Number') {
+                        output += NumberEncoder.encode(token.value);
+                        this.stats.num++;
+                        this.consume();
+                        continue;
+                    }
+
+                    output += token.value;
+                    // Beri spasi opsional antar keyword / identifier agar tidak menyatu secara syntax jika tadinya terpisah space
+                    if (token.type === 'Keyword' || (token.type === 'Punctuator' && ['=', '+', '-', '*', '/', ',', ':', 'return'].includes(token.value))) {
+                        output += ' ';
+                    }
+                    this.consume();
+                }
+                return output;
+            }
+
+            transformObjectLiteral() {
+                let result = '{ ';
+                this.consume(); // consume '{'
+                
+                while (this.cursor < this.tokens.length && this.peek().value !== '}') {
+                    let tok = this.peek();
+                    
+                    // Deteksi key: value
+                    if (tok.type === 'Identifier' && this.peek(1).value === ':') {
+                        let encodedKey = StringEncoder.encode(tok.value);
+                        result += `[${encodedKey}]: `;
+                        this.stats.prop++;
+                        this.consume(); // key
+                        this.consume(); // :
+                        continue;
+                    }
+                    
+                    if (tok.type === 'Identifier') {
+                        result += this.sm.lookup(tok.value);
+                    } else if (tok.type === 'String') {
+                        result += StringEncoder.encode(tok.value);
+                        this.stats.str++;
+                    } else if (tok.type === 'Number') {
+                        result += NumberEncoder.encode(tok.value);
+                        this.stats.num++;
+                    } else {
+                        result += tok.value;
+                    }
+                    this.consume();
+                }
+                
+                if (this.peek().value === '}') {
+                    result += ' }';
+                    this.consume();
+                }
+                return result;
+            }
+        }
+
+        // ====================================================
+        // OBFUSCATION TRANSFORMATION ENCODERS
+        // ====================================================
+        class StringEncoder {
+            static encode(str) {
+                let result = '"';
+                for (let i = 0; i < str.length; i++) {
+                    let hex = str.charCodeAt(i).toString(16);
+                    result += '\\x' + (hex.length < 2 ? '0' + hex : hex);
+                }
+                return result + '"';
+            }
+        }
+
+        class NumberEncoder {
+            static encode(numStr) {
+                if (numStr.includes('.') || numStr.toLowerCase().includes('x')) {
+                    return numStr; // Biarkan float atau hex bawaan tetap asli
+                }
+                let val = parseInt(numStr, 10);
+                if (isNaN(val)) return numStr;
+                return '0x' + val.toString(16);
+            }
+        }
+
+        // ====================================================
+        // SYSTEM COMPILER INTEGRATION CORE
+        // ====================================================
+        class Compiler {
+            constructor(sourceCode, uiController) {
+                this.sourceCode = sourceCode;
+                this.ui = uiController;
+            }
+
+            run() {
+                try {
+                    this.ui.updateProgress(10);
+                    this.ui.log('Memulai proses lexical analysis (Tokenizer)...', 'info');
+                    
+                    const tokenizer = new Tokenizer(this.sourceCode);
+                    const tokens = tokenizer.tokenize();
+                    
+                    this.ui.updateProgress(40);
+                    this.ui.log(`Berhasil memproses ${tokens.length} tokens. Memulai parsing & scope mapping...`, 'info');
+                    
+                    const scopeManager = new ScopeManager();
+                    const parser = new Parser(tokens, scopeManager);
+                    
+                    this.ui.updateProgress(70);
+                    this.ui.log('Mentransformasikan AST Nodes & Enkripsi Literal...', 'info');
+                    const outputCode = parser.parse();
+                    
+                    this.ui.updateProgress(100);
+                    this.ui.log('Obfuscation selesai dengan sukses!', 'success');
+                    
+                    this.ui.renderResult(outputCode, parser.stats);
+                } catch (err) {
+                    this.ui.logError(err.stack || err.message);
+                    this.ui.log('Proses kompilasi gagal. Periksa Error Console.', 'error');
+                }
+            }
+        }
+
+        // ====================================================
+        // UI CONTROLLER MANAGEMENT
+        // ====================================================
+        class UIController {
+            constructor() {
+                this.srcEditor = document.getElementById('srcEditor');
+                this.outEditor = document.getElementById('outEditor');
+                this.btnCompile = document.getElementById('btnCompile');
+                this.btnCopy = document.getElementById('btnCopy');
+                this.btnDownload = document.getElementById('btnDownload');
+                this.dropzone = document.getElementById('dropzone');
+                this.fileInput = document.getElementById('fileInput');
+                this.auditLog = document.getElementById('auditLog');
+                this.errorConsole = document.getElementById('errorConsole');
+                this.progressContainer = document.getElementById('progressContainer');
+                this.progressBar = document.getElementById('progressBar');
+                
+                // Stats elements
+                this.statId = document.getElementById('statId');
+                this.statStr = document.getElementById('statStr');
+                this.statNum = document.getElementById('statNum');
+                this.statProp = document.getElementById('statProp');
+
+                this.initEvents();
+            }
+
+            initEvents() {
+                this.btnCompile.addEventListener('click', () => {
+                    const code = this.srcEditor.value.trim();
+                    if (!code) {
+                        this.logError('ReferenceError: Input source code kosong.');
+                        return;
+                    }
+                    this.clearConsoles();
+                    this.progressContainer.style.display = 'block';
+                    
+                    // Run compiler execution frame
+                    setTimeout(() => {
+                        const compiler = new Compiler(code, this);
+                        compiler.run();
+                    }, 200);
+                });
+
+                this.btnCopy.addEventListener('click', () => {
+                    if (!this.outEditor.value) return;
+                    navigator.clipboard.writeText(this.outEditor.value);
+                    this.log('Kode hasil obfuscasi disalin ke clipboard.', 'success');
+                });
+
+                this.btnDownload.addEventListener('click', () => {
+                    if (!this.outEditor.value) return;
+                    const blob = new Blob([this.outEditor.value], { type: 'text/javascript' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'obfuscated.js';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    this.log('File obfuscated.js berhasil diunduh.', 'success');
+                });
+
+                // Drag & Drop Handling
+                this.dropzone.addEventListener('click', () => this.fileInput.click());
+                this.fileInput.addEventListener('change', (e) => this.handleFile(e.target.files[0]));
+                
+                this.dropzone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    this.dropzone.classList.add('dragover');
+                });
+                this.dropzone.addEventListener('dragleave', () => this.dropzone.classList.remove('dragover'));
+                this.dropzone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    this.dropzone.classList.remove('dragover');
+                    if (e.dataTransfer.files.length > 0) {
+                        this.handleFile(e.dataTransfer.files[0]);
                     }
                 });
             }
 
-            declarationRules.forEach(function(ruleRegex, index) {
-                let matchedResult;
-                ruleRegex.lastIndex = 0;
-                while ((matchedResult = ruleRegex.exec(preparedCode)) !== null) {
-                    if (index === 3 || index === 4) {
-                        // Memproses parameter di dalam tanda kurung fungsi
-                        extractSubParameters(matchedResult[1]);
-                    } else {
-                        let targetVarName = matchedResult[1];
-                        if (targetVarName && !PROTECTED_TOKENS.has(targetVarName) && !targetVarName.startsWith('___ASEP_')) {
-                            if (!localRenamingMap[targetVarName]) {
-                                localRenamingMap[targetVarName] = generateSequentialBrandedName(globalIdCounter++);
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Step 6: Eksekusi Rename Secara Merata Di Seluruh Tubuh File Berbasis Word Boundary (\b)
-            for (let rawIdentifier in localRenamingMap) {
-                let brandedSubstitutionName = localRenamingMap[rawIdentifier];
-                let boundaryRegex = new RegExp('\\b' + rawIdentifier + '\\b', 'g');
-                preparedCode = preparedCode.replace(boundaryRegex, brandedSubstitutionName);
+            handleFile(file) {
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.srcEditor.value = e.target.result;
+                    this.log(`Berhasil memuat file: ${file.name}`, 'success');
+                };
+                reader.readAsText(file);
             }
 
-            // Step 7: Enkripsi String Pool Memakai Jalur Penyandian XOR Byte Terproteksi
-            let encryptedPoolArrayContent = stringPool.map(function(rawText) {
-                return `"${encryptStringToXorUnicode(rawText)}"`;
-            });
+            log(message, type = 'info') {
+                const div = document.createElement('div');
+                div.className = `log-${type}`;
+                div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+                this.auditLog.appendChild(div);
+                this.auditLog.scrollTop = this.auditLog.scrollHeight;
+            }
 
-            // Step 8: Penyeragaman Global Komponen Helper Internal Memakai Sistem Generator Tunggal Yang Sama
-            let masterPoolBrandedName = generateSequentialBrandedName(globalIdCounter++);
-            let decoderBrandedName = generateSequentialBrandedName(globalIdCounter++);
-            let iteratorBrandedIndex = generateSequentialBrandedName(globalIdCounter++);
-            let xorKeyExpressionBranded = `(0x${XOR_KEY.toString(16)})`;
+            logError(errMessage) {
+                const div = document.createElement('div');
+                div.className = 'log-error';
+                div.textContent = `[${new Date().toLocaleTimeString()}] ${errMessage}`;
+                this.errorConsole.appendChild(div);
+                this.errorConsole.scrollTop = this.errorConsole.scrollHeight;
+            }
 
-            // Hubungkan penanda string literal ke nama fungsi decoder ter-branding
-            preparedCode = preparedCode.replace(/___ASEP_STR_LITERAL___/g, decoderBrandedName);
+            clearConsoles() {
+                this.auditLog.innerHTML = '';
+                this.errorConsole.innerHTML = '';
+            }
 
-            // Step 9: Minifikasi Penuh Tanpa Merusak Sintaksis (Menghapus whitespace berlebih)
-            preparedCode = preparedCode.replace(/\s+/g, ' ');
-            preparedCode = preparedCode.replace(/\s*([=\{\}\(\),;:><\+\-\*\/])\s*/g, '$1');
+            updateProgress(percent) {
+                this.progressBar.style.width = `${percent}%`;
+                if (percent >= 100) {
+                    setTimeout(() => {
+                        this.progressContainer.style.display = 'none';
+                        this.progressBar.style.width = '0%';
+                    }, 1000);
+                }
+            }
 
-            // Step 10: Konstruksi Monolitik Runtime Tunggal (Satu Rumpun Keluarga Dari Atas ke Bawah)
-            let runtimeEngineBlock = `const ${masterPoolBrandedName}=[${encryptedPoolArrayContent.join(',')}];function ${decoderBrandedName}(${iteratorBrandedIndex}){let _str=${masterPoolBrandedName}[${iteratorBrandedIndex}],_res='',_k=${xorKeyExpressionBranded};for(let i=0;i<_str.length;i++){_res+=String.fromCharCode(_str.charCodeAt(i)^_k);}return _res;}${preparedCode}`;
-
-            // Render Output Ke UI Komponen
-            document.getElementById('txtOutput').value = runtimeEngineBlock;
-            document.getElementById('btnDownload').disabled = false;
-            document.getElementById('btnCopy').disabled = false;
-
-            writeLog(`Sukses Besar! Berhasil memetakan ${Object.keys(localRenamingMap).length} variabel lokal.`, 'success');
-            writeLog('Output terdistribusi merata, bersih dari literal kosong, siap dijalankan di Node.js.', 'success');
-
-        } catch (error) {
-            writeLog('Fatal Error Transformer: ' + error.message, 'error');
-            document.getElementById('txtOutput').value = `/* Terjadi kesalahan dalam pemrosesan leksikal: \n ${error.message} \n*/`;
+            renderResult(outputCode, stats) {
+                this.outEditor.value = outputCode;
+                this.statId.textContent = stats.id;
+                this.statStr.textContent = stats.str;
+                this.statNum.textContent = stats.num;
+                this.statProp.textContent = stats.prop;
+            }
         }
-    });
-</script>
 
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', () => {
+            window.AppStudio = new UIController();
+        });
+    </script>
 </body>
 </html>
