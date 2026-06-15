@@ -1,1 +1,70 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Database Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="login-container" id="loginPage">
+    <div class="header-image-wrapper">
+      <img src="https://files.catbox.moe/7gfnco.jpg" alt="Background" class="header-image">
+      <div class="profile-info">
+        <img src="https://files.catbox.moe/jolozc.jpg" alt="Profile" class="profile-picture" id="profilePic">
+        <div class="profile-name" id="ownerName">Asep</div>
+        <div class="online-status">ONLINE</div>
+      </div>
+    </div>
+    
+    <div class="content-area">
+      <div class="main-title" id="title">Database Manager</div>
+
+      <form class="login-form" id="loginForm">
+        <div class="form-group">
+          <div class="password-wrapper">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="password" class="form-control" placeholder="Masukkan password" required>
+            <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+          </div>
+        </div>
+        
+        <label style="display:flex;align-items:center;gap:8px;margin-bottom:1rem;font-size:0.9rem;color:var(--gray)">
+          <input type="checkbox" id="rememberMe"> Ingat sesi
+        </label>
+        
+        <button type="submit" class="btn btn-primary" id="loginBtn">
+          <i class="fas fa-lock"></i>
+          Login
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="dashboard-container hidden" id="dashboardPage">
+    <div class="dashboard-header">
+      <h2 id="dashboardTitle">Database Manager</h2>
+      <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+    
+    <div class="stats-grid">
+      <div class="stat-card"><i class="fas fa-key"></i><h3 id="totalKeys">0</h3><p>Total Keys</p></div>
+      <div class="stat-card"><i class="fas fa-database"></i><h3 id="fileSize">0 KB</h3><p>File Size</p></div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-primary" onclick="loadDatabase()"><i class="fas fa-download"></i> Load Database</button>
+      <button class="btn btn-secondary" onclick="copyJSON()"><i class="fas fa-copy"></i> Copy JSON</button>
+      <button class="btn btn-secondary" onclick="downloadJSON()"><i class="fas fa-download"></i> Download</button>
+    </div>
+
+    <pre id="jsonViewer" class="json-viewer">Klik "Load Database" untuk mulai</pre>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
