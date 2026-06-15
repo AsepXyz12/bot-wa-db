@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Number - Buyer Access</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg-gradient"></div>
+  <div class="floating-light light-1"></div>
+
+  <div id="loginPage" class="login-page">
+    <div class="login-card glass-card scale-in">
+      <div class="logo-glow"><i class="fas fa-user-plus"></i></div>
+      <h1>Add Number - Buyer</h1>
+      <p>Masukkan password buyer</p>
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <input type="password" id="passwordInput" placeholder="Password buyer" required>
+        </div>
+        <button type="submit" class="btn-primary">Masuk</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="addPage" class="hidden">
+    <div class="add-card glass-card scale-in">
+      <h2>Tambah Nomor WhatsApp</h2>
+      <p>Khusus buyer aktif</p>
+      
+      <form id="addForm">
+        <div class="form-group">
+          <label>Nomor WhatsApp</label>
+          <input type="text" id="waNumber" placeholder="62812xxxxxxx" required>
+          <small>Tanpa + atau 0. Contoh: 628123456789</small>
+        </div>
+        
+        <div class="form-group">
+          <label>Nama/Pengenal</label>
+          <input type="text" id="waName" placeholder="Nama buyer" required>
+        </div>
+
+        <button type="submit" class="btn-primary">
+          <i class="fas fa-plus"></i> Add Number
+        </button>
+      </form>
+
+      <button id="logoutBtn" class="btn-secondary" style="margin-top:20px;width:100%">Logout</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
