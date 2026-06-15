@@ -1,455 +1,467 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Database Manager</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
-  <style>
-    :root {
-      --primary: #4361ee;
-      --primary-dark: #3a56d4;
-      --secondary-dark: white;
-      --danger: #ef4444;
-      --dark: #1e293b;
-      --light: #f1f5f9;
-      --gray: #64748b;
-      --gray-light: #e2e8f0;
-      --online-green: #38c172;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAZA MODS</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+<style>
+:root {
+  --primary: #4361ee;
+  --primary-dark: #3a56d4;
+  --success: #38c172;
+  --danger: #ef4444;
+  --dark: #1e293b;
+  --light: #f8fafc;
+  --gray: #64748b;
+  --gray-light: #e2e8f0;
+  --white: #ffffff;
+}
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--light);
-      display: flex;
-      justify-content: center;
-      align-items: center; 
-      min-height: 100vh;
-      padding: 1rem;
-    }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-    .container {
-      background-color: var(--secondary-dark);
-      border-radius: 1.5rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      width: 90%;
-      max-width: 600px;
-      overflow: hidden;
-      animation: fadeInUp 0.5s ease-out forwards;
-    }
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--light);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+.container {
+  background: var(--white);
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+  animation: fadeIn 0.4s ease;
+}
 
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-10px); }
-      75% { transform: translateX(10px); }
-    }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-    .header-image-wrapper {
-      position: relative;
-      height: 250px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      border-top-left-radius: 1.5rem;
-      border-top-right-radius: 1.5rem;
-    }
+.header {
+  position: relative;
+  height: 280px;
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://files.catbox.moe/7gfnco.jpg') center/cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
 
-    .header-image {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(0.7);
-    }
+.profile-pic {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 4px solid var(--primary);
+  box-shadow: 0 0 0 4px rgba(67,97,238,0.3);
+  margin-bottom: 15px;
+  object-fit: cover;
+}
 
-    .profile-info {
-      position: relative;
-      z-index: 10;
-      text-align: center;
-    }
-    
-    .profile-picture {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 4px solid white;
-      box-shadow: 0 0 0 4px var(--primary), 0 0 15px rgba(67, 97, 238, 0.9);
-      margin-bottom: 10px;
-    }
+.header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
 
-    .profile-name {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: white;
-      margin-top: 5px;
-    }
-    
-    .online-status {
-      display: inline-block;
-      padding: 3px 15px;
-      background-color: var(--online-green);
-      color: white;
-      font-size: 0.8rem;
-      font-weight: 500;
-      border-radius: 20px;
-      margin-top: 8px;
-    }
+.badge-online {
+  background: var(--success);
+  color: white;
+  padding: 5px 20px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
 
-    .content-area {
-      padding: 2rem;
-    }
+.content {
+  padding: 2rem;
+}
 
-    .main-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--dark);
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
+.title-main {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 5px;
+}
 
-    .form-group {
-      margin-bottom: 1.25rem;
-      position: relative;
-    }
+.title-sub {
+  text-align: center;
+  color: var(--gray);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
 
-    .password-wrapper {
-      position: relative;
-    }
+.input-group {
+  position: relative;
+  margin-bottom: 1rem;
+}
 
-    .form-control {
-      background-color: white;
-      color: var(--dark);
-      width: 100%;
-      padding: 0.85rem 1rem 0.85rem 3rem;
-      border: 1px solid var(--gray-light);
-      border-radius: 0.75rem;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-    }
+.input-group i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray);
+}
 
-    .form-control:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-    }
+.input-group input {
+  width: 100%;
+  padding: 14px 45px;
+  border: 2px solid var(--gray-light);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-family: 'Poppins';
+  transition: all 0.3s;
+}
 
-    .input-icon {
-      position: absolute;
-      top: 50%;
-      left: 1rem;
-      transform: translateY(-50%);
-      color: var(--gray);
-    }
+.input-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(67,97,238,0.1);
+}
 
-    .toggle-password {
-      position: absolute;
-      top: 50%;
-      right: 1rem;
-      transform: translateY(-50%);
-      color: var(--gray);
-      cursor: pointer;
-    }
+.toggle-eye {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray);
+  cursor: pointer;
+}
 
-    .btn {
-      width: 100%;
-      padding: 0.9rem;
-      border-radius: 0.75rem;
-      font-size: 1.05rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-    }
+.btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Poppins';
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
 
-    .btn-primary {
-      background-color: var(--primary);
-      color: white;
-      margin-bottom: 1rem;
-    }
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 4px 15px rgba(67,97,238,0.3);
+}
 
-    .btn-primary:hover {
-      background-color: var(--primary-dark);
-    }
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
 
-    .btn-secondary {
-      background-color: var(--gray-light);
-      color: var(--dark);
-    }
+.links {
+  margin-top: 1.5rem;
+  text-align: center;
+}
 
-    .checkbox-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      color: var(--gray);
-    }
+.links p {
+  color: var(--gray);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
 
-    .json-viewer {
-      background: #1e293b;
-      color: #e2e8f0;
-      padding: 1.5rem;
-      border-radius: 1rem;
-      font-family: 'Courier New', monospace;
-      font-size: 0.85rem;
-      max-height: 400px;
-      overflow: auto;
-      margin-top: 1rem;
-      display: none;
-    }
+.link-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  text-decoration: none;
+  color: var(--dark);
+  font-weight: 500;
+  border-radius: 10px;
+  transition: all 0.3s;
+}
 
-    .action-buttons {
-      display: none;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
+.link-item:hover {
+  background: var(--light);
+}
 
-    .action-buttons.show {
-      display: flex;
-    }
+.link-wa { color: #25D366; }
+.link-ch { color: #f56565; }
 
-    .hidden { display: none !important; }
+.hidden { display: none !important; }
 
-    @media (max-width: 768px) {
-      .action-buttons { flex-direction: column; }
-    }
-  </style>
+.table-wrapper {
+  margin-top: 1.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--gray-light);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #e0e7ff;
+}
+
+thead th {
+  padding: 12px;
+  text-align: left;
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+tbody td {
+  padding: 12px;
+  border-top: 1px solid var(--gray-light);
+  font-size: 0.9rem;
+}
+
+.status-badge {
+  background: #d1fae5;
+  color: var(--success);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+@keyframes shake {
+ 0%, 100% { transform: translateX(0); }
+ 25% { transform: translateX(-10px); }
+ 75% { transform: translateX(10px); }
+}
+</style>
 </head>
 <body>
-  <!-- Login Page -->
-  <div class="container" id="loginPage">
-    <div class="header-image-wrapper">
-      <img src="https://files.catbox.moe/7gfnco.jpg" alt="Background" class="header-image">
-      <div class="profile-info">
-        <img src="https://files.catbox.moe/jolozc.jpg" alt="Profile" class="profile-picture" id="profilePic">
-        <div class="profile-name" id="ownerName">Asep</div>
-        <div class="online-status">ONLINE</div>
-      </div>
-    </div>
-    
-    <div class="content-area">
-      <div class="main-title" id="title">Database Manager</div>
 
-      <form class="login-form" id="loginForm">
-        <div class="form-group">
-          <div class="password-wrapper">
-            <i class="fas fa-lock input-icon"></i>
-            <input type="password" id="password" class="form-control" placeholder="Masukkan password" required>
-            <i class="fas fa-eye toggle-password" id="togglePassword"></i>
-          </div>
-        </div>
-        
-        <label class="checkbox-label">
-          <input type="checkbox" id="rememberMe"> Ingat sesi login
-        </label>
-        
-        <button type="submit" class="btn btn-primary" id="loginBtn">
-          <i class="fas fa-lock"></i>
-          Login
-        </button>
-      </form>
-    </div>
+<!-- LOGIN PAGE -->
+<div class="container" id="loginPage">
+  <div class="header">
+    <img src="https://files.catbox.moe/jolozc.jpg" class="profile-pic" alt="RAZA">
+    <h1>RAZA MODS</h1>
+    <div class="badge-online">ONLINE</div>
   </div>
-
-  <!-- Dashboard Page -->
-  <div class="container hidden" id="dashboardPage">
-    <div class="header-image-wrapper" style="height: 180px;">
-      <img src="https://files.catbox.moe/7gfnco.jpg" alt="Background" class="header-image">
-      <div class="profile-info">
-        <div class="profile-name" id="dashboardTitle">Database Manager</div>
-      </div>
-    </div>
+  
+  <div class="content">
+    <div class="title-main">🔒 M5 ||</div>
+    <div class="title-sub">&lt;/&gt;X7RażàMọ̰ds3xcellent</div>
     
-    <div class="content-area">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h3 style="color: var(--dark);">Database Viewer</h3>
-        <button class="btn btn-secondary" onclick="logout()" style="width: auto; padding: 0.6rem 1.2rem; font-size: 0.9rem;">
-          <i class="fas fa-sign-out-alt"></i> Logout
-        </button>
+    <form id="loginForm">
+      <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="password" placeholder="Enter your password" required>
+        <i class="fas fa-eye toggle-eye" id="togglePass"></i>
       </div>
-
-      <button class="btn btn-primary" onclick="loadDatabase()">
-        <i class="fas fa-download"></i> Load ./database/database.json
+      
+      <button type="submit" class="btn btn-primary" id="loginBtn">
+        <i class="fas fa-lock"></i> Login
       </button>
-
-      <div class="action-buttons" id="actionButtons">
-        <button class="btn btn-secondary" onclick="copyJSON()">
-          <i class="fas fa-copy"></i> Copy
-        </button>
-        <button class="btn btn-secondary" onclick="downloadJSON()">
-          <i class="fas fa-download"></i> Download
-        </button>
-      </div>
-
-      <pre id="jsonViewer" class="json-viewer">Klik tombol di atas untuk load database</pre>
+    </form>
+    
+    <div class="links">
+      <p>Belum punya akun?</p>
+      <a href="https://wa.me/6283840240138" target="_blank" class="link-item link-wa">
+        <i class="fab fa-whatsapp"></i> Beli Sekarang (WhatsApp)
+      </a>
+      <a href="https://whatsapp.com/channel/0029Vb6KMNq7IUYLgWR6KY0C" target="_blank" class="link-item link-ch">
+        <i class="fas fa-volume-up"></i> Saluran Owner (WhatsApp)
+      </a>
     </div>
   </div>
+</div>
 
-  <script>
-    // CONFIG
-    const CONFIG = {
-      password: "AsepXTrinityV1",
-      owner: "AsepXyz12",
-      repo: "bot-wa-db",
-      branch: "main",
-      databasePath: "database/database.json",
-      title: "Database Manager",
-      ownerName: "Asep",
-      profilePicture: "https://files.catbox.moe/jolozc.jpg"
-    };
+<!-- DASHBOARD PAGE -->
+<div class="container hidden" id="dashboardPage">
+  <div class="header">
+    <img src="https://files.catbox.moe/jolozc.jpg" class="profile-pic" alt="RAZA">
+    <h1>RAZA MODS</h1>
+    <div class="badge-online">ONLINE</div>
+  </div>
+  
+  <div class="content">
+    <div class="title-main">🔒 M5 ||</div>
+    <div class="title-sub">&lt;/&gt;X7RażàMọ̰ds3xcellent</div>
+    <p style="text-align:center; color:var(--gray); font-size:0.85rem; margin-bottom:1rem;">Add and check your registered numbers</p>
+    
+    <div class="input-group">
+      <input type="text" id="phoneInput" placeholder="Enter phone number">
+    </div>
+    
+    <button class="btn btn-primary" onclick="addNumber()">
+      <i class="fas fa-plus"></i> Add Number
+    </button>
+    
+    <div class="input-group" style="margin-top:1rem;">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Search numbers..." oninput="searchNumber()">
+    </div>
+    
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Number</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="numberTable">
+          <tr><td colspan="2" style="text-align:center; color:var(--gray);">Klik Add Number untuk load data</td></tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <button class="btn" style="background:var(--danger); color:white; margin-top:1rem;" onclick="logout()">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
+  </div>
+</div>
 
-    const STORAGE_KEY = "db_manager_session";
-    let databaseData = null;
+<script>
+const CONFIG = {
+  password: "AsepXTrinityV1",
+  owner: "AsepXyz12",
+  repo: "bot-wa-db",
+  branch: "main",
+  databasePath: "database/database.json"
+};
 
-    // Helper buat bikin URL raw github
-    function buildRawUrl() {
-      return `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${CONFIG.databasePath}`;
-    }
+const STORAGE_KEY = "raza_session";
+let dbData = { Numbers: [] };
 
-    // Init
-    function init() {
-      document.getElementById('title').textContent = CONFIG.title;
-      document.getElementById('dashboardTitle').textContent = CONFIG.title;
-      document.getElementById('ownerName').textContent = CONFIG.ownerName;
-      document.getElementById('profilePic').src = CONFIG.profilePicture;
+function buildRawUrl() {
+  return `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/${CONFIG.branch}/${CONFIG.databasePath}`;
+}
 
-      // Cek session
-      const session = localStorage.getItem(STORAGE_KEY);
-      if (session) {
-        const data = JSON.parse(session);
-        if (data.password === CONFIG.password) {
-          showDashboard();
-          return;
-        }
-      }
-      showLogin();
-    }
+// Init
+function init() {
+  const session = localStorage.getItem(STORAGE_KEY);
+  if (session && JSON.parse(session).password === CONFIG.password) {
+    showDashboard();
+  } else {
+    showLogin();
+  }
+}
 
-    function showLogin() {
-      document.getElementById('loginPage').classList.remove('hidden');
-      document.getElementById('dashboardPage').classList.add('hidden');
-    }
+function showLogin() {
+  document.getElementById('loginPage').classList.remove('hidden');
+  document.getElementById('dashboardPage').classList.add('hidden');
+}
 
-    function showDashboard() {
-      document.getElementById('loginPage').classList.add('hidden');
-      document.getElementById('dashboardPage').classList.remove('hidden');
-    }
+function showDashboard() {
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('dashboardPage').classList.remove('hidden');
+  loadDatabase();
+}
 
-    // Login
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById('loginBtn');
-      const input = document.getElementById('password');
-      const remember = document.getElementById('rememberMe').checked;
+// Login
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const input = document.getElementById('password');
+  const btn = document.getElementById('loginBtn');
+  
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+  
+  await new Promise(r => setTimeout(r, 500));
+  
+  if (input.value === CONFIG.password) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({password: input.value}));
+    Swal.fire({icon:'success', title:'Login berhasil', timer:1000, showConfirmButton:false});
+    setTimeout(showDashboard, 800);
+  } else {
+    document.getElementById('loginPage').style.animation = 'shake 0.4s';
+    setTimeout(() => document.getElementById('loginPage').style.animation = '', 400);
+    Swal.fire({icon:'error', title:'Password salah', timer:1500, showConfirmButton:false});
+    btn.innerHTML = '<i class="fas fa-lock"></i> Login';
+    input.value = '';
+  }
+});
 
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
-      btn.disabled = true;
+// Toggle password
+document.getElementById('togglePass').addEventListener('click', function() {
+  const pass = document.getElementById('password');
+  pass.type = pass.type === 'password' ? 'text' : 'password';
+  this.classList.toggle('fa-eye-slash');
+});
 
-      await new Promise(r => setTimeout(r, 600));
+// Load database
+async function loadDatabase() {
+  try {
+    const res = await fetch(buildRawUrl() + '?t=' + Date.now());
+    if (!res.ok) throw new Error('File not found');
+    dbData = await res.json();
+    if (!dbData.Numbers) dbData.Numbers = [];
+    renderTable(dbData.Numbers);
+  } catch {
+    dbData = { Numbers: [] };
+    renderTable([]);
+  }
+}
 
-      if (input.value === CONFIG.password) {
-        if (remember) {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({ password: input.value }));
-        }
-        Swal.fire({ icon: 'success', title: 'Login berhasil!', timer: 1500, showConfirmButton: false });
-        setTimeout(showDashboard, 1000);
-      } else {
-        document.querySelector('#loginPage .container').style.animation = 'shake 0.4s';
-        setTimeout(() => document.querySelector('#loginPage .container').style.animation = '', 400);
-        Swal.fire({ icon: 'error', title: 'Password salah!', timer: 2000, showConfirmButton: false });
-        btn.innerHTML = '<i class="fas fa-lock"></i> Login';
-        btn.disabled = false;
-        input.value = '';
-      }
-    });
+// Render table
+function renderTable(numbers) {
+  const tbody = document.getElementById('numberTable');
+  if (numbers.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:var(--gray);">Belum ada nomor</td></tr>';
+    return;
+  }
+  tbody.innerHTML = numbers.map(num => `
+    <tr>
+      <td>${num}</td>
+      <td><span class="status-badge">active</span></td>
+    </tr>
+  `).join('');
+}
 
-    // Toggle password
-    document.getElementById('togglePassword').addEventListener('click', function() {
-      const password = document.getElementById('password');
-      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-      password.setAttribute('type', type);
-      this.classList.toggle('fa-eye');
-      this.classList.toggle('fa-eye-slash');
-    });
+// Add number
+async function addNumber() {
+  const input = document.getElementById('phoneInput');
+  const num = input.value.trim();
+  
+  if (!num) return Swal.fire({icon:'warning', title:'Masukkan nomor dulu', timer:1500});
+  if (dbData.Numbers.includes(num)) return Swal.fire({icon:'info', title:'Nomor sudah ada', timer:1500});
+  
+  dbData.Numbers.push(num);
+  
+  // Note: GitHub Pages gabisa write file langsung. Ini cuma update di memory.
+  // Kalo mau permanen harus pake GitHub API + token. Tapi lu minta simple jadi gini dulu.
+  
+  renderTable(dbData.Numbers);
+  input.value = '';
+  Swal.fire({icon:'success', title:'Nomor ditambahkan!', timer:1000, showConfirmButton:false});
+}
 
-    // Load database dari ./database/database.json
-    async function loadDatabase() {
-      try {
-        const url = buildRawUrl() + '?t=' + Date.now();
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('File tidak ditemukan');
-        
-        databaseData = await res.json();
-        document.getElementById('jsonViewer').textContent = JSON.stringify(databaseData, null, 2);
-        document.getElementById('jsonViewer').style.display = 'block';
-        document.getElementById('actionButtons').classList.add('show');
-        
-        Swal.fire({ icon: 'success', title: 'Database loaded!', timer: 1500, showConfirmButton: false });
-      } catch (err) {
-        Swal.fire({ icon: 'error', title: 'Error', text: err.message });
-        document.getElementById('jsonViewer').textContent = 'Error: Pastikan file ./database/database.json ada di repo';
-        document.getElementById('jsonViewer').style.display = 'block';
-      }
-    }
+// Search
+function searchNumber() {
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = dbData.Numbers.filter(n => n.toLowerCase().includes(query));
+  renderTable(filtered);
+}
 
-    // Copy JSON
-    function copyJSON() {
-      if (!databaseData) return Swal.fire({ icon: 'warning', title: 'Load database dulu' });
-      navigator.clipboard.writeText(JSON.stringify(databaseData, null, 2));
-      Swal.fire({ icon: 'success', title: 'JSON disalin!', timer: 1500, showConfirmButton: false });
-    }
+// Logout
+function logout() {
+  localStorage.removeItem(STORAGE_KEY);
+  document.getElementById('password').value = '';
+  showLogin();
+}
 
-    // Download JSON
-    function downloadJSON() {
-      if (!databaseData) return Swal.fire({ icon: 'warning', title: 'Load database dulu' });
-      const blob = new Blob([JSON.stringify(databaseData, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'database.json';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    // Logout
-    function logout() {
-      Swal.fire({
-        title: 'Logout?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          localStorage.removeItem(STORAGE_KEY);
-          showLogin();
-          document.getElementById('password').value = '';
-          document.getElementById('jsonViewer').style.display = 'none';
-          document.getElementById('actionButtons').classList.remove('show');
-        }
-      });
-    }
-
-    // Jalankan
-    init();
-  </script>
+init();
+</script>
 </body>
 </html>
