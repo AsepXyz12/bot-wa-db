@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>webcrack - GH Pages</title>
+
+  <script>
+  // Worker Monaco harus pakai URL full, kalau enggak dia nyari di github.io
+  self["MonacoEnvironment"] = {
+    getWorkerUrl: function (moduleId, label) {
+      const base = "https://webcrack.netlify.app/monacoeditorwork/";
+      const workerMap = {
+        "editorWorkerService": "editor.worker.bundle.js",
+        "typescript": "ts.worker.bundle.js",
+        "javascript": "ts.worker.bundle.js"
+      };
+      const url = base + workerMap[label];
+
+      // Monaco butuh blob biar gak kena CORS origin beda
+      return URL.createObjectURL(new Blob(
+        [`importScripts("${url}");`],
+        {type: 'application/javascript'}
+      ));
+    }
+  };
+  </script>
+
+  <!-- Otak + UI ambil dari netlify -->
+  <script type="module" crossorigin src="https://webcrack.netlify.app/assets/index-BLUswdyS.js"></script>
+  <link rel="modulepreload" crossorigin href="https://webcrack.netlify.app/assets/monaco-editor-CDTcN_i_.js">
+  <link rel="stylesheet" crossorigin href="https://webcrack.netlify.app/assets/monaco-editor-xnhJeWAr.css">
+  <link rel="stylesheet" crossorigin href="https://webcrack.netlify.app/assets/index-DeXuCetR.css">
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>
