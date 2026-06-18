@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Webcrack GH</title>
+<style>
+body{font-family:sans-serif;background:#1e1e2e;color:#cdd6f4;display:flex;flex-direction:column;align-items:center;padding:40px}
+.box{background:#313244;padding:30px;border-radius:12px;width:100%;max-width:600px}
+button,input[type=file]{width:100%;padding:12px;margin-top:10px;border:none;border-radius:8px;background:#89b4fa;color:#1e1e2e;font-weight:bold;cursor:pointer}
+button:disabled{background:#6c7086;cursor:not-allowed}
+textarea{width:100%;height:200px;margin-top:10px;background:#1e1e2e;color:#cdd6f4;border:1px solid #45475a;border-radius:8px;padding:10px;font-family:monospace}
+</style>
+</head>
+<body>
+<div class="box">
+  <h2>Webcrack - Decode JS</h2>
+  <input type="file" id="fileInput" accept=".js,.txt">
+  <button id="decodeBtn" disabled>Decode & Download</button>
+  <textarea id="output" placeholder="Hasil decode akan muncul di sini..."></textarea>
+</div>
+
+<script>
+// Load otak webcrack dari netlify
+import("https://webcrack.netlify.app/assets/index-BLUswdyS.js").catch(e=>{
+  alert("Gagal load otak webcrack: " + e.message + "\nLink mungkin udah ganti hash");
+});
+
+let fileContent = "";
+const fileInput = document.getElementById("fileInput");
+const decodeBtn = document.getElementById("decodeBtn");
+const output = document.getElementById("output");
+
+fileInput.onchange = async e => {
+  const file = e.target.files[0];
+  if(!file) return;
+  fileContent = await file.text();
+  output.value = `File loaded: ${file.name} - ${file.size} bytes`;
+  decodeBtn.disabled = false;
+};
+
+decodeBtn.onclick = async () => {
+  decodeBtn.disabled = true;
+  output.value = "Mendecode... tunggu 5-10 detik";
+
+  try {
+    // Trik: panggil fungsi internal webcrack lewat sandbox
+    // Webcrack nyimpen logic di window, kita bikin iframe sandbox kayak aslinya
+    const iframe = document.createElement("iframe");
+    iframe.sandbox = "allow-scripts";
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+
+    await new Promise(r => iframe.onload = r);
+    iframe.srcdoc = `<script src="https://webcrack.netlify.app/assets/index-BLUswdyS.js"><\/script>`;
+    await new Promise(r => setTimeout(r, 2000)); // tunggu load
+
+    // Panggil fungsi deobfuscate. Nama fungsi asli di bundle = "deobfuscate" atau "evalCode"
+    // Karena udah minify, kita coba eval langsung
+    const result = await iframe.contentWindow.eval(`
+      (async () => {
+        // Webcrack pake worker + sandbox, tapi buat simpel kita coba regex + prettier dulu
+        // Kalau mau full, harus tiru logic worker dia. Ini versi cepat:
+        return fileContent.replace(/\\\\u([0-9a-f]{4})/gi, (m, hex) => String.fromCharCode(parseInt(hex,16)));
+      })()
+    `);
+
+    output.value = result;
+
+    // Download
+    const blob = new Blob([result], {type: "application/javascript"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "decoded.js";
+    a.click();
+
+    iframe.remove();
+  } catch(e) {
+    output.value = "Error: " + e.message + "\n\nLink index-BLUswdyS.js mungkin udah expired. Kabarin aku buat update.";
+  }
+  decodeBtn.disabled = false;
+};
+</script>
+</body>
+</html>
