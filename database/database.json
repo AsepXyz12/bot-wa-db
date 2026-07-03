@@ -35,14 +35,14 @@
     {
       "id": "n_466565656526",
       "number": "466565656526",
-      "status": "active",
+      "status": "inactive",
       "addedBy": "reseller",
       "addedAt": "2026-07-03T13:28:48.384Z",
-      "updatedAt": "2026-07-03T13:28:48.384Z"
+      "updatedAt": "2026-07-03T13:48:08.778Z"
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-03T13:48:06.523Z",
+    "lastUpdated": "2026-07-03T13:48:08.778Z",
     "updatedBy": "reseller"
   }
 }
