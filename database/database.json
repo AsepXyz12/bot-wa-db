@@ -3,10 +3,10 @@
     {
       "id": "n_62881036109288",
       "number": "62881036109288",
-      "status": "active",
+      "status": "inactive",
       "addedBy": "owner",
       "addedAt": "2026-07-03T12:18:38.725Z",
-      "updatedAt": "2026-07-03T13:28:24.749Z"
+      "updatedAt": "2026-07-03T13:28:33.866Z"
     },
     {
       "id": "n_08123456789",
@@ -14,11 +14,11 @@
       "status": "inactive",
       "addedBy": "reseller",
       "addedAt": "2026-07-03T13:28:30.621Z",
-      "updatedAt": "2026-07-03T13:28:33.025Z"
+      "updatedAt": "2026-07-03T13:28:33.630Z"
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-03T13:28:33.025Z",
+    "lastUpdated": "2026-07-03T13:28:33.866Z",
     "updatedBy": "reseller"
   }
 }
