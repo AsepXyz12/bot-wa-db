@@ -11,26 +11,26 @@
     {
       "id": "n_08123456789",
       "number": "08123456789",
-      "status": "active",
+      "status": "inactive",
       "addedBy": "reseller",
       "addedAt": "2026-07-03T13:28:30.621Z",
-      "updatedAt": "2026-07-03T13:47:51.509Z"
+      "updatedAt": "2026-07-03T13:47:59.121Z"
     },
     {
       "id": "n_19292828",
       "number": "19292828",
-      "status": "inactive",
+      "status": "active",
       "addedBy": "reseller",
       "addedAt": "2026-07-03T13:28:38.569Z",
-      "updatedAt": "2026-07-03T13:48:00.154Z"
+      "updatedAt": "2026-07-03T13:28:38.569Z"
     },
     {
       "id": "n_46465656565656",
       "number": "46465656565656",
-      "status": "active",
+      "status": "inactive",
       "addedBy": "reseller",
       "addedAt": "2026-07-03T13:28:43.357Z",
-      "updatedAt": "2026-07-03T13:28:43.357Z"
+      "updatedAt": "2026-07-03T13:48:01.748Z"
     },
     {
       "id": "n_466565656526",
@@ -42,7 +42,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-03T13:48:00.154Z",
+    "lastUpdated": "2026-07-03T13:48:01.748Z",
     "updatedBy": "reseller"
   }
 }
