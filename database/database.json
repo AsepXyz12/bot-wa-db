@@ -11,14 +11,14 @@
     {
       "id": "n_08123456789",
       "number": "08123456789",
-      "status": "active",
+      "status": "inactive",
       "addedBy": "reseller",
       "addedAt": "2026-07-03T13:28:30.621Z",
-      "updatedAt": "2026-07-03T13:28:30.621Z"
+      "updatedAt": "2026-07-03T13:28:33.025Z"
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-03T13:28:30.621Z",
+    "lastUpdated": "2026-07-03T13:28:33.025Z",
     "updatedBy": "reseller"
   }
 }
