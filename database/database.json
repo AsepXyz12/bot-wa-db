@@ -1,16 +1,7 @@
 {
-  "numbers": [
-    {
-      "id": "n_62881036109288",
-      "number": "62881036109288",
-      "status": "active",
-      "addedBy": "owner",
-      "addedAt": "2026-07-03T11:55:08.734Z",
-      "updatedAt": "2026-07-03T11:55:08.734Z"
-    }
-  ],
+  "numbers": [],
   "meta": {
-    "lastUpdated": "2026-07-03T11:55:08.734Z",
+    "lastUpdated": "2026-07-03T12:18:30.293Z",
     "updatedBy": "owner"
   }
 }
