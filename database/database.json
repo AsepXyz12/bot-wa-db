@@ -7,18 +7,10 @@
       "addedBy": "owner",
       "addedAt": "2026-07-03T12:18:38.725Z",
       "updatedAt": "2026-07-03T13:47:58.669Z"
-    },
-    {
-      "id": "n_46465656565656",
-      "number": "46465656565656",
-      "status": "inactive",
-      "addedBy": "reseller",
-      "addedAt": "2026-07-03T13:28:43.357Z",
-      "updatedAt": "2026-07-03T13:48:03.272Z"
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-03T14:27:15.754Z",
+    "lastUpdated": "2026-07-03T14:27:17.945Z",
     "updatedBy": "owner"
   }
 }
