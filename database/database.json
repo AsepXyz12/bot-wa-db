@@ -9,14 +9,6 @@
       "updatedAt": "2026-07-03T12:58:49.561Z"
     },
     {
-      "id": "n_6282116920410",
-      "number": "6282116920410",
-      "status": "active",
-      "addedBy": "owner",
-      "addedAt": "2026-07-03T12:42:18.144Z",
-      "updatedAt": "2026-07-03T12:42:18.144Z"
-    },
-    {
       "id": "n_62546357963",
       "number": "62546357963",
       "status": "active",
@@ -26,7 +18,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-03T12:58:49.561Z",
-    "updatedBy": "reseller"
+    "lastUpdated": "2026-07-03T13:13:10.484Z",
+    "updatedBy": "owner"
   }
 }
