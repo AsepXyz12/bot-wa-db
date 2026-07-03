@@ -3,10 +3,10 @@
     {
       "id": "n_62881036109288",
       "number": "62881036109288",
-      "status": "active",
+      "status": "inactive",
       "addedBy": "owner",
       "addedAt": "2026-07-03T12:18:38.725Z",
-      "updatedAt": "2026-07-03T13:28:24.749Z"
+      "updatedAt": "2026-07-03T13:47:58.669Z"
     },
     {
       "id": "n_08123456789",
@@ -42,7 +42,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-03T13:47:51.509Z",
+    "lastUpdated": "2026-07-03T13:47:58.669Z",
     "updatedBy": "reseller"
   }
 }
