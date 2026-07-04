@@ -81,7 +81,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-04T16:06:18.758Z",
+    "lastUpdated": "2026-07-04T16:06:38.064Z",
     "updatedBy": "Asepp"
   },
   "registeredNames": {
@@ -100,5 +100,16 @@
       }
     ]
   },
-  "nameMutes": {}
+  "nameMutes": {},
+  "profile": {
+    "displayName": "Asep Xyz",
+    "verified": true,
+    "followers": 12840000,
+    "following": 1,
+    "likes": 982000,
+    "bio": "Owner & pengelola akun ini 🔥",
+    "updatedAt": "2026-07-04T16:06:38.064Z",
+    "updatedBy": "Asepp",
+    "media": []
+  }
 }
