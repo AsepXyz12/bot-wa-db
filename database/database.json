@@ -81,12 +81,21 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-04T16:43:39.694Z",
-    "updatedBy": "system"
+    "lastUpdated": "2026-07-04T16:44:19.096Z",
+    "updatedBy": "Asepp"
   },
   "registeredNames": {
     "reseller": [],
-    "owner": []
+    "owner": [
+      {
+        "name": "asep",
+        "addedBy": "Asepp",
+        "addedAt": "2026-07-04T16:44:19.096Z",
+        "boundDeviceId": null,
+        "boundDeviceLabel": null,
+        "boundAt": null
+      }
+    ]
   },
   "nameMutes": {
     "owner::asep": {
