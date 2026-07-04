@@ -81,11 +81,17 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-04T15:19:44.856Z",
+    "lastUpdated": "2026-07-04T15:19:50.829Z",
     "updatedBy": "Asep"
   },
   "registeredNames": {
-    "reseller": [],
+    "reseller": [
+      {
+        "name": "asep",
+        "addedBy": "Asep",
+        "addedAt": "2026-07-04T15:19:50.829Z"
+      }
+    ],
     "owner": [
       {
         "name": "asep",
