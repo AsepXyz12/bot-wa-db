@@ -33,12 +33,12 @@
   ],
   "devices": [],
   "meta": {
-    "lastUpdated": "2026-07-04T16:59:03.714Z",
-    "updatedBy": "asep"
+    "lastUpdated": "2026-07-04T16:59:04.333Z",
+    "updatedBy": "system"
   },
   "nameMutes": {
     "owner::asep": {
-      "failCount": 1,
+      "failCount": 0,
       "level": 0,
       "mutedUntil": null,
       "lastOffenseAt": "2026-07-04T16:58:44.208Z"
