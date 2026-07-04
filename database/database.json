@@ -81,7 +81,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-04T16:43:31.530Z",
+    "lastUpdated": "2026-07-04T16:43:39.694Z",
     "updatedBy": "system"
   },
   "registeredNames": {
@@ -90,10 +90,10 @@
   },
   "nameMutes": {
     "owner::asep": {
-      "failCount": 1,
+      "failCount": 2,
       "level": 0,
       "mutedUntil": null,
-      "lastOffenseAt": "2026-07-04T16:43:31.530Z"
+      "lastOffenseAt": "2026-07-04T16:43:39.694Z"
     }
   },
   "profile": {
