@@ -4,14 +4,23 @@
       "id": "n_62881036109288",
       "number": "62881036109288",
       "status": "active",
-      "note": "",
+      "note": "punya acep",
       "addedBy": "Asepp",
       "addedByRole": "pemilik",
       "addedAt": "2026-07-04T16:58:04.877Z",
-      "updatedAt": "2026-07-04T16:58:04.877Z"
+      "updatedAt": "2026-07-04T16:58:16.189Z"
     }
   ],
   "logs": [
+    {
+      "action": "note",
+      "number": "62881036109288",
+      "by": "Asepp",
+      "role": "pemilik",
+      "device": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36",
+      "at": "2026-07-04T16:58:16.189Z",
+      "detail": "catatan diubah: punya acep"
+    },
     {
       "action": "add",
       "number": "62881036109288",
@@ -24,7 +33,7 @@
   ],
   "devices": [],
   "meta": {
-    "lastUpdated": "2026-07-04T16:58:04.877Z",
+    "lastUpdated": "2026-07-04T16:58:16.189Z",
     "updatedBy": "Asepp"
   }
 }
