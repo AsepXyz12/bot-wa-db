@@ -19,9 +19,28 @@
       "addedByRole": "owner",
       "addedAt": "2026-07-04T16:59:13.019Z",
       "updatedAt": "2026-07-04T16:59:22.753Z"
+    },
+    {
+      "id": "n_6288994486449",
+      "number": "6288994486449",
+      "status": "active",
+      "note": "",
+      "addedBy": "rapp",
+      "addedByRole": "reseller",
+      "addedAt": "2026-07-04T19:37:37.714Z",
+      "updatedAt": "2026-07-04T19:37:37.714Z"
     }
   ],
   "logs": [
+    {
+      "action": "add",
+      "number": "6288994486449",
+      "by": "rapp",
+      "role": "reseller",
+      "device": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36",
+      "at": "2026-07-04T19:37:37.714Z",
+      "detail": ""
+    },
     {
       "action": "device_unblock",
       "number": null,
@@ -123,7 +142,7 @@
       "brandGuess": null,
       "brandConfidence": "unknown",
       "firstSeenAt": "2026-07-04T19:31:50.428Z",
-      "lastSeenAt": "2026-07-04T19:37:25.674Z",
+      "lastSeenAt": "2026-07-04T19:37:37.714Z",
       "lastSeenBy": "rapp",
       "lastSeenRole": "reseller",
       "lastIp": "::ffff:36.74.128.39",
@@ -136,7 +155,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-04T19:37:25.674Z",
+    "lastUpdated": "2026-07-04T19:37:37.714Z",
     "updatedBy": "rapp"
   },
   "nameMutes": {
