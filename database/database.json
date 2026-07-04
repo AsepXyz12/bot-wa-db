@@ -3,15 +3,24 @@
     {
       "id": "n_62881036109288",
       "number": "62881036109288",
-      "status": "inactive",
+      "status": "active",
       "note": "punya asepp",
       "addedBy": "Asep",
       "addedByRole": "owner",
       "addedAt": "2026-07-04T08:44:24.014Z",
-      "updatedAt": "2026-07-04T09:08:48.940Z"
+      "updatedAt": "2026-07-04T09:08:57.578Z"
     }
   ],
   "logs": [
+    {
+      "action": "status",
+      "number": "62881036109288",
+      "by": "asep",
+      "role": "reseller",
+      "device": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36",
+      "at": "2026-07-04T09:08:57.578Z",
+      "detail": "status -> active"
+    },
     {
       "action": "status",
       "number": "62881036109288",
@@ -40,7 +49,7 @@
       "brandGuess": null,
       "brandConfidence": "unknown",
       "firstSeenAt": "2026-07-04T09:07:06.781Z",
-      "lastSeenAt": "2026-07-04T09:08:48.940Z",
+      "lastSeenAt": "2026-07-04T09:08:57.578Z",
       "lastSeenBy": "asep",
       "lastSeenRole": "reseller",
       "lastIp": "::ffff:36.74.128.39",
@@ -53,7 +62,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-04T09:08:48.940Z",
+    "lastUpdated": "2026-07-04T09:08:57.578Z",
     "updatedBy": "asep"
   }
 }
