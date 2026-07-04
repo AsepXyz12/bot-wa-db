@@ -24,14 +24,23 @@
       "id": "n_6288994486449",
       "number": "6288994486449",
       "status": "active",
-      "note": "",
+      "note": "OkeGas",
       "addedBy": "rapp",
       "addedByRole": "reseller",
       "addedAt": "2026-07-04T19:37:37.714Z",
-      "updatedAt": "2026-07-04T19:37:37.714Z"
+      "updatedAt": "2026-07-04T19:50:17.826Z"
     }
   ],
   "logs": [
+    {
+      "action": "note",
+      "number": "6288994486449",
+      "by": "asepp",
+      "role": "pemilik",
+      "device": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36",
+      "at": "2026-07-04T19:50:17.826Z",
+      "detail": "catatan diubah: OkeGas"
+    },
     {
       "action": "add",
       "number": "6288994486449",
@@ -142,7 +151,7 @@
       "brandGuess": null,
       "brandConfidence": "unknown",
       "firstSeenAt": "2026-07-04T19:31:50.428Z",
-      "lastSeenAt": "2026-07-04T19:38:12.869Z",
+      "lastSeenAt": "2026-07-04T19:50:17.826Z",
       "lastSeenBy": "asepp",
       "lastSeenRole": "pemilik",
       "lastIp": "::ffff:36.74.128.39",
@@ -155,7 +164,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-04T19:49:58.421Z",
+    "lastUpdated": "2026-07-04T19:50:17.826Z",
     "updatedBy": "asepp"
   },
   "nameMutes": {
