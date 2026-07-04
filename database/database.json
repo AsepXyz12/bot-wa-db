@@ -155,7 +155,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-04T19:38:30.072Z",
+    "lastUpdated": "2026-07-04T19:40:12.097Z",
     "updatedBy": "asepp"
   },
   "nameMutes": {
@@ -182,9 +182,9 @@
         "name": "asep",
         "addedBy": "Asepp",
         "addedAt": "2026-07-04T16:58:58.448Z",
-        "boundDeviceId": "dev_mr6lc9o7_o38usj9s",
-        "boundDeviceLabel": "Chrome · Android · 400x903",
-        "boundAt": "2026-07-04T16:59:03.714Z"
+        "boundDeviceId": null,
+        "boundDeviceLabel": null,
+        "boundAt": null
       }
     ]
   },
