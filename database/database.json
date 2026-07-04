@@ -33,7 +33,19 @@
   ],
   "devices": [],
   "meta": {
-    "lastUpdated": "2026-07-04T16:58:16.189Z",
-    "updatedBy": "Asepp"
+    "lastUpdated": "2026-07-04T16:58:44.208Z",
+    "updatedBy": "system"
+  },
+  "nameMutes": {
+    "owner::asep": {
+      "failCount": 1,
+      "level": 0,
+      "mutedUntil": null,
+      "lastOffenseAt": "2026-07-04T16:58:44.208Z"
+    }
+  },
+  "registeredNames": {
+    "reseller": [],
+    "owner": []
   }
 }
