@@ -1,16 +1,7 @@
 {
-  "numbers": [
-    {
-      "id": "n_62881036109288",
-      "number": "62881036109288",
-      "status": "active",
-      "addedBy": "owner",
-      "addedAt": "2026-07-03T12:18:38.725Z",
-      "updatedAt": "2026-07-04T08:37:22.071Z"
-    }
-  ],
+  "numbers": [],
   "meta": {
-    "lastUpdated": "2026-07-04T08:37:22.072Z",
+    "lastUpdated": "2026-07-04T08:41:41.623Z",
     "updatedBy": "Asep"
   },
   "devices": [
@@ -22,7 +13,7 @@
       "brandGuess": null,
       "brandConfidence": "unknown",
       "firstSeenAt": "2026-07-04T08:37:06.996Z",
-      "lastSeenAt": "2026-07-04T08:37:22.072Z",
+      "lastSeenAt": "2026-07-04T08:41:41.623Z",
       "lastSeenBy": "Asep",
       "lastSeenRole": "owner",
       "lastIp": "::ffff:36.74.128.39",
@@ -35,6 +26,15 @@
     }
   ],
   "logs": [
+    {
+      "action": "delete",
+      "number": "62881036109288",
+      "by": "Asep",
+      "role": "owner",
+      "device": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36",
+      "at": "2026-07-04T08:41:41.623Z",
+      "detail": ""
+    },
     {
       "action": "status",
       "number": "62881036109288",
