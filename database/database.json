@@ -1,7 +1,18 @@
 {
-  "numbers": [],
+  "numbers": [
+    {
+      "id": "n_62881036109288",
+      "number": "62881036109288",
+      "status": "active",
+      "note": "Punya Asep Woiiii",
+      "addedBy": "Asep",
+      "addedByRole": "owner",
+      "addedAt": "2026-07-04T08:42:01.303Z",
+      "updatedAt": "2026-07-04T08:42:01.303Z"
+    }
+  ],
   "meta": {
-    "lastUpdated": "2026-07-04T08:41:41.623Z",
+    "lastUpdated": "2026-07-04T08:42:01.303Z",
     "updatedBy": "Asep"
   },
   "devices": [
@@ -13,7 +24,7 @@
       "brandGuess": null,
       "brandConfidence": "unknown",
       "firstSeenAt": "2026-07-04T08:37:06.996Z",
-      "lastSeenAt": "2026-07-04T08:41:41.623Z",
+      "lastSeenAt": "2026-07-04T08:42:01.303Z",
       "lastSeenBy": "Asep",
       "lastSeenRole": "owner",
       "lastIp": "::ffff:36.74.128.39",
@@ -26,6 +37,15 @@
     }
   ],
   "logs": [
+    {
+      "action": "add",
+      "number": "62881036109288",
+      "by": "Asep",
+      "role": "owner",
+      "device": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36",
+      "at": "2026-07-04T08:42:01.303Z",
+      "detail": "catatan: Punya Asep Woiiii"
+    },
     {
       "action": "delete",
       "number": "62881036109288",
