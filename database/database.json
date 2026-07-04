@@ -31,10 +31,30 @@
       "detail": ""
     }
   ],
-  "devices": [],
+  "devices": [
+    {
+      "id": "dev_mr6lc9o7_o38usj9s",
+      "label": "Chrome · Android · 400x903",
+      "userAgent": "Mozilla/5.0 (Linux; Android 15; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.7827.159 Mobile Safari/537.36",
+      "deviceOs": "Android",
+      "brandGuess": null,
+      "brandConfidence": "unknown",
+      "firstSeenAt": "2026-07-04T16:59:05.104Z",
+      "lastSeenAt": "2026-07-04T16:59:05.104Z",
+      "lastSeenBy": "asep",
+      "lastSeenRole": "owner",
+      "lastIp": "::ffff:36.74.128.39",
+      "org": "PT. TELKOM INDONESIA",
+      "isCloud": false,
+      "blocked": false,
+      "blockedAt": null,
+      "blockedBy": null,
+      "blockReason": null
+    }
+  ],
   "meta": {
-    "lastUpdated": "2026-07-04T16:59:04.333Z",
-    "updatedBy": "system"
+    "lastUpdated": "2026-07-04T16:59:05.104Z",
+    "updatedBy": "asep"
   },
   "nameMutes": {
     "owner::asep": {
