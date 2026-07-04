@@ -81,8 +81,8 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-04T16:44:19.096Z",
-    "updatedBy": "Asepp"
+    "lastUpdated": "2026-07-04T16:44:26.838Z",
+    "updatedBy": "asep"
   },
   "registeredNames": {
     "reseller": [],
@@ -91,9 +91,9 @@
         "name": "asep",
         "addedBy": "Asepp",
         "addedAt": "2026-07-04T16:44:19.096Z",
-        "boundDeviceId": null,
-        "boundDeviceLabel": null,
-        "boundAt": null
+        "boundDeviceId": "dev_mr6lc9o7_o38usj9s",
+        "boundDeviceLabel": "Chrome · Android · 400x903",
+        "boundAt": "2026-07-04T16:44:26.838Z"
       }
     ]
   },
