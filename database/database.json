@@ -1,1 +1,30 @@
-{}
+{
+  "numbers": [
+    {
+      "id": "n_62881036109288",
+      "number": "62881036109288",
+      "status": "active",
+      "note": "punya asepp",
+      "addedBy": "Asep",
+      "addedByRole": "owner",
+      "addedAt": "2026-07-04T08:44:24.014Z",
+      "updatedAt": "2026-07-04T08:44:24.014Z"
+    }
+  ],
+  "logs": [
+    {
+      "action": "add",
+      "number": "62881036109288",
+      "by": "Asep",
+      "role": "owner",
+      "device": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36",
+      "at": "2026-07-04T08:44:24.014Z",
+      "detail": "catatan: punya asepp"
+    }
+  ],
+  "devices": [],
+  "meta": {
+    "lastUpdated": "2026-07-04T08:44:24.014Z",
+    "updatedBy": "Asep"
+  }
+}
