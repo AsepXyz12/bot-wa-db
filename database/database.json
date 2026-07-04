@@ -14,14 +14,23 @@
       "id": "n_6288994037615",
       "number": "6288994037615",
       "status": "active",
-      "note": "",
+      "note": "punya cecep",
       "addedBy": "asep",
       "addedByRole": "owner",
       "addedAt": "2026-07-04T16:59:13.019Z",
-      "updatedAt": "2026-07-04T16:59:13.019Z"
+      "updatedAt": "2026-07-04T16:59:22.753Z"
     }
   ],
   "logs": [
+    {
+      "action": "note",
+      "number": "6288994037615",
+      "by": "asep",
+      "role": "owner",
+      "device": "Mozilla/5.0 (Linux; Android 15; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.7827.159 Mobile Safari/537.36",
+      "at": "2026-07-04T16:59:22.753Z",
+      "detail": "catatan diubah: punya cecep"
+    },
     {
       "action": "add",
       "number": "6288994037615",
@@ -59,7 +68,7 @@
       "brandGuess": null,
       "brandConfidence": "unknown",
       "firstSeenAt": "2026-07-04T16:59:05.104Z",
-      "lastSeenAt": "2026-07-04T16:59:13.019Z",
+      "lastSeenAt": "2026-07-04T16:59:22.753Z",
       "lastSeenBy": "asep",
       "lastSeenRole": "owner",
       "lastIp": "::ffff:36.74.128.39",
@@ -72,7 +81,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-04T16:59:13.019Z",
+    "lastUpdated": "2026-07-04T16:59:22.753Z",
     "updatedBy": "asep"
   },
   "nameMutes": {
