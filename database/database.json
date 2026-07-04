@@ -136,8 +136,8 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-04T19:35:09.407Z",
-    "updatedBy": "asep"
+    "lastUpdated": "2026-07-04T19:37:24.961Z",
+    "updatedBy": "rapp"
   },
   "nameMutes": {
     "owner::asep": {
@@ -153,9 +153,9 @@
         "name": "rapp",
         "addedBy": "Asepp",
         "addedAt": "2026-07-04T19:29:50.925Z",
-        "boundDeviceId": null,
-        "boundDeviceLabel": null,
-        "boundAt": null
+        "boundDeviceId": "dev_mr6i8l66_6754w34q",
+        "boundDeviceLabel": "Chrome · Android · 400x903",
+        "boundAt": "2026-07-04T19:37:24.961Z"
       }
     ],
     "owner": [
