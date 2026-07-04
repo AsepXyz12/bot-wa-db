@@ -22,9 +22,29 @@
       "detail": "catatan: punya asepp"
     }
   ],
-  "devices": [],
+  "devices": [
+    {
+      "id": "dev_mr63yyhg_xohbbqx5",
+      "label": "Chrome · Android · 400x903",
+      "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36",
+      "deviceOs": "Android",
+      "brandGuess": null,
+      "brandConfidence": "unknown",
+      "firstSeenAt": "2026-07-04T09:07:06.781Z",
+      "lastSeenAt": "2026-07-04T09:07:06.781Z",
+      "lastSeenBy": "asep",
+      "lastSeenRole": "owner",
+      "lastIp": "::ffff:36.74.128.39",
+      "org": "PT. TELKOM INDONESIA",
+      "isCloud": false,
+      "blocked": false,
+      "blockedAt": null,
+      "blockedBy": null,
+      "blockReason": null
+    }
+  ],
   "meta": {
-    "lastUpdated": "2026-07-04T08:44:24.014Z",
-    "updatedBy": "Asep"
+    "lastUpdated": "2026-07-04T09:07:06.781Z",
+    "updatedBy": "asep"
   }
 }
