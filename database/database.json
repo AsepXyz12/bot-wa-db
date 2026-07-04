@@ -81,14 +81,21 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-04T16:40:42.656Z",
-    "updatedBy": "Asepp"
+    "lastUpdated": "2026-07-04T16:43:31.530Z",
+    "updatedBy": "system"
   },
   "registeredNames": {
     "reseller": [],
     "owner": []
   },
-  "nameMutes": {},
+  "nameMutes": {
+    "owner::asep": {
+      "failCount": 1,
+      "level": 0,
+      "mutedUntil": null,
+      "lastOffenseAt": "2026-07-04T16:43:31.530Z"
+    }
+  },
   "profile": {
     "displayName": "Asep Xyz",
     "verified": true,
