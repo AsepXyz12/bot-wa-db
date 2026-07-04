@@ -81,8 +81,8 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-04T16:44:26.838Z",
-    "updatedBy": "asep"
+    "lastUpdated": "2026-07-04T16:44:27.506Z",
+    "updatedBy": "system"
   },
   "registeredNames": {
     "reseller": [],
@@ -99,7 +99,7 @@
   },
   "nameMutes": {
     "owner::asep": {
-      "failCount": 2,
+      "failCount": 0,
       "level": 0,
       "mutedUntil": null,
       "lastOffenseAt": "2026-07-04T16:43:39.694Z"
