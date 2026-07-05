@@ -211,7 +211,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-05T19:30:06.980Z",
+    "lastUpdated": "2026-07-05T19:30:32.067Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -325,10 +325,10 @@
     ]
   },
   "announcement": {
-    "active": true,
+    "active": false,
     "text": "hallo teman teman",
     "level": "info",
-    "updatedAt": "2026-07-05T19:30:06.980Z",
+    "updatedAt": "2026-07-05T19:30:32.066Z",
     "updatedBy": "Asepp"
   }
 }
