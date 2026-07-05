@@ -161,10 +161,29 @@
       "blockedAt": null,
       "blockedBy": null,
       "blockReason": null
+    },
+    {
+      "id": "dev_mr7ct1sz_054fweea",
+      "label": "Chrome · Android · 562x1259",
+      "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Mobile Safari/537.36",
+      "deviceOs": "Android",
+      "brandGuess": null,
+      "brandConfidence": "unknown",
+      "firstSeenAt": "2026-07-05T05:32:05.321Z",
+      "lastSeenAt": "2026-07-05T05:32:05.321Z",
+      "lastSeenBy": "rafz",
+      "lastSeenRole": "reseller",
+      "lastIp": "::ffff:103.111.98.99",
+      "org": "Faznet",
+      "isCloud": false,
+      "blocked": false,
+      "blockedAt": null,
+      "blockedBy": null,
+      "blockReason": null
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-05T05:32:04.464Z",
+    "lastUpdated": "2026-07-05T05:32:05.321Z",
     "updatedBy": "rafz"
   },
   "nameMutes": {
