@@ -151,7 +151,7 @@
       "brandGuess": null,
       "brandConfidence": "unknown",
       "firstSeenAt": "2026-07-04T19:31:50.428Z",
-      "lastSeenAt": "2026-07-05T03:15:06.025Z",
+      "lastSeenAt": "2026-07-05T03:15:16.596Z",
       "lastSeenBy": "Asepp",
       "lastSeenRole": "pemilik",
       "lastIp": "::ffff:36.74.128.39",
@@ -164,7 +164,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-05T03:15:06.025Z",
+    "lastUpdated": "2026-07-05T03:15:16.596Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -206,16 +206,36 @@
     "bio": "Pemilik & pengelola akun ini 🔥",
     "updatedAt": "2026-07-04T19:52:25.732Z",
     "updatedBy": "asepp",
-    "media": [
+    "media": [],
+    "posts": [
       {
-        "id": "m_1783194743479_q0ti7r",
-        "type": "video",
-        "url": "/uploads/profile/1783194731433_e8d06bc5e744.mp4",
-        "originalName": "419866.mp4",
-        "sizeBytes": 5950999,
-        "addedBy": "asepp",
-        "addedAt": "2026-07-04T19:52:23.479Z"
+        "id": "p_1783221310094_51lr7o",
+        "caption": "",
+        "media": [
+          {
+            "id": "m_1783194743479_q0ti7r",
+            "type": "video",
+            "url": "/uploads/profile/1783194731433_e8d06bc5e744.mp4",
+            "originalName": "419866.mp4",
+            "sizeBytes": 5950999
+          }
+        ],
+        "likes": 0,
+        "favorites": 0,
+        "commentMode": "both",
+        "comments": [],
+        "createdAt": "2026-07-04T19:52:23.479Z",
+        "createdBy": "asepp",
+        "updatedAt": "2026-07-04T19:52:23.479Z"
       }
+    ],
+    "commentStickers": [
+      "🔥 Mantap!",
+      "😍 Keren banget",
+      "👏 Gokil",
+      "❤️",
+      "🚀 Lanjutkan!",
+      "😂 Ngakak"
     ]
   }
 }
