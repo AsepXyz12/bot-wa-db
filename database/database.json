@@ -211,8 +211,8 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-05T19:28:55.648Z",
-    "updatedBy": "Asepp"
+    "lastUpdated": "2026-07-05T19:29:36.664Z",
+    "updatedBy": "asepp"
   },
   "nameMutes": {
     "owner::asep": {
@@ -234,10 +234,10 @@
         "name": "asepp",
         "addedBy": "Asepp",
         "addedAt": "2026-07-05T19:28:55.648Z",
-        "boundIp": null,
-        "boundDeviceId": null,
-        "boundDeviceLabel": null,
-        "boundAt": null,
+        "boundIp": "::ffff:36.74.128.195",
+        "boundDeviceId": "dev_mr6lc9o7_o38usj9s",
+        "boundDeviceLabel": "Chrome · Android · 400x903",
+        "boundAt": "2026-07-05T19:29:36.664Z",
         "blocked": false
       }
     ],
