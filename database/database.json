@@ -211,8 +211,8 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-05T19:29:37.495Z",
-    "updatedBy": "asepp"
+    "lastUpdated": "2026-07-05T19:30:06.980Z",
+    "updatedBy": "Asepp"
   },
   "nameMutes": {
     "owner::asep": {
@@ -323,5 +323,12 @@
       "😂 Ngakak",
       "OkeGas Min"
     ]
+  },
+  "announcement": {
+    "active": true,
+    "text": "hallo teman teman",
+    "level": "info",
+    "updatedAt": "2026-07-05T19:30:06.980Z",
+    "updatedBy": "Asepp"
   }
 }
