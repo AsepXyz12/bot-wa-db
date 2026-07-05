@@ -202,8 +202,8 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-05T05:52:15.232Z",
-    "updatedBy": "rafz"
+    "lastUpdated": "2026-07-05T05:53:30.592Z",
+    "updatedBy": "Asep"
   },
   "nameMutes": {
     "owner::asep": {
@@ -223,7 +223,7 @@
         "boundDeviceId": "dev_mr7ct1sz_054fweea",
         "boundDeviceLabel": "Chrome · Android · 562x1259",
         "boundAt": "2026-07-05T05:32:04.464Z",
-        "blocked": false
+        "blocked": true
       }
     ],
     "owner": []
