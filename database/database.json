@@ -164,7 +164,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-05T03:28:39.328Z",
+    "lastUpdated": "2026-07-05T03:28:47.585Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -176,7 +176,18 @@
     }
   },
   "registeredNames": {
-    "reseller": [],
+    "reseller": [
+      {
+        "name": "rafz",
+        "addedBy": "Asepp",
+        "addedAt": "2026-07-05T03:28:47.585Z",
+        "boundIp": null,
+        "boundDeviceId": null,
+        "boundDeviceLabel": null,
+        "boundAt": null,
+        "blocked": false
+      }
+    ],
     "owner": []
   },
   "profile": {
