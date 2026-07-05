@@ -43,6 +43,15 @@
   ],
   "logs": [
     {
+      "action": "device_block",
+      "number": null,
+      "by": "Asep",
+      "role": "pemilik",
+      "device": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36",
+      "at": "2026-07-05T05:54:15.675Z",
+      "detail": "device \"Chrome · Android · 562x1259\" diblokir"
+    },
+    {
       "action": "add",
       "number": "62895627160130",
       "by": "rafz",
@@ -195,14 +204,14 @@
       "lastIp": "::ffff:103.111.98.99",
       "org": "Faznet",
       "isCloud": false,
-      "blocked": false,
-      "blockedAt": null,
-      "blockedBy": null,
-      "blockReason": null
+      "blocked": true,
+      "blockedAt": "2026-07-05T05:54:15.675Z",
+      "blockedBy": "Asep",
+      "blockReason": ""
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-05T05:53:30.592Z",
+    "lastUpdated": "2026-07-05T05:54:15.675Z",
     "updatedBy": "Asep"
   },
   "nameMutes": {
