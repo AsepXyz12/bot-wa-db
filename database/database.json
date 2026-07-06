@@ -211,7 +211,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-06T10:15:06.615Z",
+    "lastUpdated": "2026-07-06T10:15:46.421Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -280,7 +280,53 @@
         "favorites": 0,
         "views": 0,
         "commentMode": "both",
-        "comments": [],
+        "comments": [
+          {
+            "id": "c_1783332946421_zynf9f_0",
+            "author": "Agus99",
+            "role": "",
+            "text": "Auto follow abis liat ini",
+            "isSticker": false,
+            "at": "2026-07-06T06:34:23.485Z",
+            "seeded": true
+          },
+          {
+            "id": "c_1783332946421_vnd0b5_1",
+            "author": "Rina92",
+            "role": "",
+            "text": "Keren banget videonya 🔥🔥",
+            "isSticker": false,
+            "at": "2026-06-30T07:22:12.056Z",
+            "seeded": true
+          },
+          {
+            "id": "c_1783332946421_qyu8uv_2",
+            "author": "Agus99",
+            "role": "",
+            "text": "Auto follow abis liat ini",
+            "isSticker": false,
+            "at": "2026-06-29T18:24:12.519Z",
+            "seeded": true
+          },
+          {
+            "id": "c_1783332946421_0vxu9j_3",
+            "author": "wulanp",
+            "role": "",
+            "text": "Ini yang gue cari-cari, thanks!",
+            "isSticker": false,
+            "at": "2026-07-02T17:08:37.657Z",
+            "seeded": true
+          },
+          {
+            "id": "c_1783332946421_jh09p1_4",
+            "author": "wulanp",
+            "role": "",
+            "text": "Ini yang gue cari-cari, thanks!",
+            "isSticker": false,
+            "at": "2026-07-03T08:43:20.742Z",
+            "seeded": true
+          }
+        ],
         "createdAt": "2026-07-06T10:14:59.887Z",
         "createdBy": "Asepp",
         "updatedAt": "2026-07-06T10:15:06.615Z",
