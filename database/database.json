@@ -229,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-06T20:31:21.141Z",
+    "lastUpdated": "2026-07-06T20:31:51.157Z",
     "updatedBy": "asep"
   },
   "nameMutes": {
@@ -1336,6 +1336,29 @@
     "updatedBy": "Asepp"
   },
   "reports": [
+    {
+      "id": "rpt_1783369911157_dpqqig",
+      "category": "feature",
+      "subject": "tombol plernya gagal",
+      "message": "shebbsbsbss",
+      "by": "asep",
+      "role": "reseller",
+      "ip": "::ffff:36.74.128.195",
+      "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36",
+      "status": "open",
+      "createdAt": "2026-07-06T20:31:51.157Z",
+      "updatedAt": "2026-07-06T20:31:51.157Z",
+      "replies": [
+        {
+          "id": "m_1783369911157_5xm8a1",
+          "from": "asep",
+          "role": "reseller",
+          "text": "shebbsbsbss",
+          "type": "text",
+          "at": "2026-07-06T20:31:51.157Z"
+        }
+      ]
+    },
     {
       "id": "rpt_1783331133672_hovhgh",
       "category": "feature",
