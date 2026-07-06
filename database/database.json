@@ -211,8 +211,8 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-06T09:45:33.672Z",
-    "updatedBy": "asep"
+    "lastUpdated": "2026-07-06T09:46:02.100Z",
+    "updatedBy": "Asepp"
   },
   "nameMutes": {
     "owner::asep": {
@@ -321,7 +321,7 @@
       "userAgent": "Mozilla/5.0 (Linux; Android 15; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.7827.159 Mobile Safari/537.36",
       "status": "open",
       "createdAt": "2026-07-06T09:45:33.672Z",
-      "updatedAt": "2026-07-06T09:45:33.672Z",
+      "updatedAt": "2026-07-06T09:46:02.100Z",
       "replies": [
         {
           "id": "m_1783331133672_36d6vp",
@@ -329,6 +329,13 @@
           "role": "reseller",
           "text": "okegasokegas",
           "at": "2026-07-06T09:45:33.672Z"
+        },
+        {
+          "id": "m_1783331162100_jej08g",
+          "from": "Asepp",
+          "role": "pemilik",
+          "text": "halo",
+          "at": "2026-07-06T09:46:02.100Z"
         }
       ]
     }
