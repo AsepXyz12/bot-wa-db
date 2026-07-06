@@ -211,7 +211,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-06T10:14:08.122Z",
+    "lastUpdated": "2026-07-06T10:14:59.887Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -260,6 +260,32 @@
     "updatedBy": "asepp",
     "media": [],
     "posts": [
+      {
+        "id": "p_1783332899887_bdzif3",
+        "caption": "",
+        "media": [
+          {
+            "id": "m_1783332899887_n0axt0",
+            "type": "link",
+            "category": "audio",
+            "platform": "spotify",
+            "platformLabel": "Spotify",
+            "url": "https://open.spotify.com/track/0daEJMXc3b4ZMTnvtHpuTt?si=KXP1SSfERjCTfXCx9FFgFg",
+            "embedUrl": "https://open.spotify.com/embed/track/0daEJMXc3b4ZMTnvtHpuTt",
+            "embedHtml": null,
+            "embedThumbnail": null
+          }
+        ],
+        "likes": 0,
+        "favorites": 0,
+        "views": 0,
+        "commentMode": "both",
+        "comments": [],
+        "createdAt": "2026-07-06T10:14:59.887Z",
+        "createdBy": "Asepp",
+        "updatedAt": "2026-07-06T10:14:59.887Z",
+        "category": "audio"
+      },
       {
         "id": "p_1783331293001_m5zv50",
         "caption": "NO RISK, NO FERRARI, FVCK IT DENGAN KEKALAHAN I DONT LIKE",
