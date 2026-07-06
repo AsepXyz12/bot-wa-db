@@ -33,15 +33,24 @@
     {
       "id": "n_62895627160130",
       "number": "62895627160130",
-      "status": "inactive",
+      "status": "active",
       "note": "rafzz",
       "addedBy": "rafz",
       "addedByRole": "reseller",
       "addedAt": "2026-07-05T05:52:15.232Z",
-      "updatedAt": "2026-07-06T20:31:16.366Z"
+      "updatedAt": "2026-07-06T20:31:21.141Z"
     }
   ],
   "logs": [
+    {
+      "action": "status",
+      "number": "62895627160130",
+      "by": "asep",
+      "role": "reseller",
+      "device": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36",
+      "at": "2026-07-06T20:31:21.141Z",
+      "detail": "status -> active"
+    },
     {
       "action": "status",
       "number": "62895627160130",
@@ -188,7 +197,7 @@
       "brandGuess": null,
       "brandConfidence": "unknown",
       "firstSeenAt": "2026-07-04T19:31:50.428Z",
-      "lastSeenAt": "2026-07-06T20:31:16.366Z",
+      "lastSeenAt": "2026-07-06T20:31:21.141Z",
       "lastSeenBy": "asep",
       "lastSeenRole": "reseller",
       "lastIp": "::ffff:36.74.128.195",
@@ -220,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-06T20:31:16.366Z",
+    "lastUpdated": "2026-07-06T20:31:21.141Z",
     "updatedBy": "asep"
   },
   "nameMutes": {
