@@ -211,7 +211,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-06T02:16:18.790Z",
+    "lastUpdated": "2026-07-06T02:16:29.863Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -259,43 +259,7 @@
     "updatedAt": "2026-07-04T19:52:25.732Z",
     "updatedBy": "asepp",
     "media": [],
-    "posts": [
-      {
-        "id": "p_1783302789166_g4qzuu",
-        "caption": "....",
-        "media": [
-          {
-            "id": "m_1783302789166_wxbc4d",
-            "type": "video",
-            "category": "video",
-            "url": "/uploads/profile/1783302788840_12bdd3faac70.mp4",
-            "originalName": "tiktok_7653414494311435538.mp4",
-            "sizeBytes": 256979,
-            "sourceUrl": "https://vt.tiktok.com/ZSCGAT8gx/",
-            "sourcePlatform": "tiktok",
-            "noWatermark": true
-          }
-        ],
-        "likes": 9948396,
-        "favorites": 918669,
-        "views": 31556436,
-        "commentMode": "both",
-        "comments": [
-          {
-            "id": "c_1783302925655_iecoll",
-            "author": "asepp",
-            "role": "reseller",
-            "text": "OkeGas Min",
-            "isSticker": true,
-            "at": "2026-07-06T01:55:25.655Z"
-          }
-        ],
-        "createdAt": "2026-07-06T01:53:09.166Z",
-        "createdBy": "Asepp",
-        "updatedAt": "2026-07-06T01:53:55.255Z",
-        "category": "video"
-      }
-    ],
+    "posts": [],
     "commentStickers": [
       "🔥 Mantap!",
       "😍 Keren banget",
