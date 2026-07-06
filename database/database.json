@@ -229,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-06T20:32:28.958Z",
+    "lastUpdated": "2026-07-06T20:32:45.465Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -1347,7 +1347,7 @@
       "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36",
       "status": "open",
       "createdAt": "2026-07-06T20:31:51.157Z",
-      "updatedAt": "2026-07-06T20:31:51.157Z",
+      "updatedAt": "2026-07-06T20:32:45.465Z",
       "replies": [
         {
           "id": "m_1783369911157_5xm8a1",
@@ -1356,6 +1356,14 @@
           "text": "shebbsbsbss",
           "type": "text",
           "at": "2026-07-06T20:31:51.157Z"
+        },
+        {
+          "id": "m_1783369965465_zdjkig",
+          "from": "Asepp",
+          "role": "pemilik",
+          "text": "apasi",
+          "type": "text",
+          "at": "2026-07-06T20:32:45.465Z"
         }
       ]
     },
