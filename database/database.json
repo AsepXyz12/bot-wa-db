@@ -211,7 +211,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-06T09:48:49.021Z",
+    "lastUpdated": "2026-07-06T09:48:59.929Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -276,9 +276,9 @@
             "noWatermark": true
           }
         ],
-        "likes": 0,
-        "favorites": 0,
-        "views": 0,
+        "likes": 9498646,
+        "favorites": 919961,
+        "views": 64649666,
         "commentMode": "both",
         "comments": [
           {
@@ -734,7 +734,7 @@
         ],
         "createdAt": "2026-07-06T09:48:13.001Z",
         "createdBy": "Asepp",
-        "updatedAt": "2026-07-06T09:48:49.021Z",
+        "updatedAt": "2026-07-06T09:48:59.929Z",
         "category": "video"
       }
     ],
