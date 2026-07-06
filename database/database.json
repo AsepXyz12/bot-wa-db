@@ -211,7 +211,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-06T01:50:41.081Z",
+    "lastUpdated": "2026-07-06T01:50:59.435Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -277,7 +277,8 @@
         "createdAt": "2026-07-05T20:33:41.839Z",
         "createdBy": "Asepp",
         "updatedAt": "2026-07-05T20:33:57.632Z",
-        "category": "video"
+        "category": "video",
+        "views": 0
       },
       {
         "id": "p_1783278244096_urtd20",
@@ -311,7 +312,8 @@
         "createdAt": "2026-07-05T19:04:04.096Z",
         "createdBy": "Asepp",
         "updatedAt": "2026-07-05T19:13:54.877Z",
-        "category": "video"
+        "category": "video",
+        "views": 0
       }
     ],
     "commentStickers": [
@@ -322,6 +324,38 @@
       "🚀 Lanjutkan!",
       "😂 Ngakak",
       "OkeGas Min"
+    ],
+    "randomCommentPool": [
+      {
+        "id": "rc_1783302659135_j1eo",
+        "name": "Rina92",
+        "text": "Keren banget videonya 🔥🔥"
+      },
+      {
+        "id": "rc_1783302659135_9hti",
+        "name": "Budi.id",
+        "text": "Mantap min, lanjutkan!"
+      },
+      {
+        "id": "rc_1783302659135_g7w0",
+        "name": "sitinur",
+        "text": "Wah baru tau, makasih infonya"
+      },
+      {
+        "id": "rc_1783302659135_usca",
+        "name": "Dimas_",
+        "text": "Keren parah 👏👏"
+      },
+      {
+        "id": "rc_1783302659135_5ns6",
+        "name": "wulanp",
+        "text": "Ini yang gue cari-cari, thanks!"
+      },
+      {
+        "id": "rc_1783302659135_bkz7",
+        "name": "Agus99",
+        "text": "Auto follow abis liat ini"
+      }
     ]
   },
   "announcement": {
