@@ -211,7 +211,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-06T01:51:34.058Z",
+    "lastUpdated": "2026-07-06T01:53:09.166Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -253,7 +253,34 @@
     "updatedAt": "2026-07-04T19:52:25.732Z",
     "updatedBy": "asepp",
     "media": [],
-    "posts": [],
+    "posts": [
+      {
+        "id": "p_1783302789166_g4qzuu",
+        "caption": "",
+        "media": [
+          {
+            "id": "m_1783302789166_wxbc4d",
+            "type": "video",
+            "category": "video",
+            "url": "/uploads/profile/1783302788840_12bdd3faac70.mp4",
+            "originalName": "tiktok_7653414494311435538.mp4",
+            "sizeBytes": 256979,
+            "sourceUrl": "https://vt.tiktok.com/ZSCGAT8gx/",
+            "sourcePlatform": "tiktok",
+            "noWatermark": true
+          }
+        ],
+        "likes": 0,
+        "favorites": 0,
+        "views": 0,
+        "commentMode": "both",
+        "comments": [],
+        "createdAt": "2026-07-06T01:53:09.166Z",
+        "createdBy": "Asepp",
+        "updatedAt": "2026-07-06T01:53:09.166Z",
+        "category": "video"
+      }
+    ],
     "commentStickers": [
       "🔥 Mantap!",
       "😍 Keren banget",
