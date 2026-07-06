@@ -211,7 +211,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-06T10:15:54.421Z",
+    "lastUpdated": "2026-07-06T10:16:04.971Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -276,9 +276,9 @@
             "embedThumbnail": null
           }
         ],
-        "likes": 0,
-        "favorites": 0,
-        "views": 0,
+        "likes": 5984696,
+        "favorites": 61886,
+        "views": 99946546,
         "commentMode": "both",
         "comments": [
           {
@@ -779,7 +779,7 @@
         ],
         "createdAt": "2026-07-06T10:14:59.887Z",
         "createdBy": "Asepp",
-        "updatedAt": "2026-07-06T10:15:54.421Z",
+        "updatedAt": "2026-07-06T10:16:04.971Z",
         "category": "audio"
       },
       {
