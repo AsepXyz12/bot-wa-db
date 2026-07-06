@@ -211,8 +211,8 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-06T01:53:55.255Z",
-    "updatedBy": "Asepp"
+    "lastUpdated": "2026-07-06T01:54:47.564Z",
+    "updatedBy": "system"
   },
   "nameMutes": {
     "owner::asep": {
@@ -226,6 +226,12 @@
       "level": 0,
       "mutedUntil": null,
       "lastOffenseAt": "2026-07-05T08:06:43.659Z"
+    },
+    "reseller::asep": {
+      "failCount": 1,
+      "level": 0,
+      "mutedUntil": null,
+      "lastOffenseAt": "2026-07-06T01:54:47.564Z"
     }
   },
   "registeredNames": {
