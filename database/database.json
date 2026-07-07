@@ -229,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-07T09:20:26.294Z",
+    "lastUpdated": "2026-07-07T09:24:53.563Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -1444,8 +1444,8 @@
   ],
   "baileysSources": [
     {
-      "name": "asepxyznew",
-      "addedAt": "2026-07-07T09:20:26.294Z",
+      "name": "@langitdeveloper/baileys",
+      "addedAt": "2026-07-07T09:24:53.563Z",
       "addedBy": "Asepp"
     },
     {
