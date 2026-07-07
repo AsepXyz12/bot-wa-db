@@ -229,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-07T19:33:50.567Z",
+    "lastUpdated": "2026-07-07T19:35:32.615Z",
     "updatedBy": "asep"
   },
   "nameMutes": {
@@ -1336,6 +1336,29 @@
     "updatedBy": "Asepp"
   },
   "reports": [
+    {
+      "id": "rpt_1783452932615_xyqjgz",
+      "category": "other",
+      "subject": "Banding akun kena batasan",
+      "message": "memek",
+      "by": "asep",
+      "role": "reseller",
+      "ip": "::ffff:36.74.128.195",
+      "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Mobile Safari/537.36",
+      "status": "open",
+      "createdAt": "2026-07-07T19:35:32.615Z",
+      "updatedAt": "2026-07-07T19:35:32.615Z",
+      "replies": [
+        {
+          "id": "m_1783452932615_t7pjol",
+          "from": "asep",
+          "role": "reseller",
+          "text": "memek",
+          "type": "text",
+          "at": "2026-07-07T19:35:32.615Z"
+        }
+      ]
+    },
     {
       "id": "rpt_1783369911157_dpqqig",
       "category": "feature",
