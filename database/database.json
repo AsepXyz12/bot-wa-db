@@ -229,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-07T09:19:46.246Z",
+    "lastUpdated": "2026-07-07T09:20:26.294Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -1440,6 +1440,18 @@
           "at": "2026-07-06T09:47:00.933Z"
         }
       ]
+    }
+  ],
+  "baileysSources": [
+    {
+      "name": "asepxyznew",
+      "addedAt": "2026-07-07T09:20:26.294Z",
+      "addedBy": "Asepp"
+    },
+    {
+      "name": "ourin-baileys",
+      "addedAt": "2026-07-07T09:20:26.294Z",
+      "addedBy": "Asepp"
     }
   ]
 }
