@@ -229,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-08T04:55:52.433Z",
+    "lastUpdated": "2026-07-08T04:56:21.066Z",
     "updatedBy": "system"
   },
   "nameMutes": {
@@ -256,6 +256,12 @@
       "level": 0,
       "mutedUntil": null,
       "lastOffenseAt": "2026-07-08T04:55:52.433Z"
+    },
+    "reseller::ress": {
+      "failCount": 1,
+      "level": 0,
+      "mutedUntil": null,
+      "lastOffenseAt": "2026-07-08T04:56:21.066Z"
     }
   },
   "registeredNames": {
