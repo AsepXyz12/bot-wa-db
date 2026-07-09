@@ -229,8 +229,8 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-08T14:29:37.373Z",
-    "updatedBy": "Asepp"
+    "lastUpdated": "2026-07-09T03:16:31.532Z",
+    "updatedBy": "system"
   },
   "nameMutes": {
     "owner::asep": {
@@ -262,6 +262,12 @@
       "level": 0,
       "mutedUntil": null,
       "lastOffenseAt": "2026-07-08T04:56:21.066Z"
+    },
+    "pemilik::asepp": {
+      "failCount": 1,
+      "level": 0,
+      "mutedUntil": null,
+      "lastOffenseAt": "2026-07-09T03:16:31.532Z"
     }
   },
   "registeredNames": {
@@ -277,7 +283,8 @@
         "blocked": false
       }
     ],
-    "owner": []
+    "owner": [],
+    "pemilik": []
   },
   "profile": {
     "displayName": "Asep Xyz",
