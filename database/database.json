@@ -229,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-09T10:25:06.429Z",
+    "lastUpdated": "2026-07-09T10:26:30.960Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -510,15 +510,15 @@
     "likes": 88968468,
     "bio": "Mengawasi dalam diam. Selalu ada, tak pernah terlihat.",
     "avatar": {
-      "type": "video",
-      "url": "/uploads/profile/1783590084138_6f2009072c57.mp4",
-      "originalName": "508911.mp4",
-      "sizeBytes": 884020,
-      "updatedAt": "2026-07-09T09:41:26.244Z",
+      "type": "image",
+      "url": "https://vt.tiktok.com/ZSCET8Ekv/",
+      "originalName": null,
+      "sizeBytes": null,
+      "updatedAt": "2026-07-09T10:26:30.960Z",
       "updatedBy": "Asepp"
     },
     "darkAura": true,
-    "updatedAt": "2026-07-09T09:41:26.244Z",
+    "updatedAt": "2026-07-09T10:26:30.960Z",
     "updatedBy": "Asepp"
   }
 }
