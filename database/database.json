@@ -229,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-09T10:24:41.606Z",
+    "lastUpdated": "2026-07-09T10:25:06.429Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -299,8 +299,8 @@
     "following": 1,
     "likes": 98200063,
     "bio": "Pemilik & pengelola akun ini 🔥",
-    "updatedAt": "2026-07-04T19:52:25.732Z",
-    "updatedBy": "asepp",
+    "updatedAt": "2026-07-09T10:25:06.429Z",
+    "updatedBy": "Asepp",
     "media": [],
     "posts": [],
     "commentStickers": [
@@ -344,7 +344,14 @@
         "text": "Auto follow abis liat ini"
       }
     ],
-    "avatar": null
+    "avatar": {
+      "type": "image",
+      "url": "https://vt.tiktok.com/ZSCET8Ekv/",
+      "originalName": null,
+      "sizeBytes": null,
+      "updatedAt": "2026-07-09T10:25:06.429Z",
+      "updatedBy": "Asepp"
+    }
   },
   "announcement": {
     "active": false,
