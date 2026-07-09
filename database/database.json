@@ -178,7 +178,7 @@
       "brandGuess": null,
       "brandConfidence": "unknown",
       "firstSeenAt": "2026-07-04T16:59:05.104Z",
-      "lastSeenAt": "2026-07-09T10:12:35.433Z",
+      "lastSeenAt": "2026-07-09T10:24:41.606Z",
       "lastSeenBy": "Asepp",
       "lastSeenRole": "anonymous",
       "lastIp": "::ffff:36.74.128.195",
@@ -229,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-09T10:12:35.433Z",
+    "lastUpdated": "2026-07-09T10:24:41.606Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
