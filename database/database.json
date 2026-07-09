@@ -229,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-09T03:26:38.399Z",
+    "lastUpdated": "2026-07-09T03:27:42.624Z",
     "updatedBy": "asepp"
   },
   "nameMutes": {
@@ -815,7 +815,8 @@
         "name": "Agus99",
         "text": "Auto follow abis liat ini"
       }
-    ]
+    ],
+    "avatar": null
   },
   "announcement": {
     "active": false,
@@ -965,5 +966,17 @@
       "addedAt": "2026-07-07T09:20:26.294Z",
       "addedBy": "Asepp"
     }
-  ]
+  ],
+  "anonymousProfile": {
+    "displayName": "Anonymous",
+    "verified": true,
+    "followers": 9999999,
+    "following": 0,
+    "likes": 111111111,
+    "bio": "Mengawasi dalam diam. Selalu ada, tak pernah terlihat.",
+    "avatar": null,
+    "darkAura": true,
+    "updatedAt": "2026-07-09T03:27:42.624Z",
+    "updatedBy": "asepp"
+  }
 }
