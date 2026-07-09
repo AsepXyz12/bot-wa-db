@@ -197,9 +197,9 @@
       "brandGuess": null,
       "brandConfidence": "unknown",
       "firstSeenAt": "2026-07-04T19:31:50.428Z",
-      "lastSeenAt": "2026-07-09T08:44:18.913Z",
-      "lastSeenBy": "asep",
-      "lastSeenRole": "reseller",
+      "lastSeenAt": "2026-07-09T08:45:20.253Z",
+      "lastSeenBy": "Asepp",
+      "lastSeenRole": "anonymous",
       "lastIp": "::ffff:36.74.128.195",
       "org": "PT. TELKOM INDONESIA",
       "isCloud": false,
@@ -229,8 +229,8 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-09T08:44:18.913Z",
-    "updatedBy": "asep"
+    "lastUpdated": "2026-07-09T08:45:20.253Z",
+    "updatedBy": "Asepp"
   },
   "nameMutes": {
     "owner::asep": {
