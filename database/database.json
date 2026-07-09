@@ -229,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-09T09:29:46.107Z",
+    "lastUpdated": "2026-07-09T09:34:16.379Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -502,9 +502,16 @@
     "following": 0,
     "likes": 88968468,
     "bio": "Mengawasi dalam diam. Selalu ada, tak pernah terlihat.",
-    "avatar": null,
+    "avatar": {
+      "type": "image",
+      "url": "https://vt.tiktok.com/ZSCETA6wG/",
+      "originalName": null,
+      "sizeBytes": null,
+      "updatedAt": "2026-07-09T09:34:16.379Z",
+      "updatedBy": "Asepp"
+    },
     "darkAura": true,
-    "updatedAt": "2026-07-09T09:29:46.107Z",
+    "updatedAt": "2026-07-09T09:34:16.379Z",
     "updatedBy": "Asepp"
   }
 }
