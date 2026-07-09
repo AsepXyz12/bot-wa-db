@@ -229,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-09T09:29:13.482Z",
+    "lastUpdated": "2026-07-09T09:29:46.107Z",
     "updatedBy": "Asepp"
   },
   "nameMutes": {
@@ -497,14 +497,14 @@
   ],
   "anonymousProfile": {
     "displayName": "Anonymous",
-    "verified": false,
+    "verified": true,
     "followers": 499489696,
     "following": 0,
     "likes": 88968468,
     "bio": "Mengawasi dalam diam. Selalu ada, tak pernah terlihat.",
     "avatar": null,
     "darkAura": true,
-    "updatedAt": "2026-07-09T07:55:36.941Z",
+    "updatedAt": "2026-07-09T09:29:46.107Z",
     "updatedBy": "Asepp"
   }
 }
