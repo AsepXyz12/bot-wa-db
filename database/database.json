@@ -229,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-10T15:02:54.132Z",
+    "lastUpdated": "2026-07-10T15:03:07.529Z",
     "updatedBy": "asepp"
   },
   "nameMutes": {
@@ -295,7 +295,18 @@
         "blocked": false
       }
     ],
-    "owner": [],
+    "owner": [
+      {
+        "name": "asep",
+        "addedBy": "asepp",
+        "addedAt": "2026-07-10T15:03:07.529Z",
+        "boundIp": null,
+        "boundDeviceId": null,
+        "boundDeviceLabel": null,
+        "boundAt": null,
+        "blocked": false
+      }
+    ],
     "pemilik": [
       {
         "name": "Asep",
