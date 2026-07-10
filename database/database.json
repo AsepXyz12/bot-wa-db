@@ -229,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-10T20:06:41.635Z",
+    "lastUpdated": "2026-07-10T20:07:01.989Z",
     "updatedBy": "asep"
   },
   "nameMutes": {
@@ -543,14 +543,13 @@
   ],
   "baileysSources": [
     {
-      "name": "@langitdeveloper/baileys",
-      "addedAt": "2026-07-07T09:24:53.563Z",
-      "addedBy": "Asepp"
-    },
-    {
-      "name": "ourin-baileys",
-      "addedAt": "2026-07-07T09:20:26.294Z",
-      "addedBy": "Asepp"
+      "type": "github",
+      "name": "github:pou-code/Baileys",
+      "owner": "pou-code",
+      "repo": "Baileys",
+      "ref": null,
+      "addedAt": "2026-07-10T20:07:01.989Z",
+      "addedBy": "asep"
     }
   ],
   "anonymousProfile": {
