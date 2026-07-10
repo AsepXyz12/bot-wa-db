@@ -229,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-10T04:04:11.696Z",
+    "lastUpdated": "2026-07-10T04:04:41.189Z",
     "updatedBy": "asep"
   },
   "nameMutes": {
@@ -302,34 +302,7 @@
     "updatedAt": "2026-07-09T10:25:06.429Z",
     "updatedBy": "Asepp",
     "media": [],
-    "posts": [
-      {
-        "id": "p_1783656251696_s60ras",
-        "caption": "",
-        "media": [
-          {
-            "id": "m_1783656249786_blvhhu",
-            "type": "link",
-            "category": "video",
-            "platform": "instagram",
-            "platformLabel": "Instagram",
-            "url": "https://www.instagram.com/p/DamAifdzWvR/?igsh=MXZ2aWRoY3k5ajNxdQ==",
-            "embedUrl": null,
-            "embedHtml": "<blockquote class=\"instagram-media\" data-instgrm-permalink=\"https://www.instagram.com/p/DamAifdzWvR/?igsh=MXZ2aWRoY3k5ajNxdQ==\" data-instgrm-version=\"14\" style=\"margin:0;background:#000;\"></blockquote>",
-            "embedThumbnail": null
-          }
-        ],
-        "likes": 0,
-        "favorites": 0,
-        "views": 0,
-        "commentMode": "both",
-        "comments": [],
-        "createdAt": "2026-07-10T04:04:11.696Z",
-        "createdBy": "asep",
-        "updatedAt": "2026-07-10T04:04:11.696Z",
-        "category": "video"
-      }
-    ],
+    "posts": [],
     "commentStickers": [
       "🔥 Mantap!",
       "😍 Keren banget",
