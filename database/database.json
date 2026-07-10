@@ -229,7 +229,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-10T08:49:50.652Z",
+    "lastUpdated": "2026-07-10T08:50:59.795Z",
     "updatedBy": "asep"
   },
   "nameMutes": {
@@ -378,6 +378,29 @@
     "updatedBy": "Asepp"
   },
   "reports": [
+    {
+      "id": "rpt_1783673459795_u55ydx",
+      "category": "bug",
+      "subject": "Banding akun kena batasan",
+      "message": "bokep",
+      "by": "asep",
+      "role": "reseller",
+      "ip": "::ffff:36.74.128.195",
+      "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Mobile Safari/537.36",
+      "status": "open",
+      "createdAt": "2026-07-10T08:50:59.795Z",
+      "updatedAt": "2026-07-10T08:50:59.795Z",
+      "replies": [
+        {
+          "id": "m_1783673459795_c18zh6",
+          "from": "asep",
+          "role": "reseller",
+          "text": "bokep",
+          "type": "text",
+          "at": "2026-07-10T08:50:59.795Z"
+        }
+      ]
+    },
     {
       "id": "rpt_1783452932615_xyqjgz",
       "category": "other",
