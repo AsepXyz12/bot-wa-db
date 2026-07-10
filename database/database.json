@@ -229,15 +229,15 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-10T08:50:59.795Z",
-    "updatedBy": "asep"
+    "lastUpdated": "2026-07-10T15:01:40.932Z",
+    "updatedBy": "system"
   },
   "nameMutes": {
     "owner::asep": {
-      "failCount": 0,
+      "failCount": 1,
       "level": 0,
       "mutedUntil": null,
-      "lastOffenseAt": "2026-07-04T16:58:44.208Z"
+      "lastOffenseAt": "2026-07-10T15:01:40.932Z"
     },
     "reseller::rap": {
       "failCount": 1,
