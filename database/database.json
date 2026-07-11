@@ -312,7 +312,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-11T10:58:59.004Z",
+    "lastUpdated": "2026-07-11T11:03:21.871Z",
     "updatedBy": "asep"
   },
   "nameMutes": {
@@ -381,6 +381,16 @@
         "boundDeviceId": "dev_mr6lc9o7_o38usj9s",
         "boundDeviceLabel": "Chrome · Android · 400x903",
         "boundAt": "2026-07-06T09:45:14.263Z",
+        "blocked": false
+      },
+      {
+        "name": "raza",
+        "addedBy": "asep",
+        "addedAt": "2026-07-11T11:03:21.870Z",
+        "boundIp": null,
+        "boundDeviceId": null,
+        "boundDeviceLabel": null,
+        "boundAt": null,
         "blocked": false
       }
     ],
