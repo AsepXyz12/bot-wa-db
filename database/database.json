@@ -245,11 +245,30 @@
       "blockedAt": null,
       "blockedBy": null,
       "blockReason": null
+    },
+    {
+      "id": "dev_mrg8171f_86qmi042",
+      "label": "Chrome · Android · 400x903",
+      "userAgent": "Mozilla/5.0 (Linux; Android 15; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.7827.159 Mobile Safari/537.36",
+      "deviceOs": "Android",
+      "brandGuess": null,
+      "brandConfidence": "unknown",
+      "firstSeenAt": "2026-07-11T10:28:41.073Z",
+      "lastSeenAt": "2026-07-11T10:28:41.073Z",
+      "lastSeenBy": "asep",
+      "lastSeenRole": "owner",
+      "lastIp": "::ffff:36.74.128.195",
+      "org": "PT. TELKOM INDONESIA",
+      "isCloud": false,
+      "blocked": false,
+      "blockedAt": null,
+      "blockedBy": null,
+      "blockReason": null
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-11T10:28:32.639Z",
-    "updatedBy": "system"
+    "lastUpdated": "2026-07-11T10:28:41.073Z",
+    "updatedBy": "asep"
   },
   "nameMutes": {
     "owner::asep": {
