@@ -43,6 +43,15 @@
   ],
   "logs": [
     {
+      "action": "device_block",
+      "number": null,
+      "by": "asep",
+      "role": "anonymous",
+      "device": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Mobile Safari/537.36",
+      "at": "2026-07-11T10:37:00.777Z",
+      "detail": "device \"Chrome · Android · 400x903\" diblokir"
+    },
+    {
       "action": "status",
       "number": "62895627160130",
       "by": "asep",
@@ -260,14 +269,14 @@
       "lastIp": "::ffff:36.74.128.195",
       "org": "PT. TELKOM INDONESIA",
       "isCloud": false,
-      "blocked": false,
-      "blockedAt": null,
-      "blockedBy": null,
-      "blockReason": null
+      "blocked": true,
+      "blockedAt": "2026-07-11T10:37:00.777Z",
+      "blockedBy": "asep",
+      "blockReason": ""
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-11T10:33:05.563Z",
+    "lastUpdated": "2026-07-11T10:37:00.777Z",
     "updatedBy": "asep"
   },
   "nameMutes": {
