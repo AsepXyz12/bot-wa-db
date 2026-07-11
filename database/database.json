@@ -49,19 +49,18 @@
       "addedByRole": "reseller",
       "addedAt": "2026-07-11T11:09:07.765Z",
       "updatedAt": "2026-07-11T11:10:09.298Z"
-    },
-    {
-      "id": "n_6285198674436",
-      "number": "6285198674436",
-      "status": "active",
-      "note": "",
-      "addedBy": "raza",
-      "addedByRole": "reseller",
-      "addedAt": "2026-07-11T11:13:40.745Z",
-      "updatedAt": "2026-07-11T11:13:40.745Z"
     }
   ],
   "logs": [
+    {
+      "action": "delete",
+      "number": "6285198674436",
+      "by": "asep",
+      "role": "anonymous",
+      "device": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Mobile Safari/537.36",
+      "at": "2026-07-11T11:14:32.223Z",
+      "detail": ""
+    },
     {
       "action": "add",
       "number": "6285198674436",
@@ -381,7 +380,7 @@
       "brandGuess": null,
       "brandConfidence": "unknown",
       "firstSeenAt": "2026-07-11T08:23:07.744Z",
-      "lastSeenAt": "2026-07-11T10:57:46.094Z",
+      "lastSeenAt": "2026-07-11T11:14:32.223Z",
       "lastSeenBy": "asep",
       "lastSeenRole": "anonymous",
       "lastIp": "::ffff:36.74.128.195",
@@ -432,8 +431,8 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-11T11:13:40.745Z",
-    "updatedBy": "raza"
+    "lastUpdated": "2026-07-11T11:14:32.223Z",
+    "updatedBy": "asep"
   },
   "nameMutes": {
     "owner::asep": {
