@@ -312,8 +312,8 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-11T11:03:21.871Z",
-    "updatedBy": "asep"
+    "lastUpdated": "2026-07-11T11:07:21.734Z",
+    "updatedBy": "raza"
   },
   "nameMutes": {
     "owner::asep": {
@@ -387,10 +387,10 @@
         "name": "raza",
         "addedBy": "asep",
         "addedAt": "2026-07-11T11:03:21.870Z",
-        "boundIp": null,
-        "boundDeviceId": null,
-        "boundDeviceLabel": null,
-        "boundAt": null,
+        "boundIp": "::ffff:180.242.58.40",
+        "boundDeviceId": "dev_mrg97f0k_yr0acp50",
+        "boundDeviceLabel": "Chrome · Android · 500x1128",
+        "boundAt": "2026-07-11T11:07:21.734Z",
         "blocked": false
       }
     ],
