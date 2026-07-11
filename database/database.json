@@ -3,22 +3,22 @@
     {
       "id": "n_62881036109288",
       "number": "62881036109288",
-      "status": "inactive",
+      "status": "active",
       "note": "punya acep",
       "addedBy": "Asepp",
       "addedByRole": "pemilik",
       "addedAt": "2026-07-04T16:58:04.877Z",
-      "updatedAt": "2026-07-11T11:08:06.013Z"
+      "updatedAt": "2026-07-11T11:08:03.116Z"
     },
     {
       "id": "n_6288994037615",
       "number": "6288994037615",
-      "status": "inactive",
+      "status": "active",
       "note": "punya cecep",
       "addedBy": "asep",
       "addedByRole": "owner",
       "addedAt": "2026-07-04T16:59:13.019Z",
-      "updatedAt": "2026-07-11T11:08:03.936Z"
+      "updatedAt": "2026-07-11T11:08:06.770Z"
     },
     {
       "id": "n_6288994486449",
@@ -44,12 +44,12 @@
   "logs": [
     {
       "action": "status",
-      "number": "62881036109288",
+      "number": "6288994037615",
       "by": "raza",
       "role": "reseller",
       "device": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Mobile Safari/537.36",
-      "at": "2026-07-11T11:08:06.013Z",
-      "detail": "status -> inactive"
+      "at": "2026-07-11T11:08:06.770Z",
+      "detail": "status -> active"
     },
     {
       "action": "status",
@@ -354,7 +354,7 @@
       "brandGuess": null,
       "brandConfidence": "unknown",
       "firstSeenAt": "2026-07-11T11:07:23.384Z",
-      "lastSeenAt": "2026-07-11T11:08:06.013Z",
+      "lastSeenAt": "2026-07-11T11:08:06.770Z",
       "lastSeenBy": "raza",
       "lastSeenRole": "reseller",
       "lastIp": "::ffff:180.242.58.40",
@@ -367,7 +367,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-11T11:08:06.013Z",
+    "lastUpdated": "2026-07-11T11:08:06.770Z",
     "updatedBy": "raza"
   },
   "nameMutes": {
