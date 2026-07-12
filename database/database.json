@@ -380,7 +380,7 @@
       "brandGuess": null,
       "brandConfidence": "unknown",
       "firstSeenAt": "2026-07-11T08:23:07.744Z",
-      "lastSeenAt": "2026-07-12T13:06:18.255Z",
+      "lastSeenAt": "2026-07-12T13:32:09.989Z",
       "lastSeenBy": "asep",
       "lastSeenRole": "anonymous",
       "lastIp": "::ffff:36.74.128.195",
@@ -431,8 +431,8 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-12T13:27:57.662Z",
-    "updatedBy": "system"
+    "lastUpdated": "2026-07-12T13:32:09.989Z",
+    "updatedBy": "asep"
   },
   "nameMutes": {
     "owner::asep": {
