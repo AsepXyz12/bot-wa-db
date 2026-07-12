@@ -380,7 +380,7 @@
       "brandGuess": "PC/Laptop Linux",
       "brandConfidence": "high",
       "firstSeenAt": "2026-07-11T08:23:07.744Z",
-      "lastSeenAt": "2026-07-12T13:58:43.799Z",
+      "lastSeenAt": "2026-07-12T14:41:18.706Z",
       "lastSeenBy": "asep",
       "lastSeenRole": "anonymous",
       "lastIp": "::ffff:36.74.128.195",
@@ -431,7 +431,7 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-12T13:59:57.556Z",
+    "lastUpdated": "2026-07-12T14:41:18.707Z",
     "updatedBy": "asep"
   },
   "nameMutes": {
