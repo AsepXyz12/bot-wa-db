@@ -374,13 +374,13 @@
     },
     {
       "id": "dev_mrg3k95g_sypwzjws",
-      "label": "Chrome · Linux · 400x903",
-      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
-      "deviceOs": "Linux",
-      "brandGuess": "PC/Laptop Linux",
-      "brandConfidence": "high",
+      "label": "Chrome · Android · 400x903",
+      "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Mobile Safari/537.36",
+      "deviceOs": "Android",
+      "brandGuess": null,
+      "brandConfidence": "unknown",
       "firstSeenAt": "2026-07-11T08:23:07.744Z",
-      "lastSeenAt": "2026-07-12T03:19:49.742Z",
+      "lastSeenAt": "2026-07-12T04:11:52.035Z",
       "lastSeenBy": "asep",
       "lastSeenRole": "reseller",
       "lastIp": "::ffff:36.74.128.195",
@@ -431,8 +431,8 @@
     }
   ],
   "meta": {
-    "lastUpdated": "2026-07-12T03:53:21.945Z",
-    "updatedBy": "system"
+    "lastUpdated": "2026-07-12T04:11:52.036Z",
+    "updatedBy": "asep"
   },
   "nameMutes": {
     "owner::asep": {
