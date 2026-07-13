@@ -1,7 +1,7 @@
 {
   "meta": {
-    "lastUpdated": "2026-07-13T08:03:12.088Z",
-    "updatedBy": "asep"
+    "lastUpdated": "2026-07-13T08:03:41.005Z",
+    "updatedBy": "asepp"
   },
   "logs": [],
   "devices": [
@@ -13,8 +13,8 @@
       "brandGuess": "Tecno",
       "brandConfidence": "medium",
       "firstSeenAt": "2026-07-13T08:03:12.088Z",
-      "lastSeenAt": "2026-07-13T08:03:12.088Z",
-      "lastSeenBy": "asep",
+      "lastSeenAt": "2026-07-13T08:03:41.005Z",
+      "lastSeenBy": "asepp",
       "lastSeenRole": "anonymous",
       "lastIp": "::ffff:36.74.136.91",
       "org": "Telekomunikasi Indonesia",
@@ -44,19 +44,11 @@
   "reports": [],
   "actionThresholds": {},
   "baileysSources": [],
+  "paymentOrders": [],
   "numberDetails": {
     "[object Object]": {
       "id": "n_[object Object]",
-      "number": {
-        "id": "n_6285692674402",
-        "number": "6285692674402",
-        "status": "active",
-        "note": "RazaMods",
-        "addedBy": "raza",
-        "addedByRole": "reseller",
-        "addedAt": "2026-07-11T11:09:07.765Z",
-        "updatedAt": "2026-07-11T11:10:09.298Z"
-      },
+      "number": "[object Object]",
       "status": "active",
       "note": "",
       "addedBy": "unknown",
