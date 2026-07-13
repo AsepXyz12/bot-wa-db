@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": "2026-07-13T15:12:26.902Z",
+    "lastUpdated": "2026-07-13T15:15:02.868Z",
     "updatedBy": "asep"
   },
   "logs": [
@@ -141,15 +141,15 @@
     "likes": 6660000,
     "bio": "Mengawasi dalam diam. Selalu ada, tak pernah terlihat.",
     "avatar": {
-      "type": "video",
-      "url": "/uploads/profile/1783931521376_733e7e3fcdab.mp4",
-      "originalName": "508911.mp4",
-      "sizeBytes": 884020,
-      "updatedAt": "2026-07-13T08:32:04.069Z",
+      "type": "image",
+      "url": "/uploads/profile/1783955701866_3a73e9f7dc56.jpg",
+      "originalName": "364949.jpg",
+      "sizeBytes": 142665,
+      "updatedAt": "2026-07-13T15:15:02.868Z",
       "updatedBy": "asep"
     },
     "darkAura": true,
-    "updatedAt": "2026-07-13T08:32:45.335Z",
+    "updatedAt": "2026-07-13T15:15:02.868Z",
     "updatedBy": "asep"
   },
   "personalProfiles": {
