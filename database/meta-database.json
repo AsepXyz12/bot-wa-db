@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": "2026-07-13T08:39:38.783Z",
+    "lastUpdated": "2026-07-13T09:13:20.406Z",
     "updatedBy": "asep"
   },
   "logs": [
@@ -151,6 +151,50 @@
     "darkAura": true,
     "updatedAt": "2026-07-13T08:32:45.335Z",
     "updatedBy": "asep"
+  },
+  "personalProfiles": {
+    "anonymous:asep": {
+      "role": "anonymous",
+      "name": "asep",
+      "displayName": "asep",
+      "bio": "",
+      "avatar": null,
+      "posts": [
+        {
+          "id": "pp_1783934000406_6wo0w2",
+          "caption": "ampun dep",
+          "media": [
+            {
+              "id": "m_1783934000406_j793s3",
+              "type": "video",
+              "category": "video",
+              "url": "/uploads/profile/1783933988065_6853bd3ed361.mp4",
+              "originalName": "513381.mp4",
+              "sizeBytes": 1004239
+            }
+          ],
+          "likes": 0,
+          "favorites": 0,
+          "views": 0,
+          "commentMode": "both",
+          "comments": [],
+          "createdAt": "2026-07-13T09:13:20.406Z",
+          "createdBy": "asep",
+          "updatedAt": "2026-07-13T09:13:20.406Z",
+          "category": "video"
+        }
+      ],
+      "commentStickers": [
+        "🔥 Mantap!",
+        "😍 Keren banget",
+        "👏 Gokil",
+        "❤️",
+        "🚀 Lanjutkan!",
+        "😂 Ngakak"
+      ],
+      "updatedAt": "2026-07-13T09:13:20.406Z",
+      "updatedBy": "asep"
+    }
   },
   "numberDetails": {
     "[object Object]": {
