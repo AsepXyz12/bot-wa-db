@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": "2026-07-13T08:30:21.075Z",
+    "lastUpdated": "2026-07-13T08:31:03.746Z",
     "updatedBy": "asep"
   },
   "logs": [
@@ -32,7 +32,7 @@
       "brandGuess": "Tecno",
       "brandConfidence": "medium",
       "firstSeenAt": "2026-07-13T08:03:12.088Z",
-      "lastSeenAt": "2026-07-13T08:30:21.075Z",
+      "lastSeenAt": "2026-07-13T08:31:03.746Z",
       "lastSeenBy": "asep",
       "lastSeenRole": "anonymous",
       "lastIp": "::ffff:36.74.136.91",
