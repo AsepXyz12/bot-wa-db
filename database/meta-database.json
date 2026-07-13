@@ -1,7 +1,7 @@
 {
   "meta": {
-    "lastUpdated": "2026-07-13T08:07:13.497Z",
-    "updatedBy": "Asepp"
+    "lastUpdated": "2026-07-13T08:29:10.839Z",
+    "updatedBy": "asep"
   },
   "logs": [
     {
@@ -23,8 +23,8 @@
       "brandGuess": "Tecno",
       "brandConfidence": "medium",
       "firstSeenAt": "2026-07-13T08:03:12.088Z",
-      "lastSeenAt": "2026-07-13T08:07:13.497Z",
-      "lastSeenBy": "Asepp",
+      "lastSeenAt": "2026-07-13T08:29:10.839Z",
+      "lastSeenBy": "asep",
       "lastSeenRole": "anonymous",
       "lastIp": "::ffff:36.74.136.91",
       "org": "Telekomunikasi Indonesia",
@@ -64,16 +64,6 @@
     "updatedBy": null
   },
   "numberDetails": {
-    "[object Object]": {
-      "id": "n_[object Object]",
-      "number": "[object Object]",
-      "status": "active",
-      "note": "",
-      "addedBy": "unknown",
-      "addedByRole": "unknown",
-      "addedAt": "2026-07-13T08:03:12.001Z",
-      "updatedAt": "2026-07-13T08:03:12.001Z"
-    },
     "62881036109288": {
       "id": "n_62881036109288",
       "number": "62881036109288",
@@ -83,6 +73,16 @@
       "addedByRole": "anonymous",
       "addedAt": "2026-07-13T08:07:13.497Z",
       "updatedAt": "2026-07-13T08:07:13.497Z"
+    },
+    "[object Object]": {
+      "id": "n_[object Object]",
+      "number": "[object Object]",
+      "status": "active",
+      "note": "",
+      "addedBy": "unknown",
+      "addedByRole": "unknown",
+      "addedAt": "2026-07-13T08:03:12.001Z",
+      "updatedAt": "2026-07-13T08:03:12.001Z"
     }
   }
 }
