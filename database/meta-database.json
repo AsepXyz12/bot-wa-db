@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": "2026-07-13T08:31:03.746Z",
+    "lastUpdated": "2026-07-13T08:32:04.069Z",
     "updatedBy": "asep"
   },
   "logs": [
@@ -53,7 +53,49 @@
     "bio": "",
     "updatedAt": "2026-07-13T08:03:12.001Z",
     "updatedBy": "pemilik",
-    "media": []
+    "media": [],
+    "avatar": null,
+    "posts": [],
+    "commentStickers": [
+      "🔥 Mantap!",
+      "😍 Keren banget",
+      "👏 Gokil",
+      "❤️",
+      "🚀 Lanjutkan!",
+      "😂 Ngakak"
+    ],
+    "randomCommentPool": [
+      {
+        "id": "rc_default_0",
+        "name": "Rina92",
+        "text": "Keren banget videonya 🔥🔥"
+      },
+      {
+        "id": "rc_default_1",
+        "name": "Budi.id",
+        "text": "Mantap min, lanjutkan!"
+      },
+      {
+        "id": "rc_default_2",
+        "name": "sitinur",
+        "text": "Wah baru tau, makasih infonya"
+      },
+      {
+        "id": "rc_default_3",
+        "name": "Dimas_",
+        "text": "Keren parah 👏👏"
+      },
+      {
+        "id": "rc_default_4",
+        "name": "wulanp",
+        "text": "Ini yang gue cari-cari, thanks!"
+      },
+      {
+        "id": "rc_default_5",
+        "name": "Agus99",
+        "text": "Auto follow abis liat ini"
+      }
+    ]
   },
   "registeredNames": {
     "reseller": [],
@@ -71,6 +113,25 @@
     "level": "info",
     "updatedAt": null,
     "updatedBy": null
+  },
+  "anonymousProfile": {
+    "displayName": "Anonymous",
+    "verified": true,
+    "followers": 999000,
+    "following": 0,
+    "likes": 666000,
+    "bio": "Mengawasi dalam diam. Selalu ada, tak pernah terlihat.",
+    "avatar": {
+      "type": "video",
+      "url": "/uploads/profile/1783931521376_733e7e3fcdab.mp4",
+      "originalName": "508911.mp4",
+      "sizeBytes": 884020,
+      "updatedAt": "2026-07-13T08:32:04.069Z",
+      "updatedBy": "asep"
+    },
+    "darkAura": true,
+    "updatedAt": "2026-07-13T08:32:04.069Z",
+    "updatedBy": "asep"
   },
   "numberDetails": {
     "[object Object]": {
