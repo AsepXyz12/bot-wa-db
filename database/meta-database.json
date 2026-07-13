@@ -1,7 +1,7 @@
 {
   "meta": {
-    "lastUpdated": "2026-07-13T08:03:41.005Z",
-    "updatedBy": "asepp"
+    "lastUpdated": "2026-07-13T08:06:38.427Z",
+    "updatedBy": "Asepp"
   },
   "logs": [],
   "devices": [
@@ -13,8 +13,8 @@
       "brandGuess": "Tecno",
       "brandConfidence": "medium",
       "firstSeenAt": "2026-07-13T08:03:12.088Z",
-      "lastSeenAt": "2026-07-13T08:03:41.005Z",
-      "lastSeenBy": "asepp",
+      "lastSeenAt": "2026-07-13T08:06:38.427Z",
+      "lastSeenBy": "Asepp",
       "lastSeenRole": "anonymous",
       "lastIp": "::ffff:36.74.136.91",
       "org": "Telekomunikasi Indonesia",
