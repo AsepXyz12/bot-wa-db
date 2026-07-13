@@ -1,9 +1,18 @@
 {
   "meta": {
-    "lastUpdated": "2026-07-13T15:15:02.868Z",
+    "lastUpdated": "2026-07-13T15:16:22.333Z",
     "updatedBy": "asep"
   },
   "logs": [
+    {
+      "action": "bulk_add",
+      "number": null,
+      "by": "asep",
+      "role": "anonymous",
+      "device": "Mozilla/5.0 (Linux; Android 15; TECNO LI7 Build/AP3A.240905.015.A2; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/149.0.7827.159 Mobile Safari/537.36",
+      "at": "2026-07-13T15:16:22.332Z",
+      "detail": "2 nomor ditambahkan sekaligus"
+    },
     {
       "action": "delete",
       "number": "62881036109288",
@@ -32,7 +41,7 @@
       "brandGuess": "Tecno",
       "brandConfidence": "medium",
       "firstSeenAt": "2026-07-13T08:03:12.088Z",
-      "lastSeenAt": "2026-07-13T15:12:26.902Z",
+      "lastSeenAt": "2026-07-13T15:16:22.333Z",
       "lastSeenBy": "asep",
       "lastSeenRole": "anonymous",
       "lastIp": "::ffff:36.74.136.91",
@@ -206,6 +215,26 @@
       "addedByRole": "unknown",
       "addedAt": "2026-07-13T08:03:12.001Z",
       "updatedAt": "2026-07-13T08:03:12.001Z"
+    },
+    "62881036109288": {
+      "id": "n_62881036109288",
+      "number": "62881036109288",
+      "status": "active",
+      "note": "",
+      "addedBy": "asep",
+      "addedByRole": "anonymous",
+      "addedAt": "2026-07-13T15:16:22.332Z",
+      "updatedAt": "2026-07-13T15:16:22.332Z"
+    },
+    "6288994486449": {
+      "id": "n_6288994486449",
+      "number": "6288994486449",
+      "status": "active",
+      "note": "",
+      "addedBy": "asep",
+      "addedByRole": "anonymous",
+      "addedAt": "2026-07-13T15:16:22.332Z",
+      "updatedAt": "2026-07-13T15:16:22.332Z"
     }
   }
 }
