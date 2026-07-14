@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": "2026-07-14T12:07:27.627Z",
+    "lastUpdated": "2026-07-14T12:13:46.670Z",
     "updatedBy": "asep"
   },
   "logs": [
@@ -106,11 +106,11 @@
       "brandGuess": null,
       "brandConfidence": "unknown",
       "firstSeenAt": "2026-07-14T02:55:14.973Z",
-      "lastSeenAt": "2026-07-14T02:55:14.973Z",
+      "lastSeenAt": "2026-07-14T12:13:46.670Z",
       "lastSeenBy": "asep",
       "lastSeenRole": "anonymous",
-      "lastIp": "::ffff:114.79.19.214",
-      "org": "SMART-TELECOM",
+      "lastIp": "::ffff:36.74.136.91",
+      "org": "Telekomunikasi Indonesia",
       "isCloud": false,
       "blocked": false,
       "blockedAt": null,
