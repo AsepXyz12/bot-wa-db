@@ -1,7 +1,7 @@
 {
   "meta": {
-    "lastUpdated": "2026-07-14T11:55:04.887Z",
-    "updatedBy": "AsepXxnx"
+    "lastUpdated": "2026-07-14T12:07:27.627Z",
+    "updatedBy": "asep"
   },
   "logs": [
     {
@@ -68,11 +68,11 @@
       "brandGuess": "Tecno",
       "brandConfidence": "medium",
       "firstSeenAt": "2026-07-13T08:03:12.088Z",
-      "lastSeenAt": "2026-07-14T02:54:36.742Z",
+      "lastSeenAt": "2026-07-14T12:07:27.627Z",
       "lastSeenBy": "asep",
       "lastSeenRole": "anonymous",
-      "lastIp": "::ffff:114.79.19.214",
-      "org": "SMART-TELECOM",
+      "lastIp": "::ffff:36.74.136.91",
+      "org": "Telekomunikasi Indonesia",
       "isCloud": false,
       "blocked": false,
       "blockedAt": null,
