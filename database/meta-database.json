@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": "2026-07-14T02:54:36.742Z",
+    "lastUpdated": "2026-07-14T02:55:14.973Z",
     "updatedBy": "asep"
   },
   "logs": [
@@ -91,6 +91,25 @@
       "lastSeenBy": "asep",
       "lastSeenRole": "anonymous",
       "lastIp": "::ffff:114.79.7.177",
+      "org": "SMART-TELECOM",
+      "isCloud": false,
+      "blocked": false,
+      "blockedAt": null,
+      "blockedBy": null,
+      "blockReason": null
+    },
+    {
+      "id": "dev_mrg3k95g_sypwzjws",
+      "label": "Chrome · Android · 400x903",
+      "userAgent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Mobile Safari/537.36",
+      "deviceOs": "Android",
+      "brandGuess": null,
+      "brandConfidence": "unknown",
+      "firstSeenAt": "2026-07-14T02:55:14.973Z",
+      "lastSeenAt": "2026-07-14T02:55:14.973Z",
+      "lastSeenBy": "asep",
+      "lastSeenRole": "anonymous",
+      "lastIp": "::ffff:114.79.19.214",
       "org": "SMART-TELECOM",
       "isCloud": false,
       "blocked": false,
