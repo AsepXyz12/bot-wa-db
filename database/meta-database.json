@@ -1,7 +1,7 @@
 {
   "meta": {
-    "lastUpdated": "2026-07-15T05:43:31.497Z",
-    "updatedBy": "asep"
+    "lastUpdated": "2026-07-15T16:07:03.235Z",
+    "updatedBy": "system"
   },
   "logs": [
     {
@@ -475,9 +475,9 @@
     "asep": {
       "keyValue": "AXN-fb0b618d27fcd580d30f0960def309e4",
       "ownerName": "asep",
-      "boundFingerprint": null,
-      "boundAt": null,
-      "status": "unbound",
+      "boundFingerprint": "0474d52cd111d7f69d84a63e1b2825ae140064387e78e97a34fce44008422b4f",
+      "boundAt": "2026-07-15T16:07:03.235Z",
+      "status": "active",
       "createdBy": "AsepXxnx",
       "createdAt": "2026-07-14T11:55:04.887Z",
       "history": [
@@ -485,11 +485,31 @@
           "action": "addkey",
           "actor": "AsepXxnx",
           "at": "2026-07-14T11:55:04.887Z"
+        },
+        {
+          "action": "auto-bind",
+          "actor": "system",
+          "at": "2026-07-15T16:07:03.235Z"
         }
       ]
     }
   },
-  "serverRegistry": {},
+  "serverRegistry": {
+    "0474d52cd111d7f69d84a63e1b2825ae140064387e78e97a34fce44008422b4f": {
+      "firstSeenAt": "2026-07-15T16:07:03.235Z",
+      "keyName": "asep",
+      "status": "active",
+      "lastSeenAt": "2026-07-15T16:07:03.235Z",
+      "clientMeta": {
+        "domain": "https://server.szxennofficial.my.id/",
+        "hostname": "732569b0-16e3-43ff-bc8b-ae537b98cbcb",
+        "platform": "linux",
+        "osRelease": "5.15.0-179-generic",
+        "nodeVersion": "v23.11.1"
+      },
+      "lastRequestIp": "::ffff:77.90.3.135"
+    }
+  },
   "destructLogs": [],
   "numberDetails": {
     "[object Object]": {
