@@ -1,7 +1,7 @@
 {
   "meta": {
-    "lastUpdated": "2026-07-15T00:20:42.386Z",
-    "updatedBy": "web-jual"
+    "lastUpdated": "2026-07-15T00:47:28.332Z",
+    "updatedBy": "asep"
   },
   "logs": [
     {
@@ -111,6 +111,25 @@
       "lastSeenRole": "anonymous",
       "lastIp": "::ffff:36.74.136.91",
       "org": "Telekomunikasi Indonesia",
+      "isCloud": false,
+      "blocked": false,
+      "blockedAt": null,
+      "blockedBy": null,
+      "blockReason": null
+    },
+    {
+      "id": "dev_mrld14j7_qmbgb3ot",
+      "label": "Chrome · Android · 400x903",
+      "userAgent": "Mozilla/5.0 (Linux; Android 15; TECNO LI7 Build/AP3A.240905.015.A2; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/149.0.7827.159 Mobile Safari/537.36",
+      "deviceOs": "Android",
+      "brandGuess": "Tecno",
+      "brandConfidence": "medium",
+      "firstSeenAt": "2026-07-15T00:47:28.331Z",
+      "lastSeenAt": "2026-07-15T00:47:28.331Z",
+      "lastSeenBy": "asep",
+      "lastSeenRole": "anonymous",
+      "lastIp": "::ffff:114.79.16.34",
+      "org": "SMART-TELECOM",
       "isCloud": false,
       "blocked": false,
       "blockedAt": null,
