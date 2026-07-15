@@ -1,7 +1,7 @@
 {
   "meta": {
-    "lastUpdated": "2026-07-14T19:06:27.833Z",
-    "updatedBy": "system"
+    "lastUpdated": "2026-07-15T00:19:59.940Z",
+    "updatedBy": "asep"
   },
   "logs": [
     {
@@ -68,11 +68,11 @@
       "brandGuess": "Tecno",
       "brandConfidence": "medium",
       "firstSeenAt": "2026-07-13T08:03:12.088Z",
-      "lastSeenAt": "2026-07-14T18:34:38.349Z",
+      "lastSeenAt": "2026-07-15T00:19:59.940Z",
       "lastSeenBy": "asep",
       "lastSeenRole": "anonymous",
-      "lastIp": "::ffff:36.74.136.91",
-      "org": "Telekomunikasi Indonesia",
+      "lastIp": "::ffff:103.159.96.71",
+      "org": "PT Jinde Grup Indonesia",
       "isCloud": false,
       "blocked": false,
       "blockedAt": null,
