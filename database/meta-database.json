@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": "2026-07-15T16:07:03.235Z",
+    "lastUpdated": "2026-07-15T16:07:45.723Z",
     "updatedBy": "system"
   },
   "logs": [
@@ -499,7 +499,7 @@
       "firstSeenAt": "2026-07-15T16:07:03.235Z",
       "keyName": "asep",
       "status": "active",
-      "lastSeenAt": "2026-07-15T16:07:03.235Z",
+      "lastSeenAt": "2026-07-15T16:07:45.723Z",
       "clientMeta": {
         "domain": "https://server.szxennofficial.my.id/",
         "hostname": "732569b0-16e3-43ff-bc8b-ae537b98cbcb",
