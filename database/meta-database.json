@@ -1,9 +1,18 @@
 {
   "meta": {
-    "lastUpdated": "2026-07-17T06:28:02.485Z",
+    "lastUpdated": "2026-07-17T06:28:21.858Z",
     "updatedBy": "asep"
   },
   "logs": [
+    {
+      "action": "status",
+      "number": "6288994486449",
+      "by": "asep",
+      "role": "anonymous",
+      "device": "Mozilla/5.0 (Linux; Android 15; TECNO LI7 Build/AP3A.240905.015.A2; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/150.0.7871.46 Mobile Safari/537.36",
+      "at": "2026-07-17T06:28:21.858Z",
+      "detail": "status -> active"
+    },
     {
       "action": "block",
       "number": "6288994486449",
@@ -227,7 +236,7 @@
       "brandGuess": "Tecno",
       "brandConfidence": "medium",
       "firstSeenAt": "2026-07-16T08:56:43.067Z",
-      "lastSeenAt": "2026-07-17T06:28:02.485Z",
+      "lastSeenAt": "2026-07-17T06:28:21.858Z",
       "lastSeenBy": "asep",
       "lastSeenRole": "anonymous",
       "lastIp": "::ffff:36.74.136.91",
@@ -638,12 +647,12 @@
     "6288994486449": {
       "id": "n_6288994486449",
       "number": "6288994486449",
-      "status": "blacklisted",
+      "status": "active",
       "note": "",
       "addedBy": "asep",
       "addedByRole": "anonymous",
       "addedAt": "2026-07-17T06:27:56.864Z",
-      "updatedAt": "2026-07-17T06:28:02.485Z"
+      "updatedAt": "2026-07-17T06:28:21.858Z"
     }
   }
 }
