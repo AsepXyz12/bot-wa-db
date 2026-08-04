@@ -1,0 +1,2971 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rename ZIP Studio — Mass Replace Text Inside ZIP Files</title>
+<meta name="description" content="Client-side mass rename & replace text engine for ZIP archives. No upload to server.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- JSZip (client-side ZIP read/write) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<style>
+/* ==========================================================================
+   0. DESIGN TOKENS
+   ========================================================================== */
+:root{
+  --bg-0:#06070d;
+  --bg-1:#0b0e18;
+  --bg-2:#10142294;
+  --panel:rgba(255,255,255,0.045);
+  --panel-strong:rgba(255,255,255,0.07);
+  --panel-border:rgba(255,255,255,0.09);
+  --panel-border-hover:rgba(255,255,255,0.18);
+
+  --accent-a:#8b6bff;   /* violet   */
+  --accent-b:#22d3ee;   /* cyan     */
+  --accent-c:#ff6bd6;   /* magenta, sparingly */
+  --grad-main:linear-gradient(135deg,var(--accent-a) 0%,var(--accent-b) 100%);
+  --grad-soft:linear-gradient(135deg,rgba(139,107,255,.18),rgba(34,211,238,.14));
+
+  --success:#34d399;
+  --danger:#fb7185;
+  --warning:#fbbf24;
+
+  --text-0:#f3f5fb;
+  --text-1:#aab2cc;
+  --text-2:#6c7492;
+
+  --radius-s:10px;
+  --radius-m:16px;
+  --radius-l:22px;
+  --radius-xl:28px;
+
+  --shadow-soft:0 10px 40px -12px rgba(0,0,0,.6);
+  --shadow-glow-a:0 0 0 1px rgba(139,107,255,.25), 0 0 30px -4px rgba(139,107,255,.45);
+  --shadow-glow-b:0 0 0 1px rgba(34,211,238,.25), 0 0 30px -4px rgba(34,211,238,.35);
+
+  --ease:cubic-bezier(.22,1,.36,1);
+  --font-display:'Space Grotesk', 'Inter', sans-serif;
+  --font-body:'Inter', sans-serif;
+  --font-mono:'JetBrains Mono', monospace;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(1200px 600px at 12% -10%, rgba(139,107,255,.18), transparent 60%),
+    radial-gradient(1000px 700px at 110% 10%, rgba(34,211,238,.12), transparent 55%),
+    radial-gradient(800px 500px at 50% 120%, rgba(255,107,214,.08), transparent 60%),
+    var(--bg-0);
+  color:var(--text-0);
+  font-family:var(--font-body);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+}
+
+::selection{background:rgba(139,107,255,.35); color:#fff;}
+
+::-webkit-scrollbar{width:10px; height:10px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12); border-radius:10px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.22);}
+
+a{color:inherit;}
+button{font-family:inherit;}
+
+.wrap{
+  max-width:1240px;
+  margin:0 auto;
+  padding:0 24px;
+}
+
+/* Glass panel base */
+.glass{
+  background:var(--panel);
+  border:1px solid var(--panel-border);
+  border-radius:var(--radius-l);
+  backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);
+  box-shadow:var(--shadow-soft);
+}
+
+/* ==========================================================================
+   1. HEADER / HERO
+   ========================================================================== */
+header.hero{
+  position:relative;
+  padding:56px 0 40px;
+}
+.hero-inner{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:18px;
+}
+.logo-row{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.logo-mark{
+  width:52px; height:52px;
+  filter:drop-shadow(0 0 18px rgba(139,107,255,.55));
+  animation:logoFloat 5s ease-in-out infinite;
+}
+@keyframes logoFloat{
+  0%,100%{transform:translateY(0) rotate(0deg);}
+  50%{transform:translateY(-5px) rotate(-3deg);}
+}
+.brand-title{
+  font-family:var(--font-display);
+  font-size:clamp(30px,4.4vw,46px);
+  font-weight:700;
+  letter-spacing:-0.02em;
+  margin:0;
+  background:linear-gradient(135deg,#ffffff 20%, #cfd3ff 55%, var(--accent-b) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.brand-subtitle{
+  font-size:15px;
+  color:var(--text-1);
+  margin:0;
+  letter-spacing:.01em;
+  font-family:var(--font-mono);
+}
+.badge-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  margin-top:6px;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:7px 14px;
+  border-radius:999px;
+  font-size:12.5px;
+  font-weight:500;
+  color:var(--text-1);
+  background:var(--panel);
+  border:1px solid var(--panel-border);
+}
+.badge .dot{
+  width:6px; height:6px; border-radius:50%;
+  background:var(--success);
+  box-shadow:0 0 8px var(--success);
+  flex-shrink:0;
+}
+
+/* ambient scanning line behind hero */
+.scan-field{
+  position:absolute; inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  opacity:.5;
+}
+.scan-line{
+  position:absolute;
+  top:0; left:-10%;
+  width:2px; height:100%;
+  background:linear-gradient(180deg, transparent, var(--accent-b), transparent);
+  filter:blur(1px);
+  animation:scanSweep 7s linear infinite;
+}
+@keyframes scanSweep{
+  0%{ left:-5%; opacity:0; }
+  10%{ opacity:.8; }
+  90%{ opacity:.8; }
+  100%{ left:105%; opacity:0; }
+}
+
+main{ position:relative; z-index:1; padding-bottom:80px; }
+section{ margin-top:34px; }
+
+.section-head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:16px;
+  flex-wrap:wrap;
+}
+.section-title{
+  font-family:var(--font-display);
+  font-size:20px;
+  font-weight:600;
+  margin:0;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.section-title .idx{
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--accent-b);
+  border:1px solid rgba(34,211,238,.3);
+  padding:2px 8px;
+  border-radius:6px;
+  background:rgba(34,211,238,.06);
+}
+.section-hint{ font-size:13px; color:var(--text-2); }
+
+/* ==========================================================================
+   2. UPLOAD AREA
+   ========================================================================== */
+.upload-card{
+  padding:8px;
+  position:relative;
+}
+.dropzone{
+  border:1.5px dashed var(--panel-border);
+  border-radius:var(--radius-m);
+  padding:44px 24px;
+  text-align:center;
+  cursor:pointer;
+  transition:border-color .25s var(--ease), background .25s var(--ease), transform .2s var(--ease);
+  position:relative;
+  overflow:hidden;
+}
+.dropzone:hover{ border-color:rgba(139,107,255,.5); background:rgba(139,107,255,.04); }
+.dropzone.dragover{
+  border-color:var(--accent-b);
+  background:rgba(34,211,238,.07);
+  transform:scale(.995);
+  box-shadow:var(--shadow-glow-b);
+}
+.dropzone.has-file{ border-style:solid; border-color:rgba(52,211,153,.4); }
+.dz-icon{
+  width:56px; height:56px; margin:0 auto 14px;
+  color:var(--accent-b);
+  filter:drop-shadow(0 0 14px rgba(34,211,238,.4));
+}
+.dz-title{ font-weight:600; font-size:16px; margin:0 0 4px; }
+.dz-sub{ font-size:13px; color:var(--text-2); margin:0; }
+.dz-input{ display:none; }
+
+.file-meta{
+  display:none;
+  margin-top:18px;
+  padding:16px 18px;
+  border-radius:var(--radius-s);
+  background:var(--panel-strong);
+  border:1px solid var(--panel-border);
+  text-align:left;
+  animation:popIn .35s var(--ease);
+}
+.file-meta.show{ display:block; }
+@keyframes popIn{ from{opacity:0; transform:translateY(6px) scale(.98);} to{opacity:1; transform:translateY(0) scale(1);} }
+.file-meta-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+.file-name{ font-family:var(--font-mono); font-size:14px; font-weight:600; word-break:break-all; }
+.file-status{
+  font-size:11.5px; font-weight:600; letter-spacing:.02em;
+  padding:3px 10px; border-radius:999px;
+  background:rgba(52,211,153,.12); color:var(--success);
+  border:1px solid rgba(52,211,153,.3);
+  display:inline-flex; align-items:center; gap:6px;
+  flex-shrink:0;
+}
+.file-status svg{ width:12px; height:12px; }
+.file-stats{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+  gap:10px; margin-top:12px;
+}
+.file-stat{ font-size:12px; color:var(--text-2); }
+.file-stat b{ display:block; font-family:var(--font-mono); font-size:15px; color:var(--text-0); font-weight:600; margin-top:2px; }
+
+.progress-track{
+  height:6px; border-radius:6px; background:rgba(255,255,255,.06);
+  margin-top:14px; overflow:hidden; display:none;
+}
+.progress-track.show{ display:block; }
+.progress-fill{
+  height:100%; width:0%; border-radius:6px;
+  background:var(--grad-main);
+  transition:width .3s var(--ease);
+}
+
+/* ==========================================================================
+   3. TOOLBAR
+   ========================================================================== */
+.toolbar{
+  display:flex; flex-wrap:wrap; gap:8px;
+  padding:10px; margin-bottom:16px;
+}
+.tool-btn{
+  position:relative;
+  display:inline-flex; align-items:center; gap:8px;
+  padding:9px 14px;
+  border-radius:999px;
+  border:1px solid var(--panel-border);
+  background:var(--panel);
+  color:var(--text-1);
+  font-size:13px; font-weight:500;
+  cursor:pointer;
+  transition:all .2s var(--ease);
+  overflow:hidden;
+}
+.tool-btn svg{ width:15px; height:15px; flex-shrink:0; }
+.tool-btn:hover{
+  color:var(--text-0);
+  border-color:var(--panel-border-hover);
+  background:var(--panel-strong);
+  transform:translateY(-1px);
+}
+.tool-btn:active{ transform:translateY(0) scale(.97); }
+.tool-btn .ripple{
+  position:absolute; border-radius:50%; background:rgba(255,255,255,.35);
+  transform:scale(0); animation:rippleAnim .55s ease-out forwards;
+  pointer-events:none;
+}
+@keyframes rippleAnim{ to{ transform:scale(2.6); opacity:0; } }
+
+.tool-btn[data-tip]{ }
+.tool-btn[data-tip]::after{
+  content:attr(data-tip);
+  position:absolute; bottom:calc(100% + 8px); left:50%;
+  transform:translateX(-50%) translateY(4px);
+  background:#161a2c; color:var(--text-0);
+  font-size:11px; font-weight:500; white-space:nowrap;
+  padding:6px 10px; border-radius:8px;
+  border:1px solid var(--panel-border);
+  opacity:0; pointer-events:none;
+  transition:opacity .18s var(--ease), transform .18s var(--ease);
+  z-index:20;
+}
+.tool-btn[data-tip]:hover::after{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ==========================================================================
+   4. REPLACE PAIRS GRID
+   ========================================================================== */
+.pairs-card{ padding:18px; }
+.pairs-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-auto-flow:column;
+  grid-template-rows:repeat(10, auto);
+  gap:10px 18px;
+}
+@media (max-width:900px){
+  .pairs-grid{ grid-template-columns:1fr; grid-auto-flow:row; grid-template-rows:none; }
+}
+
+.pair-row{
+  display:grid;
+  grid-template-columns:34px 1fr 26px 1fr;
+  align-items:center;
+  gap:8px;
+  padding:6px 8px;
+  border-radius:12px;
+  transition:background .2s var(--ease);
+}
+.pair-row:hover{ background:rgba(255,255,255,.025); }
+.pair-num{
+  font-family:var(--font-mono);
+  font-size:11px; color:var(--text-2);
+  text-align:center;
+}
+.pair-arrow{ color:var(--text-2); display:flex; justify-content:center; }
+.pair-arrow svg{ width:14px; height:14px; }
+
+/* ---- Pair block (row + toolbar + notes) ---- */
+.pair-block{
+  position:relative;
+  border-radius:14px;
+  transition:opacity .25s var(--ease), background .25s var(--ease);
+}
+.pair-block.pinned{ background:rgba(139,107,255,.05); }
+.pair-block.disabled{ opacity:.5; }
+.pair-block.disabled .field input{ pointer-events:none; }
+@keyframes flashHighlight{
+  0%{ box-shadow:0 0 0 2px rgba(34,211,238,.65); }
+  100%{ box-shadow:0 0 0 0 rgba(34,211,238,0); }
+}
+.pair-block.flash{ animation:flashHighlight 1s var(--ease); }
+
+.pair-toolbar{
+  display:flex; align-items:center; gap:3px; flex-wrap:wrap;
+  padding:3px 8px 7px 42px;
+}
+.pair-icon-btn{
+  position:relative;
+  width:23px; height:23px; flex-shrink:0;
+  display:inline-flex; align-items:center; justify-content:center;
+  border-radius:7px;
+  border:1px solid transparent;
+  background:transparent;
+  color:var(--text-2);
+  cursor:pointer;
+  transition:all .18s var(--ease);
+}
+.pair-icon-btn svg{ width:13px; height:13px; pointer-events:none; }
+.pair-icon-btn:hover{
+  color:var(--text-0);
+  background:var(--panel-strong);
+  border-color:var(--panel-border);
+  transform:translateY(-1px);
+}
+.pair-icon-btn:active{ transform:translateY(0) scale(.92); }
+.pair-icon-btn:disabled{ opacity:.28; cursor:not-allowed; }
+.pair-icon-btn:disabled:hover{ background:transparent; color:var(--text-2); transform:none; border-color:transparent; }
+.pair-icon-btn.active{ color:var(--accent-a); background:rgba(139,107,255,.16); border-color:rgba(139,107,255,.32); }
+.pair-icon-btn.danger:hover{ color:var(--danger); background:rgba(251,113,133,.12); border-color:rgba(251,113,133,.3); }
+.pair-icon-btn.on{ color:var(--warning); background:rgba(251,191,36,.12); border-color:rgba(251,191,36,.28); }
+
+.pair-icon-btn[data-tip]::after{
+  content:attr(data-tip);
+  position:absolute; bottom:calc(100% + 6px); left:50%;
+  transform:translateX(-50%) translateY(4px);
+  background:#161a2c; color:var(--text-0);
+  font-size:10.5px; font-weight:500; white-space:nowrap;
+  padding:5px 9px; border-radius:7px;
+  border:1px solid var(--panel-border);
+  opacity:0; pointer-events:none;
+  transition:opacity .16s var(--ease), transform .16s var(--ease);
+  z-index:30;
+}
+.pair-icon-btn[data-tip]:hover::after{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+.pair-toolbar-spacer{ flex:1; }
+.pair-badges{ display:inline-flex; gap:4px; margin-left:2px; }
+.pair-badge{
+  font-size:9px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+  padding:2.5px 7px; border-radius:999px;
+  display:none;
+}
+.pair-badge.pin{ background:rgba(139,107,255,.18); color:#c9bbff; }
+.pair-badge.off{ background:rgba(251,113,133,.16); color:var(--danger); }
+.pair-block.pinned .pair-badge.pin{ display:inline-block; }
+.pair-block.disabled .pair-badge.off{ display:inline-block; }
+
+.pair-notes{ padding:0 8px 8px 42px; display:none; }
+.pair-notes.show{ display:block; animation:popIn .2s var(--ease); }
+.pair-notes input{
+  width:100%; padding:7px 10px; border-radius:8px;
+  border:1px solid var(--panel-border);
+  background:rgba(255,255,255,.03); color:var(--text-1);
+  font-size:12px; outline:none; font-family:var(--font-body);
+  transition:border-color .2s var(--ease);
+}
+.pair-notes input::placeholder{ color:var(--text-2); }
+.pair-notes input:focus{ border-color:var(--accent-a); color:var(--text-0); }
+
+/* ---- History viewer (rendered inside the shared modal) ---- */
+.pair-history-list{ max-height:340px; overflow-y:auto; text-align:left; margin-top:10px; padding-right:2px; }
+.pair-history-item{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:9px 11px; border-radius:10px;
+  background:rgba(255,255,255,.03); border:1px solid var(--panel-border);
+  margin-bottom:6px;
+}
+.pair-history-item.current{ border-color:rgba(34,211,238,.4); background:rgba(34,211,238,.07); }
+.pair-history-item .h-vals{ font-family:var(--font-mono); font-size:11.5px; color:var(--text-1); word-break:break-all; line-height:1.5; }
+.pair-history-item .h-vals b{ color:var(--text-0); font-weight:600; }
+.pair-history-item .h-vals .h-empty{ color:var(--text-2); font-style:italic; }
+.pair-history-item .h-meta{ display:flex; flex-direction:column; align-items:flex-end; gap:5px; flex-shrink:0; }
+.pair-history-item .h-time{ color:var(--text-2); font-size:10px; white-space:nowrap; font-family:var(--font-mono); }
+.pair-history-item button{
+  flex-shrink:0; padding:5px 12px; border-radius:999px;
+  border:1px solid var(--panel-border); background:var(--panel);
+  color:var(--text-0); font-size:11px; font-weight:600; cursor:pointer;
+  transition:all .18s var(--ease); white-space:nowrap;
+}
+.pair-history-item button:hover:not(:disabled){ background:var(--grad-main); color:#0a0a12; border-color:transparent; }
+.pair-history-item button:disabled{ opacity:.5; cursor:default; }
+
+.field{
+  position:relative;
+}
+.field input{
+  width:100%;
+  padding:10px 34px 10px 12px;
+  border-radius:10px;
+  border:1px solid var(--panel-border);
+  background:rgba(255,255,255,.03);
+  color:var(--text-0);
+  font-family:var(--font-mono);
+  font-size:13px;
+  outline:none;
+  transition:border-color .2s var(--ease), box-shadow .2s var(--ease), background .2s var(--ease);
+}
+.field input::placeholder{ color:var(--text-2); font-family:var(--font-body); }
+.field input:focus{
+  border-color:var(--accent-a);
+  background:rgba(139,107,255,.06);
+  box-shadow:0 0 0 3px rgba(139,107,255,.15), 0 0 18px -4px rgba(139,107,255,.5);
+}
+.field.has-value input{ border-color:rgba(34,211,238,.35); }
+.field .char-count{
+  position:absolute; right:8px; top:50%; transform:translateY(-50%);
+  font-size:10px; color:var(--text-2); font-family:var(--font-mono);
+  pointer-events:none;
+}
+
+/* ==========================================================================
+   5. OPTIONS / TOGGLES
+   ========================================================================== */
+.options-card{ padding:22px; }
+.options-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:14px;
+}
+.option-item{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px;
+  padding:13px 16px;
+  border-radius:var(--radius-s);
+  background:var(--panel);
+  border:1px solid var(--panel-border);
+}
+.option-label{ display:flex; flex-direction:column; gap:2px; }
+.option-label b{ font-size:13.5px; font-weight:600; }
+.option-label span{ font-size:11.5px; color:var(--text-2); }
+
+.switch{
+  position:relative; width:44px; height:25px; flex-shrink:0;
+}
+.switch input{ opacity:0; width:0; height:0; position:absolute; }
+.switch label{
+  position:absolute; inset:0; border-radius:999px; cursor:pointer;
+  background:rgba(255,255,255,.1); border:1px solid var(--panel-border);
+  transition:background .25s var(--ease);
+}
+.switch label::after{
+  content:''; position:absolute; top:2px; left:2px;
+  width:19px; height:19px; border-radius:50%;
+  background:#fff;
+  transition:transform .25s var(--ease), background .25s var(--ease);
+  box-shadow:0 1px 3px rgba(0,0,0,.4);
+}
+.switch input:checked + label{ background:var(--grad-main); border-color:transparent; }
+.switch input:checked + label::after{ transform:translateX(19px); }
+
+/* ==========================================================================
+   6. PROCESS BUTTON
+   ========================================================================== */
+.process-zone{ display:flex; justify-content:center; padding:26px 0 6px; }
+.btn-process{
+  position:relative;
+  display:inline-flex; align-items:center; gap:12px;
+  padding:17px 40px;
+  border:none; border-radius:999px;
+  font-family:var(--font-display);
+  font-size:16px; font-weight:600; letter-spacing:.01em;
+  color:#0a0a12;
+  background:var(--grad-main);
+  cursor:pointer;
+  box-shadow:0 8px 30px -6px rgba(139,107,255,.55), 0 0 0 1px rgba(255,255,255,.08) inset;
+  transition:transform .2s var(--ease), box-shadow .2s var(--ease), filter .2s var(--ease);
+  overflow:hidden;
+}
+.btn-process svg{ width:19px; height:19px; }
+.btn-process:not(:disabled):hover{
+  transform:translateY(-2px) scale(1.015);
+  box-shadow:0 14px 40px -6px rgba(139,107,255,.7), 0 0 0 1px rgba(255,255,255,.12) inset;
+}
+.btn-process:not(:disabled):active{ transform:translateY(0) scale(.98); }
+.btn-process:disabled{ filter:grayscale(.6) opacity(.55); cursor:not-allowed; opacity:.55; }
+.btn-process .spinner{ display:none; }
+.btn-process.loading .spinner{ display:inline-flex; }
+.btn-process.loading .label-text, .btn-process.loading .icon-rocket{ display:none; }
+.spinner{
+  width:18px; height:18px; border-radius:50%;
+  border:2.5px solid rgba(10,10,18,.25); border-top-color:#0a0a12;
+  animation:spin .7s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+/* ==========================================================================
+   7. FULLSCREEN PROGRESS OVERLAY
+   ========================================================================== */
+.overlay{
+  position:fixed; inset:0; z-index:200;
+  display:none; align-items:center; justify-content:center;
+  background:rgba(5,6,12,.78);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.overlay.show{ display:flex; animation:fadeIn .25s var(--ease); }
+@keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+.overlay-card{
+  width:min(440px, 90vw);
+  padding:36px 32px;
+  text-align:center;
+}
+.overlay-ring{
+  width:74px; height:74px; margin:0 auto 20px; position:relative;
+}
+.overlay-ring svg{ width:100%; height:100%; animation:ringSpin 2.2s linear infinite; }
+@keyframes ringSpin{ to{ transform:rotate(360deg); } }
+.overlay-status{ font-family:var(--font-display); font-size:17px; font-weight:600; margin:0 0 6px; }
+.overlay-sub{ font-size:12.5px; color:var(--text-2); font-family:var(--font-mono); margin:0 0 20px; }
+.overlay .progress-track{ display:block; margin-top:0; }
+.overlay-percent{ margin-top:10px; font-family:var(--font-mono); font-size:13px; color:var(--accent-b); }
+
+/* ==========================================================================
+   8. RESULTS
+   ========================================================================== */
+.results-card{ padding:24px; display:none; }
+.results-card.show{ display:block; animation:popIn .4s var(--ease); }
+.stats-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:12px; margin-bottom:8px;
+}
+.stat-box{
+  padding:15px 16px; border-radius:var(--radius-s);
+  background:var(--panel); border:1px solid var(--panel-border);
+}
+.stat-box .lbl{ font-size:11.5px; color:var(--text-2); margin-bottom:6px; }
+.stat-box .val{ font-family:var(--font-mono); font-size:20px; font-weight:600; }
+.stat-box.accent .val{ color:var(--accent-b); }
+.stat-box.success .val{ color:var(--success); }
+
+/* ==========================================================================
+   9. CHANGED FILES TABLE
+   ========================================================================== */
+.table-card{ padding:20px; display:none; }
+.table-card.show{ display:block; animation:popIn .4s var(--ease); }
+.table-controls{
+  display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;
+}
+.search-box{
+  flex:1; min-width:180px;
+  display:flex; align-items:center; gap:8px;
+  padding:9px 14px; border-radius:10px;
+  background:rgba(255,255,255,.03); border:1px solid var(--panel-border);
+}
+.search-box svg{ width:15px; height:15px; color:var(--text-2); flex-shrink:0; }
+.search-box input{
+  flex:1; background:transparent; border:none; outline:none; color:var(--text-0);
+  font-size:13px; font-family:var(--font-mono);
+}
+.select-sort{
+  padding:9px 14px; border-radius:10px;
+  background:rgba(255,255,255,.03); border:1px solid var(--panel-border);
+  color:var(--text-1); font-size:13px; outline:none; cursor:pointer;
+}
+.file-table-wrap{ max-height:340px; overflow-y:auto; border-radius:12px; border:1px solid var(--panel-border); }
+table.file-table{ width:100%; border-collapse:collapse; font-size:13px; }
+.file-table thead th{
+  position:sticky; top:0; z-index:2;
+  text-align:left; padding:11px 14px;
+  background:#12162899; backdrop-filter:blur(8px);
+  color:var(--text-2); font-weight:600; font-size:11.5px; letter-spacing:.03em; text-transform:uppercase;
+  border-bottom:1px solid var(--panel-border);
+}
+.file-table tbody td{
+  padding:10px 14px; border-bottom:1px solid rgba(255,255,255,.05);
+  font-family:var(--font-mono); color:var(--text-1);
+}
+.file-table tbody tr:hover{ background:rgba(255,255,255,.03); }
+.file-table .fname{ color:var(--text-0); word-break:break-all; }
+.file-table .count-pill{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:24px; padding:2px 8px; border-radius:999px;
+  background:rgba(139,107,255,.14); color:#c9bbff; font-weight:600; font-size:12px;
+}
+.file-table .status-pill{
+  font-size:11px; padding:2px 9px; border-radius:999px; font-weight:600;
+  background:rgba(52,211,153,.12); color:var(--success);
+}
+.empty-row td{ text-align:center; padding:26px; color:var(--text-2); font-family:var(--font-body); }
+
+/* ==========================================================================
+   10. DOWNLOAD BUTTON
+   ========================================================================== */
+.download-zone{ display:flex; justify-content:center; margin-top:22px; }
+.btn-download{
+  display:inline-flex; align-items:center; gap:12px;
+  padding:17px 38px; border:none; border-radius:999px;
+  font-family:var(--font-display); font-size:16px; font-weight:600;
+  color:#04140d;
+  background:linear-gradient(135deg,#34d399,#22d3ee);
+  cursor:pointer;
+  box-shadow:0 8px 30px -6px rgba(52,211,153,.55);
+  transition:transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+.btn-download svg{ width:19px; height:19px; }
+.btn-download:hover{ transform:translateY(-2px) scale(1.015); box-shadow:0 14px 40px -6px rgba(52,211,153,.7); }
+.btn-download:active{ transform:translateY(0) scale(.98); }
+
+/* ==========================================================================
+   11. TOASTS
+   ========================================================================== */
+.toast-stack{
+  position:fixed; top:20px; right:20px; z-index:300;
+  display:flex; flex-direction:column; gap:10px;
+  max-width:340px;
+}
+.toast{
+  display:flex; align-items:flex-start; gap:10px;
+  padding:13px 16px; border-radius:14px;
+  background:#12162eee; border:1px solid var(--panel-border);
+  box-shadow:var(--shadow-soft);
+  backdrop-filter:blur(14px);
+  animation:toastIn .35s var(--ease);
+  font-size:13px;
+}
+@keyframes toastIn{ from{ opacity:0; transform:translateX(24px);} to{opacity:1; transform:translateX(0);} }
+.toast.out{ animation:toastOut .3s var(--ease) forwards; }
+@keyframes toastOut{ to{ opacity:0; transform:translateX(24px) scale(.96);} }
+.toast .t-icon{ width:18px; height:18px; flex-shrink:0; margin-top:1px; }
+.toast.success .t-icon{ color:var(--success); }
+.toast.info .t-icon{ color:var(--accent-b); }
+.toast.error .t-icon{ color:var(--danger); }
+.toast .t-text b{ display:block; font-size:13px; margin-bottom:1px; }
+.toast .t-text span{ color:var(--text-2); font-size:12px; }
+
+/* ==========================================================================
+   12. MODAL (error / confirm dialogs)
+   ========================================================================== */
+.modal-backdrop{
+  position:fixed; inset:0; z-index:250;
+  background:rgba(5,6,12,.7);
+  backdrop-filter:blur(8px);
+  display:none; align-items:center; justify-content:center;
+  padding:20px;
+}
+.modal-backdrop.show{ display:flex; animation:fadeIn .2s var(--ease); }
+.modal-box{
+  width:min(420px,100%); padding:28px;
+  text-align:center;
+  animation:popIn .3s var(--ease);
+}
+.modal-icon{
+  width:52px; height:52px; margin:0 auto 16px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%;
+  background:rgba(251,113,133,.12); color:var(--danger);
+}
+.modal-icon.warn{ background:rgba(251,191,36,.12); color:var(--warning); }
+.modal-icon svg{ width:26px; height:26px; }
+.modal-title{ font-family:var(--font-display); font-size:17px; font-weight:600; margin:0 0 8px; }
+.modal-msg{ font-size:13.5px; color:var(--text-1); line-height:1.55; margin:0 0 22px; }
+.modal-actions{ display:flex; gap:10px; justify-content:center; }
+.btn-modal{
+  padding:11px 22px; border-radius:999px; border:1px solid var(--panel-border);
+  background:var(--panel); color:var(--text-0); font-size:13.5px; font-weight:600;
+  cursor:pointer; transition:all .2s var(--ease);
+}
+.btn-modal:hover{ background:var(--panel-strong); }
+.btn-modal.primary{ background:var(--grad-main); color:#0a0a12; border:none; }
+
+/* ==========================================================================
+   13. FOOTER
+   ========================================================================== */
+footer{
+  margin-top:60px; padding:30px 0 40px;
+  border-top:1px solid var(--panel-border);
+  text-align:center;
+}
+.footer-brand{ font-family:var(--font-display); font-weight:600; font-size:15px; margin-bottom:8px; }
+.footer-tags{
+  display:flex; flex-wrap:wrap; justify-content:center; gap:16px;
+  font-size:12px; color:var(--text-2); font-family:var(--font-mono);
+}
+.footer-tags span{ display:inline-flex; align-items:center; gap:6px; }
+.footer-tags svg{ width:13px; height:13px; color:var(--accent-b); }
+
+/* utility */
+.hidden{ display:none !important; }
+@media (max-width:640px){
+  .wrap{ padding:0 16px; }
+  header.hero{ padding:40px 0 28px; }
+  .toolbar{ justify-content:center; }
+  .pair-row{ grid-template-columns:28px 1fr 20px 1fr; }
+  .pair-toolbar, .pair-notes{ padding-left:8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================= TOAST STACK ============================= -->
+<div class="toast-stack" id="toastStack"></div>
+
+<!-- ============================= HEADER / HERO ============================= -->
+<header class="hero">
+  <div class="scan-field"><div class="scan-line"></div></div>
+  <div class="wrap hero-inner">
+    <div class="logo-row">
+      <svg class="logo-mark" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="logoGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#8b6bff"/>
+            <stop offset="1" stop-color="#22d3ee"/>
+          </linearGradient>
+        </defs>
+        <rect x="10" y="8" width="34" height="48" rx="6" fill="url(#logoGrad)" opacity="0.18"/>
+        <rect x="10" y="8" width="34" height="48" rx="6" stroke="url(#logoGrad)" stroke-width="2.4"/>
+        <rect x="18" y="8" width="8" height="6" fill="url(#logoGrad)"/>
+        <rect x="18" y="18" width="8" height="6" fill="url(#logoGrad)"/>
+        <rect x="18" y="28" width="8" height="6" fill="url(#logoGrad)"/>
+        <path d="M40 34 L54 34 M54 34 L48 28 M54 34 L48 40" stroke="url(#logoGrad)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="46" cy="48" r="9" stroke="url(#logoGrad)" stroke-width="2.4"/>
+        <path d="M42.5 48 L45 50.5 L50 45.5" stroke="url(#logoGrad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <h1 class="brand-title">Rename ZIP Studio</h1>
+        <p class="brand-subtitle">Mass Replace Text Inside ZIP Files</p>
+      </div>
+    </div>
+    <div class="badge-row">
+      <span class="badge"><span class="dot"></span>Client Side Processing</span>
+      <span class="badge"><span class="dot"></span>No Upload To Server</span>
+      <span class="badge"><span class="dot"></span>Fast Replace Engine</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============================= UPLOAD ============================= -->
+  <section>
+    <div class="section-head">
+      <h2 class="section-title"><span class="idx">01</span>Upload ZIP</h2>
+      <span class="section-hint">Drag & drop, atau klik untuk memilih file</span>
+    </div>
+    <div class="glass upload-card">
+      <div class="dropzone" id="dropzone">
+        <svg class="dz-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 6v22M24 28l-8-8M24 28l8-8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M10 30v6a4 4 0 0 0 4 4h20a4 4 0 0 0 4-4v-6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="dz-title">Drop file ZIP di sini</p>
+        <p class="dz-sub">atau klik untuk memilih dari perangkat kamu · .zip only</p>
+        <input type="file" id="fileInput" class="dz-input" accept=".zip,application/zip">
+      </div>
+
+      <div class="file-meta" id="fileMeta">
+        <div class="file-meta-top">
+          <span class="file-name" id="fmName">—</span>
+          <span class="file-status" id="fmStatus">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Ready
+          </span>
+        </div>
+        <div class="file-stats">
+          <div class="file-stat">Ukuran<b id="fmSize">—</b></div>
+          <div class="file-stat">Jumlah File<b id="fmCount">—</b></div>
+          <div class="file-stat">File Text<b id="fmTextCount">—</b></div>
+          <div class="file-stat">Folder<b id="fmFolders">—</b></div>
+        </div>
+        <div class="progress-track" id="loadProgress"><div class="progress-fill" id="loadProgressFill"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= TOOLBAR + PAIRS ============================= -->
+  <section>
+    <div class="section-head">
+      <h2 class="section-title"><span class="idx">02</span>Replace Pairs</h2>
+      <span class="section-hint">20 pasangan Before → After, diproses dalam satu kali baca file</span>
+    </div>
+
+    <div class="glass toolbar">
+      <button class="tool-btn" id="btnAddPair" data-tip="Fokus ke pair kosong berikutnya">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Tambah Pair
+      </button>
+      <button class="tool-btn" id="btnCompact" data-tip="Rapikan, hapus celah pair kosong">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Hapus Pair Kosong
+      </button>
+      <button class="tool-btn" id="btnClearAll" data-tip="Kosongkan semua pair">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M5 6h10M8 6V4.5A1.5 1.5 0 0 1 9.5 3h1A1.5 1.5 0 0 1 12 4.5V6m-6 0v9a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Clear Semua
+      </button>
+      <button class="tool-btn" id="btnImport" data-tip="Import pairs dari file .json">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M5 17h10M10 3v10m0 0l-4-4m4 4l4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Import JSON
+        <input type="file" id="importInput" accept="application/json,.json" class="hidden">
+      </button>
+      <button class="tool-btn" id="btnExport" data-tip="Export pairs ke file .json">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M5 3h10M10 17V7m0 0l-4 4m4-4l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Export JSON
+      </button>
+      <button class="tool-btn" id="btnSwap" data-tip="Tukar semua Before ↔ After">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M4 7h10l-3-3m3 3l-3 3M16 13H6l3 3m-3-3l3-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Swap Before ↔ After
+      </button>
+      <button class="tool-btn" id="btnDemo" data-tip="Isi contoh pairs untuk demo cepat">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M10 3l1.6 4.6L16 9l-4.4 1.4L10 15l-1.6-4.6L4 9l4.4-1.4L10 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        Fill Demo
+      </button>
+    </div>
+
+    <div class="glass pairs-card">
+      <div class="pairs-grid" id="pairsGrid"><!-- generated by JS --></div>
+    </div>
+  </section>
+
+  <!-- ============================= OPTIONS ============================= -->
+  <section>
+    <div class="section-head">
+      <h2 class="section-title"><span class="idx">03</span>Replace Options</h2>
+    </div>
+    <div class="glass options-card">
+      <div class="options-grid" id="optionsGrid"><!-- generated by JS --></div>
+    </div>
+  </section>
+
+  <!-- ============================= CODE CLEANUP ENGINE ============================= -->
+  <section>
+    <div class="section-head">
+      <h2 class="section-title"><span class="idx">04</span>Code Cleanup Engine</h2>
+      <span class="section-hint">Setiap toggle menjalankan engine nyata saat proses Rename — bukan sekadar UI</span>
+    </div>
+    <div class="glass options-card">
+      <div class="options-grid" id="cleanupGrid"><!-- generated by JS --></div>
+    </div>
+  </section>
+
+  <!-- ============================= PROCESS BUTTON ============================= -->
+  <div class="process-zone">
+    <button class="btn-process" id="btnProcess" disabled>
+      <svg class="icon-rocket" viewBox="0 0 20 20" fill="none"><path d="M10 2c2.5 2 4 5 4 8.5 0 1.5-.5 2.7-1 3.5l-3-1-3 1c-.5-.8-1-2-1-3.5C6 7 7.5 4 10 2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="10" cy="8" r="1.3" fill="currentColor"/><path d="M7.5 13l-1.8 3M12.5 13l1.8 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span class="spinner"></span>
+      <span class="label-text">Start Rename</span>
+    </button>
+  </div>
+
+  <!-- ============================= RESULTS ============================= -->
+  <section>
+    <div class="glass results-card" id="resultsCard">
+      <div class="section-head">
+        <h2 class="section-title"><span class="idx">05</span>Hasil Proses</h2>
+        <span class="section-hint" id="resultTime">—</span>
+      </div>
+      <div class="stats-grid" id="statsGrid"><!-- generated by JS --></div>
+    </div>
+  </section>
+
+  <!-- ============================= CHANGED FILES TABLE ============================= -->
+  <section>
+    <div class="glass table-card" id="tableCard">
+      <div class="section-head">
+        <h2 class="section-title"><span class="idx">06</span>Daftar File Berubah</h2>
+      </div>
+      <div class="table-controls">
+        <div class="search-box">
+          <svg viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.8"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <input type="text" id="tableSearch" placeholder="Cari nama file...">
+        </div>
+        <select class="select-sort" id="tableSort">
+          <option value="name-asc">Nama A-Z</option>
+          <option value="name-desc">Nama Z-A</option>
+          <option value="count-desc">Replace Terbanyak</option>
+          <option value="count-asc">Replace Tersedikit</option>
+          <option value="size-desc">Ukuran Terbesar</option>
+        </select>
+      </div>
+      <div class="file-table-wrap">
+        <table class="file-table">
+          <thead>
+            <tr><th>Nama File</th><th>Jumlah Replace</th><th>Ukuran</th><th>Status</th></tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= DOWNLOAD ============================= -->
+  <div class="download-zone">
+    <button class="btn-download hidden" id="btnDownload">
+      <svg viewBox="0 0 20 20" fill="none"><path d="M10 3v10m0 0l-3.5-3.5M10 13l3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 15.5v1A1.5 1.5 0 0 0 5.5 18h9a1.5 1.5 0 0 0 1.5-1.5v-1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      Download ZIP
+    </button>
+  </div>
+
+</main>
+
+<!-- ============================= FULLSCREEN PROGRESS OVERLAY ============================= -->
+<div class="overlay" id="overlay">
+  <div class="glass overlay-card">
+    <div class="overlay-ring">
+      <svg viewBox="0 0 60 60" fill="none">
+        <circle cx="30" cy="30" r="25" stroke="rgba(255,255,255,.08)" stroke-width="5"/>
+        <circle cx="30" cy="30" r="25" stroke="url(#logoGrad)" stroke-width="5" stroke-linecap="round" stroke-dasharray="90 300"/>
+      </svg>
+    </div>
+    <p class="overlay-status" id="overlayStatus">Reading ZIP</p>
+    <p class="overlay-sub" id="overlaySub">Menyiapkan proses...</p>
+    <div class="progress-track show"><div class="progress-fill" id="overlayFill"></div></div>
+    <p class="overlay-percent" id="overlayPercent">0%</p>
+  </div>
+</div>
+
+<!-- ============================= ERROR / CONFIRM MODAL ============================= -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="glass modal-box">
+    <div class="modal-icon" id="modalIcon">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 8v5M12 16.5h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.8"/></svg>
+    </div>
+    <h3 class="modal-title" id="modalTitle">Terjadi Kesalahan</h3>
+    <p class="modal-msg" id="modalMsg">Pesan error.</p>
+    <div class="modal-actions" id="modalActions">
+      <button class="btn-modal primary" id="modalOk">Mengerti</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= FOOTER ============================= -->
+<footer>
+  <div class="wrap">
+    <div class="footer-brand">Rename ZIP Studio</div>
+    <div class="footer-tags">
+      <span><svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Running 100% Client Side</span>
+      <span><svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.8"/></svg>Powered by JSZip</span>
+      <span><svg viewBox="0 0 20 20" fill="none"><rect x="4" y="8" width="12" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M7 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.8"/></svg>No Data Sent To Server</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ==========================================================================
+   RENAME ZIP STUDIO — CLIENT SIDE ENGINE
+   100% browser-side. No network calls. Uses JSZip (CDN) only.
+   ========================================================================== */
+(function(){
+  'use strict';
+
+  /* ------------------------------------------------------------------ *
+   * 1. CONSTANTS
+   * ------------------------------------------------------------------ */
+  const PAIR_COUNT = 20;
+  const PAIR_HISTORY_LIMIT = 100; // max undo/redo steps stored per individual pair
+  const STORAGE_KEY = 'renameZipStudio.pairs.v1';
+  const OPTIONS_KEY = 'renameZipStudio.options.v1';
+  const CLEANUP_KEY = 'renameZipStudio.cleanup.v1';
+
+  // Extensions treated as text by default (still verified against content sniffing)
+  const SUPPORTED_EXT = new Set([
+    'js','jsx','ts','tsx','html','htm','css','scss','less','json','txt','md',
+    'xml','yml','yaml','env','php','py','java','cpp','c','h','cs','kt','swift',
+    'go','rb','rs','sql','ini','cfg','conf','toml','properties','gradle','vue',
+    'svelte','mjs','cjs','sh','bash','bat','ps1','csv','tsv','graphql','http',
+    'lock','htaccess','lua'
+  ]);
+  // Filenames without a "normal" extension that should still be treated as text
+  const SUPPORTED_NAMES = new Set([
+    'dockerfile','.gitignore','.editorconfig','.env','license','readme','makefile',
+    '.npmrc','.babelrc','.eslintrc','.prettierrc','.dockerignore','.htaccess'
+  ]);
+  // Extensions that are always treated as binary and copied through untouched
+  const BINARY_EXT = new Set([
+    'png','jpg','jpeg','gif','webp','ico','bmp','tiff','tif','svgz','psd','ai',
+    'exe','dll','so','dylib','bin','dat','class','jar','wasm','node','pyc','pyo',
+    'o','obj','a','lib','ttf','woff','woff2','otf','eot',
+    'zip','rar','7z','gz','tar','bz2','xz','iso','img','dmg',
+    'mp3','mp4','wav','flac','ogg','mov','avi','mkv','webm','m4a',
+    'pdf','apk','ipa','db','sqlite','keystore','jks'
+  ]);
+
+  const OPTIONS_DEF = [
+    { id:'ignoreCase',  title:'Ignore Case',        desc:'Abaikan besar/kecil huruf saat mencocokkan', default:false },
+    { id:'wholeWord',   title:'Whole Word',          desc:'Hanya cocokkan kata utuh (\\b batas kata)',   default:false },
+    { id:'regexMode',   title:'Regex Mode',          desc:'Perlakukan Before sebagai regular expression', default:false },
+    { id:'multiLine',   title:'Multi Line',          desc:'Aktifkan flag "m" untuk anchor ^ $ per baris', default:false },
+    { id:'preserveEncoding', title:'Preserve Encoding', desc:'Deteksi UTF-8/UTF-16/ANSI otomatis, tulis ulang aman', default:true },
+    { id:'renameFileName', title:'Rename File Name', desc:'Terapkan Before → After juga ke nama file & folder', default:false },
+    { id:'autoSavePairs', title:'Auto Save', desc:'Simpan pairs, status, notes & history pair otomatis ke penyimpanan lokal', default:true },
+  ];
+
+  /* ------------------------------------------------------------------ *
+   * 1c. CODE CLEANUP ENGINE — TOGGLE DEFINITIONS
+   * Each toggle is wired to a real per-language comment-stripping engine
+   * (see section 10b, "CODE CLEANUP ENGINE"). Nothing here is cosmetic:
+   * when a toggle is OFF, that language's engine is never invoked at all
+   * for any file, so content is guaranteed byte-identical for that aspect.
+   * ------------------------------------------------------------------ */
+  const CLEANUP_OPTIONS_DEF = [
+    { id:'cleanupJsLine',      title:'Remove Single Line Comments (JS/TS)', desc:'Hapus // pada .js .jsx .ts .tsx .mjs .cjs — aman dari string, template literal & URL', default:false },
+    { id:'cleanupJsBlock',     title:'Remove Block Comments (JS/TS)',       desc:'Hapus /* ... */ pada .js .jsx .ts .tsx .mjs .cjs — aman dari string & template literal', default:false },
+    { id:'cleanupHtml',        title:'Remove HTML Comments',                desc:'Hapus <!-- --> pada .html .htm, struktur tag tidak diubah', default:false },
+    { id:'cleanupCss',         title:'Remove CSS / SCSS / LESS Comments',   desc:'Hapus /* */ dan // pada .css .scss .less, selector & property aman', default:false },
+    { id:'cleanupPhp',         title:'Remove PHP Comments',                 desc:'Hapus //, # dan /* */ di dalam blok <?php ?> — string PHP tidak disentuh', default:false },
+    { id:'cleanupPython',      title:'Remove Python Comments',              desc:'Hapus # pada .py — aman dari string & triple-quoted string', default:false },
+    { id:'cleanupShell',       title:'Remove Shell Comments',               desc:'Hapus # pada .sh/.bash — shebang #!/bin/bash tetap dipertahankan', default:false },
+    { id:'cleanupYaml',        title:'Remove YAML Comments',                desc:'Hapus # pada .yml/.yaml — aman dari string seperti text: "#abc"', default:false },
+    { id:'cleanupSql',         title:'Remove SQL Comments',                 desc:'Hapus -- dan /* */ pada .sql', default:false },
+    { id:'cleanupLua',         title:'Remove Lua Comments',                 desc:'Hapus -- dan --[[ ]] pada .lua, termasuk long bracket string', default:false },
+    { id:'cleanupIni',         title:'Remove INI / CONF Comments',          desc:'Hapus ; dan # pada .ini/.conf/.cfg', default:false },
+    { id:'cleanupDockerfile',  title:'Remove Dockerfile Comments',          desc:'Hapus # pada file Dockerfile', default:false },
+    { id:'cleanupProperties',  title:'Remove Properties Comments',          desc:'Hapus # dan ! pada .properties', default:false },
+    { id:'cleanupMarkdown',    title:'Remove Markdown Comments',            desc:'Hapus <!-- --> pada .md, isi Markdown lain tidak diubah', default:false },
+  ];
+
+  /* ------------------------------------------------------------------ *
+   * 1b. PAIR HELPERS (each pair owns its own independent undo/redo trail)
+   * ------------------------------------------------------------------ */
+  function padNum(i){ return String(i+1).padStart(2,'0'); }
+  function createEmptyPair(){
+    return {
+      before:'', after:'',
+      disabled:false, pinned:false, notes:'',
+      history:[{ before:'', after:'', ts:Date.now() }],
+      hIndex:0
+    };
+  }
+
+  /* ------------------------------------------------------------------ *
+   * 2. STATE
+   * ------------------------------------------------------------------ */
+  const state = {
+    zipFile:null,          // raw File object
+    zip:null,               // JSZip instance (loaded)
+    entries:[],              // [{name, isDir, isText}]
+    pairs:Array.from({length:PAIR_COUNT}, ()=> createEmptyPair()),
+    options:{},
+    cleanup:{},              // Code Cleanup Engine toggles, see CLEANUP_OPTIONS_DEF
+    lastResult:null,        // { changedFiles:[...], stats:{...}, blob }
+  };
+  OPTIONS_DEF.forEach(o=> state.options[o.id] = o.default);
+  CLEANUP_OPTIONS_DEF.forEach(o=> state.cleanup[o.id] = o.default);
+
+  /* ------------------------------------------------------------------ *
+   * 3. DOM SHORTCUTS
+   * ------------------------------------------------------------------ */
+  const $ = (sel)=>document.querySelector(sel);
+  const $$ = (sel)=>Array.from(document.querySelectorAll(sel));
+
+  const dropzone   = $('#dropzone');
+  const fileInput  = $('#fileInput');
+  const fileMeta   = $('#fileMeta');
+  const btnProcess = $('#btnProcess');
+  const overlay    = $('#overlay');
+  const resultsCard= $('#resultsCard');
+  const tableCard  = $('#tableCard');
+  const btnDownload= $('#btnDownload');
+
+  /* ------------------------------------------------------------------ *
+   * 4. TOAST SYSTEM
+   * ------------------------------------------------------------------ */
+  const ICONS = {
+    success:'<path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
+    info:'<circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.8"/><path d="M10 9v5M10 6.5h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+    error:'<circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.8"/><path d="M7 7l6 6M13 7l-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'
+  };
+  function showToast(type, title, msg, duration){
+    duration = duration || 3200;
+    const stack = $('#toastStack');
+    const el = document.createElement('div');
+    el.className = 'toast ' + type;
+    el.innerHTML = `
+      <svg class="t-icon" viewBox="0 0 20 20" fill="none">${ICONS[type]||ICONS.info}</svg>
+      <div class="t-text"><b>${escapeHtml(title)}</b>${msg? `<span>${escapeHtml(msg)}</span>`:''}</div>
+    `;
+    stack.appendChild(el);
+    setTimeout(()=>{
+      el.classList.add('out');
+      setTimeout(()=> el.remove(), 320);
+    }, duration);
+  }
+
+  /* ------------------------------------------------------------------ *
+   * 5. MODAL SYSTEM (replaces window.alert / confirm)
+   * ------------------------------------------------------------------ */
+  const modalBackdrop = $('#modalBackdrop');
+  function showModal({title, msg, html, warn, onOk, okLabel}){
+    $('#modalTitle').textContent = title;
+    if(html){ $('#modalMsg').innerHTML = html; } else { $('#modalMsg').textContent = msg; }
+    $('#modalIcon').classList.toggle('warn', !!warn);
+    const okBtn = $('#modalOk');
+    okBtn.textContent = okLabel || 'Mengerti';
+    modalBackdrop.classList.add('show');
+    const handler = ()=>{
+      modalBackdrop.classList.remove('show');
+      okBtn.removeEventListener('click', handler);
+      if(onOk) onOk();
+    };
+    okBtn.addEventListener('click', handler);
+  }
+  modalBackdrop.addEventListener('click', (e)=>{ if(e.target === modalBackdrop) modalBackdrop.classList.remove('show'); });
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  /* ------------------------------------------------------------------ *
+   * 6. RIPPLE + TOOLTIP ON TOOL BUTTONS
+   * ------------------------------------------------------------------ */
+  function attachRipple(btn){
+    btn.addEventListener('click', function(e){
+      const rect = btn.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      const size = Math.max(rect.width, rect.height);
+      ripple.className = 'ripple';
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+      ripple.style.top  = (e.clientY - rect.top - size/2) + 'px';
+      btn.appendChild(ripple);
+      setTimeout(()=> ripple.remove(), 600);
+    });
+  }
+  $$('.tool-btn').forEach(attachRipple);
+
+  /* ------------------------------------------------------------------ *
+   * 7. BUILD REPLACE PAIRS GRID
+   * ------------------------------------------------------------------ */
+  const pairsGrid = $('#pairsGrid');
+
+  // Small inline icon set used by the per-pair toolbar
+  const PAIR_ICONS = {
+    undo:   '<path d="M5 8h7a4 4 0 1 1 0 8h-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M8 5L5 8l3 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
+    redo:   '<path d="M15 8H8a4 4 0 1 0 0 8h2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M12 5l3 3-3 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
+    duplicate: '<rect x="7" y="7" width="9" height="9" rx="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M4.5 13V5.5A1.5 1.5 0 0 1 6 4h7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
+    pin:    '<circle cx="10" cy="7.3" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M10 10.3V17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+    pause:  '<rect x="6" y="5" width="3" height="10" rx="1" fill="currentColor"/><rect x="11" y="5" width="3" height="10" rx="1" fill="currentColor"/>',
+    play:   '<path d="M7 5l8 5-8 5V5z" fill="currentColor"/>',
+    trash:  '<path d="M5 6h10M8 6V4.5A1.5 1.5 0 0 1 9.5 3h1A1.5 1.5 0 0 1 12 4.5V6m-6 0v9a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+    up:     '<path d="M10 15V5M5 9l5-5 5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
+    down:   '<path d="M10 5v10M5 11l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
+    notes:  '<path d="M5 4h10v9l-3 3H5V4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 8h4M8 11h2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>',
+    history:'<circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M10 6.5V10l3 1.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>'
+  };
+  function iconBtn(action, icon, tip, extraClass){
+    return `<button type="button" class="pair-icon-btn${extraClass? ' '+extraClass:''}" data-action="${action}" data-tip="${tip}"><svg viewBox="0 0 20 20" fill="none">${icon}</svg></button>`;
+  }
+
+  function buildPairsGrid(){
+    pairsGrid.innerHTML = '';
+    for(let i=0;i<PAIR_COUNT;i++){
+      const num = padNum(i);
+      const block = document.createElement('div');
+      block.className = 'pair-block';
+      block.dataset.idx = i;
+      block.innerHTML = `
+        <div class="pair-row">
+          <div class="pair-num">${num}</div>
+          <div class="field" data-role="before-field">
+            <input type="text" data-idx="${i}" data-role="before" placeholder="Before ${num}" autocomplete="off" spellcheck="false">
+            <span class="char-count" data-count-for="before-${i}">0</span>
+          </div>
+          <div class="pair-arrow">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M3 10h12M10 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="field" data-role="after-field">
+            <input type="text" data-idx="${i}" data-role="after" placeholder="After ${num}" autocomplete="off" spellcheck="false">
+            <span class="char-count" data-count-for="after-${i}">0</span>
+          </div>
+        </div>
+        <div class="pair-toolbar">
+          ${iconBtn('undo', PAIR_ICONS.undo, 'Undo Pair')}
+          ${iconBtn('redo', PAIR_ICONS.redo, 'Redo Pair')}
+          ${iconBtn('duplicate', PAIR_ICONS.duplicate, 'Duplicate Pair')}
+          ${iconBtn('pin', PAIR_ICONS.pin, 'Pin Pair', 'pin-btn')}
+          ${iconBtn('disable', PAIR_ICONS.pause, 'Disable Pair', 'disable-btn')}
+          ${iconBtn('notes', PAIR_ICONS.notes, 'Notes', 'notes-btn')}
+          ${iconBtn('history', PAIR_ICONS.history, 'View History')}
+          ${iconBtn('up', PAIR_ICONS.up, 'Move Up')}
+          ${iconBtn('down', PAIR_ICONS.down, 'Move Down')}
+          ${iconBtn('delete', PAIR_ICONS.trash, 'Delete Pair', 'danger')}
+          <span class="pair-toolbar-spacer"></span>
+          <span class="pair-badges">
+            <span class="pair-badge pin">Pinned</span>
+            <span class="pair-badge off">Disabled</span>
+          </span>
+        </div>
+        <div class="pair-notes" data-role="notes-wrap">
+          <input type="text" data-idx="${i}" data-role="notes" placeholder="Catatan (opsional) — mis. Brand Lama, Versi Beta..." autocomplete="off">
+        </div>
+      `;
+      pairsGrid.appendChild(block);
+    }
+  }
+  buildPairsGrid();
+
+  function pairBlockEl(idx){ return pairsGrid.querySelector(`.pair-block[data-idx="${idx}"]`); }
+
+  // Re-render everything derived from state for a single pair: field values,
+  // toolbar button enabled/disabled states, badges, notes, pin ordering.
+  function renderPairRowState(idx){
+    const p = state.pairs[idx];
+    const block = pairBlockEl(idx);
+    if(!p || !block) return;
+
+    const beforeInput = block.querySelector('input[data-role="before"]');
+    const afterInput  = block.querySelector('input[data-role="after"]');
+    const notesInput  = block.querySelector('input[data-role="notes"]');
+    if(document.activeElement !== beforeInput) beforeInput.value = p.before;
+    if(document.activeElement !== afterInput) afterInput.value = p.after;
+    if(document.activeElement !== notesInput) notesInput.value = p.notes || '';
+    updateFieldVisuals(beforeInput);
+    updateFieldVisuals(afterInput);
+
+    block.classList.toggle('pinned', !!p.pinned);
+    block.classList.toggle('disabled', !!p.disabled);
+    block.style.order = p.pinned ? (i2order(idx) - 1000) : i2order(idx);
+
+    const notesWrap = block.querySelector('[data-role="notes-wrap"]');
+    notesWrap.classList.toggle('show', !!p.notes || notesWrap.classList.contains('force-open'));
+
+    const pinBtn = block.querySelector('.pin-btn');
+    pinBtn.classList.toggle('active', !!p.pinned);
+    pinBtn.dataset.tip = p.pinned ? 'Lepas Pin' : 'Pin Pair';
+
+    const disableBtn = block.querySelector('.disable-btn');
+    disableBtn.classList.toggle('on', !!p.disabled);
+    disableBtn.innerHTML = `<svg viewBox="0 0 20 20" fill="none">${p.disabled? PAIR_ICONS.play : PAIR_ICONS.pause}</svg>`;
+    disableBtn.dataset.tip = p.disabled ? 'Aktifkan Pair' : 'Disable Pair';
+
+    const undoBtn = block.querySelector('[data-action="undo"]');
+    const redoBtn = block.querySelector('[data-action="redo"]');
+    undoBtn.disabled = p.hIndex <= 0;
+    redoBtn.disabled = p.hIndex >= p.history.length - 1;
+  }
+  // Stable base order value per slot index (used as the non-pinned baseline)
+  function i2order(idx){ return idx; }
+
+  function refreshPairInputsFromState(){
+    state.pairs.forEach((p,i)=> renderPairRowState(i));
+    validateProcessButton();
+  }
+
+  function updateFieldVisuals(input){
+    const idx = input.dataset.idx, role = input.dataset.role;
+    const countEl = pairsGrid.querySelector(`[data-count-for="${role}-${idx}"]`);
+    if(countEl) countEl.textContent = input.value.length;
+    input.closest('.field').classList.toggle('has-value', input.value.length>0);
+  }
+
+  /* ---- Pair-level history: push / undo / redo / restore ---- */
+  function pushPairHistory(idx){
+    const p = state.pairs[idx];
+    const cur = p.history[p.hIndex];
+    if(cur && cur.before === p.before && cur.after === p.after) return; // nothing changed
+    p.history = p.history.slice(0, p.hIndex + 1); // drop redo branch on new edit
+    p.history.push({ before:p.before, after:p.after, ts:Date.now() });
+    if(p.history.length > PAIR_HISTORY_LIMIT) p.history.shift();
+    p.hIndex = p.history.length - 1;
+    persistPairs();
+  }
+  function applyPairSnapshot(idx, pos){
+    const p = state.pairs[idx];
+    const snap = p.history[pos];
+    if(!snap) return;
+    p.hIndex = pos;
+    p.before = snap.before;
+    p.after = snap.after;
+    renderPairRowState(idx);
+    validateProcessButton();
+    persistPairs();
+  }
+  function undoPair(idx){
+    const p = state.pairs[idx];
+    if(p.hIndex <= 0){ showToast('info','Tidak Ada Undo', `Pair ${padNum(idx)} sudah di riwayat paling awal`, 1800); return; }
+    applyPairSnapshot(idx, p.hIndex - 1);
+    showToast('info','Undo Pair', `Pair ${padNum(idx)} dikembalikan ke versi sebelumnya`, 1700);
+  }
+  function redoPair(idx){
+    const p = state.pairs[idx];
+    if(p.hIndex >= p.history.length - 1){ showToast('info','Tidak Ada Redo', `Pair ${padNum(idx)} sudah di riwayat paling akhir`, 1800); return; }
+    applyPairSnapshot(idx, p.hIndex + 1);
+    showToast('info','Redo Pair', `Pair ${padNum(idx)} dipulihkan ke versi berikutnya`, 1700);
+  }
+
+  function duplicatePair(idx){
+    const src = state.pairs[idx];
+    const targetIdx = state.pairs.findIndex((p,i)=> i!==idx && !p.before && !p.after);
+    if(targetIdx === -1){
+      showToast('error','Tidak Ada Slot Kosong','Semua 20 pasangan sudah terisi');
+      return;
+    }
+    state.pairs[targetIdx] = {
+      before: src.before, after: src.after,
+      disabled: src.disabled, pinned:false, notes: src.notes,
+      history:[{ before:src.before, after:src.after, ts:Date.now() }],
+      hIndex:0
+    };
+    refreshPairInputsFromState();
+    persistPairs();
+    showToast('success','Pair Diduplikasi', `Disalin ke slot ${padNum(targetIdx)}`, 1800);
+    const el = pairBlockEl(targetIdx);
+    if(el){
+      el.scrollIntoView({behavior:'smooth', block:'center'});
+      el.classList.add('flash');
+      setTimeout(()=> el.classList.remove('flash'), 1000);
+    }
+  }
+  function togglePinPair(idx){
+    const p = state.pairs[idx];
+    p.pinned = !p.pinned;
+    renderPairRowState(idx);
+    persistPairs();
+    showToast('info', p.pinned? 'Pair Dipin':'Pin Dilepas', `Pair ${padNum(idx)} ${p.pinned? 'akan selalu di atas':'kembali ke posisi normal'}`, 1700);
+  }
+  function toggleDisablePair(idx){
+    const p = state.pairs[idx];
+    p.disabled = !p.disabled;
+    renderPairRowState(idx);
+    validateProcessButton();
+    persistPairs();
+    showToast('info', p.disabled? 'Pair Dinonaktifkan':'Pair Diaktifkan', `Pair ${padNum(idx)} ${p.disabled? 'tidak ikut diproses saat Rename':'ikut diproses kembali'}`, 1900);
+  }
+  function deletePair(idx){
+    showModal({
+      title:'Hapus Pair?',
+      msg:`Isi pair ${padNum(idx)} beserta seluruh riwayatnya akan dikosongkan. Aksi ini tidak bisa dibatalkan.`,
+      warn:true,
+      okLabel:'Ya, Hapus',
+      onOk:()=>{
+        state.pairs[idx] = createEmptyPair();
+        refreshPairInputsFromState();
+        persistPairs();
+        showToast('success','Pair Dihapus', `Slot ${padNum(idx)} sudah kosong`);
+      }
+    });
+  }
+  function movePair(idx, dir){
+    const target = idx + dir;
+    if(target < 0 || target >= PAIR_COUNT) return;
+    const tmp = state.pairs[idx];
+    state.pairs[idx] = state.pairs[target];
+    state.pairs[target] = tmp;
+    refreshPairInputsFromState();
+    persistPairs();
+    showToast('info','Pair Dipindah', `Slot ${padNum(idx)} ↔ ${padNum(target)}`, 1400);
+  }
+  function toggleNotesOpen(idx){
+    const block = pairBlockEl(idx);
+    const wrap = block.querySelector('[data-role="notes-wrap"]');
+    const wasOpen = wrap.classList.contains('show');
+    wrap.classList.toggle('force-open', !wasOpen);
+    wrap.classList.toggle('show', !wasOpen);
+    if(!wasOpen){
+      const input = wrap.querySelector('input');
+      setTimeout(()=> input.focus(), 60);
+    }
+  }
+
+  function openPairHistoryModal(idx){
+    const p = state.pairs[idx];
+    const rows = p.history.map((h,pos)=>{
+      const isCurrent = pos === p.hIndex;
+      const beforeTxt = h.before ? escapeHtml(h.before) : '<span class="h-empty">kosong</span>';
+      const afterTxt  = h.after ? escapeHtml(h.after) : '<span class="h-empty">kosong</span>';
+      const time = new Date(h.ts).toLocaleString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit', day:'2-digit', month:'short' });
+      return `
+        <div class="pair-history-item${isCurrent? ' current':''}">
+          <div class="h-vals"><b>${beforeTxt}</b> → <b>${afterTxt}</b></div>
+          <div class="h-meta">
+            <span class="h-time">${time}</span>
+            <button type="button" data-restore-pos="${pos}" ${isCurrent? 'disabled':''}>${isCurrent? 'Saat Ini' : 'Pulihkan'}</button>
+          </div>
+        </div>
+      `;
+    }).reverse().join('');
+    const html = `
+      <p style="font-size:12.5px; color:var(--text-2); margin:0;">Riwayat perubahan Pair ${padNum(idx)} (${p.history.length} versi tersimpan)</p>
+      <div class="pair-history-list">${rows}</div>
+    `;
+    showModal({ title:`History Pair ${padNum(idx)}`, html, okLabel:'Tutup' });
+    $('#modalMsg').querySelectorAll('[data-restore-pos]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const pos = Number(btn.dataset.restorePos);
+        applyPairSnapshot(idx, pos);
+        modalBackdrop.classList.remove('show');
+        showToast('success','Riwayat Dipulihkan', `Pair ${padNum(idx)} dikembalikan ke versi terpilih`, 1900);
+      });
+    });
+  }
+
+  // Single delegated listener handles every toolbar icon button for every pair
+  pairsGrid.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.pair-icon-btn');
+    if(!btn) return;
+    const block = e.target.closest('.pair-block');
+    const idx = Number(block.dataset.idx);
+    const action = btn.dataset.action;
+    if(action === 'undo') undoPair(idx);
+    else if(action === 'redo') redoPair(idx);
+    else if(action === 'duplicate') duplicatePair(idx);
+    else if(action === 'pin') togglePinPair(idx);
+    else if(action === 'disable') toggleDisablePair(idx);
+    else if(action === 'delete') deletePair(idx);
+    else if(action === 'up') movePair(idx, -1);
+    else if(action === 'down') movePair(idx, 1);
+    else if(action === 'notes') toggleNotesOpen(idx);
+    else if(action === 'history') openPairHistoryModal(idx);
+  });
+
+  // Auto-trim + persist on input, supports unicode/emoji naturally (JS strings are UTF-16/UTF-8 safe)
+  pairsGrid.addEventListener('input', (e)=>{
+    const input = e.target;
+    if(!input.matches('input[data-role]')) return;
+    const idx = Number(input.dataset.idx), role = input.dataset.role;
+    if(role === 'notes'){
+      state.pairs[idx].notes = input.value;
+      persistPairs();
+      return;
+    }
+    state.pairs[idx][role] = input.value;
+    updateFieldVisuals(input);
+    validateProcessButton();
+    persistPairs();
+  });
+  pairsGrid.addEventListener('blur', (e)=>{
+    const input = e.target;
+    if(!input.matches('input[data-role]')) return;
+    const idx = Number(input.dataset.idx), role = input.dataset.role;
+    if(role === 'notes'){
+      const trimmed = input.value.trim();
+      if(trimmed !== input.value){ input.value = trimmed; }
+      state.pairs[idx].notes = trimmed;
+      persistPairs();
+      return;
+    }
+    const trimmed = input.value.trim();
+    if(trimmed !== input.value){
+      input.value = trimmed;
+      state.pairs[idx][role] = trimmed;
+      updateFieldVisuals(input);
+    }
+    // Commit point for this pair's undo/redo trail
+    pushPairHistory(idx);
+    renderPairRowState(idx);
+  }, true);
+
+  function activePairs(){
+    return state.pairs
+      .map((p,i)=>({ ...p, index:i }))
+      .filter(p=> p.before.length>0 && !p.disabled);
+  }
+
+  function validateProcessButton(){
+    const hasFile = !!state.zip;
+    const hasPairs = activePairs().length>0;
+    btnProcess.disabled = !(hasFile && hasPairs);
+  }
+
+  /* ------------------------------------------------------------------ *
+   * 8. TOOLBAR ACTIONS
+   * ------------------------------------------------------------------ */
+  $('#btnAddPair').addEventListener('click', ()=>{
+    const emptyIdx = state.pairs.findIndex(p=> !p.before && !p.after);
+    if(emptyIdx === -1){
+      showToast('info','Semua pair terisi','20 pasangan sudah digunakan semua');
+      return;
+    }
+    const input = pairsGrid.querySelector(`input[data-role="before"][data-idx="${emptyIdx}"]`);
+    input.scrollIntoView({behavior:'smooth', block:'center'});
+    input.focus();
+  });
+
+  $('#btnCompact').addEventListener('click', ()=>{
+    const nonEmpty = state.pairs.filter(p=> p.before || p.after);
+    const compacted = nonEmpty.concat(
+      Array.from({length: PAIR_COUNT - nonEmpty.length}, ()=> createEmptyPair())
+    );
+    state.pairs = compacted;
+    refreshPairInputsFromState();
+    persistPairs();
+    showToast('success','Pair Dirapikan','Celah kosong sudah dihapus');
+  });
+
+  $('#btnClearAll').addEventListener('click', ()=>{
+    showModal({
+      title:'Hapus Semua Pair?',
+      msg:'Seluruh 20 pasangan Before/After beserta riwayatnya akan dikosongkan. Aksi ini tidak bisa dibatalkan.',
+      warn:true,
+      okLabel:'Ya, Hapus',
+      onOk:()=>{
+        state.pairs = Array.from({length:PAIR_COUNT}, ()=> createEmptyPair());
+        refreshPairInputsFromState();
+        persistPairs();
+        showToast('success','Dibersihkan','Semua pair sudah kosong');
+      }
+    });
+  });
+
+  $('#btnSwap').addEventListener('click', ()=>{
+    state.pairs.forEach(p=>{ const nb = p.after, na = p.before; p.before = nb; p.after = na; });
+    state.pairs.forEach((p,i)=> pushPairHistory(i));
+    refreshPairInputsFromState();
+    persistPairs();
+    showToast('success','Swap Selesai','Before ↔ After sudah ditukar');
+  });
+
+  $('#btnDemo').addEventListener('click', ()=>{
+    const demo = [
+      ['CompanyOld','CompanyNew'], ['v1.0.0','v2.0.0'], ['localhost:3000','api.example.com'],
+      ['John Doe','Jane Smith'], ['TODO','DONE'], ['staging','production']
+    ];
+    let d = 0;
+    state.pairs.forEach(p=>{
+      if(!p.before && !p.after && d < demo.length){
+        const val = demo[d++]; p.before = val[0]; p.after = val[1];
+      }
+    });
+    state.pairs.forEach((p,i)=> pushPairHistory(i));
+    refreshPairInputsFromState();
+    persistPairs();
+    showToast('success','Demo Diisi','Contoh pair sudah ditambahkan ke slot kosong');
+  });
+
+  $('#btnExport').addEventListener('click', ()=>{
+    const data = state.pairs.filter(p=> p.before || p.after)
+      .map(p=> ({ before:p.before, after:p.after, notes:p.notes||'', disabled:!!p.disabled }));
+    if(data.length===0){
+      showToast('error','Tidak Ada Data','Isi minimal satu pair sebelum export');
+      return;
+    }
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'rename-zip-pairs.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    showToast('success','Export Success','File JSON pair berhasil diunduh');
+  });
+
+  $('#btnImport').addEventListener('click', ()=> $('#importInput').click());
+  $('#importInput').addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      try{
+        const parsed = JSON.parse(reader.result);
+        if(!Array.isArray(parsed)) throw new Error('Format harus berupa array');
+        const cleaned = parsed.slice(0, PAIR_COUNT).map(p=>{
+          const before = String(p.before ?? p.from ?? '');
+          const after = String(p.after ?? p.to ?? '');
+          return {
+            before, after,
+            disabled: !!p.disabled, pinned:false, notes: String(p.notes || ''),
+            history:[{ before, after, ts:Date.now() }], hIndex:0
+          };
+        });
+        while(cleaned.length < PAIR_COUNT) cleaned.push(createEmptyPair());
+        state.pairs = cleaned;
+        refreshPairInputsFromState();
+        persistPairs();
+        showToast('success','Import Success', `${parsed.length} pair dimuat dari JSON`);
+      }catch(err){
+        showModal({title:'Import Gagal', msg:'File JSON tidak valid: ' + err.message, warn:true});
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
+
+  function persistPairs(){
+    if(!state.options.autoSavePairs) return; // Auto Save off: keep everything in-memory only
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state.pairs)); }catch(e){ /* storage unavailable */ }
+  }
+  // Turns any raw stored pair (old {before,after} shape or new full shape) into a valid pair object
+  function normalizeStoredPair(p){
+    p = p || {};
+    const before = String(p.before || '');
+    const after = String(p.after || '');
+    let history = Array.isArray(p.history) && p.history.length
+      ? p.history.slice(-PAIR_HISTORY_LIMIT).map(h=> ({ before:String(h.before||''), after:String(h.after||''), ts:Number(h.ts)||Date.now() }))
+      : [{ before, after, ts:Date.now() }];
+    let hIndex = Number.isInteger(p.hIndex) && p.hIndex>=0 && p.hIndex<history.length ? p.hIndex : history.length-1;
+    return {
+      before, after,
+      disabled: !!p.disabled,
+      pinned: !!p.pinned,
+      notes: String(p.notes || ''),
+      history, hIndex
+    };
+  }
+  function restorePairs(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length){
+        const cleaned = parsed.slice(0, PAIR_COUNT).map(normalizeStoredPair);
+        while(cleaned.length < PAIR_COUNT) cleaned.push(createEmptyPair());
+        state.pairs = cleaned;
+      }
+    }catch(e){ /* ignore corrupt storage */ }
+  }
+
+  /* ------------------------------------------------------------------ *
+   * 9. OPTIONS TOGGLES
+   * ------------------------------------------------------------------ */
+  const optionsGrid = $('#optionsGrid');
+  function buildOptions(){
+    optionsGrid.innerHTML = OPTIONS_DEF.map(o=> `
+      <div class="option-item">
+        <div class="option-label"><b>${o.title}</b><span>${o.desc}</span></div>
+        <div class="switch">
+          <input type="checkbox" id="opt-${o.id}" ${state.options[o.id]?'checked':''}>
+          <label for="opt-${o.id}"></label>
+        </div>
+      </div>
+    `).join('');
+    OPTIONS_DEF.forEach(o=>{
+      $(`#opt-${o.id}`).addEventListener('change', (e)=>{
+        state.options[o.id] = e.target.checked;
+        persistOptions();
+        showToast('info','Settings Saved', o.title + (e.target.checked? ' diaktifkan':' dinonaktifkan'), 1800);
+      });
+    });
+  }
+  function persistOptions(){
+    try{ localStorage.setItem(OPTIONS_KEY, JSON.stringify(state.options)); }catch(e){}
+  }
+  function restoreOptions(){
+    try{
+      const raw = localStorage.getItem(OPTIONS_KEY);
+      if(!raw) return;
+      const parsed = JSON.parse(raw);
+      OPTIONS_DEF.forEach(o=>{ if(typeof parsed[o.id] === 'boolean') state.options[o.id] = parsed[o.id]; });
+    }catch(e){}
+  }
+
+  /* ------------------------------------------------------------------ *
+   * 9b. CODE CLEANUP ENGINE TOGGLES (real engines live in section 10b)
+   * ------------------------------------------------------------------ */
+  const cleanupGrid = $('#cleanupGrid');
+  function buildCleanupOptions(){
+    cleanupGrid.innerHTML = CLEANUP_OPTIONS_DEF.map(o=> `
+      <div class="option-item">
+        <div class="option-label"><b>${o.title}</b><span>${o.desc}</span></div>
+        <div class="switch">
+          <input type="checkbox" id="cln-${o.id}" ${state.cleanup[o.id]?'checked':''}>
+          <label for="cln-${o.id}"></label>
+        </div>
+      </div>
+    `).join('');
+    CLEANUP_OPTIONS_DEF.forEach(o=>{
+      $(`#cln-${o.id}`).addEventListener('change', (e)=>{
+        state.cleanup[o.id] = e.target.checked;
+        persistCleanup();
+        showToast('info','Cleanup Engine', o.title + (e.target.checked? ' diaktifkan':' dinonaktifkan'), 1800);
+      });
+    });
+  }
+  function persistCleanup(){
+    try{ localStorage.setItem(CLEANUP_KEY, JSON.stringify(state.cleanup)); }catch(e){}
+  }
+  function restoreCleanup(){
+    try{
+      const raw = localStorage.getItem(CLEANUP_KEY);
+      if(!raw) return;
+      const parsed = JSON.parse(raw);
+      CLEANUP_OPTIONS_DEF.forEach(o=>{ if(typeof parsed[o.id] === 'boolean') state.cleanup[o.id] = parsed[o.id]; });
+    }catch(e){}
+  }
+
+  /* ------------------------------------------------------------------ *
+   * 10. FILE UPLOAD (DRAG & DROP + PICKER)
+   * ------------------------------------------------------------------ */
+  dropzone.addEventListener('click', ()=> fileInput.click());
+  dropzone.addEventListener('dragover', (e)=>{ e.preventDefault(); dropzone.classList.add('dragover'); });
+  dropzone.addEventListener('dragleave', ()=> dropzone.classList.remove('dragover'));
+  dropzone.addEventListener('drop', (e)=>{
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if(file) handleZipSelected(file);
+  });
+  fileInput.addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(file) handleZipSelected(file);
+  });
+
+  function isZipFile(file){
+    return /\.zip$/i.test(file.name) || file.type === 'application/zip' || file.type === 'application/x-zip-compressed';
+  }
+
+  function formatBytes(bytes){
+    if(bytes === 0) return '0 B';
+    const units = ['B','KB','MB','GB'];
+    const i = Math.floor(Math.log(bytes)/Math.log(1024));
+    return (bytes/Math.pow(1024,i)).toFixed(i===0?0:2) + ' ' + units[i];
+  }
+
+  function getExtension(filename){
+    const base = filename.split('/').pop();
+    if(SUPPORTED_NAMES.has(base.toLowerCase())) return null; // handled by name match
+    const parts = base.split('.');
+    if(parts.length < 2) return '';
+    return parts.pop().toLowerCase();
+  }
+
+  // Fast pre-check using only name/extension. Used to decide whether a file is
+  // even a *candidate* for text processing before we spend time reading bytes.
+  function nameLooksLikeText(filename){
+    const base = filename.split('/').pop().toLowerCase();
+    if(SUPPORTED_NAMES.has(base)) return true;
+    const ext = getExtension(filename);
+    if(ext === null) return true;           // matched a known name already
+    if(BINARY_EXT.has(ext)) return false;   // explicitly binary, never sniff
+    if(SUPPORTED_EXT.has(ext)) return true; // known text extension
+    return null; // unknown extension -> decide purely from content sniffing
+  }
+
+  // Content sniffing: sample the first N bytes and estimate whether the data
+  // is printable text or binary. Mirrors the heuristic used by tools like
+  // `file`/git: presence of NUL bytes or a high ratio of control bytes -> binary.
+  function looksBinaryByContent(bytes){
+    const sampleLen = Math.min(bytes.length, 8192);
+    if(sampleLen === 0) return false; // empty file -> treat as text (nothing to corrupt)
+    let suspicious = 0;
+    for(let i=0;i<sampleLen;i++){
+      const b = bytes[i];
+      if(b === 0) return true; // NUL byte is a very strong binary signal
+      // allow common whitespace/control: tab(9) lf(10) cr(13) and printable ascii/utf8 continuation bytes
+      if(b < 8 || (b > 13 && b < 32) || b === 127){
+        suspicious++;
+      }
+    }
+    return (suspicious / sampleLen) > 0.15;
+  }
+
+  // A BOM is an unambiguous "this is text" signal. UTF-16 text legitimately
+  // contains a NUL byte in every other position (e.g. "A" -> 0x41 0x00), which
+  // would otherwise trip the binary heuristic below, so we must check for a
+  // BOM *before* sniffing raw byte patterns.
+  function hasTextBOM(bytes){
+    if(bytes.length >= 3 && bytes[0]===0xEF && bytes[1]===0xBB && bytes[2]===0xBF) return true; // UTF-8 BOM
+    if(bytes.length >= 2 && bytes[0]===0xFF && bytes[1]===0xFE) return true; // UTF-16 LE BOM
+    if(bytes.length >= 2 && bytes[0]===0xFE && bytes[1]===0xFF) return true; // UTF-16 BE BOM
+    return false;
+  }
+
+  // Final decision combining extension/name hints with content sniffing, as
+  // requested: "extension + nama file + isi file", not extension alone.
+  function isSupportedTextFile(filename, bytes){
+    const nameHint = nameLooksLikeText(filename);
+    if(nameHint === false) return false; // known binary extension, skip immediately
+    if(!bytes || bytes.length === 0) return nameHint !== false; // can't sniff, trust the name hint (or allow if unknown+empty)
+    if(hasTextBOM(bytes)) return true; // BOM overrides the null-byte heuristic (UTF-16 legitimately has NULs)
+    const binaryByContent = looksBinaryByContent(bytes);
+    if(binaryByContent) return false;
+    if(nameHint === true) return true;
+    // unknown extension but content looks like printable text -> support it too
+    return true;
+  }
+
+  /* -------------------- Multi-encoding decode / encode -------------------- *
+   * Priority: UTF-8 (with/without BOM) -> UTF-16LE -> UTF-16BE -> Windows-1252
+   * -> ISO-8859-1 (last resort, never fails since it maps every byte 1:1).
+   * -------------------------------------------------------------------- */
+  function decodeBytes(bytes){
+    // UTF-8 BOM
+    if(bytes.length >= 3 && bytes[0] === 0xEF && bytes[1] === 0xBB && bytes[2] === 0xBF){
+      try{
+        return { text: new TextDecoder('utf-8', {fatal:true}).decode(bytes.subarray(3)), encoding:'utf-8-bom' };
+      }catch(e){ /* fall through */ }
+    }
+    // UTF-16 LE BOM
+    if(bytes.length >= 2 && bytes[0] === 0xFF && bytes[1] === 0xFE){
+      try{
+        return { text: new TextDecoder('utf-16le', {fatal:true}).decode(bytes.subarray(2)), encoding:'utf-16le' };
+      }catch(e){ /* fall through */ }
+    }
+    // UTF-16 BE BOM
+    if(bytes.length >= 2 && bytes[0] === 0xFE && bytes[1] === 0xFF){
+      try{
+        return { text: new TextDecoder('utf-16be', {fatal:true}).decode(bytes.subarray(2)), encoding:'utf-16be' };
+      }catch(e){ /* fall through */ }
+    }
+    // Plain UTF-8 (strict) - covers the vast majority of source/config files
+    try{
+      return { text: new TextDecoder('utf-8', {fatal:true}).decode(bytes), encoding:'utf-8' };
+    }catch(e){ /* fall through to legacy single-byte encodings */ }
+    // Windows-1252 (superset of Latin-1, common on legacy Windows text files)
+    try{
+      return { text: new TextDecoder('windows-1252', {fatal:true}).decode(bytes), encoding:'windows-1252' };
+    }catch(e){ /* fall through */ }
+    // ISO-8859-1 always succeeds (maps every byte 0x00-0xFF to a code point)
+    return { text: new TextDecoder('iso-8859-1').decode(bytes), encoding:'iso-8859-1' };
+  }
+
+  // Encode text back to bytes for writing into the new ZIP. We standardize on
+  // UTF-8 output (restoring the BOM if the source file had one) since that is
+  // the only encoding TextEncoder can produce and it keeps JS/HTML/PHP/JSON/
+  // CSS/TS/MD/XML/YAML/ENV files valid and portable.
+  function encodeText(text, sourceEncoding){
+    const encoder = new TextEncoder(); // always UTF-8
+    const body = encoder.encode(text);
+    if(sourceEncoding === 'utf-8-bom'){
+      const withBom = new Uint8Array(body.length + 3);
+      withBom.set([0xEF,0xBB,0xBF], 0);
+      withBom.set(body, 3);
+      return withBom;
+    }
+    return body;
+  }
+
+  async function handleZipSelected(file){
+    if(!isZipFile(file)){
+      showModal({ title:'File Tidak Valid', msg:'File yang kamu pilih bukan file .zip. Silakan pilih ulang file ZIP yang valid.', warn:true });
+      return;
+    }
+
+    dropzone.classList.add('has-file');
+    fileMeta.classList.add('show');
+    $('#loadProgress').classList.add('show');
+    $('#fmName').textContent = file.name;
+    $('#fmSize').textContent = formatBytes(file.size);
+    $('#fmCount').textContent = '…';
+    $('#fmTextCount').textContent = '…';
+    $('#fmFolders').textContent = '…';
+    $('#fmStatus').innerHTML = '<svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/></svg> Loading';
+    animateFill('#loadProgressFill', 30);
+
+    try{
+      const zip = await JSZip.loadAsync(file);
+      animateFill('#loadProgressFill', 75);
+
+      const names = Object.keys(zip.files);
+      if(names.length === 0){
+        throw new Error('ZIP kosong, tidak ada file di dalamnya.');
+      }
+
+      let folderCount = 0, fileCount = 0, textCount = 0;
+      const entries = [];
+      names.forEach(name=>{
+        const entry = zip.files[name];
+        if(entry.dir){ folderCount++; return; }
+        fileCount++;
+        // Cheap estimate for the upload summary (name/extension only) so we
+        // don't have to decompress every entry just to show a count. The
+        // real per-file decision (name + content sniff) happens during the
+        // actual replace pass in runReplaceProcess().
+        const nameHint = nameLooksLikeText(name);
+        const isText = nameHint !== false; // unknown extensions are counted optimistically
+        if(isText) textCount++;
+        entries.push({ name, isText });
+      });
+
+      state.zipFile = file;
+      state.zip = zip;
+      state.entries = entries;
+
+      $('#fmCount').textContent = fileCount;
+      $('#fmTextCount').textContent = textCount;
+      $('#fmFolders').textContent = folderCount;
+      $('#fmStatus').innerHTML = '<svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Ready';
+
+      animateFill('#loadProgressFill', 100);
+      setTimeout(()=> $('#loadProgress').classList.remove('show'), 700);
+
+      // reset any previous result when a new zip is loaded
+      hideResults();
+      validateProcessButton();
+      showToast('success','ZIP Loaded', `${fileCount} file ditemukan (${textCount} file text)`);
+    }catch(err){
+      dropzone.classList.remove('has-file');
+      fileMeta.classList.remove('show');
+      state.zip = null; state.zipFile = null;
+      validateProcessButton();
+      showModal({ title:'ZIP Rusak / Gagal Dibaca', msg:'Terjadi kesalahan saat membaca ZIP: ' + err.message, warn:true });
+    }
+  }
+
+  function animateFill(selector, pct){
+    const el = $(selector);
+    if(el) el.style.width = pct + '%';
+  }
+
+  /* ------------------------------------------------------------------ *
+   * 10b. CODE CLEANUP ENGINE
+   * Real per-language state-machine comment strippers. These are NOT regex
+   * one-liners: each walks the source character by character tracking
+   * string / template-literal / char-literal / escape-sequence state so
+   * that "//" or "#" or "--" etc. found *inside* a string, URL, or literal
+   * is never touched — only genuine comments are removed. Every function
+   * below returns { text, count } where count is the number of comments
+   * actually stripped, used to build the report stats.
+   * ------------------------------------------------------------------ */
+
+  // ---- JavaScript / TypeScript (and JSX/TSX/MJS/CJS reuse the same rules) ----
+  // Handles: "..." strings, '...' strings, `...` template literals (with
+  // nested ${ } interpolation), regex literals (so "//" inside /https:\/\//
+  // is never mistaken for a comment), // line comments, /* */ block
+  // comments. Division vs regex-literal ambiguity is resolved with the
+  // standard heuristic: a "/" starts a regex unless the previous
+  // significant token is an identifier/number/")"/"]"/quote (i.e. the end
+  // of a value expression), in which case it's division.
+  function stripJsTsComments(code, allowLine, allowBlock){
+    let i = 0;
+    const n = code.length;
+    let out = '';
+    let count = 0;
+    const REGEX_PRECEDERS = new Set(['return','typeof','instanceof','in','of','new','delete','void','throw','case','do','else','yield','await']);
+
+    function lastSignificantChar(){
+      for(let k = out.length - 1; k >= 0; k--){
+        const c = out[k];
+        if(c === ' ' || c === '\t' || c === '\n' || c === '\r') continue;
+        return c;
+      }
+      return '';
+    }
+    function lastWord(){
+      let k = out.length - 1;
+      while(k >= 0 && /\s/.test(out[k])) k--;
+      const end = k + 1;
+      while(k >= 0 && /[A-Za-z0-9_$]/.test(out[k])) k--;
+      return out.slice(k + 1, end);
+    }
+    function regexCanStart(){
+      const lastChar = lastSignificantChar();
+      if(lastChar === '') return true; // start of file
+      if('([{,;:!&|?=+-*%^~<>'.includes(lastChar)) return true;
+      if(/[A-Za-z0-9_$]/.test(lastChar)) return REGEX_PRECEDERS.has(lastWord());
+      return false; // ends a value (ident, number, ) ] } or quote) -> division
+    }
+    function consumeQuoted(q){
+      out += q; i++;
+      while(i < n){
+        const ch = code[i];
+        out += ch; i++;
+        if(ch === '\\' && i < n){ out += code[i]; i++; continue; }
+        if(ch === q) break;
+      }
+    }
+    function consumeTemplate(){
+      out += '`'; i++;
+      let depth = 0, inExpr = false;
+      while(i < n){
+        const ch = code[i];
+        if(!inExpr){
+          if(ch === '\\'){ out += ch; i++; if(i < n){ out += code[i]; i++; } continue; }
+          if(ch === '`'){ out += ch; i++; break; }
+          if(ch === '$' && code[i+1] === '{'){ out += '${'; i += 2; inExpr = true; depth = 1; continue; }
+          out += ch; i++;
+          continue;
+        }
+        // inside ${ ... } interpolation: comments/strings here are still real code
+        if(ch === '{'){ depth++; out += ch; i++; continue; }
+        if(ch === '}'){ depth--; out += ch; i++; if(depth === 0) inExpr = false; continue; }
+        if(allowLine && ch === '/' && code[i+1] === '/'){
+          let j = i + 2; while(j < n && code[j] !== '\n') j++;
+          count++; i = j; continue;
+        }
+        if(allowBlock && ch === '/' && code[i+1] === '*'){
+          let j = i + 2; while(j < n && !(code[j] === '*' && code[j+1] === '/')) j++;
+          j = Math.min(j + 2, n); count++; i = j; continue;
+        }
+        if(ch === '"' || ch === "'" || ch === '`'){ consumeQuotedInline(ch); continue; }
+        out += ch; i++;
+      }
+    }
+    function consumeQuotedInline(q){
+      out += q; i++;
+      while(i < n){
+        const ch = code[i];
+        out += ch; i++;
+        if(ch === '\\' && i < n){ out += code[i]; i++; continue; }
+        if(ch === q) break;
+      }
+    }
+
+    while(i < n){
+      const c = code[i], c2 = code[i+1];
+      if(allowLine && c === '/' && c2 === '/'){
+        let j = i + 2; while(j < n && code[j] !== '\n') j++;
+        count++; i = j; continue;
+      }
+      if(allowBlock && c === '/' && c2 === '*'){
+        let j = i + 2; while(j < n && !(code[j] === '*' && code[j+1] === '/')) j++;
+        j = Math.min(j + 2, n); count++; i = j; continue;
+      }
+      if(c === '"' || c === "'"){ consumeQuoted(c); continue; }
+      if(c === '`'){ consumeTemplate(); continue; }
+      if(c === '/' && regexCanStart()){
+        let j = i + 1, inClass = false, valid = false, safe = true;
+        while(j < n){
+          const ch = code[j];
+          if(ch === '\\'){ j += 2; continue; }
+          if(ch === '\n'){ safe = false; break; }
+          if(ch === '[') inClass = true;
+          else if(ch === ']') inClass = false;
+          else if(ch === '/' && !inClass){ valid = true; j++; break; }
+          j++;
+        }
+        if(valid && safe){
+          while(j < n && /[a-z]/i.test(code[j])) j++;
+          out += code.slice(i, j); i = j; continue;
+        }
+      }
+      out += c; i++;
+    }
+    return { text: out, count };
+  }
+
+  // ---- CSS / SCSS / LESS ----
+  function stripCssComments(code){
+    let i = 0, n = code.length, out = '', count = 0;
+    while(i < n){
+      const c = code[i], c2 = code[i+1];
+      if(c === '/' && c2 === '*'){
+        let j = i + 2; while(j < n && !(code[j] === '*' && code[j+1] === '/')) j++;
+        j = Math.min(j + 2, n); count++; i = j; continue;
+      }
+      if(c === '/' && c2 === '/'){ // SCSS/LESS line comments
+        let j = i + 2; while(j < n && code[j] !== '\n') j++;
+        count++; i = j; continue;
+      }
+      if(c === '"' || c === "'"){
+        out += c; i++;
+        while(i < n){
+          const ch = code[i]; out += ch; i++;
+          if(ch === '\\' && i < n){ out += code[i]; i++; continue; }
+          if(ch === c) break;
+        }
+        continue;
+      }
+      out += c; i++;
+    }
+    return { text: out, count };
+  }
+
+  // ---- PHP ---- only strips comment syntax while inside <?php / <?= / <? ... ?>
+  // blocks, so plain HTML markup around PHP is never touched.
+  function stripPhpComments(code){
+    let i = 0, n = code.length, out = '', count = 0, inPhp = false;
+    while(i < n){
+      if(!inPhp){
+        const idx = code.indexOf('<?', i);
+        if(idx === -1){ out += code.slice(i); break; }
+        out += code.slice(i, idx);
+        if(code.substr(idx, 5).toLowerCase() === '<?php'){ out += code.substr(idx, 5); i = idx + 5; }
+        else if(code.substr(idx, 3) === '<?='){ out += code.substr(idx, 3); i = idx + 3; }
+        else { out += '<?'; i = idx + 2; }
+        inPhp = true;
+        continue;
+      }
+      const c = code[i], c2 = code[i+1];
+      if(c === '?' && c2 === '>'){ out += '?>'; i += 2; inPhp = false; continue; }
+      if(c === '/' && c2 === '/'){
+        let j = i + 2; while(j < n && code[j] !== '\n' && !(code[j] === '?' && code[j+1] === '>')) j++;
+        count++; i = j; continue;
+      }
+      if(c === '#' && c2 !== '['){ // "#[" is a PHP8 attribute, not a comment
+        let j = i + 1; while(j < n && code[j] !== '\n' && !(code[j] === '?' && code[j+1] === '>')) j++;
+        count++; i = j; continue;
+      }
+      if(c === '/' && c2 === '*'){
+        let j = i + 2; while(j < n && !(code[j] === '*' && code[j+1] === '/')) j++;
+        j = Math.min(j + 2, n); count++; i = j; continue;
+      }
+      if(c === '"'){
+        out += c; i++;
+        while(i < n){
+          const ch = code[i]; out += ch; i++;
+          if(ch === '\\' && i < n){ out += code[i]; i++; continue; }
+          if(ch === '"') break;
+        }
+        continue;
+      }
+      if(c === "'"){
+        out += c; i++;
+        while(i < n){
+          const ch = code[i];
+          if(ch === '\\' && (code[i+1] === "'" || code[i+1] === '\\')){ out += ch + code[i+1]; i += 2; continue; }
+          out += ch; i++;
+          if(ch === "'") break;
+        }
+        continue;
+      }
+      out += c; i++;
+    }
+    return { text: out, count };
+  }
+
+  // ---- HTML / Markdown (both only ever use <!-- --> comment syntax) ----
+  function stripHtmlLikeComments(code){
+    let count = 0;
+    const text = code.replace(/<!--[\s\S]*?-->/g, ()=>{ count++; return ''; });
+    return { text, count };
+  }
+
+  // ---- Python ---- aware of '/" strings AND '''/""" triple-quoted strings.
+  function stripPythonComments(code){
+    let i = 0, n = code.length, out = '', count = 0;
+    while(i < n){
+      const c = code[i];
+      if((c === '"' || c === "'") && code[i+1] === c && code[i+2] === c){
+        const q = c + c + c;
+        const closeIdx = code.indexOf(q, i + 3);
+        const end = closeIdx === -1 ? n : closeIdx + 3;
+        out += code.slice(i, end); i = end; continue;
+      }
+      if(c === '"' || c === "'"){
+        const q = c; out += c; i++;
+        while(i < n){
+          const ch = code[i]; out += ch; i++;
+          if(ch === '\\' && i < n){ out += code[i]; i++; continue; }
+          if(ch === q) break;
+          if(ch === '\n') break; // unterminated on one line, bail out safely
+        }
+        continue;
+      }
+      if(c === '#'){
+        let j = i + 1; while(j < n && code[j] !== '\n') j++;
+        count++; i = j; continue;
+      }
+      out += c; i++;
+    }
+    return { text: out, count };
+  }
+
+  // ---- YAML ---- '#' only starts a comment at line-start or when preceded
+  // by whitespace (per the YAML spec), and is otherwise treated as literal
+  // text so `text: "#abc"` is left untouched.
+  function stripYamlComments(code){
+    let i = 0, n = code.length, out = '', count = 0, atLineStart = true;
+    while(i < n){
+      const c = code[i];
+      if(c === '\n'){ out += c; i++; atLineStart = true; continue; }
+      if(c === ' ' || c === '\t'){ out += c; i++; continue; }
+      if(c === "'"){
+        out += c; i++; atLineStart = false;
+        while(i < n){
+          const ch = code[i];
+          if(ch === "'"){
+            if(code[i+1] === "'"){ out += "''"; i += 2; continue; }
+            out += ch; i++; break;
+          }
+          out += ch; i++;
+        }
+        continue;
+      }
+      if(c === '"'){
+        out += c; i++; atLineStart = false;
+        while(i < n){
+          const ch = code[i]; out += ch; i++;
+          if(ch === '\\' && i < n){ out += code[i]; i++; continue; }
+          if(ch === '"') break;
+        }
+        continue;
+      }
+      if(c === '#'){
+        const prevChar = out.length ? out[out.length-1] : '\n';
+        if(atLineStart || prevChar === ' ' || prevChar === '\t'){
+          let j = i + 1; while(j < n && code[j] !== '\n') j++;
+          count++; i = j; continue;
+        }
+      }
+      out += c; i++; atLineStart = false;
+    }
+    return { text: out, count };
+  }
+
+  // ---- Shell (sh/bash) ---- preserves the shebang line untouched, and only
+  // treats '#' as a comment at a word boundary (start of line, or preceded
+  // by whitespace/;|(&), so `${#arr[@]}` and `$#` are left alone.
+  function stripShellComments(code){
+    let i = 0, n = code.length, out = '', count = 0;
+    if(code.startsWith('#!')){
+      let j = 0; while(j < n && code[j] !== '\n') j++;
+      out += code.slice(0, j); i = j;
+    }
+    let atLineStart = true;
+    while(i < n){
+      const c = code[i];
+      if(c === '\\' && i + 1 < n){ out += c + code[i+1]; i += 2; atLineStart = false; continue; }
+      if(c === '\n'){ out += c; i++; atLineStart = true; continue; }
+      if(c === ' ' || c === '\t'){ out += c; i++; continue; }
+      if(c === "'"){
+        out += c; i++; atLineStart = false;
+        while(i < n){ const ch = code[i]; out += ch; i++; if(ch === "'") break; }
+        continue;
+      }
+      if(c === '"'){
+        out += c; i++; atLineStart = false;
+        while(i < n){
+          const ch = code[i]; out += ch; i++;
+          if(ch === '\\' && i < n){ out += code[i]; i++; continue; }
+          if(ch === '"') break;
+        }
+        continue;
+      }
+      if(c === '#'){
+        const prevChar = out.length ? out[out.length-1] : '\n';
+        const boundaryOk = atLineStart || ' \t;|(&\n'.includes(prevChar);
+        if(boundaryOk){
+          let j = i + 1; while(j < n && code[j] !== '\n') j++;
+          count++; i = j; continue;
+        }
+      }
+      out += c; i++; atLineStart = false;
+    }
+    return { text: out, count };
+  }
+
+  // ---- SQL ---- '--' line comments, /* */ block comments, '...' strings
+  // that use the standard doubled-quote escape ('it''s').
+  function stripSqlComments(code){
+    let i = 0, n = code.length, out = '', count = 0;
+    while(i < n){
+      const c = code[i], c2 = code[i+1];
+      if(c === '-' && c2 === '-'){
+        let j = i + 2; while(j < n && code[j] !== '\n') j++;
+        count++; i = j; continue;
+      }
+      if(c === '/' && c2 === '*'){
+        let j = i + 2; while(j < n && !(code[j] === '*' && code[j+1] === '/')) j++;
+        j = Math.min(j + 2, n); count++; i = j; continue;
+      }
+      if(c === "'" || c === '"'){
+        const q = c; out += c; i++;
+        while(i < n){
+          const ch = code[i];
+          if(ch === q){
+            if(code[i+1] === q){ out += q + q; i += 2; continue; }
+            out += q; i++; break;
+          }
+          out += ch; i++;
+        }
+        continue;
+      }
+      out += c; i++;
+    }
+    return { text: out, count };
+  }
+
+  // ---- Lua ---- '--' line comments, '--[[ ]]' / '--[=[ ]=]' long comments,
+  // and long-bracket strings [[ ]]/[=[ ]=] are preserved verbatim.
+  function stripLuaComments(code){
+    function matchLongBracketOpen(str, idx){
+      let j = idx + 1, eq = 0;
+      while(str[j] === '='){ eq++; j++; }
+      if(str[j] === '[') return { level: eq, end: j + 1 };
+      return null;
+    }
+    function findLongBracketClose(str, start, level){
+      const closer = ']' + '='.repeat(level) + ']';
+      const idx = str.indexOf(closer, start);
+      return idx === -1 ? str.length : idx + closer.length;
+    }
+    let i = 0, n = code.length, out = '', count = 0;
+    while(i < n){
+      const c = code[i], c2 = code[i+1];
+      if(c === '-' && c2 === '-'){
+        if(code[i+2] === '['){
+          const open = matchLongBracketOpen(code, i + 2);
+          if(open){ const end = findLongBracketClose(code, open.end, open.level); count++; i = end; continue; }
+        }
+        let j = i + 2; while(j < n && code[j] !== '\n') j++;
+        count++; i = j; continue;
+      }
+      if(c === '['){
+        const open = matchLongBracketOpen(code, i);
+        if(open){ const end = findLongBracketClose(code, open.end, open.level); out += code.slice(i, end); i = end; continue; }
+      }
+      if(c === "'" || c === '"'){
+        const q = c; out += c; i++;
+        while(i < n){
+          const ch = code[i]; out += ch; i++;
+          if(ch === '\\' && i < n){ out += code[i]; i++; continue; }
+          if(ch === q) break;
+        }
+        continue;
+      }
+      out += c; i++;
+    }
+    return { text: out, count };
+  }
+
+  // ---- Line-start-only comments: INI/CONF (;, #), Dockerfile (#) and
+  // Properties (#, !). None of these languages support inline (mid-line)
+  // comments, so a comment is only recognised when it is the first
+  // non-whitespace token of a physical line — this can never corrupt a
+  // value that merely contains one of these characters mid-string.
+  function stripLineStartComments(code, markers){
+    let count = 0;
+    const outLines = code.split('\n').map(line=>{
+      const trimmed = line.replace(/^[ \t]*/, '');
+      if(markers.some(m=> trimmed.startsWith(m))){ count++; return ''; }
+      return line;
+    });
+    return { text: outLines.join('\n'), count };
+  }
+
+  // ---- Dispatcher: decide the language of a file purely from its name,
+  // reusing the exact same extension/name rules as the rest of the app,
+  // then run only the engine(s) whose toggle is currently ON. ----
+  function getCleanupLang(filename){
+    const base = filename.split('/').pop();
+    const baseLower = base.toLowerCase();
+    if(baseLower === 'dockerfile' || baseLower.startsWith('dockerfile.')) return 'dockerfile';
+    const ext = getExtension(filename);
+    if(ext === null || ext === '') return null;
+    switch(ext){
+      case 'js': case 'jsx': case 'mjs': case 'cjs': case 'ts': case 'tsx': return 'js';
+      case 'html': case 'htm': return 'html';
+      case 'css': case 'scss': case 'less': return 'css';
+      case 'php': return 'php';
+      case 'py': return 'python';
+      case 'sh': case 'bash': return 'shell';
+      case 'yml': case 'yaml': return 'yaml';
+      case 'sql': return 'sql';
+      case 'lua': return 'lua';
+      case 'ini': case 'conf': case 'cfg': return 'ini';
+      case 'properties': return 'properties';
+      case 'md': return 'markdown';
+      default: return null;
+    }
+  }
+
+  // Returns true if at least one cleanup toggle is active, so the whole
+  // per-file cleanup step can be skipped entirely (zero overhead) when the
+  // feature isn't being used.
+  function isAnyCleanupActive(cleanup){
+    return CLEANUP_OPTIONS_DEF.some(o=> !!cleanup[o.id]);
+  }
+
+  // Runs the correct engine for a given file. If its toggle (or both JS
+  // toggles) are OFF, the text is returned completely unchanged.
+  function runCodeCleanup(text, filename, cleanup){
+    const lang = getCleanupLang(filename);
+    const removed = {};
+    if(!lang) return { text, removed };
+    let out = text;
+    if(lang === 'js'){
+      const allowLine = !!cleanup.cleanupJsLine, allowBlock = !!cleanup.cleanupJsBlock;
+      if(allowLine || allowBlock){
+        const r = stripJsTsComments(out, allowLine, allowBlock);
+        out = r.text; removed.js = r.count;
+      }
+    } else if(lang === 'html' && cleanup.cleanupHtml){
+      const r = stripHtmlLikeComments(out); out = r.text; removed.html = r.count;
+    } else if(lang === 'css' && cleanup.cleanupCss){
+      const r = stripCssComments(out); out = r.text; removed.css = r.count;
+    } else if(lang === 'php' && cleanup.cleanupPhp){
+      const r = stripPhpComments(out); out = r.text; removed.php = r.count;
+    } else if(lang === 'python' && cleanup.cleanupPython){
+      const r = stripPythonComments(out); out = r.text; removed.python = r.count;
+    } else if(lang === 'shell' && cleanup.cleanupShell){
+      const r = stripShellComments(out); out = r.text; removed.shell = r.count;
+    } else if(lang === 'yaml' && cleanup.cleanupYaml){
+      const r = stripYamlComments(out); out = r.text; removed.yaml = r.count;
+    } else if(lang === 'sql' && cleanup.cleanupSql){
+      const r = stripSqlComments(out); out = r.text; removed.sql = r.count;
+    } else if(lang === 'lua' && cleanup.cleanupLua){
+      const r = stripLuaComments(out); out = r.text; removed.lua = r.count;
+    } else if(lang === 'ini' && cleanup.cleanupIni){
+      const r = stripLineStartComments(out, [';','#']); out = r.text; removed.ini = r.count;
+    } else if(lang === 'dockerfile' && cleanup.cleanupDockerfile){
+      const r = stripLineStartComments(out, ['#']); out = r.text; removed.dockerfile = r.count;
+    } else if(lang === 'properties' && cleanup.cleanupProperties){
+      const r = stripLineStartComments(out, ['#','!']); out = r.text; removed.properties = r.count;
+    } else if(lang === 'markdown' && cleanup.cleanupMarkdown){
+      const r = stripHtmlLikeComments(out); out = r.text; removed.markdown = r.count;
+    }
+    return { text: out, removed };
+  }
+
+  /* ------------------------------------------------------------------ *
+   * 11. REPLACE ENGINE
+   * ------------------------------------------------------------------ */
+
+  function escapeRegex(str){
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  // Build a compiled matcher for one pair based on current options
+  function buildMatcher(pair, options){
+    let flags = 'g';
+    if(options.ignoreCase) flags += 'i';
+    if(options.multiLine) flags += 'm';
+
+    let source;
+    if(options.regexMode){
+      source = pair.before; // used as-is, raw regex source
+    }else{
+      source = escapeRegex(pair.before);
+    }
+    if(options.wholeWord){
+      source = `\\b(?:${source})\\b`;
+    }
+    return new RegExp(source, flags);
+  }
+
+  // Apply all active pairs to one string in a single in-memory pass. The file
+  // itself is read from the ZIP exactly once (see runReplaceProcess); every
+  // pair is then applied to that same string using String#replace with a
+  // callback, which counts and substitutes matches in one traversal instead
+  // of doing a separate .match() scan followed by a second .replace() scan.
+  // Returns { newText, replaceCount, samples } where samples holds up to 3
+  // example before -> after snippets for the preview modal.
+  function applyPairsToText(text, pairs, options, collectSamples){
+    let result = text;
+    let totalReplace = 0;
+    const samples = [];
+    for(const pair of pairs){
+      let regex;
+      try{
+        regex = buildMatcher(pair, options);
+      }catch(err){
+        throw new Error(`Regex tidak valid pada pair #${pair.index+1}: ${err.message}`);
+      }
+      result = result.replace(regex, function(match){
+        totalReplace++;
+        if(collectSamples && samples.length < 3){
+          samples.push({ before: match, after: pair.after });
+        }
+        return pair.after;
+      });
+    }
+    return { newText: result, replaceCount: totalReplace, samples };
+  }
+
+  // Rename a file/folder path by applying the same active pairs to its name.
+  // Reuses the exact same matcher/options as content replace, so Ignore Case,
+  // Whole Word, Regex Mode etc. behave identically for names and content.
+  function applyPairsToName(name, pairs, options){
+    if(!options.renameFileName) return { newName:name, changed:false };
+    const { newText } = applyPairsToText(name, pairs, options, false);
+    return { newName:newText, changed:newText !== name };
+  }
+
+  /* ------------------------------------------------------------------ *
+   * 12. OVERLAY PROGRESS CONTROL
+   * ------------------------------------------------------------------ */
+  const STEP_LABELS = [
+    ['Reading ZIP','Membaca struktur arsip ZIP...'],
+    ['Extracting','Mengekstrak entri file...'],
+    ['Scanning','Menandai file text yang didukung...'],
+    ['Reading Files','Membaca isi setiap file...'],
+    ['Replacing','Menjalankan mass replace engine...'],
+    ['Packing ZIP','Membungkus ulang menjadi ZIP baru...'],
+    ['Generating Download','Menyiapkan file untuk diunduh...'],
+    ['Done','Selesai!']
+  ];
+  function setOverlayStep(stepIndex, pct){
+    const [label, sub] = STEP_LABELS[stepIndex];
+    $('#overlayStatus').textContent = label;
+    $('#overlaySub').textContent = sub;
+    $('#overlayFill').style.width = pct + '%';
+    $('#overlayPercent').textContent = Math.round(pct) + '%';
+  }
+  function openOverlay(){ overlay.classList.add('show'); }
+  function closeOverlay(){ overlay.classList.remove('show'); }
+
+  /* ------------------------------------------------------------------ *
+   * 13. MAIN PROCESS PIPELINE
+   * ------------------------------------------------------------------ */
+  btnProcess.addEventListener('click', runReplaceProcess);
+
+  async function runReplaceProcess(){
+    if(!state.zip){
+      showModal({ title:'Belum Ada ZIP', msg:'Silakan upload file ZIP terlebih dahulu.', warn:true });
+      return;
+    }
+    const pairs = activePairs();
+    if(pairs.length === 0){
+      showModal({ title:'Tidak Ada Pasangan Aktif', msg:'Isi minimal satu pasangan Before → After sebelum memulai proses.', warn:true });
+      return;
+    }
+
+    btnProcess.classList.add('loading');
+    btnProcess.disabled = true;
+    openOverlay();
+    showToast('info','Replace Started', `${pairs.length} pasangan aktif diproses`, 2200);
+
+    const startTime = performance.now();
+
+    try{
+      setOverlayStep(0, 5);
+      await nextFrame();
+
+      setOverlayStep(1, 15);
+      const allNames = Object.keys(state.zip.files);
+      await nextFrame();
+
+      setOverlayStep(2, 22);
+      await nextFrame();
+
+      setOverlayStep(3, 30);
+      await nextFrame();
+
+      // === REPLACING ===
+      const changedFiles = [];
+      let totalReplaceCount = 0;
+      let filesChangedCount = 0;
+      let textFileCount = 0;
+      let binaryFileCount = 0;
+      let skippedCount = 0;      // files that could not be read/decoded at all
+      let renamedCount = 0;      // files/folders whose name changed
+      const skippedFiles = [];  // {name, reason} for files we could not process
+
+      const newZip = new JSZip();
+      const renameEnabled = !!state.options.renameFileName;
+
+      // Code Cleanup Engine: skip the per-file cleanup step entirely if no
+      // toggle is active, so there is zero overhead when the feature is off.
+      const cleanupActive = isAnyCleanupActive(state.cleanup);
+      const cleanupTotals = { js:0, html:0, css:0, php:0, python:0, shell:0, yaml:0, sql:0, lua:0, ini:0, dockerfile:0, properties:0, markdown:0 };
+
+      // Time-budgeted cooperative yielding: instead of yielding every N files
+      // (which behaves badly when file sizes vary wildly, e.g. 300MB+ ZIPs),
+      // we yield whenever more than ~16ms of work has passed since the last
+      // frame, keeping the UI thread responsive regardless of archive shape.
+      let lastYield = performance.now();
+      async function maybeYield(){
+        if(performance.now() - lastYield > 16){
+          await nextFrame();
+          lastYield = performance.now();
+        }
+      }
+
+      for(let i=0;i<allNames.length;i++){
+        const name = allNames[i];
+        const entry = state.zip.files[name];
+        const meta = { date: entry.date, unixPermissions: entry.unixPermissions };
+
+        // Renamed path applies to both files and (empty) folders, preserving
+        // the exact same directory structure otherwise.
+        const { newName } = applyPairsToName(name, pairs, state.options);
+        if(newName !== name) renamedCount++;
+
+        if(entry.dir){
+          // Preserve empty folders exactly, just under the (possibly) renamed path.
+          newZip.file(newName, null, { dir:true, date: meta.date, unixPermissions: meta.unixPermissions });
+          await maybeYield();
+          continue;
+        }
+
+        let rawBytes;
+        try{
+          rawBytes = await entry.async('uint8array');
+        }catch(readErr){
+          // Corrupted entry inside an otherwise valid ZIP: skip it, keep going.
+          skippedCount++;
+          skippedFiles.push({ name, reason:'Gagal membaca entri (rusak)' });
+          await maybeYield();
+          continue;
+        }
+
+        const candidateIsText = isSupportedTextFile(name, rawBytes);
+
+        if(candidateIsText){
+          textFileCount++;
+          try{
+            const { text, encoding } = decodeBytes(rawBytes);
+            const outcome = applyPairsToText(text, pairs, state.options, true);
+
+            // Code Cleanup Engine runs AFTER the replace pass, on the same
+            // in-memory string, using the (possibly renamed) file's own
+            // extension to pick the right language engine.
+            let finalText = outcome.newText;
+            let cleanupRemoved = {};
+            let cleanupCountForFile = 0;
+            if(cleanupActive){
+              const cleaned = runCodeCleanup(finalText, newName, state.cleanup);
+              finalText = cleaned.text;
+              cleanupRemoved = cleaned.removed;
+              Object.keys(cleanupRemoved).forEach(lang=>{
+                cleanupTotals[lang] += cleanupRemoved[lang];
+                cleanupCountForFile += cleanupRemoved[lang];
+              });
+            }
+
+            const outBytes = encodeText(finalText, state.options.preserveEncoding ? encoding : 'utf-8');
+
+            newZip.file(newName, outBytes, { date: meta.date, unixPermissions: meta.unixPermissions });
+
+            if(outcome.replaceCount > 0 || cleanupCountForFile > 0){
+              filesChangedCount++;
+              totalReplaceCount += outcome.replaceCount;
+              changedFiles.push({
+                name: newName,
+                originalName: name,
+                count: outcome.replaceCount,
+                commentsRemoved: cleanupCountForFile,
+                sizeBefore: rawBytes.length,
+                sizeAfter: outBytes.length,
+                size: outBytes.length,
+                status: 'Changed',
+                encoding,
+                samples: outcome.samples
+              });
+            }
+          }catch(decodeErr){
+            // Could not decode with any supported encoding, or a bad regex pair:
+            // skip this single file instead of aborting the whole batch.
+            skippedCount++;
+            skippedFiles.push({ name, reason: decodeErr.message || 'Gagal decode/replace' });
+            newZip.file(newName, rawBytes, { date: meta.date, unixPermissions: meta.unixPermissions }); // keep original bytes so structure stays intact
+          }
+        }else{
+          // Binary / unsupported: copy through untouched, byte for byte.
+          binaryFileCount++;
+          newZip.file(newName, rawBytes, { date: meta.date, unixPermissions: meta.unixPermissions });
+        }
+
+        // progress across the 30 -> 72 range while reading/replacing
+        const pct = 30 + Math.round(((i+1)/allNames.length) * 42);
+        setOverlayStep(4, pct);
+        await maybeYield();
+      }
+
+      setOverlayStep(5, 78);
+      await nextFrame();
+
+      const blob = await newZip.generateAsync({ type:'blob', compression:'DEFLATE', compressionOptions:{level:6} }, (meta)=>{
+        setOverlayStep(5, 78 + Math.round(meta.percent * 0.15));
+      });
+
+      setOverlayStep(6, 95);
+      await nextFrame();
+
+      const endTime = performance.now();
+      const elapsedMs = Math.max(1, Math.round(endTime - startTime));
+
+      state.lastResult = {
+        blob,
+        changedFiles,
+        skippedFiles,
+        stats:{
+          totalFolders: allNames.filter(n=> state.zip.files[n].dir).length,
+          totalFiles: allNames.filter(n=> !state.zip.files[n].dir).length,
+          textFiles: textFileCount,
+          binaryFiles: binaryFileCount,
+          totalSkip: skippedCount,
+          processedFiles: textFileCount,
+          filesChanged: filesChangedCount,
+          totalReplace: totalReplaceCount,
+          activePairs: pairs.length,
+          renamedCount,
+          elapsedMs,
+          zipBefore: state.zipFile.size,
+          zipAfter: blob.size,
+          jsCommentsRemoved: cleanupTotals.js,
+          htmlCommentsRemoved: cleanupTotals.html,
+          cssCommentsRemoved: cleanupTotals.css,
+          phpCommentsRemoved: cleanupTotals.php,
+          pythonCommentsRemoved: cleanupTotals.python,
+          sqlCommentsRemoved: cleanupTotals.sql,
+          yamlCommentsRemoved: cleanupTotals.yaml,
+          shellCommentsRemoved: cleanupTotals.shell,
+          luaCommentsRemoved: cleanupTotals.lua,
+          iniCommentsRemoved: cleanupTotals.ini,
+          dockerfileCommentsRemoved: cleanupTotals.dockerfile,
+          propertiesCommentsRemoved: cleanupTotals.properties,
+          markdownCommentsRemoved: cleanupTotals.markdown,
+          totalCommentsRemoved: Object.values(cleanupTotals).reduce((a,b)=> a+b, 0),
+        }
+      };
+
+      setOverlayStep(7, 100);
+      await sleep(450);
+      closeOverlay();
+
+      renderResults(state.lastResult);
+      const skipNote = skippedCount>0 ? `, ${skippedCount} file dilewati` : '';
+      const cleanupNote = cleanupTotals && Object.values(cleanupTotals).reduce((a,b)=>a+b,0) > 0
+        ? `, ${Object.values(cleanupTotals).reduce((a,b)=>a+b,0)} komentar dihapus`
+        : '';
+      showToast('success','Replace Success', `${totalReplaceCount} replace di ${filesChangedCount} file${skipNote}${cleanupNote}`);
+    }catch(err){
+      closeOverlay();
+      showModal({
+        title:'Proses Gagal',
+        msg: err && err.message ? err.message : 'Terjadi kesalahan tak terduga saat memproses ZIP.',
+        warn:true
+      });
+    }finally{
+      btnProcess.classList.remove('loading');
+      validateProcessButton();
+    }
+  }
+
+  function nextFrame(){ return new Promise(r=> requestAnimationFrame(()=> requestAnimationFrame(r))); }
+  function sleep(ms){ return new Promise(r=> setTimeout(r, ms)); }
+
+  /* ------------------------------------------------------------------ *
+   * 14. RESULTS RENDERING
+   * ------------------------------------------------------------------ */
+  function hideResults(){
+    resultsCard.classList.remove('show');
+    tableCard.classList.remove('show');
+    btnDownload.classList.add('hidden');
+    state.lastResult = null;
+  }
+
+  function renderResults(result){
+    const s = result.stats;
+    $('#resultTime').textContent = `Selesai dalam ${s.elapsedMs} ms`;
+
+    const stats = [
+      ['Total Folder', s.totalFolders, ''],
+      ['Total File', s.totalFiles, ''],
+      ['File Text', s.textFiles, 'accent'],
+      ['File Binary', s.binaryFiles, ''],
+      ['Total Skip', s.totalSkip, s.totalSkip>0? 'success':''],
+      ['File Diproses', s.processedFiles, ''],
+      ['File Berubah', s.filesChanged, 'success'],
+      ['Total Replace', s.totalReplace, 'success'],
+      ['Rename Filename', s.renamedCount, 'accent'],
+      ['Pasangan Aktif', s.activePairs, 'accent'],
+      ['Waktu Proses', s.elapsedMs + ' ms', ''],
+      ['ZIP Sebelum', formatBytes(s.zipBefore), ''],
+      ['ZIP Sesudah', formatBytes(s.zipAfter), ''],
+    ];
+
+    // Code Cleanup Engine report — only render a category's stat box if its
+    // engine actually ran and removed at least one comment, so the grid
+    // stays clean when the feature is unused.
+    const cleanupStats = [
+      ['JavaScript Comments Removed', s.jsCommentsRemoved],
+      ['HTML Comments Removed', s.htmlCommentsRemoved],
+      ['CSS Comments Removed', s.cssCommentsRemoved],
+      ['PHP Comments Removed', s.phpCommentsRemoved],
+      ['Python Comments Removed', s.pythonCommentsRemoved],
+      ['SQL Comments Removed', s.sqlCommentsRemoved],
+      ['YAML Comments Removed', s.yamlCommentsRemoved],
+      ['Shell Comments Removed', s.shellCommentsRemoved],
+      ['Lua Comments Removed', s.luaCommentsRemoved],
+      ['INI/Conf Comments Removed', s.iniCommentsRemoved],
+      ['Dockerfile Comments Removed', s.dockerfileCommentsRemoved],
+      ['Properties Comments Removed', s.propertiesCommentsRemoved],
+      ['Markdown Comments Removed', s.markdownCommentsRemoved],
+    ].filter(([,val])=> val > 0);
+
+    if(cleanupStats.length > 0 || s.totalCommentsRemoved > 0){
+      cleanupStats.forEach(([lbl,val])=> stats.push([lbl, val, 'accent']));
+      stats.push(['Total Comments Removed', s.totalCommentsRemoved, 'success']);
+    }
+
+    $('#statsGrid').innerHTML = stats.map(([lbl,val,cls])=> `
+      <div class="stat-box ${cls}"><div class="lbl">${lbl}</div><div class="val">${val}</div></div>
+    `).join('');
+
+    resultsCard.classList.add('show');
+    tableCard.classList.add('show');
+    btnDownload.classList.remove('hidden');
+
+    renderFileTable(result.changedFiles);
+  }
+
+  /* ------------------------------------------------------------------ *
+   * 15. CHANGED FILES TABLE (search + sort)
+   * ------------------------------------------------------------------ */
+  function renderFileTable(files){
+    const search = $('#tableSearch').value.trim().toLowerCase();
+    const sortVal = $('#tableSort').value;
+
+    let rows = files.filter(f=> !search || f.name.toLowerCase().includes(search));
+
+    const sorters = {
+      'name-asc': (a,b)=> a.name.localeCompare(b.name),
+      'name-desc': (a,b)=> b.name.localeCompare(a.name),
+      'count-desc': (a,b)=> b.count - a.count,
+      'count-asc': (a,b)=> a.count - b.count,
+      'size-desc': (a,b)=> b.size - a.size,
+    };
+    rows = rows.slice().sort(sorters[sortVal] || sorters['name-asc']);
+
+    const tbody = $('#tableBody');
+    if(rows.length === 0){
+      tbody.innerHTML = `<tr class="empty-row"><td colspan="4">Tidak ada file yang cocok</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = rows.map((f,i)=> `
+      <tr data-row-idx="${i}" style="cursor:pointer" title="Klik untuk preview replace">
+        <td class="fname">${escapeHtml(f.name)}</td>
+        <td><span class="count-pill">${f.count}</span></td>
+        <td>${formatBytes(f.size)}</td>
+        <td><span class="status-pill">${f.status}</span></td>
+      </tr>
+    `).join('');
+
+    // Click a row to preview: filename, replace count, first 3 sample
+    // replacements, and size before/after. Reuses the existing modal UI.
+    tbody.querySelectorAll('tr[data-row-idx]').forEach(tr=>{
+      tr.addEventListener('click', ()=>{
+        const f = rows[Number(tr.dataset.rowIdx)];
+        showFilePreview(f);
+      });
+    });
+  }
+
+  function showFilePreview(f){
+    const samplesHtml = (f.samples && f.samples.length)
+      ? f.samples.map(s=> `
+          <div style="display:flex; align-items:center; gap:8px; padding:8px 10px; margin-top:6px; border-radius:8px; background:rgba(255,255,255,.03); font-family:var(--font-mono); font-size:12px; text-align:left;">
+            <span style="color:var(--danger); word-break:break-all;">${escapeHtml(s.before)}</span>
+            <span style="color:var(--text-2); flex-shrink:0;">→</span>
+            <span style="color:var(--success); word-break:break-all;">${escapeHtml(s.after)}</span>
+          </div>
+        `).join('')
+      : '<div style="font-size:12px; color:var(--text-2); margin-top:6px;">Tidak ada contoh tersedia</div>';
+
+    const html = `
+      <div style="font-family:var(--font-mono); font-size:13px; color:var(--text-0); word-break:break-all; margin-bottom:10px;">${escapeHtml(f.name)}</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:12px; color:var(--text-2); text-align:left; margin-bottom:4px;">
+        <div>Jumlah Replace: <b style="color:var(--text-0)">${f.count}</b></div>
+        <div>Komentar Dihapus: <b style="color:var(--text-0)">${f.commentsRemoved || 0}</b></div>
+        <div>Encoding: <b style="color:var(--text-0)">${f.encoding || 'utf-8'}</b></div>
+        <div>Ukuran Lama: <b style="color:var(--text-0)">${formatBytes(f.sizeBefore ?? f.size)}</b></div>
+        <div>Ukuran Baru: <b style="color:var(--text-0)">${formatBytes(f.sizeAfter ?? f.size)}</b></div>
+      </div>
+      <div style="text-align:left; font-size:11.5px; color:var(--text-2); margin-top:12px;">Preview 3 replace pertama:</div>
+      ${samplesHtml}
+    `;
+    showModal({ title:'Preview File', html, okLabel:'Tutup' });
+  }
+  $('#tableSearch').addEventListener('input', ()=>{
+    if(state.lastResult) renderFileTable(state.lastResult.changedFiles);
+  });
+  $('#tableSort').addEventListener('change', ()=>{
+    if(state.lastResult) renderFileTable(state.lastResult.changedFiles);
+  });
+
+  /* ------------------------------------------------------------------ *
+   * 16. DOWNLOAD RESULT
+   * ------------------------------------------------------------------ */
+  btnDownload.addEventListener('click', ()=>{
+    if(!state.lastResult){
+      showModal({ title:'Belum Ada Hasil', msg:'Jalankan proses rename terlebih dahulu sebelum download.', warn:true });
+      return;
+    }
+    const originalName = state.zipFile.name.replace(/\.zip$/i,'');
+    const outName = `${originalName}-renamed.zip`;
+    const url = URL.createObjectURL(state.lastResult.blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = outName;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+    showToast('success','Download Ready', outName);
+  });
+
+  /* ------------------------------------------------------------------ *
+   * 17. INIT
+   * ------------------------------------------------------------------ */
+  function init(){
+    restorePairs();
+    restoreOptions();
+    buildOptions();
+    restoreCleanup();
+    buildCleanupOptions();
+    refreshPairInputsFromState();
+    validateProcessButton();
+  }
+  init();
+
+})();
+</script>
+</body>
+</html>
